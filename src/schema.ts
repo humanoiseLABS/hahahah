@@ -7,6 +7,7 @@ export type SchemaName =
   | 'persona'
   | 'culture'
   | 'memes'
+  | 'registers'
   | 'lexicon'
   | 'config'
   | 'manifest'
@@ -18,6 +19,7 @@ const schemaFiles: Record<SchemaName, string> = {
   persona: 'persona.schema.json',
   culture: 'culture.schema.json',
   memes: 'memes.schema.json',
+  registers: 'register-map.schema.json',
   lexicon: 'lexicon.schema.json',
   config: 'config.schema.json',
   manifest: 'manifest.schema.json',

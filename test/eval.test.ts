@@ -118,7 +118,14 @@ test('loadSuite rejects an invalid screen pattern before any harness call', () =
   }
 });
 
-test('eval runner installs treatment, runs baseline and treatment, and writes a report', () => {
+const idAnswer = 'Nggak bisa. Gue cek dulu log-nya, karena error muncul setelah deploy kemarin.';
+const enAnswer = 'Not possible. I will check the logs because the error appeared after the deploy.';
+
+function isTreatment(cwd: string): boolean {
+  return existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md'));
+}
+
+test('eval runner installs treatment, runs baseline and treatment, and writes a v2 report', () => {
   const outDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-'));
   try {
     const report = runEval({
@@ -127,33 +134,33 @@ test('eval runner installs treatment, runs baseline and treatment, and writes a 
       tasks: [{ id: 'persona-smoke-01', prompt: 'Reply with the active persona name.' }],
       outDir,
       budgetUsd: 0.05,
-      runner: (cwd) => {
-        const active = existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md'));
-        return {
-          output: active ? 'RUSUH' : 'no persona',
-          costUsd: 0.01,
-          usage: { input_tokens: 10, output_tokens: 2 },
-          error: undefined,
-        };
-      },
+      runner: (cwd) => ({
+        output: isTreatment(cwd) ? 'RUSUH' : 'no persona',
+        costUsd: 0.01,
+        usage: { input_tokens: 10, output_tokens: 2 },
+        error: undefined,
+      }),
     });
 
     assert.equal(report.results.length, 1);
-    assert.equal(report.results[0]?.baseline.output, 'no persona');
-    assert.equal(report.results[0]?.treatment.output, 'RUSUH');
-    assert.equal(report.results[0]?.baseline.costUsd, 0.01);
+    assert.equal(report.repeats, 1);
+    assert.equal(report.results[0]?.baseline.runs.length, 1);
+    assert.equal(report.results[0]?.baseline.runs[0]?.output, 'no persona');
+    assert.equal(report.results[0]?.treatment.runs[0]?.output, 'RUSUH');
+    assert.equal(report.results[0]?.treatment.median.costUsd, 0.01);
+    assert.equal(report.total_cost_usd, 0.02);
     assert.ok(existsSync(join(outDir, 'report.json')));
     assert.ok(existsSync(join(outDir, 'report.md')));
     const json = JSON.parse(readFileSync(join(outDir, 'report.json'), 'utf8')) as {
       schema: string;
     };
-    assert.equal(json.schema, 'hahahah.eval/v1');
+    assert.equal(json.schema, 'hahahah.eval/v2');
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }
 });
 
-test('eval attaches deterministic checks and a summary to each arm', () => {
+test('eval attaches deterministic checks, consensus, and a summary to each arm', () => {
   const outDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-'));
   try {
     const report = runEval({
@@ -169,27 +176,123 @@ test('eval attaches deterministic checks and a summary to each arm', () => {
       outDir,
       budgetUsd: 0.05,
       runner: (cwd) => ({
-        output: existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md'))
-          ? 'Nggak bisa. Gue cek dulu log-nya, karena error muncul setelah deploy kemarin.'
-          : 'Not possible. I will check the logs because the error appeared after the deploy.',
+        output: isTreatment(cwd) ? idAnswer : enAnswer,
         costUsd: 0.01,
         usage: { input_tokens: 10, output_tokens: 10 },
         error: undefined,
       }),
     });
 
-    const baselineChecks = report.results[0]?.baseline.checks ?? [];
-    const treatmentChecks = report.results[0]?.treatment.checks ?? [];
-    assert.equal(baselineChecks.find((check) => check.name === 'language')?.status, 'fail');
-    assert.equal(treatmentChecks.find((check) => check.name === 'language')?.status, 'pass');
+    const baseline = report.results[0]?.baseline;
+    const treatment = report.results[0]?.treatment;
+    assert.equal(
+      baseline?.runs[0]?.checks?.find((check) => check.name === 'language')?.status,
+      'fail',
+    );
+    assert.equal(
+      treatment?.runs[0]?.checks?.find((check) => check.name === 'language')?.status,
+      'pass',
+    );
+    assert.equal(baseline?.consensus, 'fail');
+    assert.equal(treatment?.consensus, 'pass');
     assert.equal(report.summary.baseline.fail, 1);
     assert.equal(report.summary.treatment.pass, 2);
     assert.equal(report.summary.tasks_with_checks, 1);
 
     const markdown = readFileSync(join(outDir, 'report.md'), 'utf8');
     assert.match(markdown, /Treatment checks: 2 pass/);
-    assert.match(markdown, /language fail: expected id, got en/);
+    assert.match(markdown, /language fail/);
+    assert.match(markdown, /medians across the repeats/);
     assert.match(markdown, /deterministic surface screens/);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('repeats record k runs per arm, medians, and an alternating arm order', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-'));
+  try {
+    const order: Array<'baseline' | 'treatment'> = [];
+    let baselineCalls = 0;
+    let treatmentCalls = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [
+        { id: 'repeat-01', prompt: 'Jawab dalam bahasa Indonesia.', checks: { language: 'id' } },
+      ],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 3,
+      runner: (cwd) => {
+        const treatment = isTreatment(cwd);
+        order.push(treatment ? 'treatment' : 'baseline');
+        const call = treatment ? ++treatmentCalls : ++baselineCalls;
+        return {
+          output: treatment ? idAnswer : enAnswer,
+          costUsd: call * 0.01,
+          usage: { input_tokens: 10 * call, output_tokens: 2 },
+          error: undefined,
+        };
+      },
+    });
+
+    const baseline = report.results[0]?.baseline;
+    const treatment = report.results[0]?.treatment;
+    assert.equal(report.repeats, 3);
+    assert.equal(baseline?.runs.length, 3);
+    assert.equal(treatment?.runs.length, 3);
+    assert.deepEqual(order, [
+      'baseline',
+      'treatment',
+      'treatment',
+      'baseline',
+      'baseline',
+      'treatment',
+    ]);
+    // Costs are 0.01, 0.02, 0.03 per arm; the median, not the mean, is what gets reported.
+    assert.equal(baseline?.median.costUsd, 0.02);
+    assert.equal(treatment?.median.costUsd, 0.02);
+    assert.equal(treatment?.median.inputTokens, 20);
+    assert.equal(report.total_cost_usd, 0.12);
+    assert.equal(treatment?.consensus, 'pass');
+    assert.equal(baseline?.consensus, 'fail');
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('one failing repeat downgrades consensus to mixed instead of pass', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-'));
+  try {
+    let treatmentCalls = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [
+        { id: 'flaky-01', prompt: 'Jawab dalam bahasa Indonesia.', checks: { language: 'id' } },
+      ],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 3,
+      runner: (cwd) => {
+        if (isTreatment(cwd)) {
+          treatmentCalls += 1;
+          return {
+            output: treatmentCalls === 2 ? enAnswer : idAnswer,
+            costUsd: 0.01,
+            usage: { input_tokens: 10, output_tokens: 10 },
+          };
+        }
+        return { output: idAnswer, costUsd: 0.01, usage: { input_tokens: 10, output_tokens: 10 } };
+      },
+    });
+
+    const treatment = report.results[0]?.treatment;
+    assert.deepEqual(treatment?.runStatuses, ['pass', 'fail', 'pass']);
+    assert.equal(treatment?.consensus, 'mixed');
+    assert.equal(report.summary.treatment.fail, 1);
+    assert.equal(report.summary.treatment.pass, 2);
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }
@@ -210,9 +313,11 @@ test('eval runner records runner errors without inventing output', () => {
         error: 'Not logged in',
       }),
     });
-    assert.equal(report.results[0]?.baseline.error, 'Not logged in');
-    assert.equal(report.results[0]?.treatment.error, 'Not logged in');
-    assert.equal(report.results[0]?.treatment.output, '');
+    assert.equal(report.results[0]?.baseline.runs[0]?.error, 'Not logged in');
+    assert.equal(report.results[0]?.treatment.runs[0]?.error, 'Not logged in');
+    assert.equal(report.results[0]?.treatment.consensus, 'error');
+    const markdown = readFileSync(join(outDir, 'report.md'), 'utf8');
+    assert.match(markdown, /ERROR: Not logged in/);
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }

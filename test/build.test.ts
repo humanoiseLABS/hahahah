@@ -149,3 +149,18 @@ test('measure-only build does not write artifacts', () => {
     rmSync(join(out, '..'), { recursive: true, force: true });
   }
 });
+
+test('every MVP profile builds within budget on both adapters', () => {
+  for (const profileId of ['rusuh-id', 'halal-id', 'jawa-id']) {
+    for (const adapterId of ['fake', 'claude-code']) {
+      const result = build({ root, profileId, adapterId, write: false });
+      for (const [name, report] of Object.entries(result.manifest.budgets)) {
+        assert.equal(
+          report.status,
+          'ok',
+          `${profileId}/${adapterId}: ${name} ${report.tokens}/${report.target}`,
+        );
+      }
+    }
+  }
+});

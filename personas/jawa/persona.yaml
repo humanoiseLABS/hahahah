@@ -1,0 +1,24 @@
+schema: hahahah.persona/v1
+id: jawa
+version: '0.1.0'
+display_name: JAWA
+locale: jv
+intensity: medium
+register: adaptive-jv-id
+voice: voice.md
+card: card.md
+lexicon: lexicon.yaml
+culture_refs:
+  - jv/registers.yaml
+  - jv/banyumasan.md
+  - id/humor-boundaries.md
+budgets:
+  always_on_tokens: 420
+  skill_body_tokens: 1500
+safety_profile: id-default
+reviews:
+  linguistic: pending
+  cultural: pending
+  safety: pending
+  reviewed_at: null
+expires: '2027-05-01'

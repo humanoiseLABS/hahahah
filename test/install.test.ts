@@ -97,6 +97,39 @@ test('uninstall removes managed content and preserves user files', () => {
   }
 });
 
+test('every MVP profile installs and uninstalls through the same path', () => {
+  const cases: Array<[string, string]> = [
+    ['rusuh-id', 'rusuh'],
+    ['halal-id', 'halal'],
+    ['jawa-id', 'jawa'],
+  ];
+  for (const [profileId, persona] of cases) {
+    const targetRoot = tempProject();
+    try {
+      const result = install({ sourceRoot, targetRoot, profileId });
+      assert.equal(result.manifest.persona, persona);
+      const skillPath = join(targetRoot, `.claude/skills/hahahah-${persona}/SKILL.md`);
+      assert.ok(existsSync(skillPath), `${profileId}: missing SKILL.md`);
+      assert.ok(
+        existsSync(
+          join(targetRoot, `.claude/skills/hahahah-${persona}/references/core/10-safety.md`),
+        ),
+        `${profileId}: missing core safety reference`,
+      );
+      assert.equal(doctor({ targetRoot }).ok, true, `${profileId}: doctor failed`);
+      uninstall({ targetRoot });
+      assert.equal(existsSync(join(targetRoot, '.claude')), false, `${profileId}: .claude residue`);
+      assert.equal(
+        existsSync(join(targetRoot, 'CLAUDE.md')),
+        false,
+        `${profileId}: CLAUDE.md residue`,
+      );
+    } finally {
+      rmSync(targetRoot, { recursive: true, force: true });
+    }
+  }
+});
+
 test('uninstall leaves no empty managed directories behind', () => {
   const targetRoot = tempProject();
   try {

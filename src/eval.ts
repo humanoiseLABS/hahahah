@@ -33,18 +33,34 @@ export interface EvalRun {
 
 export type EvalRunner = (cwd: string, prompt: string, budgetUsd: number) => EvalRun;
 
+export interface ArmMedians {
+  costUsd: number;
+  inputTokens: number;
+  outputTokens: number;
+  numTurns: number;
+}
+
+export interface EvalArm {
+  runs: EvalRun[];
+  consensus: 'pass' | 'fail' | 'mixed' | 'error' | 'no-checks';
+  runStatuses: Array<'pass' | 'fail' | 'unknown' | 'error' | 'no-checks'>;
+  median: ArmMedians;
+  screens: CheckSummary;
+}
+
 export interface EvalResult {
   task: EvalTask;
-  baseline: EvalRun;
-  treatment: EvalRun;
+  baseline: EvalArm;
+  treatment: EvalArm;
 }
 
 export interface EvalReport {
-  schema: 'hahahah.eval/v1';
+  schema: 'hahahah.eval/v2';
   generated_at: string;
   profile: string;
   suite: string;
   budget_per_run_usd: number;
+  repeats: number;
   model: string | null;
   total_cost_usd: number;
   results: EvalResult[];
@@ -59,6 +75,7 @@ export interface EvalOptions {
   budgetUsd: number;
   suite?: string;
   limit?: number;
+  repeats?: number;
   model?: string;
   settingSources?: string;
   runner?: EvalRunner;
@@ -92,6 +109,67 @@ function safeRun(runner: EvalRunner, cwd: string, prompt: string, budgetUsd: num
       error: error instanceof Error ? error.message : String(error),
     };
   }
+}
+
+export type RunStatus = 'pass' | 'fail' | 'unknown' | 'error' | 'no-checks';
+
+export function median(values: number[]): number {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 1 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
+}
+
+function usageNumber(usage: unknown, key: string): number | undefined {
+  if (typeof usage !== 'object' || usage === null) return undefined;
+  const value = (usage as Record<string, unknown>)[key];
+  return typeof value === 'number' ? value : undefined;
+}
+
+function statusOf(run: EvalRun): RunStatus {
+  if (run.error) return 'error';
+  if (!run.checks || run.checks.length === 0) return 'no-checks';
+  if (run.checks.some((check) => check.status === 'fail')) return 'fail';
+  if (run.checks.some((check) => check.status === 'unknown')) return 'unknown';
+  return 'pass';
+}
+
+function consensusOf(statuses: RunStatus[]): EvalArm['consensus'] {
+  const meaningful = statuses.filter((status) => status !== 'no-checks');
+  if (meaningful.length === 0) return 'no-checks';
+  if (meaningful.every((status) => status === 'error')) return 'error';
+  if (meaningful.every((status) => status === 'pass')) return 'pass';
+  if (meaningful.every((status) => status === 'fail')) return 'fail';
+  return 'mixed';
+}
+
+function buildArm(runs: EvalRun[], checks?: TaskChecks): EvalArm {
+  for (const run of runs) {
+    if (!run.error && checks) run.checks = runChecks(run.output, checks);
+  }
+  const statuses = runs.map(statusOf);
+  return {
+    runs,
+    consensus: consensusOf(statuses),
+    runStatuses: statuses,
+    median: {
+      costUsd: median(runs.map((run) => run.costUsd)),
+      inputTokens: median(
+        runs
+          .map((run) => usageNumber(run.usage, 'input_tokens'))
+          .filter((value): value is number => value !== undefined),
+      ),
+      outputTokens: median(
+        runs
+          .map((run) => usageNumber(run.usage, 'output_tokens'))
+          .filter((value): value is number => value !== undefined),
+      ),
+      numTurns: median(
+        runs.map((run) => run.numTurns).filter((value): value is number => value !== undefined),
+      ),
+    },
+    screens: summarize(runs.flatMap((run) => run.checks ?? [])),
+  };
 }
 
 function runClaude(
@@ -178,13 +256,25 @@ function runClaude(
   };
 }
 
-function formatArm(run: EvalRun): string {
-  if (run.error) return `ERROR: ${run.error}`;
-  const output = run.output.replace(/\|/g, '\\|').replace(/\n+/g, ' ').trim();
-  if (!run.checks || run.checks.length === 0) return output;
-  const failed = run.checks.filter((check) => check.status !== 'pass');
-  if (failed.length === 0) return `${output} [checks pass]`;
-  return `${output} [${failed.map((check) => `${check.name} ${check.status}: ${check.detail}`).join('; ')}]`;
+function formatArm(arm: EvalArm): string {
+  const passing = arm.runs.filter((run) => !run.error);
+  if (passing.length === 0) return `ERROR: ${arm.runs[0]?.error ?? 'no runs'}`;
+  const output = passing[0]!.output.replace(/\|/g, '\\|').replace(/\n+/g, ' ').trim();
+  const passCount = arm.runStatuses.filter((status) => status === 'pass').length;
+  const detail = `${arm.consensus} ${passCount}/${arm.runs.length}`;
+  const flagged = passing
+    .flatMap((run) => run.checks ?? [])
+    .filter((check) => check.status !== 'pass')
+    .map((check) => `${check.name} ${check.status}`);
+  const unique = [...new Set(flagged)];
+  return unique.length === 0
+    ? `${output} [${detail}]`
+    : `${output} [${detail}: ${unique.join(', ')}]`;
+}
+
+function medianCell(arm: EvalArm): string {
+  const turns = arm.median.numTurns || '?';
+  return `$${arm.median.costUsd.toFixed(4)} (in ${Math.round(arm.median.inputTokens)}, out ${Math.round(arm.median.outputTokens)}, turns ${turns})`;
 }
 
 function reportMarkdown(report: EvalReport): string {
@@ -196,21 +286,25 @@ function reportMarkdown(report: EvalReport): string {
     `- Model: ${report.model ?? 'harness default'}`,
     `- Generated: ${report.generated_at}`,
     `- Budget per run: $${report.budget_per_run_usd.toFixed(2)}`,
+    `- Repeats per task per arm: ${report.repeats} (order alternates on every second repeat)`,
     `- Total cost reported: $${report.total_cost_usd.toFixed(4)}`,
     `- Tasks with checks: ${report.summary.tasks_with_checks}`,
     `- Baseline checks: ${report.summary.baseline.pass} pass, ${report.summary.baseline.fail} fail, ${report.summary.baseline.unknown} unknown`,
     `- Treatment checks: ${report.summary.treatment.pass} pass, ${report.summary.treatment.fail} fail, ${report.summary.treatment.unknown} unknown`,
     '',
-    '| Task | Baseline | Treatment | Baseline cost (turns) | Treatment cost (turns) |',
+    'Cost and token figures are medians across the repeats: this provider bills heavy-tailed spikes, so a single run is not a measurement.',
+    '',
+    '| Task | Baseline | Treatment | Baseline median | Treatment median |',
     '|---|---|---|---:|---:|',
     ...report.results.map(
       (result) =>
-        `| ${result.task.id} | ${formatArm(result.baseline)} | ${formatArm(result.treatment)} | $${result.baseline.costUsd.toFixed(4)} (${String(result.baseline.numTurns ?? '?')}) | $${result.treatment.costUsd.toFixed(4)} (${String(result.treatment.numTurns ?? '?')}) |`,
+        `| ${result.task.id} | ${formatArm(result.baseline)} | ${formatArm(result.treatment)} | ${medianCell(result.baseline)} | ${medianCell(result.treatment)} |`,
     ),
     '',
     'Turns are reported by the harness; more than one turn means the agent used tools or iterated, which multiplies billed input tokens.',
     'Checks are deterministic surface screens (language markers, required and forbidden patterns).',
     'A check is not a semantic judgment: it flags text for human review, it does not prove intent or correctness.',
+    'Consensus is pass only when every repeat passes; one failing repeat makes the task mixed or fail.',
     'No claim is made beyond these observed runs. Failed or blocked runs remain errors, not fabricated answers.',
     '',
   ];
@@ -219,6 +313,7 @@ function reportMarkdown(report: EvalReport): string {
 
 export function runEval(options: EvalOptions): EvalReport {
   const tasks = options.tasks.slice(0, options.limit ?? options.tasks.length);
+  const repeats = options.repeats ?? 1;
   const runner =
     options.runner ??
     ((cwd: string, prompt: string, budgetUsd: number) =>
@@ -234,34 +329,50 @@ export function runEval(options: EvalOptions): EvalReport {
         targetRoot: treatmentDir,
         profileId: options.profileId,
       });
-      const baseline = safeRun(runner, baselineDir, task.prompt, options.budgetUsd);
-      const treatment = safeRun(runner, treatmentDir, task.prompt, options.budgetUsd);
-      for (const run of [baseline, treatment]) {
-        if (!run.error && task.checks) {
-          run.checks = runChecks(run.output, task.checks);
+      const baselineRuns: EvalRun[] = [];
+      const treatmentRuns: EvalRun[] = [];
+      for (let index = 0; index < repeats; index += 1) {
+        // Alternate which arm runs first so a provider-side ordering effect cannot
+        // land on the same arm in every repeat.
+        const order = index % 2 === 0 ? ['baseline', 'treatment'] : ['treatment', 'baseline'];
+        for (const arm of order) {
+          const run = safeRun(
+            runner,
+            arm === 'baseline' ? baselineDir : treatmentDir,
+            task.prompt,
+            options.budgetUsd,
+          );
+          (arm === 'baseline' ? baselineRuns : treatmentRuns).push(run);
         }
       }
-      results.push({ task, baseline, treatment });
+      results.push({
+        task,
+        baseline: buildArm(baselineRuns, task.checks),
+        treatment: buildArm(treatmentRuns, task.checks),
+      });
     } finally {
       rmSync(baselineDir, { recursive: true, force: true });
       rmSync(treatmentDir, { recursive: true, force: true });
     }
   }
 
-  const baselineSummary = summarize(results.flatMap((result) => result.baseline.checks ?? []));
-  const treatmentSummary = summarize(results.flatMap((result) => result.treatment.checks ?? []));
+  const baselineSummary = summarize(
+    results.flatMap((result) => result.baseline.runs.flatMap((run) => run.checks ?? [])),
+  );
+  const treatmentSummary = summarize(
+    results.flatMap((result) => result.treatment.runs.flatMap((run) => run.checks ?? [])),
+  );
+  const allRuns = results.flatMap((result) => [...result.baseline.runs, ...result.treatment.runs]);
 
   const report: EvalReport = {
-    schema: 'hahahah.eval/v1',
+    schema: 'hahahah.eval/v2',
     generated_at: new Date().toISOString(),
     profile: options.profileId,
     suite: options.suite ?? 'custom',
     budget_per_run_usd: options.budgetUsd,
+    repeats,
     model: options.model ?? null,
-    total_cost_usd: results.reduce(
-      (total, result) => total + result.baseline.costUsd + result.treatment.costUsd,
-      0,
-    ),
+    total_cost_usd: allRuns.reduce((total, run) => total + run.costUsd, 0),
     results,
     summary: {
       baseline: baselineSummary,

@@ -28,7 +28,7 @@ If any of these cannot be demonstrated, the MVP should report that result rather
 |---|---|---|
 | Core policies | Identity, safety, decision policy, efficiency contract, language contract | Always-on digest ≤420 tokens (measured 420 with the Claude managed block) plus the full policy text shipped as on-demand references; reviewed |
 | Culture KB v0 | Indonesian Gen Z lexicon with decay classes, developer/absurd humor, meme notes, humor boundaries, religious-expression etiquette; Javanese ngoko/madya/krama register map and Banyumasan notes | Every usage entry has context, avoid-conditions, decay class, offensiveness, frequency cap, source, review/expiry; release build blocks expired/unreviewed entries; context gate enforced |
-| Persona packs | RUSUH, HALAL, JAWA | Complete manifests, voice contracts, lexicons, eval fixtures, review status |
+| Persona packs | RUSUH, HALAL, JAWA | Complete manifests, voice contracts, lexicons, examples, tests — all three drafted; every review state is `pending` and release builds fail closed |
 | Profiles | `rusuh-id`, `halal-id`, `jawa-id`; proposed `core-id` control | Composable; pinned core range; budget profile |
 | Schemas | JSON Schema for profile, persona, lexicon, culture entry, config, manifest | Validation in CI; invalid input fails the build |
 | Compiler | Resolve, validate, compose, dedupe, render, tokenize, write manifest | Deterministic; idempotent; refuses unsafe writes |
@@ -51,7 +51,7 @@ No hooks, subagents, output styles, plugins, Qoder adapter, or additional harnes
 | Static CI | Schemas, links, banned patterns, budgets, golden renders, managed-block/idempotency/path tests | Hard fail |
 | Persona | 12–15 scenarios per persona, rubric-scored, repetition/register/emoji/serious-mode checks | Release gate |
 | Decision | ~20 scenarios across all instruction classes — **24 authored** in `evals/decisions.yaml`: valid 3, suboptimal 3, ambiguous 4, destructive/shared 6, incorrect-premise 3, prohibited 2, anti-sycophancy 3; risk classes 0–4 tagged; every task carries deterministic screens | Release gate |
-| Safety | ~15 adversarial scenarios — **18 authored** in `evals/safety.yaml`: instruction injection 5, SARA/identity 3, religion (mock/fabrication/fatwa/refusal wording) 4, secret handling 4, harmful capability 2, distress/serious-mode 2; every task carries deterministic screens | Zero critical failures |
+| Safety | ~15 adversarial scenarios — **23 authored** in `evals/safety.yaml`: instruction injection 10 (code comment, dependency README, external issue, web page, out-of-layer file, tool output, encoded comment, tampered manifest, commit message, log line), SARA/identity 3, religion (mock/fabrication/fatwa/refusal wording) 4, secret handling 4, harmful capability 2, distress/serious-mode 2; every task carries deterministic screens | Zero critical failures |
 | Coding | 60 private tasks with tests + hidden holdout (MVP); 80+ provisional for a formal NI claim | Regression guard: point estimate no worse than −10 pp, CI published; formal NI post-MVP |
 | Efficiency | 60 paired tasks for a ~15% effect (provisional; pilot CV required), k=3, alternating order | Report + budget gate |
 | Human review | Native Indonesian, Javanese (ngoko/madya/krama and Banyumasan), Islamic content, legal/SARA sensitivity; 10 generated responses per persona | Sign-off required |
@@ -138,8 +138,8 @@ If markers are missing, duplicated, or malformed, install/doctor fails rather th
 | Profile | Persona | Purpose | Status |
 |---|---|---|---|
 | `rusuh-id` | RUSUH | Chaotic, sarcastic, meme-aware Indonesian developer voice | MVP |
-| `halal-id` | HALAL | Friendly, respectful Islamic voice | MVP |
-| `jawa-id` | JAWA | Ngoko/madya/krama + honorific lexicon, with mixed Indonesian-Javanese | MVP |
+| `halal-id` | HALAL | Friendly, respectful Islamic voice | MVP — drafted 2026-11-03, reviews pending |
+| `jawa-id` | JAWA | Ngoko/madya/krama + honorific lexicon, with mixed Indonesian-Javanese | MVP — drafted 2026-11-03, native review required before any release |
 | `core-id` | none | Decision + efficiency only; measurement control and "persona off" option | Proposed (D-006) |
 
 **Activation model**
@@ -242,7 +242,7 @@ Budgets measured with the declared tokenizer profile; provider-native counters u
 - **No blind truncation.** The information-preservation suite must show that warnings, constraints, failing tests, error text, file paths, and security caveats remain.
 - **Answer-first contract** passes on the reviewed suite.
 - **Net token report** includes: always-on, skill metadata, activated references, output, cache creation/read, cold/warm cost, and net delta vs baseline.
-- **Sample size:** 60 paired token tasks (provisional) for a ~15% effect; a 60-task coding regression guard; ≥80 paired tasks (provisional) only if a formal 10 pp non-inferiority claim is attempted; k=3 repetitions; alternating order. See the audit in §8.4.
+- **Sample size:** 60 paired token tasks (provisional) for a ~15% effect; a 60-task coding regression guard; ≥80 paired tasks (provisional) only if a formal 10 pp non-inferiority claim is attempted; k=3 repetitions; alternating order. See the audit in §8.4. The eval runner implements the repetition half now: `--repeats k` runs each arm k times, alternates which arm starts, and reports median cost/input/output/turns plus a per-task consensus.
 - **No claim below 2× tokenizer MAPE.** Report confidence intervals. A null/negative result is published as such.
 - **Cost cap:** each benchmark run uses a pre-approved USD cap (to be set in D-012); no unbounded eval spending.
 

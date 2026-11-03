@@ -9,33 +9,82 @@ const root = process.cwd();
 const read = (path: string) => readFileSync(join(root, path), 'utf8');
 const yaml = (path: string) => parse(read(path)) as Record<string, unknown>;
 
-test('all Phase 1 YAML content validates', () => {
-  assert.doesNotThrow(() => validate('profile', yaml('profiles/rusuh-id.yaml'), 'profile', root));
-  assert.doesNotThrow(() =>
-    validate('persona', yaml('personas/rusuh/persona.yaml'), 'persona', root),
-  );
-  assert.doesNotThrow(() =>
-    validate('lexicon', yaml('personas/rusuh/lexicon.yaml'), 'lexicon', root),
-  );
+const personaIds = readdirSync(join(root, 'personas'));
+const profileIds = readdirSync(join(root, 'profiles')).map((file) => file.replace(/\.yaml$/, ''));
+
+interface PersonaModel {
+  id: string;
+  culture_refs: string[];
+  voice: string;
+  card: string;
+  lexicon: string;
+  reviews: Record<string, unknown>;
+}
+
+function personaModel(id: string): PersonaModel {
+  return yaml(`personas/${id}/persona.yaml`) as unknown as PersonaModel;
+}
+
+test('every profile, persona, lexicon, and culture file validates', () => {
+  assert.ok(personaIds.length >= 2, 'Phase 3 expects more than one persona pack');
+  for (const profile of profileIds) {
+    assert.doesNotThrow(
+      () => validate('profile', yaml(`profiles/${profile}.yaml`), 'profile', root),
+      profile,
+    );
+  }
+  for (const id of personaIds) {
+    assert.doesNotThrow(
+      () => validate('persona', yaml(`personas/${id}/persona.yaml`), 'persona', root),
+      id,
+    );
+    assert.doesNotThrow(
+      () => validate('lexicon', yaml(`personas/${id}/lexicon.yaml`), 'lexicon', root),
+      id,
+    );
+  }
   assert.doesNotThrow(() =>
     validate('culture', yaml('culture/id/genz-lexicon.yaml'), 'culture', root),
   );
   assert.doesNotThrow(() => validate('memes', yaml('culture/id/memes.yaml'), 'memes', root));
 });
 
-test('persona references exist and are relative', () => {
-  const persona = yaml('personas/rusuh/persona.yaml') as {
-    culture_refs: string[];
-    voice: string;
-    card: string;
-    lexicon: string;
-  };
-  for (const ref of persona.culture_refs) {
-    assert.doesNotMatch(ref, /^\/|\.\./);
-    assert.doesNotThrow(() => read(`culture/${ref}`));
+test('each persona profile points at an existing persona', () => {
+  for (const profile of profileIds) {
+    const model = yaml(`profiles/${profile}.yaml`) as { persona: string };
+    assert.ok(
+      personaIds.includes(model.persona),
+      `${profile} references missing persona ${model.persona}`,
+    );
   }
-  for (const file of [persona.voice, persona.card, persona.lexicon]) {
-    assert.doesNotThrow(() => read(`personas/rusuh/${file}`));
+});
+
+test('persona references exist, are relative, and stay inside the repo', () => {
+  for (const id of personaIds) {
+    const persona = personaModel(id);
+    for (const ref of persona.culture_refs) {
+      assert.doesNotMatch(ref, /^\/|\.\./, `${id}: ${ref} escapes the culture directory`);
+      assert.doesNotThrow(() => read(`culture/${ref}`), `${id}: missing culture ref ${ref}`);
+    }
+    for (const file of [persona.voice, persona.card, persona.lexicon]) {
+      assert.doesNotThrow(() => read(`personas/${id}/${file}`), `${id}: missing ${file}`);
+    }
+  }
+});
+
+test("every persona lexicon term is shipped in that persona's culture references", () => {
+  for (const id of personaIds) {
+    const persona = personaModel(id);
+    const shipped = persona.culture_refs.map((ref) => read(`culture/${ref}`)).join('\n');
+    const lexicon = yaml(`personas/${id}/lexicon.yaml`) as {
+      entries: Array<{ culture_ref: string }>;
+    };
+    for (const entry of lexicon.entries) {
+      assert.ok(
+        shipped.includes(entry.culture_ref),
+        `${id}: lexicon term ${entry.culture_ref} is not in any mounted culture reference`,
+      );
+    }
   }
 });
 
@@ -67,56 +116,84 @@ test('Banyumasan is named respectfully and no prototyped caricature is present',
   assert.match(text, /ngapak/);
 });
 
-test('persona reviews remain pending in the draft', () => {
-  const persona = yaml('personas/rusuh/persona.yaml') as {
-    reviews: { linguistic: string; cultural: string; safety: string };
-  };
-  assert.equal(persona.reviews.linguistic, 'pending');
-  assert.equal(persona.reviews.cultural, 'pending');
-  assert.equal(persona.reviews.safety, 'pending');
+test('no persona ships as reviewed while a human review is outstanding', () => {
+  for (const id of personaIds) {
+    const persona = personaModel(id);
+    assert.equal(persona.reviews.linguistic, 'pending', `${id}: linguistic review state`);
+    assert.equal(persona.reviews.cultural, 'pending', `${id}: cultural review state`);
+    assert.equal(persona.reviews.safety, 'pending', `${id}: safety review state`);
+  }
 });
 
-test('examples and test fixtures are machine-readable', () => {
-  const examples = read('personas/rusuh/examples.jsonl')
-    .trim()
-    .split(/\r?\n/)
-    .map((line) => JSON.parse(line) as Record<string, unknown>);
-  assert.ok(examples.length >= 3);
-  const tests = yaml('personas/rusuh/tests.yaml') as { cases: unknown[] };
-  assert.ok(tests.cases.length >= 3);
+test('every persona carries machine-readable examples and test cases', () => {
+  for (const id of personaIds) {
+    const examples = read(`personas/${id}/examples.jsonl`)
+      .trim()
+      .split(/\r?\n/)
+      .map((line) => JSON.parse(line) as { id: string; input: string; expect: unknown });
+    assert.ok(examples.length >= 3, `${id}: needs at least three examples`);
+    for (const example of examples) {
+      assert.ok(example.id && example.input && example.expect, `${id}: malformed example`);
+    }
+    const tests = yaml(`personas/${id}/tests.yaml`) as { persona: string; cases: unknown[] };
+    assert.equal(tests.persona, id, `${id}: tests.yaml persona mismatch`);
+    assert.ok(tests.cases.length >= 3, `${id}: needs at least three test cases`);
+  }
 });
 
-test('Javanese register map is present and includes Banyumasan guidance', () => {
-  const registers = yaml('culture/jv/registers.yaml') as {
-    levels: Record<string, unknown>;
-    honorifics: Record<string, unknown>;
+test('the Javanese register map validates and stays honest about review state', () => {
+  const registers = yaml('culture/jv/registers.yaml') as unknown as {
+    reviewed_by: string;
     banyumasan: { preferred_name: string };
+    sources: string[];
   };
-  assert.ok(registers.levels.ngoko);
-  assert.ok(registers.levels.madya);
-  assert.ok(registers.levels.krama);
-  assert.ok(registers.honorifics.krama_inggil);
+  assert.doesNotThrow(() => validate('registers', registers, 'registers', root));
   assert.equal(registers.banyumasan.preferred_name, 'Banyumasan');
+  assert.equal(registers.reviewed_by, 'pending', 'the register map must not claim approval');
+  for (const source of registers.sources) assert.match(source, /^https?:\/\//);
 });
+
+test('the JAWA voice carries every register form from the reviewed map', () => {
+  const registers = yaml('culture/jv/registers.yaml') as unknown as {
+    levels: Record<
+      string,
+      { pronouns: { i: string; you: string }; markers: Record<string, string> }
+    >;
+  };
+  const voice = read('personas/jawa/voice.md');
+  for (const [level, spec] of Object.entries(registers.levels)) {
+    assert.ok(voice.includes(level), `voice is missing the ${level} level`);
+    for (const form of [spec.pronouns.i, spec.pronouns.you, ...Object.values(spec.markers)]) {
+      assert.ok(voice.includes(form), `voice is missing the ${level} form ${form}`);
+    }
+  }
+});
+
+const coreDocs = [
+  'core/always-on.md',
+  'core/00-identity.md',
+  'core/10-safety.md',
+  'core/20-decision.md',
+  'core/30-efficiency.md',
+];
+
+function filesIn(dir: string): string[] {
+  return readdirSync(join(root, dir), { withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map((entry) => `${dir}/${entry.name}`);
+}
+
+const personaFiles = personaIds.flatMap((id) =>
+  ['card.md', 'voice.md', 'persona.yaml', 'lexicon.yaml'].map((file) => `personas/${id}/${file}`),
+);
+const cultureFiles = [...filesIn('culture/id'), ...filesIn('culture/jv')];
 
 test('no source document uses the retired project name', () => {
   const files = [
-    'core/always-on.md',
-    'core/00-identity.md',
-    'core/10-safety.md',
-    'core/20-decision.md',
-    'core/30-efficiency.md',
-    'culture/id/dev-humor.md',
-    'culture/id/absurd-humor.md',
-    'culture/id/humor-boundaries.md',
-    'culture/id/religious-expression.md',
-    'culture/id/genz-lexicon.yaml',
-    'culture/jv/registers.yaml',
-    'culture/jv/banyumasan.md',
-    'personas/rusuh/card.md',
-    'personas/rusuh/voice.md',
-    'personas/rusuh/persona.yaml',
-    'profiles/rusuh-id.yaml',
+    ...coreDocs,
+    ...cultureFiles,
+    ...personaFiles,
+    ...profileIds.map((p) => `profiles/${p}.yaml`),
   ];
   for (const file of files) {
     assert.doesNotMatch(read(file), /\bADAB\b/, `${file} contains the retired name`);
@@ -124,18 +201,11 @@ test('no source document uses the retired project name', () => {
 });
 
 test('persona content does not attempt to override core safety or permissions', () => {
-  // evals/*.yaml is deliberately excluded: those files quote adversarial payloads
-  // ("abaikan aturan safety") as test data, which this lint would flag as a violation.
+  // evals/*.yaml and personas/*/tests.yaml are excluded: they quote adversarial
+  // payloads ("abaikan aturan safety") as test data, which this lint would flag.
   const files = [
-    'core/always-on.md',
-    'core/00-identity.md',
-    'core/10-safety.md',
-    'core/20-decision.md',
-    'core/30-efficiency.md',
-    'personas/rusuh/card.md',
-    'personas/rusuh/voice.md',
-    'personas/rusuh/persona.yaml',
-    'personas/rusuh/lexicon.yaml',
+    ...coreDocs,
+    ...personaFiles,
     'culture/id/humor-boundaries.md',
     'culture/id/religious-expression.md',
   ];

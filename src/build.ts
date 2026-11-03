@@ -25,6 +25,7 @@ import type {
   Persona,
   PersonaLexicon,
   Profile,
+  RegisterFile,
 } from './types.ts';
 
 const CORE_POLICY_FILES = ['00-identity.md', '10-safety.md', '20-decision.md', '30-efficiency.md'];
@@ -114,12 +115,12 @@ function loadPersonaLexicon(root: string, persona: Persona): PersonaLexicon {
   return lexicon;
 }
 
-type ParsedCulture = CultureFile | MemeFile;
+type ParsedCulture = CultureFile | MemeFile | RegisterFile;
 
 interface ReviewableCulture {
   reviewed_by: string;
   next_review: string;
-  entries: Array<{ id: string; expires: string; purpose?: string }>;
+  entries?: Array<{ id: string; expires: string; purpose?: string }>;
 }
 
 function loadCultureRef(
@@ -140,6 +141,10 @@ function loadCultureRef(
       validate('memes', data, `culture/${ref}`, root);
       return { path: ref, content, parsed: data as MemeFile };
     }
+    if (schema === 'hahahah.culture.registers/v1') {
+      validate('registers', data, `culture/${ref}`, root);
+      return { path: ref, content, parsed: data as RegisterFile };
+    }
     throw new BuildError(`Unknown culture schema in culture/${ref}`);
   }
   return { path: ref, content };
@@ -149,6 +154,7 @@ function reviewIssues(
   persona: Persona,
   cultureFiles: CultureFile[],
   memeFiles: MemeFile[],
+  registerFiles: RegisterFile[],
 ): string[] {
   const issues: string[] = [];
   for (const [name, state] of Object.entries(persona.reviews)) {
@@ -166,24 +172,24 @@ function reviewIssues(
       issues.push(`meme notes: reviewed_by is ${memes.reviewed_by}`);
     }
   }
+  for (const registers of registerFiles) {
+    if (registers.reviewed_by !== 'approved') {
+      issues.push(`register map ${registers.locale}: reviewed_by is ${registers.reviewed_by}`);
+    }
+  }
   return issues;
 }
 
-function expiryIssues(
-  persona: Persona,
-  cultureFiles: ReviewableCulture[],
-  memeFiles: MemeFile[],
-  today: string,
-): string[] {
+function expiryIssues(persona: Persona, reviewables: ReviewableCulture[], today: string): string[] {
   const issues: string[] = [];
   if (persona.expires < today) {
     issues.push(`persona ${persona.id} expired on ${persona.expires}`);
   }
-  for (const culture of [...cultureFiles, ...memeFiles]) {
+  for (const culture of reviewables) {
     if (culture.next_review < today) {
       issues.push(`culture review expired on ${culture.next_review}`);
     }
-    for (const entry of culture.entries) {
+    for (const entry of culture.entries ?? []) {
       if (entry.expires < today) {
         issues.push(`culture entry ${entry.id} expired on ${entry.expires}`);
       }
@@ -338,6 +344,9 @@ export function build(options: BuildOptions): BuildResult {
   const memeFiles = culture.flatMap((ref) =>
     ref.parsed?.schema === 'hahahah.culture.memes/v1' ? [ref.parsed] : [],
   );
+  const registerFiles = culture.flatMap((ref) =>
+    ref.parsed?.schema === 'hahahah.culture.registers/v1' ? [ref.parsed] : [],
+  );
 
   const artifacts = adapter.render({
     profile,
@@ -352,8 +361,8 @@ export function build(options: BuildOptions): BuildResult {
   const measured = measure(artifacts);
 
   const today = new Date().toISOString().slice(0, 10);
-  const review = reviewIssues(persona, cultureFiles, memeFiles);
-  const expiry = expiryIssues(persona, cultureFiles, memeFiles, today);
+  const review = reviewIssues(persona, cultureFiles, memeFiles, registerFiles);
+  const expiry = expiryIssues(persona, [...cultureFiles, ...memeFiles, ...registerFiles], today);
   const warnings = makeWarnings(persona, cultureFiles, review, expiry);
 
   if (options.release && (review.length > 0 || expiry.length > 0)) {

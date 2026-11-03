@@ -89,6 +89,14 @@ export interface MemeFile {
   entries: MemeEntry[];
 }
 
+export interface RegisterFile {
+  schema: 'hahahah.culture.registers/v1';
+  locale: string;
+  version: string;
+  reviewed_by: string;
+  next_review: string;
+}
+
 export interface PersonaLexicon {
   schema: 'hahahah.lexicon/v1';
   persona: string;

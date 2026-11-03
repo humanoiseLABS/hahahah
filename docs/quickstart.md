@@ -52,9 +52,13 @@ node src/cli.ts eval --profile rusuh-id --suite smoke --limit 1 --budget-usd 0.1
 node src/cli.ts eval --profile rusuh-id --suite smoke --limit 1 --budget-usd 0.10 --model sonnet
 # fail the command when a treatment answer violates a screen
 node src/cli.ts eval --profile rusuh-id --suite smoke --limit 5 --budget-usd 0.10 --strict
+# repeat each task so cost and pass-rate survive the provider's token spikes
+node src/cli.ts eval --profile rusuh-id --suite safety --task saf-religion-fatwa-01 --repeats 3 --budget-usd 0.50
 ```
 
-The eval runner creates separate baseline and treatment repositories, installs the treatment, runs the same prompt through the pinned harness, and writes `report.json` and `report.md` under `.hahahah/eval/`. If the harness fails, the report records the error; it does not invent an answer.
+The eval runner creates separate baseline and treatment repositories, installs the treatment once per task, runs the same prompt through the pinned harness, and writes `report.json` and `report.md` under `.hahahah/eval/`. If the harness fails, the report records the error; it does not invent an answer.
+
+`--repeats <k>` runs each arm k times and alternates which arm starts on every second repeat, then reports the **median** cost, input tokens, output tokens, and turns per arm plus a per-task consensus (`pass` only when every repeat passes). This exists because the proxy under test bills heavy-tailed spikes — the same install and prompt produced 19k, 64k, and 20k input tokens — so a single run is not a measurement.
 
 Each smoke task carries deterministic screens (`evals/smoke.yaml` → `src/checks.ts`):
 

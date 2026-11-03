@@ -1,8 +1,7 @@
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { build, BuildError } from './build.ts';
-import { summarize, type CheckResult } from './checks.ts';
-import { loadSuite, runEval } from './eval.ts';
+import { loadSuite, runEval, type EvalArm } from './eval.ts';
 import { doctor, install, uninstall, InstallError } from './install.ts';
 
 function printUsage(): void {
@@ -14,7 +13,7 @@ Usage:
   node src/cli.ts install --profile <id> [--target <repo>] [--dry-run] [--force]
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
   node src/cli.ts doctor [--target <repo>]
-  node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--budget-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--strict]
+  node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--strict]
 
 Eval checks are deterministic surface screens, not semantic judges. --strict exits non-zero when a treatment check fails.
 `);
@@ -54,6 +53,7 @@ try {
       suite: { type: 'string', default: 'smoke' },
       task: { type: 'string', multiple: true, default: [] },
       limit: { type: 'string' },
+      repeats: { type: 'string' },
       'budget-usd': { type: 'string', default: '0.10' },
       model: { type: 'string' },
       'setting-sources': { type: 'string' },
@@ -122,9 +122,13 @@ try {
   } else if (command === 'eval') {
     const suite = loadSuite(process.cwd(), parsed.values.suite);
     const limit = parsed.values.limit ? Number.parseInt(parsed.values.limit, 10) : undefined;
+    const repeats = parsed.values.repeats ? Number.parseInt(parsed.values.repeats, 10) : 1;
     const budget = Number.parseFloat(parsed.values['budget-usd']);
     if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0)) {
       throw new Error('--limit must be a positive integer');
+    }
+    if (!Number.isInteger(repeats) || repeats < 1) {
+      throw new Error('--repeats must be a positive integer');
     }
     if (!Number.isFinite(budget) || budget <= 0) {
       throw new Error('--budget-usd must be a positive number');
@@ -144,21 +148,26 @@ try {
       tasks,
       suite: suite.suite,
       limit,
+      repeats,
       budgetUsd: budget,
       model: parsed.values.model,
       settingSources: parsed.values['setting-sources'],
       outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'eval'),
     });
+    const runs = report.results.reduce(
+      (total, result) => total + result.baseline.runs.length + result.treatment.runs.length,
+      0,
+    );
     console.log(
-      `eval: ${report.results.length} task(s), cost $${report.total_cost_usd.toFixed(4)}`,
+      `eval: ${report.results.length} task(s) x ${report.repeats} repeat(s) = ${runs} runs, cost $${report.total_cost_usd.toFixed(4)}`,
     );
     for (const result of report.results) {
-      const state = (run: { error?: string; checks?: CheckResult[] }) => {
-        if (run.error) return `ERROR: ${run.error}`;
-        if (!run.checks || run.checks.length === 0) return 'ok';
-        const summary = summarize(run.checks);
-        const detail = summary.findings.length > 0 ? ` (${summary.findings.join('; ')})` : '';
-        return `ok checks=${summary.pass}/${run.checks.length}${detail}`;
+      const state = (arm: EvalArm) => {
+        if (arm.consensus === 'error') return `ERROR: ${arm.runs[0]?.error ?? 'no runs'}`;
+        const passed = arm.runStatuses.filter((status) => status === 'pass').length;
+        const findings = [...new Set(arm.screens.findings)];
+        const detail = findings.length > 0 ? ` (${findings.join('; ')})` : '';
+        return `${arm.consensus} ${passed}/${arm.runs.length} med $${arm.median.costUsd.toFixed(4)}${detail}`;
       };
       console.log(
         `- ${result.task.id}: baseline=${state(result.baseline)}, treatment=${state(result.treatment)}`,
@@ -167,13 +176,16 @@ try {
     const { baseline, treatment } = report.summary;
     if (report.summary.tasks_with_checks > 0) {
       console.log(
-        `checks: baseline ${baseline.pass} pass / ${baseline.fail} fail / ${baseline.unknown} unknown; treatment ${treatment.pass} pass / ${treatment.fail} fail / ${treatment.unknown} unknown`,
+        `screens: baseline ${baseline.pass} pass / ${baseline.fail} fail / ${baseline.unknown} unknown; treatment ${treatment.pass} pass / ${treatment.fail} fail / ${treatment.unknown} unknown`,
       );
     }
-    if (report.results.some((result) => result.baseline.error || result.treatment.error)) {
+    const failedRun = report.results
+      .flatMap((result) => [...result.baseline.runs, ...result.treatment.runs])
+      .find((run) => run.error);
+    if (failedRun) {
       process.exitCode = 1;
     } else if (parsed.values.strict && treatment.fail > 0) {
-      console.error(`strict: ${treatment.fail} treatment check(s) failed`);
+      console.error(`strict: ${treatment.fail} treatment screen(s) failed across repeats`);
       process.exitCode = 1;
     }
   } else {
