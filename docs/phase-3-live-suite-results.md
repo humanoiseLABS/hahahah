@@ -275,3 +275,42 @@ Next step is a decision, not code: raise the per-run cap until a small fix can a
 At the observed burn rate ($0.51 in six turns) a completion is plausibly $0.8-1.2 per arm, so one
 fixture costs about $2 and the full 60-fixture k=1 pass is in the $60-120 region rather than the
 $42 the caps project. That is the owner's call under A-05 before any of it is spent.
+
+## 14. Preflight attempt three: twelve turns, still no file change
+
+Spend this attempt: **$1.3204** on one arm (`--arm treatment`, cap $1.00 → 1.32× overshoot, which
+matches §13 and confirms the cap is not a ceiling).
+
+The fixture is a one-character fix (`<` to `<=`). The harness reported 12 turns, the grader found
+`changedFiles: []`, `otherNewFiles: []`, `missingFiles: []`, and the result text was empty because
+a budget-capped run returns none. So after three attempts and **$2.24** total, the question the
+preflight exists to answer — can the agent write files under `--permission-mode acceptEdits`
+in headless mode — is still unanswered, and nothing here says why.
+
+What was eliminated for free, without another call:
+
+- **Host configuration.** `~/.claude/settings.json` carries no `permissions` block and
+  `settings.local.json` allows exactly one `WebFetch(domain:raw.githubusercontent.com)` rule:
+  nothing denies `Edit`/`Write`.
+- **A transcript we could read.** `--no-session-persistence` means no JSONL for these runs; the
+  only recent session file under `~/.claude/projects/` belongs to a different working directory
+  and contains no reference to the fixture. So there is no record of whether an edit was
+  attempted and refused, or simply never attempted.
+- **The grader itself.** Injected-runner tests already prove `changedFiles` populates when a file
+  really is written, so the empty list is not this tool failing to notice.
+
+Two readings survive, and they cost different things to distinguish: the agent may have burned
+12 turns reading (the treatment arm re-sends a ~19k-token context every turn, which is exactly the
+mechanism in §5), or `acceptEdits` may not grant writes in `-p` mode and every attempt was
+silently refused. The second one would make the whole coding study impossible, not just expensive.
+
+**Budget consequence, measured rather than borrowed.** At $1.32 for one arm that did not finish,
+60 fixtures × 2 arms is in the $160 region for a single k=1 pass — not the $42 that §13 projected
+from caps, and not the ≈$17 extrapolated from the conversational suites. Both earlier numbers are
+superseded by this measurement.
+
+**The fork, for the owner.** Either fund one diagnostic run captured with `--output-format
+stream-json` (a small runner change, ≤$0.5) so tool calls and permission decisions become visible,
+or invoke the budget/reviewer failure rule in `DEVELOPMENT_ROADMAP.md` and record the coding
+regression guard as **inconclusive**: the 60 fixtures, the validator, and the tamper check stay as
+free local machinery, and no correctness claim is made about the layer.

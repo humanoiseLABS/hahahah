@@ -51,11 +51,12 @@ function printStudy(report: FixtureStudyReport): void {
   // A harness error arrives verbatim, and on Windows cmd.exe puts it over several lines.
   const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim();
   console.log(
-    `coding study: ${report.fixtures_run} fixture(s) x ${report.repeats} repeat(s) x 2 arms, cost $${report.total_cost_usd.toFixed(4)}`,
+    `coding study: ${report.fixtures_run} fixture(s) x ${report.repeats} repeat(s) x ${report.arms.length} arm(s) [${report.arms.join('+')}], cost $${report.total_cost_usd.toFixed(4)}`,
   );
   for (const result of report.results) {
     const state = (arm: FixtureStudyResult['baseline']) => {
-      if (arm.grades.length > 0 && arm.grades.every((grade) => grade === 'error')) {
+      if (arm.grades.length === 0) return 'not run';
+      if (arm.grades.every((grade) => grade === 'error')) {
         return `error (${oneLine(arm.runs[0]?.run.error ?? 'no runs')})`;
       }
       return `${arm.grades.join(',')} solved ${arm.solved}/${arm.runs.length}`;
@@ -64,13 +65,13 @@ function printStudy(report: FixtureStudyReport): void {
       `- ${result.fixture.id}${result.fixture.hidden ? ' (hidden)' : ''}: baseline=${state(result.baseline)}, treatment=${state(result.treatment)}`,
     );
   }
-  const { baseline, treatment } = report.summary;
-  console.log(
-    `grades: baseline solved ${baseline.solved} failed ${baseline.failed} tampered ${baseline.tampered} untouched ${baseline.untouched} error ${baseline.error}`,
-  );
-  console.log(
-    `grades: treatment solved ${treatment.solved} failed ${treatment.failed} tampered ${treatment.tampered} untouched ${treatment.untouched} error ${treatment.error}`,
-  );
+  const tallyLine = (name: 'baseline' | 'treatment') => {
+    const tally = report.summary[name];
+    return `grades: ${name} solved ${tally.solved} failed ${tally.failed} tampered ${tally.tampered} untouched ${tally.untouched} error ${tally.error}`;
+  };
+  for (const arm of report.arms) {
+    console.log(tallyLine(arm));
+  }
   if (report.hidden_run > 0) {
     console.log(
       `hidden holdout (${report.hidden_run} fixture(s)): baseline solved ${report.summary.holdout.baseline.solved}, treatment solved ${report.summary.holdout.treatment.solved}`,
