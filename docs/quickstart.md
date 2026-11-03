@@ -104,6 +104,8 @@ The grading command is pinned so that two runs of the same fix give the same gra
 
 Spend is opt-in and bounded. Without `--live` nothing is called. With `--live` the command refuses unless you pass `--max-total-usd`, and refuses again when `fixtures × repeats × 2 × --budget-usd` exceeds it, so a 60-fixture campaign cannot start by accident.
 
+A run always writes its report. If the harness still holds a workspace open when the tool cleans up, the directory is listed under `Workspace residue` in `report.md` and left for you to delete rather than aborting the run. A harness that hangs or cannot reach the API shows up as `error` with its own message, not as a failed task — check the provider before reading that as anything about the persona.
+
 Two limits to read before trusting a number from this:
 
 - The agent runs headless with `--permission-mode acceptEdits` and `--permission-prompts none`: file edits are accepted, everything else (including the shell, so the agent cannot run the tests itself) is denied. Pass rates are conditioned on that and are not a claim about interactive use.

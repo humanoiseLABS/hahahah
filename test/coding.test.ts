@@ -1,7 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  closeSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  openSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
@@ -20,6 +29,7 @@ import {
   type CodingFixture,
 } from '../src/coding.ts';
 import { validate } from '../src/schema.ts';
+import { removeWorkspace } from '../src/workspace.ts';
 
 const root = process.cwd();
 
@@ -353,6 +363,63 @@ test('only the treatment arm carries the installed profile', () => {
 });
 
 const zeroTally = { solved: 0, failed: 0, tampered: 0, untouched: 0, error: 0 };
+
+test('a failed removal never throws and says whether the directory is gone', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hahahah-residue-'));
+  const held = join(dir, 'held.txt');
+  writeFileSync(held, 'x', 'utf8');
+  // Node opens files with FILE_SHARE_DELETE, so a handle from this process does not block
+  // removal — the real lock came from the harness process, which only the caller can
+  // simulate. What this has to prove is that no removal failure can escape as a throw.
+  const handle = openSync(held, 'w');
+  try {
+    assert.equal(removeWorkspace(dir), true);
+  } finally {
+    closeSync(handle);
+  }
+  assert.equal(removeWorkspace(join(dir, 'already-gone')), true);
+});
+
+test('the study writes its report even when no workspace can be removed', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-study-out-'));
+  const attempted: string[] = [];
+  try {
+    const report = runFixtureStudy({
+      sourceRoot: root,
+      profileId: 'rusuh-id',
+      fixtures: [miniFixture()],
+      outDir,
+      budgetUsd: 0.35,
+      runner: (cwd: string) => {
+        fixTheFile(cwd);
+        return {
+          output: 'selesai',
+          costUsd: 0.02,
+          usage: { input_tokens: 10, output_tokens: 5 },
+          numTurns: 1,
+        };
+      },
+      // Stands in for the harness still holding the workspace when the tool cleans up: the
+      // EPERM that ended the first live run.
+      remove: (dir: string) => {
+        attempted.push(dir);
+        return false;
+      },
+    });
+    assert.equal(report.residue.length, 2);
+    assert.deepEqual(attempted, report.residue);
+    assert.equal(report.summary.baseline.solved, 1, 'the grade is unaffected by cleanup');
+    assert.match(
+      readFileSync(join(outDir, 'report.md'), 'utf8'),
+      /Workspace residue after the run: 2/,
+    );
+    assert.ok(existsSync(join(outDir, 'report.json')), 'the paid evidence must survive');
+  } finally {
+    // The study deliberately left these behind; the test owns cleaning them up.
+    for (const dir of attempted) rmSync(dir, { recursive: true, force: true });
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
 
 test('a reply that never edits the workspace is untouched, not a pass', () => {
   const { report, outDir } = study(() => undefined);

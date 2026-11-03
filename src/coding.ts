@@ -5,7 +5,6 @@ import {
   mkdtempSync,
   readFileSync,
   readdirSync,
-  rmSync,
   statSync,
   writeFileSync,
 } from 'node:fs';
@@ -15,6 +14,7 @@ import { parse } from 'yaml';
 import { install } from './install.ts';
 import { validate } from './schema.ts';
 import { median, runClaude, usageNumber } from './eval.ts';
+import { removeWorkspace } from './workspace.ts';
 
 export interface FixtureFile {
   path: string;
@@ -237,7 +237,7 @@ export function checkFixture(fixture: CodingFixture): FixtureCheck {
       testsPassingWithSolution: fixed.pass,
     };
   } finally {
-    rmSync(workspace, { recursive: true, force: true });
+    removeWorkspace(workspace);
   }
 }
 
@@ -443,6 +443,7 @@ export interface FixtureStudyReport {
   hidden_run: number;
   total_cost_usd: number;
   harness: { permission_mode: 'acceptEdits'; permission_prompts: 'none' };
+  residue: string[];
   summary: {
     baseline: GradeTally;
     treatment: GradeTally;
@@ -462,6 +463,9 @@ export interface StudyOptions {
   model?: string;
   settingSources?: string;
   runner?: AgentRunner;
+  // Injectable so the case that actually destroyed the first live run — a workspace the OS
+  // refuses to delete while the harness still holds it — is testable on any platform.
+  remove?: (dir: string) => boolean;
 }
 
 export function projectedCostUsd(count: number, repeats: number, budgetUsd: number): number {
@@ -491,6 +495,10 @@ function studyMarkdown(report: FixtureStudyReport): string {
   };
   const cell = (arm: ArmSummary) =>
     `$${arm.median.costUsd.toFixed(4)} (in ${Math.round(arm.median.inputTokens)}, out ${Math.round(arm.median.outputTokens)}, turns ${arm.median.numTurns || '?'})`;
+  const residue =
+    report.residue.length === 0
+      ? 'none'
+      : `${report.residue.length} workspace dir(s) were still held open by the harness and are left behind: ${report.residue.join(', ')}`;
   const lines = [
     '# HAHahah coding fixture study',
     '',
@@ -502,6 +510,7 @@ function studyMarkdown(report: FixtureStudyReport): string {
     `- Budget per run: $${report.budget_per_run_usd.toFixed(2)}`,
     `- Total cost reported: $${report.total_cost_usd.toFixed(4)}`,
     `- Harness: headless, --permission-mode ${report.harness.permission_mode}, --permission-prompts ${report.harness.permission_prompts}`,
+    `- Workspace residue after the run: ${residue}`,
     '',
     `Baseline: solved ${report.summary.baseline.solved}, failed ${report.summary.baseline.failed}, tampered ${report.summary.baseline.tampered}, untouched ${report.summary.baseline.untouched}, error ${report.summary.baseline.error}`,
     `Treatment: solved ${report.summary.treatment.solved}, failed ${report.summary.treatment.failed}, tampered ${report.summary.treatment.tampered}, untouched ${report.summary.treatment.untouched}, error ${report.summary.treatment.error}`,
@@ -549,6 +558,8 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
       }));
 
   const results: FixtureStudyResult[] = [];
+  const residue: string[] = [];
+  const remove = options.remove ?? removeWorkspace;
   for (const fixture of fixtures) {
     const prompt = fixturePrompt(fixture);
     const baseline: FixtureArmRun[] = [];
@@ -574,7 +585,7 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
           const run = safeAgent(runner, dir, prompt, options.budgetUsd);
           (arm === 'baseline' ? baseline : treatment).push(gradeRun(fixture, dir, run));
         } finally {
-          rmSync(dir, { recursive: true, force: true });
+          if (!remove(dir)) residue.push(dir);
         }
       }
     }
@@ -599,6 +610,7 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
     hidden_run: holdout.length,
     total_cost_usd: allRuns.reduce((total, arm) => total + arm.run.costUsd, 0),
     harness: { permission_mode: 'acceptEdits', permission_prompts: 'none' },
+    residue,
     summary: {
       baseline: tally(results, 'baseline'),
       treatment: tally(results, 'treatment'),

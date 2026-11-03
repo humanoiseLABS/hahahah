@@ -1,9 +1,10 @@
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { parse } from 'yaml';
 import { install } from './install.ts';
+import { removeWorkspace } from './workspace.ts';
 import { validate } from './schema.ts';
 import {
   checkSuiteErrors,
@@ -364,8 +365,10 @@ export function runEval(options: EvalOptions): EvalReport {
         treatment: buildArm(treatmentRuns, task.checks),
       });
     } finally {
-      rmSync(baselineDir, { recursive: true, force: true });
-      rmSync(treatmentDir, { recursive: true, force: true });
+      // Same root cause as the coding study: a locked workspace must never throw out of the
+      // finally block and take the paid report with it.
+      removeWorkspace(baselineDir);
+      removeWorkspace(treatmentDir);
     }
   }
 

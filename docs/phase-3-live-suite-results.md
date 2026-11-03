@@ -220,3 +220,33 @@ different call site, and after the progress-label fix that fixture grades a clam
 rounding lesson, so it is no longer a near-duplicate. None of this substitutes for the human
 review: whether each *reference solution* is the only defensible reading of its brief is a
 judgement about Indonesian developer idiom, not something a green suite proves.
+
+## 12. The first live attempt, and what it cost
+
+Spend: **$0.00** — nothing reached a model, and this section is the evidence.
+
+The first `fixtures run --live` did not produce a study result. It produced two instrument
+findings, in order of consequence:
+
+**A cleanup failure destroyed paid-for evidence.** The run threw `EPERM` from `rmSync` inside
+the `finally` block of the fixture loop and exited before any report was written, so the cost
+of the two arms became unknowable after the fact. Root cause, established by comparison rather
+than by guesswork: the same code path with an unreachable binary cleaned both workspaces fine,
+and in the failed run only the *last-used* workspace refused deletion — the baseline (finished
+earlier) removed cleanly in the same `finally`. The leaked directory then deleted without error
+minutes later, so the lock was a transient handle held by the just-exited harness, not a logic
+error in the grading path. `src/workspace.ts` now does the removal best-effort: it returns
+whether the directory is gone, records leftovers in `report.residue`, and cannot throw. The same
+latent bug existed in the eval runner's identical `finally`, and is fixed there too, because a
+locked directory would otherwise destroy a report that cost ≈$7.
+
+**The provider is currently unreachable.** The retry, with the fix in place, wrote its report and
+returned `cost $0.0000` with both arms `error`: the baseline hit the 180-second harness timeout
+(`spawnSync cmd.exe ETIMEDOUT`) and the treatment came back `API Error: Connection refused —
+a firewall or proxy may be blocking it (ECONNREFUSED)`. So the preflight question — does the
+harness grant the agent its file edits — is still unanswered. It cannot be answered until the
+proxy/provider is up, and no spend estimate should be inferred from this run.
+
+One thing got proven without anyone planning it: a hung or unreachable harness grades `error`,
+not `failed`, and the residue of the locked workspace was reported (`residue: 1`) instead of
+crashing the run. The preflight is ready to re-run the moment the provider answers.
