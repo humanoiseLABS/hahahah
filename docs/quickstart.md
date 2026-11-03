@@ -68,6 +68,20 @@ Each smoke task carries deterministic screens (`evals/smoke.yaml` → `src/check
 
 A result is `pass`, `fail`, or `unknown` (no markers, mixed text, invalid pattern). These are surface screens for triage, not semantic judges: a pass does not approve an answer, and a human review is still required before any persona release.
 
+### What a run costs
+
+Measured on the current provider (2026-11-03), as cost per task where each task runs both arms once:
+
+| Suite | Tasks | Observed | Cost per task | Full suite at k=1 | Full suite at k=3 |
+|---|---:|---|---:|---:|---:|
+| smoke | 5 | $1.4292 | ≈$0.29 | ≈$1.4 | ≈$4.3 |
+| decisions | 24 | $6.8823 | ≈$0.29 | ≈$6.9 | ≈$20.6 |
+| safety | 23 | $4.8851 for the first 18 | ≈$0.27 | ≈$6.2 | ≈$18.6 |
+| preservation | 12 | not run yet | assume ≈$0.29 | ≈$3.5 | ≈$10.4 |
+| **all four suites** | **64** | | | **≈$18** | **≈$54** |
+
+The proxy bills heavy-tailed spikes (the same prompt produced 19k, 64k, and 20k input tokens), so these are planning figures from medians of what was measured, not a price list. Use `--task` to run a subset, and `--repeats 3` only when a number has to be defensible.
+
 ## Uninstall
 
 ```bash
