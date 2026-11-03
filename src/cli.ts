@@ -21,7 +21,7 @@ Usage:
   node src/cli.ts install --profile <id> [--target <repo>] [--dry-run] [--force]
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
   node src/cli.ts fixtures check [--dir fixtures]
-  node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--live]
+  node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--arm both|baseline|treatment] [--setting-sources <sources>] [--out <dir>] [--live]
   node src/cli.ts doctor [--target <repo>]
   node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--strict]
 
@@ -121,6 +121,7 @@ try {
       'budget-usd': { type: 'string', default: '0.10' },
       'max-total-usd': { type: 'string' },
       model: { type: 'string' },
+      arm: { type: 'string', default: 'both' },
       'setting-sources': { type: 'string' },
       release: { type: 'boolean', default: false },
       'dry-run': { type: 'boolean', default: false },
@@ -219,14 +220,19 @@ try {
         : undefined;
       const repeats = positiveInt(parsed.values.repeats, '--repeats', 1);
       const budget = positiveNumber(parsed.values['budget-usd'], '--budget-usd');
+      const arm = parsed.values.arm;
+      if (arm !== 'both' && arm !== 'baseline' && arm !== 'treatment') {
+        throw new Error('--arm must be both, baseline, or treatment');
+      }
+      const armCount = arm === 'both' ? 2 : 1;
       const ceiling = parsed.values['max-total-usd']
         ? positiveNumber(parsed.values['max-total-usd'], '--max-total-usd')
         : 0;
       const count = limit === undefined ? fixtures.length : Math.min(limit, fixtures.length);
-      const projected = projectedCostUsd(count, repeats, budget);
+      const projected = projectedCostUsd(count, repeats, budget, armCount);
       const hidden = fixtures.slice(0, count).filter((fixture) => fixture.hidden).length;
       console.log(
-        `plan: running ${count} of ${fixtures.length} selected fixture(s) (${hidden} marked hidden holdout), ${repeats} repeat(s), 2 arms, $${budget.toFixed(2)} per run`,
+        `plan: running ${count} of ${fixtures.length} selected fixture(s) (${hidden} marked hidden holdout), ${repeats} repeat(s), ${armCount} arm(s) [${arm}], $${budget.toFixed(2)} per run`,
       );
       console.log(
         `projected cost of the caps: $${projected.toFixed(2)} — not a ceiling: the harness checks its budget between turns, so a capped run overshoots (measured 1.17x and 1.46x of --budget-usd on 2026-11-04)`,
@@ -246,6 +252,11 @@ try {
             `projected $${projected.toFixed(2)} exceeds the approved ceiling of $${ceiling.toFixed(2)}: lower --limit, --repeats, or --budget-usd`,
           );
         }
+        if (armCount === 1) {
+          console.log(
+            'single arm: this run cannot compare baseline against treatment, it only answers "did the harness behave"',
+          );
+        }
         const report = runFixtureStudy({
           sourceRoot: process.cwd(),
           profileId: parsed.values.profile,
@@ -253,6 +264,7 @@ try {
           limit,
           repeats,
           budgetUsd: budget,
+          arm,
           model: parsed.values.model,
           settingSources: parsed.values['setting-sources'],
           outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'coding'),

@@ -94,6 +94,8 @@ node src/cli.ts fixtures run --id cod-expiry-gte --limit 1 --budget-usd 0.35
 
 # spend: only after stating the ceiling you approve
 node src/cli.ts fixtures run --budget-usd 0.35 --max-total-usd 45 --live
+# a preflight costs half as much on one arm, and cannot compare the two
+node src/cli.ts fixtures run --id cod-expiry-gte --arm treatment --budget-usd 1 --max-total-usd 3 --live
 ```
 
 `fixtures run` is the model-facing half. For each fixture it seeds two disposable repositories with the same broken files, installs the profile in the treatment one only, sends the same brief to both, then **executes the fixture's own test suite in each workspace** and grades the result. That makes this a correctness signal rather than a text screen, so it is the one measurement here that can say whether the persona layer changed whether the task was actually solved. Reports land in `.hahahah/coding/report.json` and `report.md`, which stay untracked like the eval reports.

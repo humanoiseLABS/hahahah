@@ -640,6 +640,37 @@ test('a task state that crashes the suite instead of asserting is not red', () =
   assert.match(check.detail, /task state ran \d+ of 3/);
 });
 
+test('a single-arm run leaves the other arm empty and says it cannot compare', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-study-out-'));
+  try {
+    const report = runFixtureStudy({
+      sourceRoot: root,
+      profileId: 'rusuh-id',
+      fixtures: [miniFixture()],
+      outDir,
+      budgetUsd: 0.35,
+      arm: 'treatment',
+      runner: (cwd: string) => {
+        fixTheFile(cwd);
+        return { output: 'selesai', costUsd: 0.02, usage: {}, numTurns: 1 };
+      },
+    });
+    assert.deepEqual(report.arms, ['treatment']);
+    assert.equal(report.results[0]?.baseline.runs.length, 0);
+    assert.equal(report.results[0]?.treatment.solved, 1);
+    assert.equal(report.total_cost_usd.toFixed(2), '0.02');
+    assert.match(readFileSync(join(outDir, 'report.md'), 'utf8'), /Arms run: treatment/);
+    assert.match(readFileSync(join(outDir, 'report.md'), 'utf8'), /no baseline\/treatment/);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('one arm projects one arm of cost', () => {
+  assert.equal(projectedCostUsd(12, 1, 0.35).toFixed(2), '8.40');
+  assert.equal(projectedCostUsd(12, 1, 0.35, 1).toFixed(2), '4.20');
+});
+
 test('the projection counts every arm so the ceiling is not a surprise', () => {
   assert.equal(projectedCostUsd(12, 1, 0.35).toFixed(2), '8.40');
   assert.equal(projectedCostUsd(60, 3, 0.35).toFixed(2), '126.00');
@@ -711,4 +742,10 @@ test('fixtures run rejects an unknown fixture id before doing anything', () => {
   const result = cli(['fixtures', 'run', '--id', 'cod-does-not-exist']);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Unknown fixture id/);
+});
+
+test('an unknown --arm value is refused before any plan is printed', () => {
+  const result = cli(['fixtures', 'run', '--arm', 'everything']);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /--arm must be both, baseline, or treatment/);
 });

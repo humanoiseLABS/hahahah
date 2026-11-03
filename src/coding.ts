@@ -439,6 +439,7 @@ export interface FixtureStudyReport {
   suite: 'coding-fixtures';
   budget_per_run_usd: number;
   repeats: number;
+  arms: Array<'baseline' | 'treatment'>;
   fixtures_run: number;
   hidden_run: number;
   total_cost_usd: number;
@@ -463,14 +464,20 @@ export interface StudyOptions {
   model?: string;
   settingSources?: string;
   runner?: AgentRunner;
+  // A preflight only needs to know whether one arm behaves, and running both costs twice.
+  arm?: 'both' | 'baseline' | 'treatment';
   // Injectable so the case that actually destroyed the first live run — a workspace the OS
   // refuses to delete while the harness still holds it — is testable on any platform.
   remove?: (dir: string) => boolean;
 }
 
-export function projectedCostUsd(count: number, repeats: number, budgetUsd: number): number {
-  // Two arms per fixture per repeat.
-  return count * repeats * 2 * budgetUsd;
+export function projectedCostUsd(
+  count: number,
+  repeats: number,
+  budgetUsd: number,
+  arms = 2,
+): number {
+  return count * repeats * arms * budgetUsd;
 }
 
 function safeAgent(runner: AgentRunner, cwd: string, prompt: string, budget: number): AgentRun {
@@ -507,6 +514,7 @@ function studyMarkdown(report: FixtureStudyReport): string {
     `- Generated: ${report.generated_at}`,
     `- Fixtures run: ${report.fixtures_run} (${report.hidden_run} hidden holdout)`,
     `- Repeats per fixture per arm: ${report.repeats}`,
+    `- Arms run: ${report.arms.join(' + ')}${report.arms.length === 1 ? ' (single arm — no baseline/treatment comparison is available from this run)' : ''}`,
     `- Budget per run: $${report.budget_per_run_usd.toFixed(2)}`,
     `- Total cost reported: $${report.total_cost_usd.toFixed(4)}`,
     `- Harness: headless, --permission-mode ${report.harness.permission_mode}, --permission-prompts ${report.harness.permission_prompts}`,
@@ -560,12 +568,19 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
   const results: FixtureStudyResult[] = [];
   const residue: string[] = [];
   const remove = options.remove ?? removeWorkspace;
+  const arms: Array<'baseline' | 'treatment'> =
+    options.arm && options.arm !== 'both' ? [options.arm] : ['baseline', 'treatment'];
   for (const fixture of fixtures) {
     const prompt = fixturePrompt(fixture);
     const baseline: FixtureArmRun[] = [];
     const treatment: FixtureArmRun[] = [];
     for (let index = 0; index < repeats; index += 1) {
-      const order = index % 2 === 0 ? ['baseline', 'treatment'] : ['treatment', 'baseline'];
+      let order: Array<'baseline' | 'treatment'> = ['baseline', 'treatment'];
+      if (arms.length === 1) {
+        order = arms;
+      } else if (index % 2 === 1) {
+        order = ['treatment', 'baseline'];
+      }
       for (const arm of order) {
         // A fresh workspace per repeat: if the previous run's edits carried over, the
         // second sample would be measuring the first one.
@@ -606,6 +621,7 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
     suite: 'coding-fixtures',
     budget_per_run_usd: options.budgetUsd,
     repeats,
+    arms,
     fixtures_run: results.length,
     hidden_run: holdout.length,
     total_cost_usd: allRuns.reduce((total, arm) => total + arm.run.costUsd, 0),
