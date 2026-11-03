@@ -677,7 +677,7 @@ test('fixtures run plans without calling a model', () => {
   const one = cli(['fixtures', 'run', '--id', 'cod-expiry-gte', '--budget-usd', '0.35']);
   assert.equal(one.status, 0, one.stderr);
   assert.match(one.stdout, /running 1 of 1 selected fixture\(s\) \(0 marked hidden holdout\)/);
-  assert.match(one.stdout, /projected worst case: \$0\.70/);
+  assert.match(one.stdout, /projected cost of the caps: \$0\.70/);
   assert.match(one.stdout, /no model was called and nothing was spent/);
 
   const holdout = cli(['fixtures', 'run', '--id', 'cod-alg-none', '--budget-usd', '0.35']);

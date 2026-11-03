@@ -104,6 +104,8 @@ The grading command is pinned so that two runs of the same fix give the same gra
 
 Spend is opt-in and bounded. Without `--live` nothing is called. With `--live` the command refuses unless you pass `--max-total-usd`, and refuses again when `fixtures × repeats × 2 × --budget-usd` exceeds it, so a 60-fixture campaign cannot start by accident.
 
+Read that projection as the sum of the caps, not as the bill. The harness checks its budget between turns and stops only after going past it, so a capped run overshoots: measured on 2026-11-04, arms capped at $0.35 each reported $0.51 and $0.41. A run that dies on the cap also returns no agent text, so it grades `error` and cannot be audited afterwards — budget per run generously rather than tightly, or the study pays for unexplainable gaps.
+
 A run always writes its report. If the harness still holds a workspace open when the tool cleans up, the directory is listed under `Workspace residue` in `report.md` and left for you to delete rather than aborting the run. A harness that hangs or cannot reach the API shows up as `error` with its own message, not as a failed task — check the provider before reading that as anything about the persona.
 
 Two limits to read before trusting a number from this:

@@ -229,7 +229,7 @@ try {
         `plan: running ${count} of ${fixtures.length} selected fixture(s) (${hidden} marked hidden holdout), ${repeats} repeat(s), 2 arms, $${budget.toFixed(2)} per run`,
       );
       console.log(
-        `projected worst case: $${projected.toFixed(2)} (a run that hits its budget cap is billed up to that cap)`,
+        `projected cost of the caps: $${projected.toFixed(2)} — not a ceiling: the harness checks its budget between turns, so a capped run overshoots (measured 1.17x and 1.46x of --budget-usd on 2026-11-04)`,
       );
       if (!parsed.values.live) {
         console.log(

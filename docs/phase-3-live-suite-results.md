@@ -250,3 +250,28 @@ proxy/provider is up, and no spend estimate should be inferred from this run.
 One thing got proven without anyone planning it: a hung or unreachable harness grades `error`,
 not `failed`, and the residue of the locked workspace was reported (`residue: 1`) instead of
 crashing the run. The preflight is ready to re-run the moment the provider answers.
+
+## 13. Preflight attempt two: the cap is soft, and a capped run is unauditable
+
+Spend: **$0.9197** for one fixture, two arms. The provider was reachable this time, so the run
+produced three measurements worth having.
+
+1. **`--max-budget-usd` is not a ceiling.** With a per-run cap of $0.35, the arms reported
+   $0.5110 and $0.4088 — 1.46× and 1.17× the cap, because the harness checks its budget between
+   turns and stops only after exceeding it. So `fixtures × repeats × 2 × --budget-usd` is a
+   projection of the caps, not of the bill; `fixtures run` now says so on the plan line instead
+   of claiming the cap is the worst case. Any ceiling the owner approves must be read that way.
+2. **Both arms ended in `error_max_budget_usd` having changed no files.** `changedFiles` and
+   `otherNewFiles` were empty in both arms after 6 and 7 turns, so the question the preflight
+   exists to answer — whether `--permission-mode acceptEdits` actually lets the agent write in
+   headless mode — is still open: the run may have been denied, or it may simply have been
+   reading when the cap killed it. $0.35 per run is too small to find out.
+3. **A capped run leaves no transcript.** The harness returned `result: ""` on that subtype, so
+   `error` grades are unexplainable after the fact. The report records the cost and turn count,
+   which is what makes the overshoot provable at all, but there is no agent text to audit and no
+   reason to expect one.
+
+Next step is a decision, not code: raise the per-run cap until a small fix can actually finish.
+At the observed burn rate ($0.51 in six turns) a completion is plausibly $0.8-1.2 per arm, so one
+fixture costs about $2 and the full 60-fixture k=1 pass is in the $60-120 region rather than the
+$42 the caps project. That is the owner's call under A-05 before any of it is spent.
