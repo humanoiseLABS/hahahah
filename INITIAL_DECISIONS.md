@@ -616,7 +616,7 @@ The display name and technical identifiers are deliberately separate:
 **Decision**
 
 - `node src/cli.ts fixtures run` seeds the same broken files into a bare workspace and one with the profile installed, sends both arms the identical prompt, and grades each by running the fixture's own test command in that workspace.
-- Grades are `solved`, `failed`, `tampered`, `untouched`, `error`. `tampered` covers an edited, deleted, or newly added test file and is never counted as solved even when the suite goes green; `untouched` is the reply-without-a-fix case; `error` is reported as an instrument failure and is not scored as a model failure.
+- Grades are `solved`, `failed`, `tampered`, `untouched`, `error`. `tampered` covers an edited, deleted, or newly added test file and is never counted as solved even when the suite goes green; `untouched` is the reply-without-a-fix case; `error` is reported as an instrument failure and is not scored as a model failure. Fixtures marked `hidden` are tallied apart from the visible set in both the JSON and the Markdown report.
 - The agent runs headless with `--permission-mode acceptEdits` and `--permission-prompts none`. Edits are the only widened permission; the shell stays denied because this host is unsandboxed (A-06, R-10/R-14), which also means the agent cannot run the tests it is being graded on. `--dangerously-skip-permissions` and `bypassPermissions` are not used.
 - Nothing calls a model unless `--live` is present, and `--live` refuses without `--max-total-usd` or when `fixtures × repeats × 2 × --budget-usd` exceeds it.
 

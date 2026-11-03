@@ -377,7 +377,11 @@ export interface FixtureStudyReport {
   hidden_run: number;
   total_cost_usd: number;
   harness: { permission_mode: 'acceptEdits'; permission_prompts: 'none' };
-  summary: { baseline: GradeTally; treatment: GradeTally };
+  summary: {
+    baseline: GradeTally;
+    treatment: GradeTally;
+    holdout: { baseline: GradeTally; treatment: GradeTally };
+  };
   results: FixtureStudyResult[];
 }
 
@@ -435,6 +439,7 @@ function studyMarkdown(report: FixtureStudyReport): string {
     '',
     `Baseline: solved ${report.summary.baseline.solved}, failed ${report.summary.baseline.failed}, tampered ${report.summary.baseline.tampered}, untouched ${report.summary.baseline.untouched}, error ${report.summary.baseline.error}`,
     `Treatment: solved ${report.summary.treatment.solved}, failed ${report.summary.treatment.failed}, tampered ${report.summary.treatment.tampered}, untouched ${report.summary.treatment.untouched}, error ${report.summary.treatment.error}`,
+    `Hidden holdout (${report.hidden_run} of ${report.fixtures_run} fixtures) — baseline solved ${report.summary.holdout.baseline.solved}, treatment solved ${report.summary.holdout.treatment.solved}. Read these apart: the visible set is what the fixtures were designed against, so a holdout that scores worse is the honest signal.`,
     '',
     '| Fixture | Baseline | Treatment | Baseline median | Treatment median |',
     '|---|---|---|---:|---:|',
@@ -512,6 +517,7 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
   }
 
   const allRuns = results.flatMap((result) => [...result.baseline.runs, ...result.treatment.runs]);
+  const holdout = results.filter((result) => result.fixture.hidden);
   const report: FixtureStudyReport = {
     schema: 'hahahah.coding.study/v1',
     generated_at: new Date().toISOString(),
@@ -521,10 +527,17 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
     budget_per_run_usd: options.budgetUsd,
     repeats,
     fixtures_run: results.length,
-    hidden_run: results.filter((result) => result.fixture.hidden).length,
+    hidden_run: holdout.length,
     total_cost_usd: allRuns.reduce((total, arm) => total + arm.run.costUsd, 0),
     harness: { permission_mode: 'acceptEdits', permission_prompts: 'none' },
-    summary: { baseline: tally(results, 'baseline'), treatment: tally(results, 'treatment') },
+    summary: {
+      baseline: tally(results, 'baseline'),
+      treatment: tally(results, 'treatment'),
+      holdout: {
+        baseline: tally(holdout, 'baseline'),
+        treatment: tally(holdout, 'treatment'),
+      },
+    },
     results,
   };
 

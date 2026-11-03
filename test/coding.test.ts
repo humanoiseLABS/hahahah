@@ -154,6 +154,7 @@ function study(
   act: (cwd: string, call: number) => void,
   outcome?: Partial<AgentRun>,
   repeats = 1,
+  fixture = miniFixture(),
 ): {
   report: ReturnType<typeof runFixtureStudy>;
   stub: StudyStub;
@@ -164,7 +165,7 @@ function study(
   const report = runFixtureStudy({
     sourceRoot: root,
     profileId: 'rusuh-id',
-    fixtures: [miniFixture()],
+    fixtures: [fixture],
     outDir,
     budgetUsd: 0.35,
     repeats,
@@ -172,6 +173,10 @@ function study(
   });
   return { report, stub, outDir };
 }
+
+const fixTheFile = (cwd: string) => {
+  writeFileSync(join(cwd, 'src', 'a.js'), 'export const value = 2;\n', 'utf8');
+};
 
 test('the study grades a real fix as solved with the fixture tests', () => {
   const { report, stub, outDir } = study((cwd) => {
@@ -224,12 +229,15 @@ test('only the treatment arm carries the installed profile', () => {
   }
 });
 
+const zeroTally = { solved: 0, failed: 0, tampered: 0, untouched: 0, error: 0 };
+
 test('a reply that never edits the workspace is untouched, not a pass', () => {
   const { report, outDir } = study(() => undefined);
   try {
     assert.deepEqual(report.summary, {
-      baseline: { solved: 0, failed: 0, tampered: 0, untouched: 1, error: 0 },
-      treatment: { solved: 0, failed: 0, tampered: 0, untouched: 1, error: 0 },
+      baseline: { ...zeroTally, untouched: 1 },
+      treatment: { ...zeroTally, untouched: 1 },
+      holdout: { baseline: zeroTally, treatment: zeroTally },
     });
     assert.deepEqual(report.results[0]?.baseline.grades, ['untouched']);
     assert.deepEqual(report.results[0]?.treatment.grades, ['untouched']);
@@ -237,6 +245,26 @@ test('a reply that never edits the workspace is untouched, not a pass', () => {
       report.results[0]?.baseline.runs[0]?.fail,
       2,
       'the tests still ran, and they still say the task is unsolved',
+    );
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('holdout fixtures are tallied apart from the visible set', () => {
+  const holdout = miniFixture();
+  holdout.hidden = true;
+  const { report, outDir } = study(fixTheFile, undefined, 1, holdout);
+  try {
+    assert.equal(report.fixtures_run, 1);
+    assert.equal(report.hidden_run, 1);
+    assert.deepEqual(report.summary.holdout, {
+      baseline: { ...zeroTally, solved: 1 },
+      treatment: { ...zeroTally, solved: 1 },
+    });
+    assert.match(
+      readFileSync(join(outDir, 'report.md'), 'utf8'),
+      /Hidden holdout \(1 of 1 fixtures\)/,
     );
   } finally {
     rmSync(outDir, { recursive: true, force: true });

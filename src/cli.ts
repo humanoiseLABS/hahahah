@@ -71,6 +71,11 @@ function printStudy(report: FixtureStudyReport): void {
   console.log(
     `grades: treatment solved ${treatment.solved} failed ${treatment.failed} tampered ${treatment.tampered} untouched ${treatment.untouched} error ${treatment.error}`,
   );
+  if (report.hidden_run > 0) {
+    console.log(
+      `hidden holdout (${report.hidden_run} fixture(s)): baseline solved ${report.summary.holdout.baseline.solved}, treatment solved ${report.summary.holdout.treatment.solved}`,
+    );
+  }
   const errored = report.results
     .flatMap((result) => [...result.baseline.runs, ...result.treatment.runs])
     .some((run) => run.grade === 'error');
