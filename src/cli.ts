@@ -21,7 +21,7 @@ Usage:
   node src/cli.ts install --profile <id> [--target <repo>] [--dry-run] [--force]
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
   node src/cli.ts fixtures check [--dir fixtures]
-  node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--out <dir>] [--live]
+  node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--live]
   node src/cli.ts doctor [--target <repo>]
   node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--strict]
 
