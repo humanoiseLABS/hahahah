@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hahahah.install/v1",
+  "title": "HAHahah install manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "generated_by",
+    "profile",
+    "persona",
+    "adapter",
+    "installed_at",
+    "files",
+    "block",
+    "created_claude_md"
+  ],
+  "properties": {
+    "schema": { "const": "hahahah.install/v1" },
+    "generated_by": { "type": "string", "minLength": 1 },
+    "profile": { "type": "string", "minLength": 1 },
+    "persona": { "type": "string", "minLength": 1 },
+    "adapter": { "type": "string", "minLength": 1 },
+    "installed_at": { "type": "string", "minLength": 1 },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "tokens"],
+        "properties": {
+          "path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).+$" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "tokens": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "const": "CLAUDE.md" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "created_claude_md": { "type": "boolean" }
+  }
+}

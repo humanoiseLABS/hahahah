@@ -1,0 +1,15 @@
+schema: hahahah.profile/v1
+id: rusuh-id
+persona: rusuh
+locale: id
+intensity: high
+core: '>=0.1.0 <0.2.0'
+budget_profile: default-id
+adapters:
+  - fake
+  - claude-code
+budgets:
+  always_on_tokens: 420
+  skill_metadata_tokens: 90
+  skill_body_tokens: 1500
+  reference_tokens_max: 4600

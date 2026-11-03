@@ -1,0 +1,161 @@
+schema: hahahah.culture.lexicon/v1
+locale: id
+version: '2026.11'
+reviewed_by: pending
+next_review: '2027-02-01'
+entries:
+  - id: id-gabut
+    term: gabut
+    gloss: idle / nothing to do
+    register: informal
+    regions: [national]
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts: [casual_work, self_deprecation]
+    avoid_when: [incident, user_distress, formal_writing]
+    max_per_response: 1
+    expires: '2027-11-01'
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/gabut
+        note: KBBI colloquial entry
+  - id: id-mager
+    term: mager
+    gloss: too lazy to move / low motivation
+    register: informal
+    regions: [national]
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts: [casual_work, low_energy]
+    avoid_when: [incident, user_distress, formal_writing]
+    max_per_response: 1
+    expires: '2027-11-01'
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/mager
+        note: KBBI colloquial entry
+  - id: id-baper
+    term: baper
+    gloss: over-sensitive / taking something personally
+    register: informal
+    regions: [national]
+    decay_class: kbbi-colloquial
+    offensiveness: low
+    contexts: [casual_work, empathy]
+    avoid_when: [user_distress, formal_writing, identity_target]
+    max_per_response: 1
+    expires: '2027-11-01'
+    confidence: medium
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/baper
+        note: KBBI colloquial entry
+  - id: id-cuan
+    term: cuan
+    gloss: profit / financial gain
+    register: informal
+    regions: [national]
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts: [work, money]
+    avoid_when: [incident, formal_writing, user_distress]
+    max_per_response: 1
+    expires: '2027-11-01'
+    confidence: medium
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/cuan
+        note: KBBI colloquial entry
+  - id: id-kepo
+    term: kepo
+    gloss: nosy / overly curious
+    register: informal
+    regions: [national]
+    decay_class: kbbi-colloquial
+    offensiveness: low
+    contexts: [casual_work]
+    avoid_when: [user_distress, formal_writing, identity_target]
+    max_per_response: 1
+    expires: '2027-11-01'
+    confidence: medium
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/kepo
+        note: KBBI colloquial entry
+  - id: id-julid
+    term: julid
+    gloss: snarky / quick to criticize
+    register: informal
+    regions: [national]
+    decay_class: kbbi-colloquial
+    offensiveness: low
+    contexts: [awareness]
+    avoid_when: [usage, user_distress, identity_target]
+    max_per_response: 0
+    expires: '2027-11-01'
+    confidence: medium
+    purpose: awareness
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/julid
+        note: KBBI colloquial entry; also used as an insult label
+  - id: id-bucin
+    term: bucin
+    gloss: lovestruck / overly attached
+    register: informal
+    regions: [national]
+    decay_class: aging-ironic
+    offensiveness: low
+    contexts: [awareness]
+    avoid_when: [usage, user_distress, formal_writing]
+    max_per_response: 0
+    expires: '2027-05-01'
+    confidence: medium
+    purpose: awareness
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/bucin
+        note: KBBI colloquial entry; aging/ironic
+  - id: id-rizz
+    term: rizz
+    gloss: charisma / social appeal
+    register: informal
+    regions: [global]
+    decay_class: global-meme
+    offensiveness: low
+    contexts: [awareness]
+    avoid_when: [usage, incident, user_distress, formal_writing]
+    max_per_response: 0
+    expires: '2027-05-01'
+    confidence: low
+    purpose: awareness
+    sources:
+      - url: https://www.kompas.com/tren/read/2024/07/20/083000765/skibidi-sigma-dan-rizz-ini-10-arti-bahasa-gaul-gen-alpha
+        note: Indonesian reporting on Gen Alpha slang; high decay/cringe risk
+  - id: id-skibidi
+    term: skibidi
+    gloss: absurd / bad, from brainrot memes
+    register: informal
+    regions: [global]
+    decay_class: global-meme
+    offensiveness: low
+    contexts: [absurd_humor, awareness]
+    avoid_when: [usage, incident, user_distress, formal_writing]
+    max_per_response: 0
+    expires: '2027-05-01'
+    confidence: low
+    purpose: awareness
+    sources:
+      - url: https://www.kompas.com/tren/read/2024/07/20/083000765/skibidi-sigma-dan-rizz-ini-10-arti-bahasa-gaul-gen-alpha
+        note: Indonesian reporting on Gen Alpha slang; high decay/cringe risk
+  - id: id-accent-mockery
+    term: 'ngapak/medok/jawir'
+    gloss: accent or ethnic mockery; never use as a joke
+    register: neutral
+    regions: [national]
+    decay_class: banned
+    offensiveness: banned
+    contexts: [awareness]
+    avoid_when: [usage, identity_target, user_distress]
+    max_per_response: 0
+    expires: '2027-11-01'
+    confidence: high
+    purpose: awareness
+    sources:
+      - url: https://rri.co.id/jakarta/wawancara/1028779/stop-sebut-ngapak-upaya-menghargai-keberagaman-bahasa
+        note: RRI coverage of the campaign to stop using "ngapak" as a mocking label

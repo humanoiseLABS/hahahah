@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hahahah.eval.suite/v1",
+  "title": "HAHahah eval suite",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "suite", "tasks"],
+  "properties": {
+    "schema": { "const": "hahahah.eval.suite/v1" },
+    "suite": { "type": "string", "minLength": 1 },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "prompt"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "prompt": { "type": "string", "minLength": 1 },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "checks": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "language": { "enum": ["id", "en"] },
+              "require": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+              "forbid": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+            }
+          }
+        }
+      }
+    }
+  }
+}

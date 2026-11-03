@@ -1,0 +1,129 @@
+{
+  "schema": "hahahah.eval/v1",
+  "generated_at": "2026-11-01T08:28:40.480Z",
+  "profile": "rusuh-id",
+  "suite": "smoke",
+  "budget_per_run_usd": 0.2,
+  "model": null,
+  "total_cost_usd": 0.167454,
+  "results": [
+    {
+      "task": {
+        "id": "persona-serious-01",
+        "tags": [
+          "persona",
+          "serious-mode"
+        ],
+        "prompt": "Tanpa memakai tools, jawab sebagai agen coding: production sedang down dan checkout gagal. Tulis dua langkah diagnosis pertama dan jangan memakai humor, emoji, atau slang.",
+        "checks": {
+          "language": "id",
+          "forbid": [
+            "[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]",
+            "\\b(wkwk|haha+|hehe+|lol|anjay|gokil|santuy)\\b"
+          ]
+        }
+      },
+      "baseline": {
+        "output": "\nProduksi down, checkout gagal. Dua langkah diagnosis:\n\n1. **Cek status payment gateway** - Ping endpoint payment service. Verify response time dan HTTP status. Timeout atau 5xx berarti external dependency fail.\n\n2. **Tail application logs saat checkout** - Filter error level. Cari stack trace atau exception message. Identify exact failure point: validation, database write, atau external API call.",
+        "costUsd": 0.038568,
+        "usage": {
+          "input_tokens": 18784,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 100,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "",
+          "iterations": [],
+          "speed": "standard",
+          "fallback_credit": null
+        },
+        "checks": [
+          {
+            "name": "language",
+            "status": "pass",
+            "detail": "expected id, got id (id=5 en=0)"
+          },
+          {
+            "name": "forbid",
+            "status": "pass",
+            "detail": "/[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]/ absent"
+          },
+          {
+            "name": "forbid",
+            "status": "pass",
+            "detail": "/\\b(wkwk|haha+|hehe+|lol|anjay|gokil|santuy)\\b/ absent"
+          }
+        ]
+      },
+      "treatment": {
+        "output": "**Langkah 1: Cek log error checkout**\n\nLihat log backend (Rails/Node/etc) dan frontend untuk find error message spesifik. Checkout gagal biasanya leave trace di:\n- `log/production.log` (Rails)\n- Console/Network tab (frontend)\n- NGINX/Proxy logs\n\n**Langkah 2: Verifikasi dependency kritis**\n\nCek:\n- Database connection (pg_isready, mysqladmin ping)\n- Payment gateway API (curl test endpoint)\n- Redis/session store (redis-cli ping)\n\n---\n\nSilakan jalankan command:\n```bash\ntail -n 50 log/production.log 2>/dev/null || cat /var/log/app/error.log 2>/dev/null || echo \"No log found\"\n```",
+        "costUsd": 0.128886,
+        "usage": {
+          "input_tokens": 63718,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 145,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "",
+          "iterations": [],
+          "speed": "standard",
+          "fallback_credit": null
+        },
+        "checks": [
+          {
+            "name": "language",
+            "status": "pass",
+            "detail": "expected id, got id (id=3 en=1)"
+          },
+          {
+            "name": "forbid",
+            "status": "pass",
+            "detail": "/[\\u{1F300}-\\u{1FAFF}\\u{2600}-\\u{27BF}]/ absent"
+          },
+          {
+            "name": "forbid",
+            "status": "pass",
+            "detail": "/\\b(wkwk|haha+|hehe+|lol|anjay|gokil|santuy)\\b/ absent"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 3,
+      "fail": 0,
+      "unknown": 0,
+      "findings": []
+    },
+    "treatment": {
+      "pass": 3,
+      "fail": 0,
+      "unknown": 0,
+      "findings": []
+    },
+    "tasks_with_checks": 1
+  }
+}

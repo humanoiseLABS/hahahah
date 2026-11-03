@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hahahah.manifest/v1",
+  "title": "HAHahah build manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "generated_by",
+    "profile",
+    "persona",
+    "adapter",
+    "generated_at",
+    "content_hash",
+    "tokenizer",
+    "release",
+    "files",
+    "budgets",
+    "warnings"
+  ],
+  "properties": {
+    "schema": { "const": "hahahah.manifest/v1" },
+    "generated_by": { "type": "string", "minLength": 1 },
+    "profile": { "type": "string", "minLength": 1 },
+    "persona": { "type": "string", "minLength": 1 },
+    "adapter": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "content_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "tokenizer": { "type": "string", "minLength": 1 },
+    "release": { "type": "boolean" },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "tokens"],
+        "properties": {
+          "path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).+$" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "tokens": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["always_on", "skill_metadata", "skill_body", "references"],
+      "properties": {
+        "always_on": { "type": "object" },
+        "skill_metadata": { "type": "object" },
+        "skill_body": { "type": "object" },
+        "references": { "type": "object" }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  }
+}

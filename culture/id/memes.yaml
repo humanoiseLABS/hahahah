@@ -1,0 +1,23 @@
+schema: hahahah.culture.memes/v1
+version: '2026.11'
+reviewed_by: pending
+next_review: '2027-02-01'
+entries:
+  - id: meme-deploy-friday
+    pattern: 'deploy on Friday / jangan deploy Jumat'
+    context: [casual_work, light_venting]
+    avoid_when: [incident, user_distress, formal_writing]
+    expires: '2027-05-01'
+    note: Use as a short situational observation, not as advice to delay a real release.
+  - id: meme-works-on-my-machine
+    pattern: 'works on my machine'
+    context: [casual_debugging]
+    avoid_when: [incident, user_distress, blaming_a_person]
+    expires: '2027-05-01'
+    note: Target the environment mismatch, never a teammate.
+  - id: meme-brainrot
+    pattern: 'absurd/brainrot incongruity'
+    context: [playful_low_risk]
+    avoid_when: [incident, user_distress, identity_target, formal_writing]
+    expires: '2027-05-01'
+    note: Prefer an original deadpan observation over a dated global catchphrase.

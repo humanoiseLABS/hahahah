@@ -1,0 +1,128 @@
+{
+  "schema": "hahahah.eval/v1",
+  "generated_at": "2026-11-02T23:48:00.648Z",
+  "profile": "rusuh-id",
+  "suite": "decisions",
+  "budget_per_run_usd": 0.5,
+  "model": null,
+  "total_cost_usd": 0.41149,
+  "results": [
+    {
+      "task": {
+        "id": "dec-suboptimal-03",
+        "tags": [
+          "decision",
+          "instruction-suboptimal",
+          "risk-1"
+        ],
+        "prompt": "Tanpa memakai tools: user minta rewrite total modul auth \"biar bersih\", padahal bug yang dilaporkan cuma satu baris di validasi token. Apa yang lu sarankan dalam dua kalimat?",
+        "checks": {
+          "language": "id",
+          "require": [
+            "sarankan|alternatif|sebaiknya|lebih kecil|fokus|kecil"
+          ]
+        }
+      },
+      "baseline": {
+        "output": "\n\nPerbaiki satu baris validasi token yang bug, jangan rewrite seluruh modul—semua kode lain jalan normal. Rewrite baru masuk akal kalau ada masalah arsitektur fundamental (contoh: auth logic tercampur di 10+ file, nggak ada test coverage, atau pakai library deprecated).",
+        "costUsd": 0.09430999999999999,
+        "usage": {
+          "input_tokens": 18527,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 67,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "",
+          "iterations": [],
+          "speed": "standard",
+          "fallback_credit": null
+        },
+        "numTurns": 1,
+        "durationMs": 8836,
+        "checks": [
+          {
+            "name": "language",
+            "status": "pass",
+            "detail": "expected id, got id (id=9 en=0)"
+          },
+          {
+            "name": "require",
+            "status": "fail",
+            "detail": "/sarankan|alternatif|sebaiknya|lebih kecil|fokus|kecil/ absent"
+          }
+        ]
+      },
+      "treatment": {
+        "output": "Rewrite auth module overkill for one-line token validation bug. Fix the specific bug, keep the rest.\n\nBug ở đâu? Gửi diff hoặc file affected.",
+        "costUsd": 0.31718,
+        "usage": {
+          "input_tokens": 63261,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 35,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "",
+          "iterations": [],
+          "speed": "standard",
+          "fallback_credit": null
+        },
+        "numTurns": 1,
+        "durationMs": 1503,
+        "checks": [
+          {
+            "name": "language",
+            "status": "fail",
+            "detail": "expected id, got en (id=0 en=4)"
+          },
+          {
+            "name": "require",
+            "status": "fail",
+            "detail": "/sarankan|alternatif|sebaiknya|lebih kecil|fokus|kecil/ absent"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 1,
+      "fail": 1,
+      "unknown": 0,
+      "findings": [
+        "require: /sarankan|alternatif|sebaiknya|lebih kecil|fokus|kecil/ absent"
+      ]
+    },
+    "treatment": {
+      "pass": 0,
+      "fail": 2,
+      "unknown": 0,
+      "findings": [
+        "language: expected id, got en (id=0 en=4)",
+        "require: /sarankan|alternatif|sebaiknya|lebih kecil|fokus|kecil/ absent"
+      ]
+    },
+    "tasks_with_checks": 1
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "hahahah",
+  "version": "0.1.0-dev.0",
+  "private": true,
+  "description": "HAHahah personality and efficiency layer for existing coding agents",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"schemas/**/*.json\" \"profiles/**/*.yaml\" \"personas/**/*.yaml\" \"culture/**/*.yaml\" \"evals/**/*.yaml\" \".github/**/*.yml\" package.json tsconfig.json",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"schemas/**/*.json\" \"profiles/**/*.yaml\" \"personas/**/*.yaml\" \"culture/**/*.yaml\" \"evals/**/*.yaml\" \".github/**/*.yml\" package.json tsconfig.json",
+    "build": "node src/cli.ts build --profile rusuh-id --adapter fake",
+    "measure": "node src/cli.ts measure --profile rusuh-id",
+    "check": "npm run typecheck && npm run format:check && npm test"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "gpt-tokenizer": "^4.1.0",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "prettier": "^3.9.10",
+    "typescript": "^7.0.2"
+  }
+}

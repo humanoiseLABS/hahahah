@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hahahah.persona/v1",
+  "title": "HAHahah persona",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "version",
+    "display_name",
+    "locale",
+    "intensity",
+    "register",
+    "voice",
+    "card",
+    "lexicon",
+    "culture_refs",
+    "budgets",
+    "safety_profile",
+    "reviews",
+    "expires"
+  ],
+  "properties": {
+    "schema": { "const": "hahahah.persona/v1" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "display_name": { "type": "string", "minLength": 1 },
+    "locale": { "type": "string", "minLength": 2, "maxLength": 16 },
+    "intensity": { "enum": ["low", "medium", "high"] },
+    "register": { "type": "string", "minLength": 1 },
+    "voice": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).+$" },
+    "card": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).+$" },
+    "lexicon": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).+$" },
+    "culture_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).+$" }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["always_on_tokens", "skill_body_tokens"],
+      "properties": {
+        "always_on_tokens": { "type": "integer", "minimum": 1 },
+        "skill_body_tokens": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "safety_profile": { "type": "string", "minLength": 1 },
+    "reviews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["linguistic", "cultural", "safety", "reviewed_at"],
+      "properties": {
+        "linguistic": { "enum": ["pending", "approved", "rejected"] },
+        "cultural": { "enum": ["pending", "approved", "rejected"] },
+        "safety": { "enum": ["pending", "approved", "rejected"] },
+        "reviewed_at": {
+          "anyOf": [
+            { "type": "null" },
+            { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+          ]
+        }
+      }
+    },
+    "expires": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+  }
+}
