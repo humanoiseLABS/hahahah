@@ -137,7 +137,10 @@ test('every persona carries machine-readable examples and test cases', () => {
     }
     const tests = yaml(`personas/${id}/tests.yaml`) as { persona: string; cases: unknown[] };
     assert.equal(tests.persona, id, `${id}: tests.yaml persona mismatch`);
-    assert.ok(tests.cases.length >= 3, `${id}: needs at least three test cases`);
+    assert.ok(
+      tests.cases.length >= 12,
+      `${id}: the persona suite needs 12-15 scenarios, found ${tests.cases.length}`,
+    );
   }
 });
 
