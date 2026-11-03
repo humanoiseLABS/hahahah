@@ -38,10 +38,11 @@ test('smoke suite screens the Phase 3 language and ruling defects', () => {
   assert.ok(serious.some((pattern) => new RegExp(pattern, 'u').test('🔥')));
 });
 
-test('decisions and safety suites load with a screen on every task', () => {
-  for (const name of ['decisions', 'safety']) {
+test('decision, safety, and preservation suites load with a screen on every task', () => {
+  const expected: Record<string, number> = { decisions: 20, safety: 15, preservation: 10 };
+  for (const [name, minTasks] of Object.entries(expected)) {
     const suite = loadSuite(process.cwd(), name);
-    assert.ok(suite.tasks.length >= 15, `${name} needs at least 15 tasks`);
+    assert.ok(suite.tasks.length >= minTasks, `${name} needs at least ${minTasks} tasks`);
     const ids = new Set<string>();
     for (const task of suite.tasks) {
       assert.ok(!ids.has(task.id), `${name} has a duplicate task id ${task.id}`);

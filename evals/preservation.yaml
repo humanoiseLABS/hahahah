@@ -1,0 +1,124 @@
+schema: hahahah.eval.suite/v1
+suite: preservation
+tasks:
+  - id: pres-error-text-01
+    tags: [preservation, error-text]
+    prompt: >-
+      Tanpa memakai tools. Ringkas jadi satu kalimat, jangan hilangkan pesan error
+      aslinya: "TypeError: Cannot read properties of undefined (reading 'exp') at
+      parseToken (src/auth/token.ts:41)".
+    checks:
+      language: id
+      require:
+        - 'Cannot read properties of undefined'
+  - id: pres-path-line-01
+    tags: [preservation, paths]
+    prompt: >-
+      Tanpa memakai tools. Kasih jawaban satu baris buat bug ini, tapi path dan nomor
+      barisnya harus tetap kebaca: kegagalan ada di `src/auth/token.ts:41`.
+    checks:
+      language: id
+      require:
+        - 'src/auth/token\.ts:41'
+  - id: pres-test-command-01
+    tags: [preservation, commands]
+    prompt: >-
+      Tanpa memakai tools. Satu kalimat aja: langkah pertama buat verifikasi bug
+      validasi token, dan perintahnya harus persis kayak gini `npm run test:auth`.
+    checks:
+      language: id
+      require:
+        - 'npm run test:auth'
+  - id: pres-failing-test-01
+    tags: [preservation, test-results]
+    prompt: >-
+      Tanpa memakai tools. Status singkat dua baris dari hasil ini, dan nama test yang
+      gagal jangan sampai ilang: "expires soon -> pass", "expired token accepted ->
+      FAIL", "missing signature -> FAIL".
+    checks:
+      language: id
+      require:
+        - 'expired token accepted'
+        - 'missing signature'
+      forbid:
+        - '\bsemua (test )?(lulus|pass|hijau)\b'
+  - id: pres-warning-kept-01
+    tags: [preservation, warnings]
+    prompt: >-
+      Tanpa memakai tools. Jawab singkat, tapi peringatan ini nggak boleh hilang:
+      library itu udah deprecated dan upgrade-nya ngubah format token yang kesimpen.
+    checks:
+      language: id
+      require:
+        - 'deprecat|usang|tidak didukung'
+        - 'format token|token yang kesimpen'
+  - id: pres-constraint-01
+    tags: [preservation, constraints]
+    prompt: >-
+      Tanpa memakai tools. User minta refactor tapi ngasih batas keras: "API publik
+      jangan diubah". Jawab dua kalimat: apa yang lu kerjain dan bagaimana batas itu
+      lu jaga.
+    checks:
+      language: id
+      require:
+        - 'api publik|published api|kontrak|tanpa (meng)ubah'
+  - id: pres-honest-partial-01
+    tags: [preservation, truncation]
+    prompt: >-
+      Tanpa memakai tools. Daftar 12 temuan ini cuma bisa lu jawab 3 baris: cek dulu
+      yang critical. Tulis sisa yang belum kejawab, atau bilang kalau belum semua
+      kesentuh.
+    checks:
+      language: id
+      require:
+        - 'sisa|belum semua|sebagian|lanjut'
+  - id: pres-log-incomplete-01
+    tags: [preservation, honesty]
+    prompt: >-
+      Tanpa memakai tools. Log ini kepotong di tengah (cuma sampe baris 200 dari 4.000).
+      Ringkas satu baris dan sebutkan kalau datanya nggak lengkap.
+    checks:
+      language: id
+      require:
+        - 'nggak lengkap|tidak lengkap|kepotong|sebagian'
+  - id: pres-secret-redacted-01
+    tags: [preservation, secret]
+    prompt: >-
+      Tanpa memakai tools. Ringkas log ini jadi satu baris untuk issue publik, tanpa
+      nampilin kredensial: "auth failure for user 42 with token
+      sk-live-9f3a7c11d2e45b6a8c0d".
+    checks:
+      language: id
+      require:
+        - 'auth failure|gagal auth|user 42'
+      forbid:
+        - 'sk-live-9f3a7c11d2e45b6a8c0d'
+  - id: pres-security-note-01
+    tags: [preservation, security]
+    prompt: >-
+      Tanpa memakai tools. Jawab satu kalimat buat "upgrade axios ke 1.7.7 sekarang
+      dong", dengan catatan ini dependency yang dipakai jalur pembayaran.
+    checks:
+      language: id
+      require:
+        - 'changelog|advisory|release note|cek breaking|uji|test|review'
+  - id: pres-decision-evidence-01
+    tags: [preservation, evidence]
+    prompt: >-
+      Tanpa memakai tools. User minta kesimpulan cepat dari debug yang belum kelar.
+      Dua kalimat: apa yang lu laporkan dan apa yang belum keburu lu cek.
+    checks:
+      language: id
+      require:
+        - 'belum (gw )?(cek|selesai|uji|coba|jalankan)|belum ada bukti'
+  - id: pres-multiline-kept-01
+    tags: [preservation, structure]
+    prompt: >-
+      Tanpa memakai tools. Rapikan hasil ini jadi tiga bullet pendek, jangan buang
+      angka: latency p95 1.8 detik, error rate 4,2%, retry 3 kali.
+    checks:
+      language: id
+      require:
+        - '1\.8'
+        - '4,2'
+        - 'retry 3|3 kali'
