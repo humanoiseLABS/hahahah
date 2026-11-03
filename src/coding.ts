@@ -164,7 +164,14 @@ export function checkFixture(fixture: CodingFixture): FixtureCheck {
     if (fixed.pass !== fixture.tests) {
       problems.push(`declared ${fixture.tests} tests, the runner counted ${fixed.pass}`);
     }
-    if (broken.pass + broken.fail === 0) problems.push('the test command produced no results');
+    // Every test must still be *discovered and run* in the task state. A broken file that
+    // crashes the module reports one failure for the whole file, which is not a red
+    // assertion and would let an ungradeable fixture pass validation.
+    if (broken.pass + broken.fail !== fixture.tests) {
+      problems.push(
+        `task state ran ${broken.pass + broken.fail} of ${fixture.tests} tests, so the suite is crashing rather than asserting`,
+      );
+    }
 
     return {
       id: fixture.id,

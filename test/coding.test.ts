@@ -407,6 +407,49 @@ test('every repeat starts from the broken task state', () => {
   }
 });
 
+test('a task state that crashes the suite instead of asserting is not red', () => {
+  // The broken file does not export the function, so node reports one failure for the
+  // whole file rather than the fixture's three assertions. Counting that as "red" would
+  // hide an authoring mistake: the task asks for a rewrite, not a fix.
+  const crashing: CodingFixture = {
+    schema: 'hahahah.coding.fixture/v1',
+    id: 'cod-crashes',
+    brief: 'Perbaiki src/a.js supaya mengekspor nilai dua, bukan hilang ekspor.',
+    language: 'id',
+    tags: ['validator-invariant'],
+    files: [
+      { path: 'src/a.js', content: 'export const lain = 1;\n' },
+      {
+        path: 'test/a.test.js',
+        content: [
+          "import test from 'node:test';",
+          "import assert from 'node:assert/strict';",
+          "import { value } from '../src/a.js';",
+          '',
+          "test('ada', () => {",
+          '  assert.equal(value, 2);',
+          '});',
+          '',
+          "test('bukan satu', () => {",
+          '  assert.notEqual(value, 1);',
+          '});',
+          '',
+          "test('bukan nol', () => {",
+          '  assert.notEqual(value, 0);',
+          '});',
+          '',
+        ].join('\n'),
+      },
+    ],
+    solution: [{ path: 'src/a.js', content: 'export const value = 2;\n' }],
+    tests: 3,
+  };
+
+  const check = checkFixture(crashing);
+  assert.equal(check.ok, false, 'a crashed task state must not pass validation');
+  assert.match(check.detail, /task state ran \d+ of 3/);
+});
+
 test('the projection counts every arm so the ceiling is not a surprise', () => {
   assert.equal(projectedCostUsd(12, 1, 0.35).toFixed(2), '8.40');
   assert.equal(projectedCostUsd(60, 3, 0.35).toFixed(2), '126.00');
