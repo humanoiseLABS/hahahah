@@ -22,7 +22,7 @@ const root = process.cwd();
 
 test('every shipped coding fixture is red in its task state and green with the solution', () => {
   const checks = checkAll(root);
-  assert.ok(checks.length >= 24, `expected at least 24 fixtures, found ${checks.length}`);
+  assert.ok(checks.length >= 60, `expected at least 60 fixtures, found ${checks.length}`);
   const broken = checks.filter((check) => !check.ok);
   assert.deepEqual(
     broken.map((check) => `${check.id}: ${check.detail}`),
@@ -30,7 +30,7 @@ test('every shipped coding fixture is red in its task state and green with the s
     'a fixture that cannot be graded would waste paid model runs',
   );
   const hidden = checks.filter((check) => check.hidden);
-  assert.ok(hidden.length >= 4, 'the set needs hidden holdout tasks');
+  assert.ok(hidden.length >= 10, 'the set needs hidden holdout tasks');
   // A fixture that is red on every test is asking for a rewrite, not a fix.
   const noGreen = checks.filter((check) => check.ok && check.testsFailingWhenBroken === 0);
   assert.deepEqual(
@@ -45,6 +45,36 @@ test('every fixture has a brief long enough to be a task and a declared test cou
     assert.ok(fixture.brief.length >= 40, `${fixture.id} brief is too thin`);
     assert.ok(fixture.tests >= 2, `${fixture.id} needs at least two tests`);
     assert.ok(fixture.tags && fixture.tags.length > 0, `${fixture.id} needs tags`);
+  }
+});
+
+test('no fixture carries a character outside the intended alphabet', () => {
+  // Two fixtures were authored with a stray CJK word and a Vietnamese diacritic.
+  // A brief in the wrong script is a defect the model will copy, and nothing else here
+  // would ever notice.
+  // This Node build rejects \p{Script} escapes outright, so the ranges are spelled out:
+  // accented Latin, combining marks, Greek, Cyrillic, Arabic, Devanagari, Thai, the
+  // Japanese and Korean blocks, and CJK. Emoji live above \uD7FF and stay allowed.
+  const forbidden =
+    /[\u00C0-\u00FF\u0100-\u024F\u0300-\u036F\u0370-\u03FF\u0400-\u04FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u1E00-\u1EFF\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uAC00-\uD7A3]/;
+  // Both of these were actually authored in this repository, so the detector has to
+  // catch them or it is a green no-op.
+  assert.ok(forbidden.test('motong kalimat buat preview卡片'), 'CJK must be caught');
+  assert.ok(forbidden.test('tidak lompat ke đầu'), 'Vietnamese diacritics must be caught');
+  for (const fixture of loadFixtures(root)) {
+    const texts = [
+      fixture.id,
+      fixture.brief,
+      ...fixture.files.map((file) => `${file.path}\n${file.content}`),
+      ...fixture.solution.map((file) => `${file.path}\n${file.content}`),
+    ];
+    for (const text of texts) {
+      assert.equal(
+        forbidden.test(text),
+        false,
+        `${fixture.id} contains a stray script or diacritic: ${JSON.stringify(text.slice(0, 60))}`,
+      );
+    }
   }
 });
 

@@ -1,0 +1,45 @@
+schema: hahahah.coding.fixture/v1
+id: cod-search-case-insensitive
+language: id
+tags: [strings, search, case]
+brief: >-
+  searchProducts(products, query) nyari produk di nama yang cocok sama query.
+  Pencariannya tidak peka huruf besar/kecil, dari kedua sisi — user yang ngetik
+  "Kopi" harus tetap nemu produk bernama "Kopi Susu".
+files:
+  - path: src/searchProducts.js
+    content: |
+      export function searchProducts(products, query) {
+        return products.filter((product) => product.name.toLowerCase().includes(query));
+      }
+  - path: test/searchProducts.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { searchProducts } from '../src/searchProducts.js';
+
+      const katalog = [{ name: 'Kopi Susu' }, { name: 'Teh Poci' }];
+
+      test('query dengan huruf besar tetap nemu', () => {
+        assert.deepEqual(searchProducts(katalog, 'Kopi'), [{ name: 'Kopi Susu' }]);
+      });
+
+      test('query huruf kecil juga nemu', () => {
+        assert.deepEqual(searchProducts(katalog, 'poci'), [{ name: 'Teh Poci' }]);
+      });
+
+      test('query yang tidak ada isinya kosong', () => {
+        assert.deepEqual(searchProducts(katalog, 'sambal'), []);
+      });
+
+      test('query kosong ngasih semua produk', () => {
+        assert.equal(searchProducts(katalog, '').length, 2);
+      });
+solution:
+  - path: src/searchProducts.js
+    content: |
+      export function searchProducts(products, query) {
+        const needle = query.toLowerCase();
+        return products.filter((product) => product.name.toLowerCase().includes(needle));
+      }
+tests: 4

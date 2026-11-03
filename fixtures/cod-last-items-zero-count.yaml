@@ -1,0 +1,46 @@
+schema: hahahah.coding.fixture/v1
+id: cod-last-items-zero-count
+language: id
+hidden: true
+tags: [arrays, slice, edge-case]
+brief: >-
+  lastItems(items, count) ngambil beberapa pesan terakhir dari log chat.
+  count nol artinya tidak ada yang diminta — balas array kosong, jangan
+  kirim semua pesan. Jumlah yang lebih besar dari panjang daftar ya semuanya.
+files:
+  - path: src/lastItems.js
+    content: |
+      export function lastItems(items, count) {
+        return items.slice(-count);
+      }
+  - path: test/lastItems.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { lastItems } from '../src/lastItems.js';
+
+      test('nol berarti tidak ada yang diambil', () => {
+        assert.deepEqual(lastItems(['a', 'b', 'c'], 0), []);
+      });
+
+      test('dua pesan terakhir', () => {
+        assert.deepEqual(lastItems(['a', 'b', 'c'], 2), ['b', 'c']);
+      });
+
+      test('minta lebih dari jumlahnya dikasih semua', () => {
+        assert.deepEqual(lastItems(['a'], 5), ['a']);
+      });
+
+      test('bilangan negatif juga tidak ambil apa pun', () => {
+        assert.deepEqual(lastItems(['a', 'b'], -1), []);
+      });
+solution:
+  - path: src/lastItems.js
+    content: |
+      export function lastItems(items, count) {
+        if (count <= 0) {
+          return [];
+        }
+        return items.slice(-count);
+      }
+tests: 4

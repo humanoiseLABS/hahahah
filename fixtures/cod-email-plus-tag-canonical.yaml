@@ -1,0 +1,44 @@
+schema: hahahah.coding.fixture/v1
+id: cod-email-plus-tag-canonical
+language: id
+tags: [email, normalization, dedupe]
+brief: >-
+  canonicalEmail(email) dipakai buat nyocokin akun, jadi huruf besar di-kecilin
+  dan tag plus di bagian depan alamat ("budi+news@contoh.id") dibuang supaya
+  orang yang sama tidak tercatat dua kali. Bagian domain tidak boleh berubah.
+files:
+  - path: src/email.js
+    content: |
+      export function canonicalEmail(email) {
+        return email.toLowerCase();
+      }
+  - path: test/email.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { canonicalEmail } from '../src/email.js';
+
+      test('tag plus dibuang dari nama', () => {
+        assert.equal(canonicalEmail('Budi+news@contoh.id'), 'budi@contoh.id');
+      });
+
+      test('alamat tanpa tag tetap sama', () => {
+        assert.equal(canonicalEmail('budi@contoh.id'), 'budi@contoh.id');
+      });
+
+      test('domain ikut di-kecilkan', () => {
+        assert.equal(canonicalEmail('Budi@CONTOH.ID'), 'budi@contoh.id');
+      });
+solution:
+  - path: src/email.js
+    content: |
+      export function canonicalEmail(email) {
+        const lower = email.toLowerCase();
+        const at = lower.indexOf('@');
+        if (at === -1) {
+          return lower;
+        }
+        const local = lower.slice(0, at).split('+')[0];
+        return `${local}${lower.slice(at)}`;
+      }
+tests: 3

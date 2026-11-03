@@ -1,0 +1,44 @@
+schema: hahahah.coding.fixture/v1
+id: cod-options-default-object
+language: en
+tags: [defaults, destructuring, config]
+brief: >-
+  configure(options) fills in retry and verbosity defaults. Callers may pass
+  nothing at all, or an empty object, and both must get the documented defaults
+  of three retries and verbose off rather than crashing.
+files:
+  - path: src/configure.js
+    content: |
+      export function configure(options) {
+        const { retries = 3, verbose = false } = options;
+        return { retries, verbose };
+      }
+  - path: test/configure.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { configure } from '../src/configure.js';
+
+      test('no options at all still gives defaults', () => {
+        assert.deepEqual(configure(), { retries: 3, verbose: false });
+      });
+
+      test('an empty object gives defaults', () => {
+        assert.deepEqual(configure({}), { retries: 3, verbose: false });
+      });
+
+      test('given values win', () => {
+        assert.deepEqual(configure({ retries: 5, verbose: true }), { retries: 5, verbose: true });
+      });
+
+      test('a partial object keeps the other default', () => {
+        assert.deepEqual(configure({ retries: 1 }), { retries: 1, verbose: false });
+      });
+solution:
+  - path: src/configure.js
+    content: |
+      export function configure(options = {}) {
+        const { retries = 3, verbose = false } = options;
+        return { retries, verbose };
+      }
+tests: 4

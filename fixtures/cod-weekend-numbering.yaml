@@ -1,0 +1,40 @@
+schema: hahahah.coding.fixture/v1
+id: cod-weekend-numbering
+language: id
+hidden: true
+tags: [dates, weekday, off-by-one]
+brief: >-
+  isWeekend(date) nutup auto-reply toko pada hari libur. Hari libur itu Sabtu
+  dan Minggu. getUTCDay() itu 0 buat Minggu dan 6 buat Sabtu, bukan 1 sampai 7.
+files:
+  - path: src/weekend.js
+    content: |
+      export function isWeekend(date) {
+        const day = date.getUTCDay();
+        return day === 6 || day === 7;
+      }
+  - path: test/weekend.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { isWeekend } from '../src/weekend.js';
+
+      test('minggu dianggap libur', () => {
+        assert.equal(isWeekend(new Date(Date.UTC(2026, 10, 1))), true);
+      });
+
+      test('sabtu dianggap libur', () => {
+        assert.equal(isWeekend(new Date(Date.UTC(2026, 9, 31))), true);
+      });
+
+      test('senin bukan libur', () => {
+        assert.equal(isWeekend(new Date(Date.UTC(2026, 10, 2))), false);
+      });
+solution:
+  - path: src/weekend.js
+    content: |
+      export function isWeekend(date) {
+        const day = date.getUTCDay();
+        return day === 0 || day === 6;
+      }
+tests: 3

@@ -1,0 +1,38 @@
+schema: hahahah.coding.fixture/v1
+id: cod-reduce-initial-value
+language: en
+tags: [arrays, reduce, empty-list]
+brief: >-
+  totalWeight(items) sums the grams of every parcel in a shipment manifest.
+  An empty manifest is a normal state and must total zero grams, and a single
+  parcel must come back as its weight, not as the parcel object itself.
+files:
+  - path: src/weight.js
+    content: |
+      export function totalWeight(items) {
+        return items.reduce((sum, item) => sum + item.grams);
+      }
+  - path: test/weight.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { totalWeight } from '../src/weight.js';
+
+      test('an empty manifest totals zero', () => {
+        assert.equal(totalWeight([]), 0);
+      });
+
+      test('several parcels are added up', () => {
+        assert.equal(totalWeight([{ grams: 250 }, { grams: 500 }]), 750);
+      });
+
+      test('one parcel returns its weight', () => {
+        assert.equal(totalWeight([{ grams: 100 }]), 100);
+      });
+solution:
+  - path: src/weight.js
+    content: |
+      export function totalWeight(items) {
+        return items.reduce((sum, item) => sum + item.grams, 0);
+      }
+tests: 3
