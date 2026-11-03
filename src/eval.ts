@@ -120,7 +120,7 @@ export function median(values: number[]): number {
   return sorted.length % 2 === 1 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
 }
 
-function usageNumber(usage: unknown, key: string): number | undefined {
+export function usageNumber(usage: unknown, key: string): number | undefined {
   if (typeof usage !== 'object' || usage === null) return undefined;
   const value = (usage as Record<string, unknown>)[key];
   return typeof value === 'number' ? value : undefined;
@@ -174,12 +174,17 @@ function buildArm(runs: EvalRun[], checks?: TaskChecks): EvalArm {
   };
 }
 
-function runClaude(
+export interface ClaudeOptions {
+  model?: string;
+  settingSources?: string;
+  agentArgs?: string[];
+}
+
+export function runClaude(
   cwd: string,
   prompt: string,
   budgetUsd: number,
-  model?: string,
-  settingSources?: string,
+  options: ClaudeOptions = {},
 ): EvalRun {
   const command = process.env.HAHAHAH_CLAUDE_BIN ?? 'claude';
   const args = [
@@ -190,11 +195,14 @@ function runClaude(
     budgetUsd.toFixed(2),
     '--no-session-persistence',
   ];
-  if (model) {
-    args.push('--model', model);
+  if (options.model) {
+    args.push('--model', options.model);
   }
-  if (settingSources) {
-    args.push('--setting-sources', settingSources);
+  if (options.settingSources) {
+    args.push('--setting-sources', options.settingSources);
+  }
+  if (options.agentArgs) {
+    args.push(...options.agentArgs);
   }
   const result =
     process.platform === 'win32'
@@ -319,7 +327,10 @@ export function runEval(options: EvalOptions): EvalReport {
   const runner =
     options.runner ??
     ((cwd: string, prompt: string, budgetUsd: number) =>
-      runClaude(cwd, prompt, budgetUsd, options.model, options.settingSources));
+      runClaude(cwd, prompt, budgetUsd, {
+        model: options.model,
+        settingSources: options.settingSources,
+      }));
   const results: EvalResult[] = [];
 
   for (const task of tasks) {

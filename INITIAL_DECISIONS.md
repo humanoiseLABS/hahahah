@@ -58,6 +58,7 @@ These are constraints, not open decisions:
 | D-030 | Eval checks are deterministic screens, not judges | Language markers + require/forbid patterns flag text for review; no semantic or judge claim | Accepted (Phase 3) | Owner |
 | D-031 | Core policies ship as on-demand references | `core/00-identity.md`, `10-safety.md`, `20-decision.md`, `30-efficiency.md` mount under the skill's `references/core/`; reference target 4000 → 4600 | Accepted (Phase 3) | Owner |
 | D-032 | Scope is waivable, truth is not | Always-on adds `A user can waive scope, not truth.`; user pressure cannot convert unverified work into a completion claim | Accepted (Phase 3, evidence-driven) | Owner |
+| D-033 | Coding fixtures are graded by their own tests, and spend is opt-in | `fixtures run` executes the fixture's `node --test` suite in the workspace the agent finished in; edited/deleted/added test files score `tampered`, never `solved`; no model call without `--live`, and `--live` requires `--max-total-usd` | Implemented (Phase 3), owner approval pending | Owner |
 
 ---
 
@@ -606,6 +607,23 @@ The display name and technical identifiers are deliberately separate:
 
 ---
 
+### D-033 — Coding fixtures are graded by their own tests, and spend is opt-in
+
+**Status:** Implemented 2026-11-03 (Phase 3); owner approval pending, and no live model has been billed on it.
+
+**Context:** Every measurement in `docs/phase-3-live-suite-results.md` rests on surface screens, and §10 records what that cannot do: it cannot say whether an answer was *correct*. The coding fixtures already carried real `node --test` suites, so a correctness signal was available for free — but only if the tests are executed **after** the agent has had the workspace, and only if the agent cannot win by editing the tests. The spend side had its own history: a 64-task campaign ran to ≈$22.1 on this provider, and A-05 requires evaluation spend to be approved and bounded.
+
+**Decision**
+
+- `node src/cli.ts fixtures run` seeds the same broken files into a bare workspace and one with the profile installed, sends both arms the identical prompt, and grades each by running the fixture's own test command in that workspace.
+- Grades are `solved`, `failed`, `tampered`, `untouched`, `error`. `tampered` covers an edited, deleted, or newly added test file and is never counted as solved even when the suite goes green; `untouched` is the reply-without-a-fix case; `error` is reported as an instrument failure and is not scored as a model failure.
+- The agent runs headless with `--permission-mode acceptEdits` and `--permission-prompts none`. Edits are the only widened permission; the shell stays denied because this host is unsandboxed (A-06, R-10/R-14), which also means the agent cannot run the tests it is being graded on. `--dangerously-skip-permissions` and `bypassPermissions` are not used.
+- Nothing calls a model unless `--live` is present, and `--live` refuses without `--max-total-usd` or when `fixtures × repeats × 2 × --budget-usd` exceeds it.
+
+**Consequences:** The ceiling becomes a number the owner states rather than something discovered in a report. The measurement is conditioned on the no-shell posture and must be described that way in any published rate. Two things remain unproven: that the live harness actually grants those edits (only injected stub runners have been graded), and that 12 fixtures can support anything beyond a descriptive count — 48 remain, and a non-inferiority claim still needs the pilot-calibrated sample from Phase 4.
+
+---
+
 ## 3. Assumptions
 
 | ID | Assumption | If false |
@@ -681,6 +699,7 @@ The owner should explicitly approve or amend:
 - [ ] **D-030** eval checks are deterministic screens, not judges
 - [ ] **D-031** core policies ship as on-demand references (reference target 4,600)
 - [ ] **D-032** scope is waivable, truth is not
+- [ ] **D-033** coding fixtures graded by their own tests; `fixtures run` needs `--live` and an explicit `--max-total-usd`
 - [ ] **Q-01 … Q-12** answered or explicitly deferred
 - [ ] **Authorize Phase 1 only** — no implementation beyond the approved phase
 

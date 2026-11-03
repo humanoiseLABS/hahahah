@@ -1,7 +1,14 @@
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { build, BuildError } from './build.ts';
-import { checkAll } from './coding.ts';
+import {
+  checkAll,
+  loadFixtures,
+  projectedCostUsd,
+  runFixtureStudy,
+  type FixtureStudyReport,
+  type FixtureStudyResult,
+} from './coding.ts';
 import { loadSuite, runEval, type EvalArm } from './eval.ts';
 import { doctor, install, uninstall, InstallError } from './install.ts';
 
@@ -14,11 +21,60 @@ Usage:
   node src/cli.ts install --profile <id> [--target <repo>] [--dry-run] [--force]
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
   node src/cli.ts fixtures check [--dir fixtures]
+  node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--out <dir>] [--live]
   node src/cli.ts doctor [--target <repo>]
   node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--strict]
 
 Eval checks are deterministic surface screens, not semantic judges. --strict exits non-zero when a treatment check fails.
+fixtures run grades the agent by executing each fixture's tests. Without --live it only prints the plan and calls no model; with --live it needs --max-total-usd.
 `);
+}
+
+function positiveInt(value: string | undefined, flag: string, fallback: number): number {
+  if (value === undefined) return fallback;
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new Error(`${flag} must be a positive integer`);
+  }
+  return parsed;
+}
+
+function positiveNumber(value: string, flag: string): number {
+  const parsed = Number.parseFloat(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    throw new Error(`${flag} must be a positive number`);
+  }
+  return parsed;
+}
+
+function printStudy(report: FixtureStudyReport): void {
+  // A harness error arrives verbatim, and on Windows cmd.exe puts it over several lines.
+  const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim();
+  console.log(
+    `coding study: ${report.fixtures_run} fixture(s) x ${report.repeats} repeat(s) x 2 arms, cost $${report.total_cost_usd.toFixed(4)}`,
+  );
+  for (const result of report.results) {
+    const state = (arm: FixtureStudyResult['baseline']) => {
+      if (arm.grades.length > 0 && arm.grades.every((grade) => grade === 'error')) {
+        return `error (${oneLine(arm.runs[0]?.run.error ?? 'no runs')})`;
+      }
+      return `${arm.grades.join(',')} solved ${arm.solved}/${arm.runs.length}`;
+    };
+    console.log(
+      `- ${result.fixture.id}${result.fixture.hidden ? ' (hidden)' : ''}: baseline=${state(result.baseline)}, treatment=${state(result.treatment)}`,
+    );
+  }
+  const { baseline, treatment } = report.summary;
+  console.log(
+    `grades: baseline solved ${baseline.solved} failed ${baseline.failed} tampered ${baseline.tampered} untouched ${baseline.untouched} error ${baseline.error}`,
+  );
+  console.log(
+    `grades: treatment solved ${treatment.solved} failed ${treatment.failed} tampered ${treatment.tampered} untouched ${treatment.untouched} error ${treatment.error}`,
+  );
+  const errored = report.results
+    .flatMap((result) => [...result.baseline.runs, ...result.treatment.runs])
+    .some((run) => run.grade === 'error');
+  if (errored) process.exitCode = 1;
 }
 
 function formatReport(result: ReturnType<typeof build>): string {
@@ -54,15 +110,18 @@ try {
       out: { type: 'string' },
       suite: { type: 'string', default: 'smoke' },
       task: { type: 'string', multiple: true, default: [] },
+      id: { type: 'string', multiple: true, default: [] },
       limit: { type: 'string' },
       repeats: { type: 'string' },
       'budget-usd': { type: 'string', default: '0.10' },
+      'max-total-usd': { type: 'string' },
       model: { type: 'string' },
       'setting-sources': { type: 'string' },
       release: { type: 'boolean', default: false },
       'dry-run': { type: 'boolean', default: false },
       force: { type: 'boolean', default: false },
       strict: { type: 'boolean', default: false },
+      live: { type: 'boolean', default: false },
       dir: { type: 'string' },
       help: { type: 'boolean', short: 'h', default: false },
     },
@@ -124,10 +183,7 @@ try {
     }
   } else if (command === 'fixtures') {
     const action = parsed.positionals[1] ?? 'check';
-    if (action !== 'check') {
-      printUsage();
-      process.exitCode = 1;
-    } else {
+    if (action === 'check') {
       const checks = checkAll(process.cwd(), parsed.values.dir ?? 'fixtures');
       for (const check of checks) {
         const label = check.ok ? 'ok  ' : 'FAIL';
@@ -142,6 +198,65 @@ try {
       if (failed.length > 0) {
         process.exitCode = 1;
       }
+    } else if (action === 'run') {
+      const all = loadFixtures(process.cwd(), parsed.values.dir ?? 'fixtures');
+      let fixtures = all;
+      if (parsed.values.id.length > 0) {
+        const known = new Set(all.map((fixture) => fixture.id));
+        const unknown = parsed.values.id.filter((id) => !known.has(id));
+        if (unknown.length > 0) {
+          throw new Error(`Unknown fixture id(s): ${unknown.join(', ')}`);
+        }
+        fixtures = all.filter((fixture) => parsed.values.id.includes(fixture.id));
+      }
+      const limit = parsed.values.limit
+        ? positiveInt(parsed.values.limit, '--limit', fixtures.length)
+        : undefined;
+      const repeats = positiveInt(parsed.values.repeats, '--repeats', 1);
+      const budget = positiveNumber(parsed.values['budget-usd'], '--budget-usd');
+      const ceiling = parsed.values['max-total-usd']
+        ? positiveNumber(parsed.values['max-total-usd'], '--max-total-usd')
+        : 0;
+      const count = limit === undefined ? fixtures.length : Math.min(limit, fixtures.length);
+      const projected = projectedCostUsd(count, repeats, budget);
+      const hidden = fixtures.slice(0, count).filter((fixture) => fixture.hidden).length;
+      console.log(
+        `plan: running ${count} of ${fixtures.length} selected fixture(s) (${hidden} marked hidden holdout), ${repeats} repeat(s), 2 arms, $${budget.toFixed(2)} per run`,
+      );
+      console.log(
+        `projected worst case: $${projected.toFixed(2)} (a run that hits its budget cap is billed up to that cap)`,
+      );
+      if (!parsed.values.live) {
+        console.log(
+          'dry run: no model was called and nothing was spent. Add --live with --max-total-usd to run it.',
+        );
+      } else {
+        if (ceiling === 0) {
+          throw new Error(
+            `--live needs --max-total-usd: this campaign projects $${projected.toFixed(2)}, state the approved ceiling`,
+          );
+        }
+        if (projected > ceiling) {
+          throw new Error(
+            `projected $${projected.toFixed(2)} exceeds the approved ceiling of $${ceiling.toFixed(2)}: lower --limit, --repeats, or --budget-usd`,
+          );
+        }
+        const report = runFixtureStudy({
+          sourceRoot: process.cwd(),
+          profileId: parsed.values.profile,
+          fixtures,
+          limit,
+          repeats,
+          budgetUsd: budget,
+          model: parsed.values.model,
+          settingSources: parsed.values['setting-sources'],
+          outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'coding'),
+        });
+        printStudy(report);
+      }
+    } else {
+      printUsage();
+      process.exitCode = 1;
     }
   } else if (command === 'eval') {
     const suite = loadSuite(process.cwd(), parsed.values.suite);

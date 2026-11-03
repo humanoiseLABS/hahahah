@@ -20,4 +20,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run format:check
       - run: npm test
+      - run: node src/cli.ts fixtures check
       - run: npm run build

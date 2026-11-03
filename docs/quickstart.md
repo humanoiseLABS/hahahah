@@ -82,6 +82,31 @@ Measured on the current provider (2026-11-03), as cost per task where each task 
 
 The proxy bills heavy-tailed spikes (the same prompt produced 19k, 64k, and 20k input tokens), so these are planning figures from medians of what was measured, not a price list. Use `--task` to run a subset, and `--repeats 3` only when a number has to be defensible.
 
+## Coding fixtures
+
+```bash
+# free: prove every fixture is red in its task state and green with the reference solution
+node src/cli.ts fixtures check
+
+# free: print what a study would cost, call no model
+node src/cli.ts fixtures run --budget-usd 0.35
+node src/cli.ts fixtures run --id cod-expiry-gte --limit 1 --budget-usd 0.35
+
+# spend: only after stating the ceiling you approve
+node src/cli.ts fixtures run --budget-usd 0.35 --max-total-usd 9 --live
+```
+
+`fixtures run` is the model-facing half. For each fixture it seeds two disposable repositories with the same broken files, installs the profile in the treatment one only, sends the same brief to both, then **executes the fixture's own test suite in each workspace** and grades the result. That makes this a correctness signal rather than a text screen, so it is the one measurement here that can say whether the persona layer changed whether the task was actually solved. Reports land in `.hahahah/coding/report.json` and `report.md`, which stay untracked like the eval reports.
+
+Grades, per run: `solved` (the untouched tests passed), `failed` (a real attempt that did not pass), `tampered` (a test file was edited, deleted, or added — never counted as solved, even when the suite then goes green), `untouched` (the agent replied without changing any file), `error` (the run did not complete, so it is not scored at all).
+
+Spend is opt-in and bounded. Without `--live` nothing is called. With `--live` the command refuses unless you pass `--max-total-usd`, and refuses again when `fixtures × repeats × 2 × --budget-usd` exceeds it, so a 60-fixture campaign cannot start by accident.
+
+Two limits to read before trusting a number from this:
+
+- The agent runs headless with `--permission-mode acceptEdits` and `--permission-prompts none`: file edits are accepted, everything else (including the shell, so the agent cannot run the tests itself) is denied. Pass rates are conditioned on that and are not a claim about interactive use.
+- That permission posture is taken from `claude --help` and is **not yet verified against a live run**. A first `--live` pass over one fixture is the preflight: if every arm comes back `untouched` or `error`, suspect the harness denied the writes before concluding the persona caused it.
+
 ## Uninstall
 
 ```bash
@@ -93,7 +118,7 @@ Only manifest-owned files and the managed block are removed. User content outsid
 
 ## Safety notes
 
-- The eval runner never uses `--dangerously-skip-permissions`.
+- Neither runner uses `--dangerously-skip-permissions` or `--permission-mode bypassPermissions`. The coding study widens the agent's reach to file edits and nothing else, because its task is to edit files.
 - Native Windows shell execution is unsandboxed; use a disposable repository and a hard `--budget-usd` cap.
 - Qoder compatibility is unverified; see `docs/qoder-assessment.md`.
 - RUSUH linguistic, cultural, and safety reviews remain pending.
