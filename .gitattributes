@@ -1,0 +1,10 @@
+# The compiler and prettier assume LF. Without this, a Windows checkout converts to
+# CRLF and format:check fails there while passing locally.
+* text=auto eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.ts text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.jsonl text eol=lf
+*.lock binary
