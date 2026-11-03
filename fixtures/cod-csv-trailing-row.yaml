@@ -1,0 +1,40 @@
+schema: hahahah.coding.fixture/v1
+id: cod-csv-trailing-row
+language: id
+tags: [csv, edge-case]
+brief: >-
+  parseCsv(text) mengubah teks CSV jadi array baris. File yang diakhiri newline normal
+  nggak boleh menghasilkan satu baris hantu di ujung.
+files:
+  - path: src/csv.js
+    content: |
+      export function parseCsv(text) {
+        return text.split('\n').map((row) => row.split(','));
+      }
+  - path: test/csv.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { parseCsv } from '../src/csv.js';
+
+      test('baris pertama ke-parse dengan benar', () => {
+        assert.deepEqual(parseCsv('a,b\nc,d\n')[0], ['a', 'b']);
+      });
+
+      test('newline di akhir tidak menambah baris kosong', () => {
+        assert.equal(parseCsv('a,b\nc,d\n').length, 2);
+      });
+
+      test('teks kosong menghasilkan nol baris', () => {
+        assert.deepEqual(parseCsv(''), []);
+      });
+solution:
+  - path: src/csv.js
+    content: |
+      export function parseCsv(text) {
+        return text
+          .split('\n')
+          .filter((row) => row.trim() !== '')
+          .map((row) => row.split(','));
+      }
+tests: 3

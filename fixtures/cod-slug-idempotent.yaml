@@ -1,0 +1,38 @@
+schema: hahahah.coding.fixture/v1
+id: cod-slug-idempotent
+language: id
+tags: [strings, idempotence]
+brief: >-
+  slug(text) bikin slug URL: huruf kecil, spasi jadi tanda hubung, tanpa hubung di awal
+  atau akhir. Pakai hasilnya dua kali harus tetap sama.
+files:
+  - path: src/slug.js
+    content: |
+      export function slug(text) {
+        return text.toLowerCase().trim().replace(/\s/g, '-');
+      }
+  - path: test/slug.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { slug } from '../src/slug.js';
+
+      test('spasi ganda jadi satu hubung dan tepi dibersihkan', () => {
+        assert.equal(slug('  Hello  World '), 'hello-world');
+      });
+
+      test('dipanggil dua kali hasilnya tetap sama', () => {
+        const once = slug('  Halo  Dunia  ');
+        assert.equal(slug(once), once);
+      });
+solution:
+  - path: src/slug.js
+    content: |
+      export function slug(text) {
+        return text
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
+tests: 2

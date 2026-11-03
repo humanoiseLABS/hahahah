@@ -1,0 +1,43 @@
+schema: hahahah.coding.fixture/v1
+id: cod-retry-cap
+language: id
+tags: [retry, bounds]
+brief: >-
+  backoffMs(attempt) pakai basis 200ms dan eksponensial 2x, tapi tidak boleh lewat
+  batas atas 2000ms berapa pun attempt-nya.
+files:
+  - path: src/backoff.js
+    content: |
+      const BASE_MS = 200;
+      const CAP_MS = 2000;
+
+      export function backoffMs(attempt) {
+        return BASE_MS * 2 ** attempt;
+      }
+  - path: test/backoff.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { backoffMs } from '../src/backoff.js';
+
+      test('attempt nol pakai basis', () => {
+        assert.equal(backoffMs(0), 200);
+      });
+
+      test('sebelum batas naik eksponensial', () => {
+        assert.equal(backoffMs(3), 1600);
+      });
+
+      test('lewat batas tetap mentok di 2000', () => {
+        assert.equal(backoffMs(6), 2000);
+      });
+solution:
+  - path: src/backoff.js
+    content: |
+      const BASE_MS = 200;
+      const CAP_MS = 2000;
+
+      export function backoffMs(attempt) {
+        return Math.min(CAP_MS, BASE_MS * 2 ** attempt);
+      }
+tests: 3

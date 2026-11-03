@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { build, BuildError } from './build.ts';
+import { checkAll } from './coding.ts';
 import { loadSuite, runEval, type EvalArm } from './eval.ts';
 import { doctor, install, uninstall, InstallError } from './install.ts';
 
@@ -12,6 +13,7 @@ Usage:
   node src/cli.ts measure --profile <id> [--adapter fake|claude-code]
   node src/cli.ts install --profile <id> [--target <repo>] [--dry-run] [--force]
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
+  node src/cli.ts fixtures check [--dir fixtures]
   node src/cli.ts doctor [--target <repo>]
   node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--strict]
 
@@ -61,6 +63,7 @@ try {
       'dry-run': { type: 'boolean', default: false },
       force: { type: 'boolean', default: false },
       strict: { type: 'boolean', default: false },
+      dir: { type: 'string' },
       help: { type: 'boolean', short: 'h', default: false },
     },
   });
@@ -118,6 +121,27 @@ try {
       process.exitCode = 1;
     } else {
       console.log(`doctor: ok (${parsed.values.target})`);
+    }
+  } else if (command === 'fixtures') {
+    const action = parsed.positionals[1] ?? 'check';
+    if (action !== 'check') {
+      printUsage();
+      process.exitCode = 1;
+    } else {
+      const checks = checkAll(process.cwd(), parsed.values.dir ?? 'fixtures');
+      for (const check of checks) {
+        const label = check.ok ? 'ok  ' : 'FAIL';
+        const holdout = check.hidden ? ' (hidden)' : '';
+        console.log(`${label} ${check.id}${holdout}: ${check.detail}`);
+      }
+      const failed = checks.filter((check) => !check.ok);
+      const hidden = checks.filter((check) => check.hidden).length;
+      console.log(
+        `fixtures: ${checks.length - failed.length}/${checks.length} valid, ${hidden} marked hidden holdout`,
+      );
+      if (failed.length > 0) {
+        process.exitCode = 1;
+      }
     }
   } else if (command === 'eval') {
     const suite = loadSuite(process.cwd(), parsed.values.suite);

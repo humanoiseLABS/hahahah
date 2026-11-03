@@ -1,0 +1,46 @@
+schema: hahahah.coding.fixture/v1
+id: cod-escape-html
+language: id
+tags: [security, xss]
+hidden: true
+brief: >-
+  escapeHtml(text) buat nyelipin teks user ke HTML. Lima karakter berbahaya harus ke-escape:
+  & < > " dan '.
+files:
+  - path: src/html.js
+    content: |
+      export function escapeHtml(text) {
+        return text.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      }
+  - path: test/html.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { escapeHtml } from '../src/html.js';
+
+      test('tag ke-escape dua arah', () => {
+        assert.equal(escapeHtml('<b>x</b>'), '&lt;b&gt;x&lt;/b&gt;');
+      });
+
+      test('ampersand tidak dobel', () => {
+        assert.equal(escapeHtml('a & b'), 'a &amp; b');
+      });
+
+      test('tanda kutip ke-escape', () => {
+        assert.equal(escapeHtml('id="x" & \'y\''), 'id=&quot;x&quot; &amp; &apos;y&apos;');
+      });
+solution:
+  - path: src/html.js
+    content: |
+      const ENTITIES = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&apos;',
+      };
+
+      export function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, (char) => ENTITIES[char]);
+      }
+tests: 3

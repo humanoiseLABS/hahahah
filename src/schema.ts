@@ -12,7 +12,8 @@ export type SchemaName =
   | 'config'
   | 'manifest'
   | 'install'
-  | 'evalSuite';
+  | 'evalSuite'
+  | 'codingFixture';
 
 const schemaFiles: Record<SchemaName, string> = {
   profile: 'profile.schema.json',
@@ -25,6 +26,7 @@ const schemaFiles: Record<SchemaName, string> = {
   manifest: 'manifest.schema.json',
   install: 'install-manifest.schema.json',
   evalSuite: 'eval-suite.schema.json',
+  codingFixture: 'coding-fixture.schema.json',
 };
 
 type AjvConstructor = new (options?: object) => {

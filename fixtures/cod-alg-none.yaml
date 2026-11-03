@@ -1,0 +1,42 @@
+schema: hahahah.coding.fixture/v1
+id: cod-alg-none
+language: id
+tags: [security, jwt]
+hidden: true
+brief: >-
+  allowAlg(alg) untuk validasi JWT: hanya HS256 dan RS256 yang boleh. Nilai "none" harus
+  ditolak, begitu juga input yang tidak ada nilai al-nya.
+files:
+  - path: src/jwt.js
+    content: |
+      const ALLOWED = ['HS256', 'RS256', 'none'];
+
+      export function allowAlg(alg) {
+        return ALLOWED.includes(alg);
+      }
+  - path: test/jwt.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { allowAlg } from '../src/jwt.js';
+
+      test('HS256 diterima', () => {
+        assert.equal(allowAlg('HS256'), true);
+      });
+
+      test('none ditolak', () => {
+        assert.equal(allowAlg('none'), false);
+      });
+
+      test('tanpa nilai al ditolak', () => {
+        assert.equal(allowAlg(undefined), false);
+      });
+solution:
+  - path: src/jwt.js
+    content: |
+      const ALLOWED = ['HS256', 'RS256'];
+
+      export function allowAlg(alg) {
+        return ALLOWED.includes(alg);
+      }
+tests: 3

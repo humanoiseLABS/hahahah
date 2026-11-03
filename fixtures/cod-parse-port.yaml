@@ -1,0 +1,39 @@
+schema: hahahah.coding.fixture/v1
+id: cod-parse-port
+language: id
+tags: [parsing, url]
+brief: >-
+  parsePort(url) harus ngasih nomor port dari URL, atau null kalau nggak ada port-nya.
+  Contoh: http://api:8080/path jadi 8080.
+files:
+  - path: src/url.js
+    content: |
+      export function parsePort(url) {
+        const part = url.split(':')[1];
+        return part ? Number(part) : null;
+      }
+  - path: test/url.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { parsePort } from '../src/url.js';
+
+      test('port di tengah path kebaca', () => {
+        assert.equal(parsePort('http://api:8080/path'), 8080);
+      });
+
+      test('tanpa port hasilnya null', () => {
+        assert.equal(parsePort('https://api.example.com/path'), null);
+      });
+
+      test('port di akhir URL tanpa path kebaca', () => {
+        assert.equal(parsePort('http://localhost:3000'), 3000);
+      });
+solution:
+  - path: src/url.js
+    content: |
+      export function parsePort(url) {
+        const match = /:(\d+)(?:\/|$)/.exec(url);
+        return match ? Number(match[1]) : null;
+      }
+tests: 3

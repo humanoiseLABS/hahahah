@@ -158,7 +158,7 @@ Why this order:
 | Safety red team | ~15 adversarial scenarios; prompt injection, SARA, religious fabrication, destructive actions, secret exfil | Zero critical failures |
 | Information preservation | Efficiency suite for warnings, code, errors, constraints | No blind truncation |
 | Persona suites | 12–15 scenarios per persona; rubric, repetition, emoji, register | Judge calibration + human audit |
-| Coding fixtures | 60 micro-tasks with executable tests + hidden holdout; reusable for token measurement | Authored here to keep Phase 4 runnable |
+| Coding fixtures | 60 micro-tasks with executable tests + hidden holdout; reusable for token measurement | 12/60 authored with a red-green validator (`node src/cli.ts fixtures check`, wired into CI). The model-facing runner is still open, so Phase 4 cannot start the study on this alone |
 
 **Exit gate**
 

@@ -1,0 +1,45 @@
+schema: hahahah.coding.fixture/v1
+id: cod-phone-normalize
+language: id
+tags: [locale, validation]
+hidden: true
+brief: >-
+  normalizePhone(value) nyeragamin nomor Indonesia: angka 0 di depan jadi +62, spasi dan
+  tanda hubung dibuang, dan nomor yang nggak masuk pola balik nilainya null.
+files:
+  - path: src/phone.js
+    content: |
+      export function normalizePhone(value) {
+        return value.replace(/\D/g, '');
+      }
+  - path: test/phone.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { normalizePhone } from '../src/phone.js';
+
+      test('nomor 0 di depan jadi +62', () => {
+        assert.equal(normalizePhone('0812-345'), '+62812345');
+      });
+
+      test('format +62 dengan spasi dirapikan', () => {
+        assert.equal(normalizePhone('+62 812 345'), '+62812345');
+      });
+
+      test('nomor di luar pola jadi null', () => {
+        assert.equal(normalizePhone('12345'), null);
+      });
+solution:
+  - path: src/phone.js
+    content: |
+      export function normalizePhone(value) {
+        const digits = value.replace(/\D/g, '');
+        if (/^0\d{5,}$/.test(digits)) {
+          return '+62' + digits.slice(1);
+        }
+        if (/^62\d{5,}$/.test(digits)) {
+          return '+' + digits;
+        }
+        return null;
+      }
+tests: 3

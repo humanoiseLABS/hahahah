@@ -1,0 +1,37 @@
+schema: hahahah.coding.fixture/v1
+id: cod-discount-cents
+language: id
+tags: [money, rounding]
+brief: >-
+  discountedTotalCents(cents, percentOff) harus balikin total dalam sen sebagai bilangan
+  bulat. Hasil 169.15 itu nggak valid buat uang.
+files:
+  - path: src/price.js
+    content: |
+      export function discountedTotalCents(cents, percentOff) {
+        return (cents * (100 - percentOff)) / 100;
+      }
+  - path: test/price.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { discountedTotalCents } from '../src/price.js';
+
+      test('potongan yang habisan pas', () => {
+        assert.equal(discountedTotalCents(1000, 25), 750);
+      });
+
+      test('potongan yang menghasilkan pecahan dibulatkan', () => {
+        assert.equal(discountedTotalCents(199, 15), 169);
+      });
+
+      test('nilai kecil ikut dibulatkan ke bawah', () => {
+        assert.equal(discountedTotalCents(5, 33), 3);
+      });
+solution:
+  - path: src/price.js
+    content: |
+      export function discountedTotalCents(cents, percentOff) {
+        return Math.round((cents * (100 - percentOff)) / 100);
+      }
+tests: 3

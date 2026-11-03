@@ -1,0 +1,37 @@
+schema: hahahah.coding.fixture/v1
+id: cod-expiry-gte
+language: id
+tags: [auth, off-by-one]
+brief: >-
+  Fungsi isTokenExpired(token, now) harus bilang true kalau token sudah kedaluwarsa.
+  Kasus batas: exp persis sama dengan now itu dihitung expired.
+files:
+  - path: src/token.js
+    content: |
+      export function isTokenExpired(token, now = Date.now()) {
+        return token.exp < now;
+      }
+  - path: test/token.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { isTokenExpired } from '../src/token.js';
+
+      test('token yang lewat masa berlaku dianggap expired', () => {
+        assert.equal(isTokenExpired({ exp: 1000 }, 2000), true);
+      });
+
+      test('token yang masih hidup dianggap valid', () => {
+        assert.equal(isTokenExpired({ exp: 5000 }, 1000), false);
+      });
+
+      test('tepat di batas exp harus dianggap expired', () => {
+        assert.equal(isTokenExpired({ exp: 1000 }, 1000), true);
+      });
+solution:
+  - path: src/token.js
+    content: |
+      export function isTokenExpired(token, now = Date.now()) {
+        return token.exp <= now;
+      }
+tests: 3

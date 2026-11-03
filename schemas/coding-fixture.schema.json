@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "hahahah.coding.fixture/v1",
+  "title": "HAHahah coding fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "brief", "files", "solution", "tests"],
+  "properties": {
+    "schema": { "const": "hahahah.coding.fixture/v1" },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "brief": { "type": "string", "minLength": 20 },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "hidden": { "type": "boolean" },
+    "language": { "enum": ["id", "en"] },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/file" }
+    },
+    "solution": {
+      "type": "array",
+      "minItems": 1,
+      "description": "A known-good state for the same files, used only to prove the fixture is solvable and its tests are real.",
+      "items": { "$ref": "#/definitions/file" }
+    },
+    "tests": { "type": "integer", "minimum": 1 },
+    "runner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command"],
+      "properties": {
+        "command": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": { "type": "string" },
+          "description": "Only node --test [dir] is accepted; anything else is rejected at load time."
+        }
+      }
+    }
+  },
+  "definitions": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "content"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.)[A-Za-z0-9._/-]+$" },
+        "content": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

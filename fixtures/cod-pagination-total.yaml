@@ -1,0 +1,37 @@
+schema: hahahah.coding.fixture/v1
+id: cod-pagination-total
+language: id
+tags: [pagination, off-by-one]
+brief: >-
+  totalPages(total, perPage) buat paginasi. Sisa data sekecil apa pun tetap butuh satu
+  halaman sendiri, dan daftar kosong tetap punya satu halaman kosong.
+files:
+  - path: src/paging.js
+    content: |
+      export function totalPages(total, perPage) {
+        return Math.floor(total / perPage);
+      }
+  - path: test/paging.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { totalPages } from '../src/paging.js';
+
+      test('penuh pas tanpa sisa', () => {
+        assert.equal(totalPages(10, 10), 1);
+      });
+
+      test('sisa sekecil apa pun tetap satu halaman', () => {
+        assert.equal(totalPages(11, 10), 2);
+      });
+
+      test('kosong tetap punya satu halaman', () => {
+        assert.equal(totalPages(0, 10), 1);
+      });
+solution:
+  - path: src/paging.js
+    content: |
+      export function totalPages(total, perPage) {
+        return Math.max(1, Math.ceil(total / perPage));
+      }
+tests: 3
