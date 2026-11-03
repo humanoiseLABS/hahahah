@@ -30,8 +30,8 @@ files:
         assert.equal(normalizeColor('#112233'), '#112233');
       });
 
-      test('nilai non-hex dibiarkan apa adanya', () => {
-        assert.equal(normalizeColor('rgb(1, 2, 3)'), 'rgb(1, 2, 3)');
+      test('nilai non-hex ikut di-kecilkan', () => {
+        assert.equal(normalizeColor('RGB(1, 2, 3)'), 'rgb(1, 2, 3)');
       });
 solution:
   - path: src/color.js

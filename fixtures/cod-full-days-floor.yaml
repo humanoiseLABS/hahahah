@@ -5,7 +5,8 @@ tags: [dates, rounding, durations]
 brief: >-
   fullDaysBetween(startMs, endMs) ngitung hari penuh antara dua timestamp
   (milidetik). Hari penuh ya hari yang udah kelar: 1 hari 20 jam itu 1 hari,
-  23 jam itu 0 hari. Urusan zona waktu bukan urusan fungsi ini.
+  23 jam itu 0 hari. Urutan start sama end boleh kebalik, hasilnya tetep
+  positif. Urusan zona waktu bukan urusan fungsi ini.
 files:
   - path: src/days.js
     content: |

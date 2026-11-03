@@ -5,7 +5,8 @@ tags: [parsing, locale, money]
 brief: >-
   parseAmount(text) baca angka yang ditulis gaya Indonesia — titik sebagai
   pemisah ribuan, misalnya "Rp 1.234.567" itu satu juta dua ratus tiga puluh
-  empat ribu lima ratus enam puluh tujuh. Outputnya angka bulat.
+  empat ribu lima ratus enam puluh tujuh. Outputnya angka bulat rupiah, dan
+  input-nya nggak pernah pakai koma desimal.
 files:
   - path: src/amount.js
     content: |

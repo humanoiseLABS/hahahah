@@ -5,7 +5,8 @@ tags: [rounding, progress, display]
 brief: >-
   progressLabel(done, total) bikin label persen buat progress bar migrasi.
   Jangan pernah nulis 100% sebelum semua selesai, dan jangan bulatkan ke atas —
-  999 dari 1000 itu belum kelar.
+  999 dari 1000 itu belum kelar. Kalau done-nya lewat dari total, tetep tulis
+  100%, jangan 150%.
 files:
   - path: src/progress.js
     content: |
@@ -33,6 +34,10 @@ files:
       test('satu dari tiga', () => {
         assert.equal(progressLabel(1, 3), '33%');
       });
+
+      test('lewat dari total tetap ditulis 100 persen', () => {
+        assert.equal(progressLabel(1500, 1000), '100%');
+      });
 solution:
   - path: src/progress.js
     content: |
@@ -42,4 +47,4 @@ solution:
         }
         return `${Math.floor((done / total) * 100)}%`;
       }
-tests: 4
+tests: 5

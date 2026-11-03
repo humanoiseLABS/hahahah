@@ -22,16 +22,18 @@ files:
         assert.equal(nextAfter(['a', 'b', 'c'], 'b'), 'c');
       });
 
+      // Both sentinels are defensible, so the test asks "is there no answer"
+      // instead of pinning undefined over null.
       test('item yang tidak dikenal tidak lompat ke awal', () => {
-        assert.equal(nextAfter(['a', 'b'], 'z'), undefined);
+        assert.equal(nextAfter(['a', 'b'], 'z') ?? null, null);
       });
 
       test('item terakhir tidak punya berikutnya', () => {
-        assert.equal(nextAfter(['a'], 'a'), undefined);
+        assert.equal(nextAfter(['a'], 'a') ?? null, null);
       });
 
       test('daftar kosong aman', () => {
-        assert.equal(nextAfter([], 'x'), undefined);
+        assert.equal(nextAfter([], 'x') ?? null, null);
       });
 solution:
   - path: src/queue.js

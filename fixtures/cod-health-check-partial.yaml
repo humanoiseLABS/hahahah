@@ -5,7 +5,8 @@ tags: [promises, error-handling, monitoring]
 brief: >-
   reportHealth(services) ngecek semua service dan ngembaliin satu array
   { name, ok }. Service yang mati atau reject harus tercatat ok:false,
-  bukan bikin hasil service lain ikut hilang.
+  bukan bikin hasil service lain ikut hilang. check() juga boleh cuma jawab
+  false — itu tetap dihitung mati.
 files:
   - path: src/health.js
     content: |
@@ -44,6 +45,13 @@ files:
       test('daftar kosong menghasilkan laporan kosong', async () => {
         assert.deepEqual(await reportHealth([]), []);
       });
+
+      test('service yang jawab false ya false, bukan ikut hitung', async () => {
+        const lemas = async () => false;
+        assert.deepEqual(await reportHealth([{ name: 'cache', check: lemas }]), [
+          { name: 'cache', ok: false },
+        ]);
+      });
 solution:
   - path: src/health.js
     content: |
@@ -54,4 +62,4 @@ solution:
           ok: settled[index].status === 'fulfilled' ? settled[index].value : false,
         }));
       }
-tests: 3
+tests: 4

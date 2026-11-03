@@ -1,17 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   checkAll,
   checkFixture,
   commandError,
+  ensureModuleMarker,
   fixturePrompt,
+  GRADE_ENV,
   loadFixtures,
   projectedCostUsd,
   runFixtureStudy,
+  runTests,
   type AgentRun,
   type AgentRunner,
   type CodingFixture,
@@ -89,6 +92,96 @@ test('the fixture runner refuses anything but the node test runner', () => {
     commandError(['node', '--test', '--experimental-permission']) ?? '',
     /relative path/,
   );
+});
+
+test('the grading environment is pinned so the host cannot move a grade', () => {
+  // A local-day getter is a defensible fix for cod-weekend-numbering, and before TZ was
+  // pinned it graded 3/3 here and 1/3 under TZ=America/Los_Angeles.
+  assert.equal(GRADE_ENV.TZ, 'UTC');
+  assert.deepEqual(
+    Object.keys(GRADE_ENV).sort(),
+    ['HOME', 'PATH', 'SYSTEMROOT', 'TEMP', 'TMP', 'TMPDIR', 'TZ'],
+    'anything else the host exports must not reach the graded child',
+  );
+});
+
+test('a graded workspace declares ESM instead of relying on syntax detection', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hahahah-marker-'));
+  try {
+    mkdirSync(join(dir, 'test'), { recursive: true });
+    writeFileSync(
+      join(dir, 'test', 'a.test.js'),
+      "import test from 'node:test';\ntest('esm loads', () => {});\n",
+      'utf8',
+    );
+    ensureModuleMarker(dir);
+    assert.equal(JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')).type, 'module');
+
+    // A manifest the agent wrote keeps its own fields but must not decide module loading:
+    // {"type":"commonjs"} here makes every ESM test file fail to parse.
+    writeFileSync(join(dir, 'package.json'), '{"name":"scratch","type":"commonjs"}\n', 'utf8');
+    ensureModuleMarker(dir);
+    const merged = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as Record<
+      string,
+      unknown
+    >;
+    assert.equal(merged.type, 'module');
+    assert.equal(merged.name, 'scratch');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('the graded child sees the pinned timezone, not the host one', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hahahah-tz-'));
+  mkdirSync(join(dir, 'test'), { recursive: true });
+  writeFileSync(
+    join(dir, 'test', 'tz.test.js'),
+    [
+      "import test from 'node:test';",
+      "import assert from 'node:assert/strict';",
+      "test('child sees UTC', () => {",
+      "  assert.equal(process.env.TZ, 'UTC');",
+      '});',
+      '',
+    ].join('\n'),
+    'utf8',
+  );
+  const hostZone = process.env.TZ;
+  // If the child ever inherits the environment again, it sees Los Angeles and fails.
+  process.env.TZ = 'America/Los_Angeles';
+  try {
+    const result = runTests(dir, ['node', '--test'], ['test/tz.test.js']);
+    assert.equal(result.error, undefined);
+    assert.equal(result.pass, 1);
+    assert.equal(result.fail, 0);
+  } finally {
+    if (hostZone === undefined) delete process.env.TZ;
+    else process.env.TZ = hostZone;
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('a scratch test file the agent leaves behind cannot move the counts', () => {
+  // node --test also discovers *_test.js, so an unpin target list would let free passes
+  // from vendor/ inflate the reported count above the fixture's declared suite.
+  const { report, outDir } = study((cwd) => {
+    fixTheFile(cwd);
+    mkdirSync(join(cwd, 'vendor'), { recursive: true });
+    writeFileSync(
+      join(cwd, 'vendor', 'sneaky_test.js'),
+      "import test from 'node:test';\ntest('free pass', () => {});\ntest('another', () => {});\n",
+      'utf8',
+    );
+  });
+  try {
+    const run = report.results[0]?.baseline.runs[0];
+    assert.equal(run?.grade, 'solved');
+    assert.equal(run?.pass, 2, 'only the declared test files are counted');
+    assert.ok(run?.otherNewFiles.includes('vendor/sneaky_test.js'));
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
 });
 
 test('a fixture whose task state already passes is rejected', () => {

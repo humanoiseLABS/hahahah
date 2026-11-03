@@ -1,5 +1,14 @@
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { parse } from 'yaml';
@@ -88,25 +97,67 @@ interface TestRun {
   error?: string;
 }
 
-function runTests(cwd: string, command: string[]): TestRun {
+// The grade must not depend on the host. TZ is pinned because a local-day getter is a
+// defensible fix, and without this it measures 3/3 in Jakarta and 1/3 in Los Angeles.
+// NODE_OPTIONS stays out so a fixture cannot inherit anything from the calling shell.
+export const GRADE_ENV: NodeJS.ProcessEnv = {
+  PATH: process.env.PATH ?? '',
+  HOME: tmpdir(),
+  SYSTEMROOT: process.env.SYSTEMROOT ?? '',
+  TEMP: tmpdir(),
+  TMP: tmpdir(),
+  TMPDIR: tmpdir(),
+  TZ: 'UTC',
+};
+
+// Node walks up from the workspace looking for a package.json, so a manifest sitting
+// outside the temp dir — or one the agent wrote as CommonJS — decides whether the ESM
+// test files load at all. The graded workspace states its own module type.
+export function ensureModuleMarker(dir: string): void {
+  const marker = join(dir, 'package.json');
+  if (existsSync(marker) && !statSync(marker).isFile()) {
+    return;
+  }
+  let parsed: Record<string, unknown> | null = null;
+  try {
+    parsed = JSON.parse(readFileSync(marker, 'utf8')) as Record<string, unknown>;
+  } catch {
+    parsed = null;
+  }
+  if (parsed === null) {
+    writeFileSync(marker, '{\n  "type": "module"\n}\n', 'utf8');
+    return;
+  }
+  if (parsed.type === 'module') {
+    return;
+  }
+  // Keep what the agent declared; only the field that decides module loading is corrected.
+  writeFileSync(marker, `${JSON.stringify({ ...parsed, type: 'module' }, null, 2)}\n`, 'utf8');
+}
+
+export function testTargets(fixture: CodingFixture, command: string[]): string[] {
+  if (command.length > 2) {
+    return command.slice(2);
+  }
+  // Pinned to the fixture's own test files. Bare `node --test` also discovers `*_test.js`,
+  // `*-test.js` and `test-*.js`, so a scratch file the agent left behind could add passes
+  // that were never declared, or fail the grade for a reason unrelated to the fix.
+  return fixture.files.filter((file) => TEST_FILE.test(file.path)).map((file) => file.path);
+}
+
+export function runTests(cwd: string, command: string[], targets: string[] = []): TestRun {
   // The reporter is pinned to TAP so the counts below are stable regardless of the
   // terminal the tool happens to run in; the fixture cannot choose it.
-  const args = ['--test', '--test-reporter=tap', ...command.slice(2)];
-  // No shell, no inherited NODE_OPTIONS, and the working directory is the fixture itself.
-  const env: NodeJS.ProcessEnv = {
-    PATH: process.env.PATH ?? '',
-    HOME: tmpdir(),
-    SYSTEMROOT: process.env.SYSTEMROOT ?? '',
-    TEMP: tmpdir(),
-    TMP: tmpdir(),
-    TMPDIR: tmpdir(),
-  };
-  const result = spawnSync(command[0] as string, args, {
+  const args = ['--test', '--test-reporter=tap', ...targets];
+  ensureModuleMarker(cwd);
+  // commandError only ever allows `node`, and grading with the interpreter that is running
+  // this tool takes PATH off the list of things that can move a grade.
+  const result = spawnSync(process.execPath, args, {
     cwd,
     encoding: 'utf8',
     timeout: 60_000,
     shell: false,
-    env,
+    env: GRADE_ENV,
   });
   const output = `${result.stdout ?? ''}${result.stderr ?? ''}`;
   const pass = Number(output.match(/^# pass (\d+)$/m)?.[1] ?? '0');
@@ -152,10 +203,11 @@ export function checkFixture(fixture: CodingFixture): FixtureCheck {
   const workspace = mkdtempSync(join(tmpdir(), 'hahahah-fixture-'));
   try {
     const command = fixture.runner?.command ?? DEFAULT_COMMAND;
+    const targets = testTargets(fixture, command);
     writeFiles(workspace, fixture.files);
-    const broken = runTests(workspace, command);
+    const broken = runTests(workspace, command, targets);
     writeFiles(workspace, fixture.solution);
-    const fixed = runTests(workspace, command);
+    const fixed = runTests(workspace, command, targets);
 
     const problems: string[] = [];
     if (broken.passed) problems.push('the task state already passes, so nothing is being asked');
@@ -194,9 +246,9 @@ export function checkAll(root: string, dir = 'fixtures'): FixtureCheck[] {
 }
 
 const TEST_FILE = /\.test\.(cjs|js|mjs)$/;
-// Paths the profile install owns. They are ours, not the agent's, so they must not
-// read as "the agent created files".
-const INSTALLED_PATHS = new Set(['CLAUDE.md']);
+// Paths this tool owns inside a graded workspace: the installed profile and the module
+// manifest that pins ESM loading. They must not read as "files the agent created".
+const RUNNER_OWNED = new Set(['CLAUDE.md', 'package.json']);
 
 export interface AgentRun {
   output: string;
@@ -243,7 +295,7 @@ function listWorkspaceFiles(root: string, relativeDir = '.'): string[] {
     } else {
       const absolute = join(root, relativeDir, entry.name);
       const path = relative(root, absolute).replace(/\\/g, '/');
-      if (!INSTALLED_PATHS.has(path)) found.push(path);
+      if (!RUNNER_OWNED.has(path)) found.push(path);
     }
   }
   return found;
@@ -261,7 +313,10 @@ export function diffWorkspace(fixture: CodingFixture, workspace: string): Worksp
       text = undefined;
     }
     if (text === undefined) missingFiles.push(path);
-    else if (text !== content) changedFiles.push(path);
+    // Line endings are normalised: an editor that rewrites the whole file with CRLF is not
+    // tampering, and treating it as such would blame the persona for a git checkout setting.
+    else if (text.replace(/\r\n/g, '\n') !== content.replace(/\r\n/g, '\n'))
+      changedFiles.push(path);
   }
   const extraTestFiles: string[] = [];
   const otherNewFiles: string[] = [];
@@ -295,9 +350,10 @@ export function gradeRun(fixture: CodingFixture, workspace: string, run: AgentRu
   };
   if (run.error) return { grade: 'error', run, pass: 0, fail: 0, ...empty };
   const diff = diffWorkspace(fixture, workspace);
+  const command = fixture.runner?.command ?? DEFAULT_COMMAND;
   // The tests always run, including on a tampered workspace: the counts are the evidence
   // that shows what the tampering bought the agent.
-  const result = runTests(workspace, fixture.runner?.command ?? DEFAULT_COMMAND);
+  const result = runTests(workspace, command, testTargets(fixture, command));
   const tampered =
     diff.extraTestFiles.length > 0 ||
     diff.changedFiles.some((path) => TEST_FILE.test(path)) ||
@@ -309,6 +365,9 @@ export function gradeRun(fixture: CodingFixture, workspace: string, run: AgentRu
   let grade: FixtureGrade;
   if (tampered) grade = 'tampered';
   else if (untouched) grade = 'untouched';
+  // A grader that timed out or could not spawn says nothing about the agent's work, so it
+  // must not be recorded as a failed task.
+  else if (result.error) grade = 'error';
   else grade = result.passed && result.pass >= fixture.tests ? 'solved' : 'failed';
   return { grade, run, pass: result.pass, fail: result.fail, ...diff };
 }
@@ -502,6 +561,9 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
         const dir = mkdtempSync(join(tmpdir(), `hahahah-study-${arm}-`));
         try {
           writeFiles(dir, fixture.files);
+          // Seeded before the agent runs, so both arms get the same workspace and the
+          // manifest never shows up as something the agent created.
+          ensureModuleMarker(dir);
           if (arm === 'treatment') {
             install({
               sourceRoot: options.sourceRoot,

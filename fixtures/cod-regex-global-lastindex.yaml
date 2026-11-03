@@ -4,8 +4,8 @@ language: en
 tags: [regex, stateful, search]
 brief: >-
   containsTag(text) answers whether a message has a hashtag. It must be a pure
-  question: the same text twice gives the same answer, and one message without
-  a tag must not change the result of the next message.
+  question: the same text twice gives the same answer, and a message that does
+  have a tag must not change the answer for the message that follows it.
 files:
   - path: src/tags.js
     content: |

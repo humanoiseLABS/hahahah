@@ -5,7 +5,8 @@ tags: [strings, search, case]
 brief: >-
   searchProducts(products, query) nyari produk di nama yang cocok sama query.
   Pencariannya tidak peka huruf besar/kecil, dari kedua sisi — user yang ngetik
-  "Kopi" harus tetap nemu produk bernama "Kopi Susu".
+  "Kopi" harus tetap nemu produk bernama "Kopi Susu". Yang nyambung di tengah
+  kata juga dihitung, nggak harus mulai dari awal nama.
 files:
   - path: src/searchProducts.js
     content: |
@@ -35,6 +36,10 @@ files:
       test('query kosong ngasih semua produk', () => {
         assert.equal(searchProducts(katalog, '').length, 2);
       });
+
+      test('potongan di tengah nama juga nemu', () => {
+        assert.deepEqual(searchProducts(katalog, 'oci'), [{ name: 'Teh Poci' }]);
+      });
 solution:
   - path: src/searchProducts.js
     content: |
@@ -42,4 +47,4 @@ solution:
         const needle = query.toLowerCase();
         return products.filter((product) => product.name.toLowerCase().includes(needle));
       }
-tests: 4
+tests: 5

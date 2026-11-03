@@ -3,7 +3,7 @@ id: cod-cents-from-float
 language: id
 tags: [money, float, rounding]
 brief: >-
-  toCents(rupiah) mangubah angka rupiah jadi satuan cents supaya bisa disimpan
+  toCents(rupiah) ngubah angka rupiah jadi satuan cents supaya bisa disimpan
   sebagai integer. 19.99 harus jadi 1999, bukan 1998 — jangan pakai floor
   karena hasil perkalian float bisa meleset sedikit ke bawah.
 files:

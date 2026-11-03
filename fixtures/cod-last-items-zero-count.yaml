@@ -6,7 +6,8 @@ tags: [arrays, slice, edge-case]
 brief: >-
   lastItems(items, count) ngambil beberapa pesan terakhir dari log chat.
   count nol artinya tidak ada yang diminta — balas array kosong, jangan
-  kirim semua pesan. Jumlah yang lebih besar dari panjang daftar ya semuanya.
+  kirim semua pesan. Kalau count-nya negatif, sama aja: nggak ada yang diambil.
+  Jumlah yang lebih besar dari panjang daftar ya semuanya.
 files:
   - path: src/lastItems.js
     content: |

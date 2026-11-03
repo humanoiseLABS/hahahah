@@ -171,3 +171,52 @@ both matter more than the pass counts:
 - Semantic correctness (confabulated paths, unfilled `[placeholders]`, "checkout" read as git checkout) cannot be scored by these screens. Phase 4 needs a judge calibrated against human labels; the k≥3 median rule from §5 is implemented. The coding side is the one place that can score correctness — `fixtures run` grades by executing the fixture's tests — but it has only ever been run against injected stub agents.
 - The coding study's harness posture (`--permission-mode acceptEdits` with `--permission-prompts none`, so the agent edits files but cannot run a shell) is read out of `claude --help` and is **not yet verified on a live run**. The first `--live` pass over one fixture is the preflight: an all-`untouched` or all-`error` result means the harness probably denied the writes, and must not be recorded as a persona defect.
 - Session spend: **≈$22.1** — $16.5 for the first suites and ablations, $5.62 for §8; the §9b restatement cost nothing because it re-scores stored outputs. That is well past the bound A-05 describes, so any further campaign needs an explicit ceiling first. At this price the 60-task coding suite costs ≈$17 per k=1 pass and ≈$52 at k=3 — and that per-task figure is borrowed from the conversational suites, because a coding run uses tools and has never been priced here. All 60 fixtures are now authored, so a first k=1 pass is bounded by `60 × 2 × --budget-usd`: $42 at the $0.35 per-run setting. The preflight run is what replaces the borrowed estimate with a measured coding number. `fixtures run` enforces the ceiling instead of trusting the operator: it calls no model without `--live`, and refuses when `fixtures × repeats × 2 × --budget-usd` exceeds `--max-total-usd`. What is still the owner's to supply is the number, not the plumbing.
+
+## 11. Two review rounds on the fixture set
+
+Spend for this section: **$0**. No model was called; every claim below is either read out of
+a file or measured by running `node --test` in a scratch workspace.
+
+36 fixtures were authored in one pass, so two independent review rounds were run against them
+before any paid study could use them: one over the fixtures, one over the grading runner that
+this pass also changed. Both rounds were asked to hunt specifically for what `fixtures check`
+cannot see — an assertion that grades a correct alternative fix as wrong, a brief that states
+a rule nothing checks, a band-aid implementation that slips through.
+
+**What was found in the fixtures.** Seven briefs did not state a rule their tests enforced, so a
+model could obey the brief and still be graded `failed`: a negative `count` in
+`cod-last-items-zero-count`, reversed arguments in `cod-full-days-floor`, substring matching in
+`cod-search-case-insensitive`, a resolved-`false` health check in `cod-health-check-partial`,
+`'0'`/`'yes'` in `cod-env-flag-false-string`, an over-total progress label, and a non-hex value
+that was only ever tested already-lowercased. Two fixtures pinned incidental detail and were
+loosened instead: `cod-indexof-missing-item` no longer demands `undefined` over `null` (both are
+defensible), and `cod-split-limit-drops-value` no longer matches the error *message* the brief
+never specified. One brief contradicted its own test (`cod-email-plus-tag-canonical`: "domain
+tidak boleh berubah" while asserting a lowercased domain) and one described the opposite of the
+bug it tested (`cod-regex-global-lastindex`: the poisoning comes from a *matching* call, not a
+non-matching one). Four tests were added to close band-aids the reviewers reproduced —
+`flat(2)`, `value !== 'false'`, `ok: status === 'fulfilled'`, and plain `Math.floor((done/total)*100)`.
+One test I had added this round was removed again after review showed it passed in the broken
+state and so enforced nothing (`cod-map-key-type`'s stored-zero lookup, where the brief makes
+absent and zero both answer 0).
+
+**What was found in the runner** (R-35, and the more serious of the two). Three host
+dependencies could have turned a machine difference into a model difference, each measured
+before and after: `date.getDay()` scored 3/3 in Asia/Jakarta and 1/3 in America/Los_Angeles;
+bare `node --test` also discovers `*_test.js`, so a scratch `vendor/sneaky_test.js` reported
+`pass=4` against a fixture declaring 2 tests; and module loading was decided by whatever
+`package.json` Node found above the temp workspace, or by one the agent wrote as CommonJS, which
+zeroed the suite (`pass=0 fail=1`). `runTests` now grades only the fixture's declared test files,
+with `process.execPath`, a seeded `{"type":"module"}` manifest, `TZ=UTC`, and no inherited
+environment. A grader that times out is now recorded as `error`, not `failed`.
+
+**Residual, in order of honesty.** The three new pins are each proven to be able to fail by
+reproducing the unpinned behaviour, but no test exercises the timeout path — that would mean
+hanging a 60-second suite in CI. CRLF is now normalised in the tamper comparison, which means an
+agent that rewrites a test file's line endings only is no longer flagged; that was a deliberate
+trade. The duplication the reviewers counted (five fixtures touching a rounding primitive, three
+touching truthiness, two sharing the bare `.sort()` line) was not reduced: each sits at a
+different call site, and after the progress-label fix that fixture grades a clamp rather than a
+rounding lesson, so it is no longer a near-duplicate. None of this substitutes for the human
+review: whether each *reference solution* is the only defensible reading of its brief is a
+judgement about Indonesian developer idiom, not something a green suite proves.

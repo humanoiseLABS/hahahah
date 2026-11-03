@@ -28,7 +28,7 @@ files:
       });
 
       test('baris tanpa tanda sama dengan ditolak', () => {
-        assert.throws(() => splitKeyValue('tanpa tanda sama dengan'), /key=value/);
+        assert.throws(() => splitKeyValue('tanpa tanda sama dengan'), Error);
       });
 solution:
   - path: src/env.js

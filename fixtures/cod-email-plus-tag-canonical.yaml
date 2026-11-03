@@ -5,7 +5,8 @@ tags: [email, normalization, dedupe]
 brief: >-
   canonicalEmail(email) dipakai buat nyocokin akun, jadi huruf besar di-kecilin
   dan tag plus di bagian depan alamat ("budi+news@contoh.id") dibuang supaya
-  orang yang sama tidak tercatat dua kali. Bagian domain tidak boleh berubah.
+  orang yang sama tidak tercatat dua kali. Domainnya cuma ikut di-kecilkan,
+  jangan sampai kepotong.
 files:
   - path: src/email.js
     content: |

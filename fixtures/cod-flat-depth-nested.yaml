@@ -26,6 +26,16 @@ files:
         assert.deepEqual(flattenTags([['x']]), ['x']);
       });
 
+      test('grup yang nyarang dalam juga ikut rata', () => {
+        assert.deepEqual(flattenTags([['a'], ['b', ['c', ['d', ['e']]]]]), [
+          'a',
+          'b',
+          'c',
+          'd',
+          'e',
+        ]);
+      });
+
       test('grup kosong tidak nambah apa pun', () => {
         assert.deepEqual(flattenTags([[], ['y']]), ['y']);
       });
@@ -35,4 +45,4 @@ solution:
       export function flattenTags(groups) {
         return groups.flat(Infinity);
       }
-tests: 3
+tests: 4
