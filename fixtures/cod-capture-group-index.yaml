@@ -1,0 +1,40 @@
+schema: hahahah.coding.fixture/v1
+id: cod-capture-group-index
+language: en
+tags: [regex, capture-groups, parsing]
+brief: >-
+  extractTrackingCode(text) returns only the numeric part of a courier code
+  such as JNE12345 — the digits, not the whole match. Text without a courier
+  code answers null.
+files:
+  - path: src/tracking.js
+    content: |
+      export function extractTrackingCode(text) {
+        const found = text.match(/JNE(\d+)/);
+        return found ? found[0] : null;
+      }
+  - path: test/tracking.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { extractTrackingCode } from '../src/tracking.js';
+
+      test('only the digits are returned', () => {
+        assert.equal(extractTrackingCode('resi JNE12345 sudah tiba'), '12345');
+      });
+
+      test('text without a code answers null', () => {
+        assert.equal(extractTrackingCode('tidak ada resi'), null);
+      });
+
+      test('a short code still returns its digits', () => {
+        assert.equal(extractTrackingCode('JNE9'), '9');
+      });
+solution:
+  - path: src/tracking.js
+    content: |
+      export function extractTrackingCode(text) {
+        const found = text.match(/JNE(\d+)/);
+        return found ? found[1] : null;
+      }
+tests: 3

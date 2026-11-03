@@ -1,0 +1,38 @@
+schema: hahahah.coding.fixture/v1
+id: cod-invoice-zero-pad
+language: id
+tags: [strings, padding, ids]
+brief: >-
+  invoiceNumber(n) nulis nomor invoice supaya urutannya bener waktu di-sort
+  sebagai teks: nomornya di-pad nol sampai lima digit, INV-7 jadi INV-00007.
+  Nomor yang udah lebih dari lima digit tidak boleh dipotong.
+files:
+  - path: src/invoice.js
+    content: |
+      export function invoiceNumber(n) {
+        return `INV-${n}`;
+      }
+  - path: test/invoice.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { invoiceNumber } from '../src/invoice.js';
+
+      test('nomor kecil di-pad sampai lima digit', () => {
+        assert.equal(invoiceNumber(7), 'INV-00007');
+      });
+
+      test('empat digit juga di-pad', () => {
+        assert.equal(invoiceNumber(1000), 'INV-01000');
+      });
+
+      test('nomor panjang tidak kepotong', () => {
+        assert.equal(invoiceNumber(123456), 'INV-123456');
+      });
+solution:
+  - path: src/invoice.js
+    content: |
+      export function invoiceNumber(n) {
+        return `INV-${String(n).padStart(5, '0')}`;
+      }
+tests: 3

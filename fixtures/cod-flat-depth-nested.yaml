@@ -1,0 +1,38 @@
+schema: hahahah.coding.fixture/v1
+id: cod-flat-depth-nested
+language: id
+tags: [arrays, flatten, nesting]
+brief: >-
+  flattenTags(groups) ngegabungin daftar tag yang isinya daftar-dari-tag
+  jadi satu daftar rata. Grup bisa bersarang beberapa tingkat, semuanya
+  harus keluar jadi string — tidak ada sub-array yang ketinggalan.
+files:
+  - path: src/tags.js
+    content: |
+      export function flattenTags(groups) {
+        return groups.flat();
+      }
+  - path: test/tags.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { flattenTags } from '../src/tags.js';
+
+      test('sub-grup ikut dirata', () => {
+        assert.deepEqual(flattenTags([['a'], ['b', ['c', 'd']]]), ['a', 'b', 'c', 'd']);
+      });
+
+      test('satu grup biasa tetap sama', () => {
+        assert.deepEqual(flattenTags([['x']]), ['x']);
+      });
+
+      test('grup kosong tidak nambah apa pun', () => {
+        assert.deepEqual(flattenTags([[], ['y']]), ['y']);
+      });
+solution:
+  - path: src/tags.js
+    content: |
+      export function flattenTags(groups) {
+        return groups.flat(Infinity);
+      }
+tests: 3

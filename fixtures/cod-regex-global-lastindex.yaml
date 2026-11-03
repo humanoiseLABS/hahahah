@@ -1,0 +1,44 @@
+schema: hahahah.coding.fixture/v1
+id: cod-regex-global-lastindex
+language: en
+tags: [regex, stateful, search]
+brief: >-
+  containsTag(text) answers whether a message has a hashtag. It must be a pure
+  question: the same text twice gives the same answer, and one message without
+  a tag must not change the result of the next message.
+files:
+  - path: src/tags.js
+    content: |
+      const HAS_TAG = /#\w+/g;
+
+      export function containsTag(text) {
+        return HAS_TAG.test(text);
+      }
+  - path: test/tags.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { containsTag } from '../src/tags.js';
+
+      test('a message with a hashtag is found', () => {
+        assert.equal(containsTag('lihat #promo'), true);
+      });
+
+      test('the next message is answered on its own', () => {
+        assert.equal(containsTag('#diskon lagi'), true);
+      });
+
+      test('a message without a hashtag is not found', () => {
+        assert.equal(containsTag('halo dunia'), false);
+      });
+
+      test('the first message is answered the same twice', () => {
+        assert.equal(containsTag('lihat #promo'), true);
+      });
+solution:
+  - path: src/tags.js
+    content: |
+      export function containsTag(text) {
+        return /#\w+/.test(text);
+      }
+tests: 4

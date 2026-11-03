@@ -1,0 +1,42 @@
+schema: hahahah.coding.fixture/v1
+id: cod-round-away-from-zero
+language: id
+tags: [rounding, negatives, refunds]
+brief: >-
+  roundRupiah(nilai) bulatin angka ke rupiah terdekat untuk pembulatan refund.
+  Aturnya pembulatan menjauhi nol, jadi -2.5 itu -3 — simetris dengan 2.5 yang 3.
+  Sekarang nilai negatif dibulatkan ke arah yang lain.
+files:
+  - path: src/round.js
+    content: |
+      export function roundRupiah(nilai) {
+        return Math.round(nilai);
+      }
+  - path: test/round.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { roundRupiah } from '../src/round.js';
+
+      test('positif setengah naik', () => {
+        assert.equal(roundRupiah(2.5), 3);
+      });
+
+      test('negatif setengah menjauhi nol', () => {
+        assert.equal(roundRupiah(-2.5), -3);
+      });
+
+      test('negatif yang bukan setengah tetap dekat nol', () => {
+        assert.equal(roundRupiah(-2.4), -2);
+      });
+
+      test('setengah ke bawah juga menjauhi nol', () => {
+        assert.equal(roundRupiah(-0.5), -1);
+      });
+solution:
+  - path: src/round.js
+    content: |
+      export function roundRupiah(nilai) {
+        return nilai < 0 ? -Math.round(-nilai) : Math.round(nilai);
+      }
+tests: 4

@@ -1,0 +1,38 @@
+schema: hahahah.coding.fixture/v1
+id: cod-locale-thousands-dots
+language: id
+tags: [parsing, locale, money]
+brief: >-
+  parseAmount(text) baca angka yang ditulis gaya Indonesia — titik sebagai
+  pemisah ribuan, misalnya "Rp 1.234.567" itu satu juta dua ratus tiga puluh
+  empat ribu lima ratus enam puluh tujuh. Outputnya angka bulat.
+files:
+  - path: src/amount.js
+    content: |
+      export function parseAmount(text) {
+        return Number(text.replace(/[^\d.]/g, ''));
+      }
+  - path: test/amount.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { parseAmount } from '../src/amount.js';
+
+      test('Titik ribuan tidak membuat angka jadi NaN', () => {
+        assert.equal(parseAmount('Rp 1.234.567'), 1234567);
+      });
+
+      test('Seribu tetap seribu, bukan satu', () => {
+        assert.equal(parseAmount('1.000'), 1000);
+      });
+
+      test('Angka polos tanpa pemisah diterima', () => {
+        assert.equal(parseAmount('45000'), 45000);
+      });
+solution:
+  - path: src/amount.js
+    content: |
+      export function parseAmount(text) {
+        return Number(text.replace(/\D/g, ''));
+      }
+tests: 3

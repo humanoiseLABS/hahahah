@@ -1,0 +1,43 @@
+schema: hahahah.coding.fixture/v1
+id: cod-match-null-guard
+language: en
+tags: [regex, "null", extraction]
+brief: >-
+  firstDigits(text) pulls the first run of digits out of an incoming chat
+  message. Messages without any digits are normal traffic, so return null
+  instead of letting the caller crash on the match result.
+files:
+  - path: src/digits.js
+    content: |
+      export function firstDigits(text) {
+        return text.match(/\d+/)[0];
+      }
+  - path: test/digits.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { firstDigits } from '../src/digits.js';
+
+      test('a plain code is extracted', () => {
+        assert.equal(firstDigits('kode 4211'), '4211');
+      });
+
+      test('the first run wins', () => {
+        assert.equal(firstDigits('a1b2'), '1');
+      });
+
+      test('no digits answers null', () => {
+        assert.equal(firstDigits('tanpa angka'), null);
+      });
+
+      test('a leading digit still works', () => {
+        assert.equal(firstDigits('7 menit lagi'), '7');
+      });
+solution:
+  - path: src/digits.js
+    content: |
+      export function firstDigits(text) {
+        const found = text.match(/\d+/);
+        return found ? found[0] : null;
+      }
+tests: 4

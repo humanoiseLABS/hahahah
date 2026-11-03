@@ -1,0 +1,46 @@
+schema: hahahah.coding.fixture/v1
+id: cod-hex-color-expand
+language: id
+tags: [strings, color, normalization]
+brief: >-
+  normalizeColor(color) dipakai buat bandingkan warna tema, jadi bentuk singkat
+  tiga digit harus di-expand ke enam digit dan huruf besar jadi kecil.
+  Nilai yang bukan hex seperti rgb() cukup di-kecil saja.
+files:
+  - path: src/color.js
+    content: |
+      export function normalizeColor(color) {
+        return color.toLowerCase();
+      }
+  - path: test/color.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { normalizeColor } from '../src/color.js';
+
+      test('bentuk singkat di-expand', () => {
+        assert.equal(normalizeColor('#ABC'), '#aabbcc');
+      });
+
+      test('putih singkat jadi enam f', () => {
+        assert.equal(normalizeColor('#fff'), '#ffffff');
+      });
+
+      test('hex enam digit cuma di-kecilkan', () => {
+        assert.equal(normalizeColor('#112233'), '#112233');
+      });
+
+      test('nilai non-hex dibiarkan apa adanya', () => {
+        assert.equal(normalizeColor('rgb(1, 2, 3)'), 'rgb(1, 2, 3)');
+      });
+solution:
+  - path: src/color.js
+    content: |
+      export function normalizeColor(color) {
+        const lower = color.toLowerCase();
+        if (/^#[0-9a-f]{3}$/.test(lower)) {
+          return `#${lower[1]}${lower[1]}${lower[2]}${lower[2]}${lower[3]}${lower[3]}`;
+        }
+        return lower;
+      }
+tests: 4

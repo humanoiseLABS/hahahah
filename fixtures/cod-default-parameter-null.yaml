@@ -1,0 +1,42 @@
+schema: hahahah.coding.fixture/v1
+id: cod-default-parameter-null
+language: en
+tags: [defaults, nullish, paging]
+brief: >-
+  pageSize(size) returns the page size to use, falling back to the default of
+  20 when the caller has no value. "No value" includes both an omitted
+  argument and an explicit null, but a requested zero must stay zero.
+files:
+  - path: src/pageSize.js
+    content: |
+      export function pageSize(size = 20) {
+        return size;
+      }
+  - path: test/pageSize.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { pageSize } from '../src/pageSize.js';
+
+      test('omitted size uses the default', () => {
+        assert.equal(pageSize(), 20);
+      });
+
+      test('an explicit null uses the default', () => {
+        assert.equal(pageSize(null), 20);
+      });
+
+      test('an explicit zero is respected', () => {
+        assert.equal(pageSize(0), 0);
+      });
+
+      test('a given size is returned', () => {
+        assert.equal(pageSize(50), 50);
+      });
+solution:
+  - path: src/pageSize.js
+    content: |
+      export function pageSize(size) {
+        return size === undefined || size === null ? 20 : size;
+      }
+tests: 4

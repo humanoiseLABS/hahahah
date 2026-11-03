@@ -1,0 +1,47 @@
+schema: hahahah.coding.fixture/v1
+id: cod-query-value-encode
+language: id
+hidden: true
+tags: [url, encoding, injection]
+brief: >-
+  buildQuery(params) nyusun query string buat request ke API kampung.
+  Nilai harus di-encode: spasi jadi %20 dan karakter & atau = di dalam nilai
+  tidak boleh menyamar jadi parameter baru.
+files:
+  - path: src/query.js
+    content: |
+      export function buildQuery(params) {
+        return Object.entries(params)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&');
+      }
+  - path: test/query.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { buildQuery } from '../src/query.js';
+
+      test('spasi di nilai di-encode', () => {
+        assert.equal(buildQuery({ q: 'kopi Susu' }), 'q=kopi%20Susu');
+      });
+
+      test('nilai tidak bisa memalsukan parameter baru', () => {
+        assert.equal(buildQuery({ q: 'a&b=evil' }), 'q=a%26b%3Devil');
+      });
+
+      test('satu parameter biasa tetap rapi', () => {
+        assert.equal(buildQuery({ page: '2' }), 'page=2');
+      });
+
+      test('params kosong jadi string kosong', () => {
+        assert.equal(buildQuery({}), '');
+      });
+solution:
+  - path: src/query.js
+    content: |
+      export function buildQuery(params) {
+        return Object.entries(params)
+          .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+          .join('&');
+      }
+tests: 4

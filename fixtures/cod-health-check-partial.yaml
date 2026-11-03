@@ -1,0 +1,57 @@
+schema: hahahah.coding.fixture/v1
+id: cod-health-check-partial
+language: id
+tags: [promises, error-handling, monitoring]
+brief: >-
+  reportHealth(services) ngecek semua service dan ngembaliin satu array
+  { name, ok }. Service yang mati atau reject harus tercatat ok:false,
+  bukan bikin hasil service lain ikut hilang.
+files:
+  - path: src/health.js
+    content: |
+      export async function reportHealth(services) {
+        const values = await Promise.all(services.map((service) => service.check()));
+        return services.map((service, index) => ({ name: service.name, ok: values[index] }));
+      }
+  - path: test/health.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { reportHealth } from '../src/health.js';
+
+      const hidup = async () => true;
+      const mati = async () => {
+        throw new Error('connection timeout');
+      };
+
+      test('service yang mati tidak menghapus hasil yang lain', async () => {
+        const report = await reportHealth([
+          { name: 'api', check: hidup },
+          { name: 'db', check: mati },
+        ]);
+        assert.deepEqual(report, [
+          { name: 'api', ok: true },
+          { name: 'db', ok: false },
+        ]);
+      });
+
+      test('semua sehat tercatat sehat', async () => {
+        assert.deepEqual(await reportHealth([{ name: 'api', check: hidup }]), [
+          { name: 'api', ok: true },
+        ]);
+      });
+
+      test('daftar kosong menghasilkan laporan kosong', async () => {
+        assert.deepEqual(await reportHealth([]), []);
+      });
+solution:
+  - path: src/health.js
+    content: |
+      export async function reportHealth(services) {
+        const settled = await Promise.allSettled(services.map((service) => service.check()));
+        return services.map((service, index) => ({
+          name: service.name,
+          ok: settled[index].status === 'fulfilled' ? settled[index].value : false,
+        }));
+      }
+tests: 3

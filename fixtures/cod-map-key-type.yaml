@@ -1,0 +1,43 @@
+schema: hahahah.coding.fixture/v1
+id: cod-map-key-type
+language: en
+tags: [maps, key-types, coercion]
+brief: >-
+  stockFor(warehouse, sku) reads a stock count from a Map that was loaded from
+  JSON, so its keys are strings. Callers pass either "8812" or 8812 and must get
+  the same answer. An unknown sku reports zero stock instead of undefined.
+files:
+  - path: src/stock.js
+    content: |
+      export function stockFor(warehouse, sku) {
+        return warehouse.get(sku) ?? 0;
+      }
+  - path: test/stock.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { stockFor } from '../src/stock.js';
+
+      const warehouse = new Map([
+        ['8812', 5],
+        ['9000', 0],
+      ]);
+
+      test('a numeric sku still finds the record', () => {
+        assert.equal(stockFor(warehouse, 8812), 5);
+      });
+
+      test('a string sku finds the record too', () => {
+        assert.equal(stockFor(warehouse, '8812'), 5);
+      });
+
+      test('an unknown sku reports zero', () => {
+        assert.equal(stockFor(warehouse, '1111'), 0);
+      });
+solution:
+  - path: src/stock.js
+    content: |
+      export function stockFor(warehouse, sku) {
+        return warehouse.get(String(sku)) ?? 0;
+      }
+tests: 3

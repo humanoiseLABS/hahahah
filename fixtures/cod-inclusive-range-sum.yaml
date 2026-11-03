@@ -1,0 +1,46 @@
+schema: hahahah.coding.fixture/v1
+id: cod-inclusive-range-sum
+language: id
+tags: [loops, off-by-one, ranges]
+brief: >-
+  sumRange(start, end) njumlahin nomor antrian dari start sampai end,
+  termasuk end. Sekarang antrian terakhir nggak ikut kejumlah, dan range
+  satu angka jadi nol.
+files:
+  - path: src/range.js
+    content: |
+      export function sumRange(start, end) {
+        let total = 0;
+        for (let i = start; i < end; i += 1) {
+          total += i;
+        }
+        return total;
+      }
+  - path: test/range.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { sumRange } from '../src/range.js';
+
+      test('angka terakhir ikut terhitung', () => {
+        assert.equal(sumRange(1, 3), 6);
+      });
+
+      test('range satu angka ya angka itu', () => {
+        assert.equal(sumRange(5, 5), 5);
+      });
+
+      test('mulai dari nol tetap benar', () => {
+        assert.equal(sumRange(0, 2), 3);
+      });
+solution:
+  - path: src/range.js
+    content: |
+      export function sumRange(start, end) {
+        let total = 0;
+        for (let i = start; i <= end; i += 1) {
+          total += i;
+        }
+        return total;
+      }
+tests: 3

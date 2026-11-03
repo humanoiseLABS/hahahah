@@ -1,0 +1,56 @@
+schema: hahahah.coding.fixture/v1
+id: cod-memo-key-collision
+language: id
+tags: [caching, key-design, collision]
+brief: >-
+  cachedQuote(cache, region, service) nyimpen kutipan biar tidak dihitung dua kali.
+  Kunci cache harus membedakan pasangan argumen: region "1,2" dengan service "3"
+  itu lain dari region "1" dengan service "2,3".
+files:
+  - path: src/quote.js
+    content: |
+      export function cachedQuote(cache, region, service) {
+        const key = `${region},${service}`;
+        if (cache[key] === undefined) {
+          cache[key] = `${region}:${service}=100`;
+        }
+        return cache[key];
+      }
+  - path: test/quote.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { cachedQuote } from '../src/quote.js';
+
+      test('pasangan argumen yang beda tidak boleh saling timpa', () => {
+        const cache = {};
+        const pertama = cachedQuote(cache, '1,2', '3');
+        const kedua = cachedQuote(cache, '1', '2,3');
+        assert.notEqual(pertama, kedua);
+      });
+
+      test('argumen yang sama dapat nilai yang sama', () => {
+        const cache = {};
+        assert.equal(
+          cachedQuote(cache, 'bdg', 'ongkir'),
+          cachedQuote(cache, 'bdg', 'ongkir'),
+        );
+      });
+
+      test('dua pasangan berbeda menempati dua entri', () => {
+        const cache = {};
+        cachedQuote(cache, '1,2', '3');
+        cachedQuote(cache, '1', '2,3');
+        assert.equal(Object.keys(cache).length, 2);
+      });
+solution:
+  - path: src/quote.js
+    content: |
+      export function cachedQuote(cache, region, service) {
+        const key = JSON.stringify([region, service]);
+        if (cache[key] === undefined) {
+          cache[key] = `${region}:${service}=100`;
+        }
+        return cache[key];
+      }
+tests: 3

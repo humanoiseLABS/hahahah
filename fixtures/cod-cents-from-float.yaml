@@ -1,0 +1,42 @@
+schema: hahahah.coding.fixture/v1
+id: cod-cents-from-float
+language: id
+tags: [money, float, rounding]
+brief: >-
+  toCents(rupiah) mangubah angka rupiah jadi satuan cents supaya bisa disimpan
+  sebagai integer. 19.99 harus jadi 1999, bukan 1998 — jangan pakai floor
+  karena hasil perkalian float bisa meleset sedikit ke bawah.
+files:
+  - path: src/cents.js
+    content: |
+      export function toCents(rupiah) {
+        return Math.floor(rupiah * 100);
+      }
+  - path: test/cents.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { toCents } from '../src/cents.js';
+
+      test('harga 19.99 jadi 1999', () => {
+        assert.equal(toCents(19.99), 1999);
+      });
+
+      test('harga 2.3 jadi 230', () => {
+        assert.equal(toCents(2.3), 230);
+      });
+
+      test('pecah kecil tidak kehilangan digit', () => {
+        assert.equal(toCents(0.07), 7);
+      });
+
+      test('angka bulat aman', () => {
+        assert.equal(toCents(1500), 150000);
+      });
+solution:
+  - path: src/cents.js
+    content: |
+      export function toCents(rupiah) {
+        return Math.round(rupiah * 100);
+      }
+tests: 4

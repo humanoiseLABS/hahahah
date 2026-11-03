@@ -1,0 +1,46 @@
+schema: hahahah.coding.fixture/v1
+id: cod-indexof-missing-item
+language: id
+tags: [arrays, index, off-by-one]
+brief: >-
+  nextAfter(items, current) ngasih item berikutnya dari daftar antrian.
+  Kalau current ternyata tidak ada di daftar, jawabannya tidak ada —
+  bukan item pertama, karena indexOf ngasilin -1.
+files:
+  - path: src/queue.js
+    content: |
+      export function nextAfter(items, current) {
+        return items[items.indexOf(current) + 1];
+      }
+  - path: test/queue.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { nextAfter } from '../src/queue.js';
+
+      test('item berikutnya diambil dari posisi yang benar', () => {
+        assert.equal(nextAfter(['a', 'b', 'c'], 'b'), 'c');
+      });
+
+      test('item yang tidak dikenal tidak lompat ke awal', () => {
+        assert.equal(nextAfter(['a', 'b'], 'z'), undefined);
+      });
+
+      test('item terakhir tidak punya berikutnya', () => {
+        assert.equal(nextAfter(['a'], 'a'), undefined);
+      });
+
+      test('daftar kosong aman', () => {
+        assert.equal(nextAfter([], 'x'), undefined);
+      });
+solution:
+  - path: src/queue.js
+    content: |
+      export function nextAfter(items, current) {
+        const index = items.indexOf(current);
+        if (index === -1) {
+          return undefined;
+        }
+        return items[index + 1];
+      }
+tests: 4

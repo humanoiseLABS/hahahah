@@ -1,0 +1,45 @@
+schema: hahahah.coding.fixture/v1
+id: cod-shallow-copy-leak
+language: id
+tags: [copying, aliasing, objects]
+brief: >-
+  cloneOrder(order) dipakai buat bikin draft dari order yang sudah disimpan.
+  Draft boleh diedit tanpa mengubah order aslinya — termasuk daftar items-nya,
+  yang sekarang masih merujuk array yang sama.
+files:
+  - path: src/order.js
+    content: |
+      export function cloneOrder(order) {
+        return { ...order };
+      }
+  - path: test/order.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { cloneOrder } from '../src/order.js';
+
+      test('menambah item ke draft tidak mengubah aslinya', () => {
+        const asli = { id: 1, items: ['baju'] };
+        const draft = cloneOrder(asli);
+        draft.items.push('celana');
+        assert.deepEqual(asli.items, ['baju']);
+      });
+
+      test('mengubah field biasa tidak mengubah aslinya', () => {
+        const asli = { id: 1, items: ['baju'] };
+        const draft = cloneOrder(asli);
+        draft.id = 2;
+        assert.equal(asli.id, 1);
+      });
+
+      test('draft punya isi yang sama', () => {
+        const asli = { id: 7, items: ['a', 'b'] };
+        assert.deepEqual(cloneOrder(asli), asli);
+      });
+solution:
+  - path: src/order.js
+    content: |
+      export function cloneOrder(order) {
+        return { ...order, items: order.items.slice() };
+      }
+tests: 3

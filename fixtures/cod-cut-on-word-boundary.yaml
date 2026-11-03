@@ -1,0 +1,47 @@
+schema: hahahah.coding.fixture/v1
+id: cod-cut-on-word-boundary
+language: id
+tags: [strings, truncation, display]
+brief: >-
+  cutWords(text, max) motong kalimat buat preview kartu seukuran max karakter.
+  Motongnya di spasi terakhir sebelum batas, jadi tidak ada kata yang kepotong
+  di tengah. Kata tunggal yang lebih panjang dari max ya dipotong pas di max.
+files:
+  - path: src/cut.js
+    content: |
+      export function cutWords(text, max) {
+        return text.slice(0, max);
+      }
+  - path: test/cut.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { cutWords } from '../src/cut.js';
+
+      test('kata tidak dibelah di tengah', () => {
+        assert.equal(cutWords('kopi susu pagi', 12), 'kopi susu');
+      });
+
+      test('teks yang muat dibiarkan utuh', () => {
+        assert.equal(cutWords('kopi', 10), 'kopi');
+      });
+
+      test('kata panjang dipotong pas di batas', () => {
+        assert.equal(cutWords('pembangunan', 6), 'pemban');
+      });
+
+      test('tepat di batas tidak motong apa pun', () => {
+        assert.equal(cutWords('abc def', 7), 'abc def');
+      });
+solution:
+  - path: src/cut.js
+    content: |
+      export function cutWords(text, max) {
+        if (text.length <= max) {
+          return text;
+        }
+        const head = text.slice(0, max);
+        const lastSpace = head.lastIndexOf(' ');
+        return lastSpace > 0 ? head.slice(0, lastSpace) : head;
+      }
+tests: 4

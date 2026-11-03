@@ -1,0 +1,51 @@
+schema: hahahah.coding.fixture/v1
+id: cod-clamp-both-bounds
+language: id
+tags: [bounds, clamp, input]
+brief: >-
+  clampVolume(value) menjaga volume speaker di rentang 0 sampai 100.
+  Yang di atas 100 udah di-cut, tapi nilai negatif masih lolos dan bikin
+  aplikasi crash di driver audio.
+files:
+  - path: src/volume.js
+    content: |
+      export function clampVolume(value) {
+        if (value > 100) {
+          return 100;
+        }
+        return value;
+      }
+  - path: test/volume.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { clampVolume } from '../src/volume.js';
+
+      test('di atas langit-langit dipotong ke 100', () => {
+        assert.equal(clampVolume(120), 100);
+      });
+
+      test('nilai negatif dinaikkan ke 0', () => {
+        assert.equal(clampVolume(-5), 0);
+      });
+
+      test('nilai di tengah rentang tidak berubah', () => {
+        assert.equal(clampVolume(40), 40);
+      });
+
+      test('nol ya nol', () => {
+        assert.equal(clampVolume(0), 0);
+      });
+solution:
+  - path: src/volume.js
+    content: |
+      export function clampVolume(value) {
+        if (value > 100) {
+          return 100;
+        }
+        if (value < 0) {
+          return 0;
+        }
+        return value;
+      }
+tests: 4

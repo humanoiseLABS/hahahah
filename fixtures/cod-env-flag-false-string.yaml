@@ -1,0 +1,47 @@
+schema: hahahah.coding.fixture/v1
+id: cod-env-flag-false-string
+language: id
+tags: [config, env, string-boolean]
+brief: >-
+  featureEnabled(env, name) nutup fitur kalau env di-set "false".
+  Environment variable itu string, jadi "false" ikut terbaca sebagai nyala.
+  Yang dianggap nyala cuma "true" dan "1"; belum diset berarti mati.
+files:
+  - path: src/flags.js
+    content: |
+      export function featureEnabled(env, name) {
+        return Boolean(env[name]);
+      }
+  - path: test/flags.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { featureEnabled } from '../src/flags.js';
+
+      test('false yang ditulis orang berarti mati', () => {
+        assert.equal(featureEnabled({ FAST_BUILD: 'false' }, 'FAST_BUILD'), false);
+      });
+
+      test('true berarti nyala', () => {
+        assert.equal(featureEnabled({ FAST_BUILD: 'true' }, 'FAST_BUILD'), true);
+      });
+
+      test('1 berarti nyala', () => {
+        assert.equal(featureEnabled({ FAST_BUILD: '1' }, 'FAST_BUILD'), true);
+      });
+
+      test('belum diset berarti mati', () => {
+        assert.equal(featureEnabled({}, 'FAST_BUILD'), false);
+      });
+solution:
+  - path: src/flags.js
+    content: |
+      export function featureEnabled(env, name) {
+        const value = env[name];
+        if (value === undefined) {
+          return false;
+        }
+        const normalized = value.trim().toLowerCase();
+        return normalized === 'true' || normalized === '1';
+      }
+tests: 4

@@ -1,0 +1,51 @@
+schema: hahahah.coding.fixture/v1
+id: cod-sort-names-by-letter
+language: en
+tags: [sorting, strings, case]
+brief: >-
+  sortNames(names) lists customer names alphabetically, ignoring case, so
+  "Bob" comes after "anna" and not before it. The input array must stay
+  unchanged. No locale collation is required — plain letter order is enough.
+files:
+  - path: src/names.js
+    content: |
+      export function sortNames(names) {
+        return names.slice().sort();
+      }
+  - path: test/names.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { sortNames } from '../src/names.js';
+
+      test('uppercase does not jump ahead of lowercase', () => {
+        assert.deepEqual(sortNames(['anna', 'Bob']), ['anna', 'Bob']);
+      });
+
+      test('three names keep letter order', () => {
+        assert.deepEqual(sortNames(['banana', 'Apple', 'cherry']), ['Apple', 'banana', 'cherry']);
+      });
+
+      test('mixed case pairs sort by letter', () => {
+        assert.deepEqual(sortNames(['Ted', 'anna']), ['anna', 'Ted']);
+      });
+
+      test('the caller array is not modified', () => {
+        const input = ['zeta', 'Alpha'];
+        sortNames(input);
+        assert.deepEqual(input, ['zeta', 'Alpha']);
+      });
+solution:
+  - path: src/names.js
+    content: |
+      export function sortNames(names) {
+        return names.slice().sort((a, b) => {
+          const left = a.toLowerCase();
+          const right = b.toLowerCase();
+          if (left === right) {
+            return 0;
+          }
+          return left < right ? -1 : 1;
+        });
+      }
+tests: 4

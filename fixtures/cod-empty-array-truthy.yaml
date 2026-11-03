@@ -1,0 +1,44 @@
+schema: hahahah.coding.fixture/v1
+id: cod-empty-array-truthy
+language: id
+tags: [falsy, arrays, messaging]
+brief: >-
+  describeHits(results) nyusun pesan jumlah tiket yang ketemu.
+  Array kosong itu tetap object yang "ada", jadi jangan dianggap
+  ada hasil cuma karena variabelnya terisi.
+files:
+  - path: src/hits.js
+    content: |
+      export function describeHits(results) {
+        if (results) {
+          return `Ditemukan ${results.length} tiket`;
+        }
+        return 'Tidak ada tiket';
+      }
+  - path: test/hits.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { describeHits } from '../src/hits.js';
+
+      test('nol hasil ditulis tidak ada tiket', () => {
+        assert.equal(describeHits([]), 'Tidak ada tiket');
+      });
+
+      test('satu hasil tetap disebut', () => {
+        assert.equal(describeHits([{ id: 1 }]), 'Ditemukan 1 tiket');
+      });
+
+      test('beberapa hasil dihitung', () => {
+        assert.equal(describeHits([{ id: 1 }, { id: 2 }]), 'Ditemukan 2 tiket');
+      });
+solution:
+  - path: src/hits.js
+    content: |
+      export function describeHits(results) {
+        if (results.length > 0) {
+          return `Ditemukan ${results.length} tiket`;
+        }
+        return 'Tidak ada tiket';
+      }
+tests: 3

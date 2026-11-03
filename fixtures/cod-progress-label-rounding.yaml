@@ -1,0 +1,45 @@
+schema: hahahah.coding.fixture/v1
+id: cod-progress-label-rounding
+language: id
+tags: [rounding, progress, display]
+brief: >-
+  progressLabel(done, total) bikin label persen buat progress bar migrasi.
+  Jangan pernah nulis 100% sebelum semua selesai, dan jangan bulatkan ke atas —
+  999 dari 1000 itu belum kelar.
+files:
+  - path: src/progress.js
+    content: |
+      export function progressLabel(done, total) {
+        return `${Math.round((done / total) * 100)}%`;
+      }
+  - path: test/progress.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { progressLabel } from '../src/progress.js';
+
+      test('999 dari 1000 belum 100 persen', () => {
+        assert.equal(progressLabel(999, 1000), '99%');
+      });
+
+      test('dua dari tiga tidak dibulatkan ke atas', () => {
+        assert.equal(progressLabel(2, 3), '66%');
+      });
+
+      test('selesai penuh ditulis 100 persen', () => {
+        assert.equal(progressLabel(1000, 1000), '100%');
+      });
+
+      test('satu dari tiga', () => {
+        assert.equal(progressLabel(1, 3), '33%');
+      });
+solution:
+  - path: src/progress.js
+    content: |
+      export function progressLabel(done, total) {
+        if (done >= total) {
+          return '100%';
+        }
+        return `${Math.floor((done / total) * 100)}%`;
+      }
+tests: 4

@@ -1,0 +1,48 @@
+schema: hahahah.coding.fixture/v1
+id: cod-full-days-floor
+language: id
+tags: [dates, rounding, durations]
+brief: >-
+  fullDaysBetween(startMs, endMs) ngitung hari penuh antara dua timestamp
+  (milidetik). Hari penuh ya hari yang udah kelar: 1 hari 20 jam itu 1 hari,
+  23 jam itu 0 hari. Urusan zona waktu bukan urusan fungsi ini.
+files:
+  - path: src/days.js
+    content: |
+      const DAY_MS = 86400000;
+
+      export function fullDaysBetween(startMs, endMs) {
+        return Math.round(Math.abs(endMs - startMs) / DAY_MS);
+      }
+  - path: test/days.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { fullDaysBetween } from '../src/days.js';
+
+      const DAY = 86400000;
+
+      test('satu hari dua puluh jam dihitung satu hari', () => {
+        assert.equal(fullDaysBetween(0, DAY + 20 * 3600000), 1);
+      });
+
+      test('dua puluh tiga jam belum sehari', () => {
+        assert.equal(fullDaysBetween(0, 23 * 3600000), 0);
+      });
+
+      test('tiga hari pas tetap tiga', () => {
+        assert.equal(fullDaysBetween(0, 3 * DAY), 3);
+      });
+
+      test('urutan terbalik tidak bikin negatif', () => {
+        assert.equal(fullDaysBetween(2 * DAY, 0), 2);
+      });
+solution:
+  - path: src/days.js
+    content: |
+      const DAY_MS = 86400000;
+
+      export function fullDaysBetween(startMs, endMs) {
+        return Math.floor(Math.abs(endMs - startMs) / DAY_MS);
+      }
+tests: 4

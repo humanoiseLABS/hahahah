@@ -1,0 +1,57 @@
+schema: hahahah.coding.fixture/v1
+id: cod-unique-by-field
+language: id
+hidden: true
+tags: [sets, object-identity, dedupe]
+brief: >-
+  uniqueUsers(users) buang duplikat pelanggan berdasarkan id. Dua object
+  dengan id yang sama itu orang yang sama, walau object-nya beda. Urutan
+  tetap seperti aslinya dan kemunculan pertama yang dipakai.
+files:
+  - path: src/users.js
+    content: |
+      export function uniqueUsers(users) {
+        return [...new Set(users)];
+      }
+  - path: test/users.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { uniqueUsers } from '../src/users.js';
+
+      test('dua object dengan id sama dianggap satu orang', () => {
+        const users = [
+          { id: 7, name: 'Budi' },
+          { id: 7, name: 'Budi' },
+        ];
+        assert.equal(uniqueUsers(users).length, 1);
+      });
+
+      test('id yang beda tetap dipertahankan urutannya', () => {
+        const users = [
+          { id: 1, name: 'A' },
+          { id: 2, name: 'B' },
+        ];
+        assert.deepEqual(uniqueUsers(users), users);
+      });
+
+      test('kemunculan pertama yang menang', () => {
+        const users = [
+          { id: 3, name: 'lama' },
+          { id: 3, name: 'baru' },
+        ];
+        assert.equal(uniqueUsers(users)[0].name, 'lama');
+      });
+solution:
+  - path: src/users.js
+    content: |
+      export function uniqueUsers(users) {
+        const seen = new Map();
+        for (const user of users) {
+          if (!seen.has(user.id)) {
+            seen.set(user.id, user);
+          }
+        }
+        return [...seen.values()];
+      }
+tests: 3

@@ -1,0 +1,39 @@
+schema: hahahah.coding.fixture/v1
+id: cod-missing-address-crash
+language: id
+hidden: true
+tags: [null-safety, optional-chaining, rendering]
+brief: >-
+  cityLabel(user) dipakai di kartu pelanggan. Banyak user baru belum ngisi
+  alamat, dan alamat yang belum ada itu bukan error — tampilkan teks
+  "alamat belum diisi" sambil tetap menampilkan namanya.
+files:
+  - path: src/label.js
+    content: |
+      export function cityLabel(user) {
+        return `${user.name} - ${user.address.city}`;
+      }
+  - path: test/label.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { cityLabel } from '../src/label.js';
+
+      test('user dengan alamat tampil normal', () => {
+        assert.equal(cityLabel({ name: 'Budi', address: { city: 'Salemba' } }), 'Budi - Salemba');
+      });
+
+      test('user tanpa alamat tidak membuat halaman mati', () => {
+        assert.equal(cityLabel({ name: 'Siti' }), 'Siti - alamat belum diisi');
+      });
+
+      test('address yang diisi null diperlakukan sama', () => {
+        assert.equal(cityLabel({ name: 'Ade', address: null }), 'Ade - alamat belum diisi');
+      });
+solution:
+  - path: src/label.js
+    content: |
+      export function cityLabel(user) {
+        return `${user.name} - ${user.address?.city ?? 'alamat belum diisi'}`;
+      }
+tests: 3

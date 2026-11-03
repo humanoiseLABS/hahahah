@@ -1,0 +1,59 @@
+schema: hahahah.coding.fixture/v1
+id: cod-object-key-order
+language: id
+tags: [objects, key-order, forms]
+brief: >-
+  answerOrder(answers) ngembaliin nomor pertanyaan dalam urutan pertama kali
+  muncul, supaya riwayat formulir bisa dibaca ulang sama seperti waktu diisi.
+  Nomor pertanyaan bisa angka seperti "12" dan "3", bisa juga label seperti "alpha".
+files:
+  - path: src/answers.js
+    content: |
+      export function answerOrder(answers) {
+        const rows = {};
+        for (const answer of answers) {
+          rows[answer.number] = answer.text;
+        }
+        return Object.keys(rows);
+      }
+  - path: test/answers.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { answerOrder } from '../src/answers.js';
+
+      test('urutan pertama kali muncul yang dipakai', () => {
+        const answers = [
+          { number: '12', text: 'a' },
+          { number: '3', text: 'b' },
+          { number: 'alpha', text: 'c' },
+        ];
+        assert.deepEqual(answerOrder(answers), ['12', '3', 'alpha']);
+      });
+
+      test('nomor yang kembar tidak ditulis dua kali', () => {
+        const answers = [
+          { number: '1', text: 'a' },
+          { number: '1', text: 'b' },
+        ];
+        assert.deepEqual(answerOrder(answers), ['1']);
+      });
+
+      test('satu jawaban balik satu nomor', () => {
+        assert.deepEqual(answerOrder([{ number: '7', text: 'x' }]), ['7']);
+      });
+solution:
+  - path: src/answers.js
+    content: |
+      export function answerOrder(answers) {
+        const order = [];
+        const seen = new Set();
+        for (const answer of answers) {
+          if (!seen.has(answer.number)) {
+            seen.add(answer.number);
+            order.push(answer.number);
+          }
+        }
+        return order;
+      }
+tests: 3

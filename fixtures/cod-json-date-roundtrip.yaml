@@ -1,0 +1,45 @@
+schema: hahahah.coding.fixture/v1
+id: cod-json-date-roundtrip
+language: id
+tags: [json, dates, serialization]
+brief: >-
+  restoreEvent(event) ngirim event lewat JSON buat nyimpen ke disk, terus
+  balikin lagi ke caller. Field "at" harus tetap berupa Date setelah lewat
+  JSON, karena caller manggil method Date di hasilnya.
+files:
+  - path: src/event.js
+    content: |
+      export function restoreEvent(event) {
+        return JSON.parse(JSON.stringify(event));
+      }
+  - path: test/event.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { restoreEvent } from '../src/event.js';
+
+      const asal = {
+        title: 'rutin mingguan',
+        at: new Date('2026-01-02T03:04:05.000Z'),
+      };
+
+      test('field at masih Date setelah lewat JSON', () => {
+        assert.ok(restoreEvent(asal).at instanceof Date);
+      });
+
+      test('detiknya tidak berubah', () => {
+        assert.equal(restoreEvent(asal).at.getTime(), asal.at.getTime());
+      });
+
+      test('judul ikut kebalikin', () => {
+        assert.equal(restoreEvent(asal).title, 'rutin mingguan');
+      });
+solution:
+  - path: src/event.js
+    content: |
+      export function restoreEvent(event) {
+        const plain = JSON.parse(JSON.stringify(event));
+        plain.at = new Date(plain.at);
+        return plain;
+      }
+tests: 3

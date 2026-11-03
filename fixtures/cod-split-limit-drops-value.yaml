@@ -1,0 +1,43 @@
+schema: hahahah.coding.fixture/v1
+id: cod-split-limit-drops-value
+language: id
+tags: [strings, split, config]
+brief: >-
+  splitKeyValue(line) mastiin satu baris konfigurasi "key=value" jadi
+  { key, value }. Nilai boleh mengandung tanda sama dengan di dalamnya, misalnya
+  token base64, dan semuanya harus ikut ke value. Baris tanpa "=" itu error.
+files:
+  - path: src/env.js
+    content: |
+      export function splitKeyValue(line) {
+        const parts = line.split('=', 2);
+        return { key: parts[0], value: parts[1] };
+      }
+  - path: test/env.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { splitKeyValue } from '../src/env.js';
+
+      test('nilai yang mengandung tanda sama dengan utuh', () => {
+        assert.deepEqual(splitKeyValue('token=a=b'), { key: 'token', value: 'a=b' });
+      });
+
+      test('pasangan biasa terbelah benar', () => {
+        assert.deepEqual(splitKeyValue('mode=fast'), { key: 'mode', value: 'fast' });
+      });
+
+      test('baris tanpa tanda sama dengan ditolak', () => {
+        assert.throws(() => splitKeyValue('tanpa tanda sama dengan'), /key=value/);
+      });
+solution:
+  - path: src/env.js
+    content: |
+      export function splitKeyValue(line) {
+        const index = line.indexOf('=');
+        if (index === -1) {
+          throw new Error('bukan pasangan key=value: ' + line);
+        }
+        return { key: line.slice(0, index), value: line.slice(index + 1) };
+      }
+tests: 3
