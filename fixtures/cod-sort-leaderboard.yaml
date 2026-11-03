@@ -1,0 +1,38 @@
+schema: hahahah.coding.fixture/v1
+id: cod-sort-leaderboard
+language: id
+tags: [sorting, numbers]
+brief: >-
+  Fungsi topScores(scores) harus ngasih daftar nilai tertinggi dulu (descending).
+  Sekarang urutannya ngaco begitu ada angka di atas 9 — misalnya 10 kalah sama 9.
+  Daftar aslinya jangan diubah, dan skor kembar harus tetap muncul dua kali.
+files:
+  - path: src/leaderboard.js
+    content: |
+      export function topScores(scores) {
+        return scores.slice().sort();
+      }
+  - path: test/leaderboard.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { topScores } from '../src/leaderboard.js';
+
+      test('skor puluhan tidak kalah oleh urutan digit', () => {
+        assert.deepEqual(topScores([9, 2, 10]), [10, 9, 2]);
+      });
+
+      test('campuran tiga dan dua digit tetap turun', () => {
+        assert.deepEqual(topScores([100, 25, 9, 78]), [100, 78, 25, 9]);
+      });
+
+      test('skor kembar tetap dimunculkan', () => {
+        assert.deepEqual(topScores([5, 1, 5]), [5, 5, 1]);
+      });
+solution:
+  - path: src/leaderboard.js
+    content: |
+      export function topScores(scores) {
+        return scores.slice().sort((a, b) => b - a);
+      }
+tests: 3

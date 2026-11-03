@@ -1,0 +1,46 @@
+schema: hahahah.coding.fixture/v1
+id: cod-slug-unanchored
+language: en
+tags: [regex, validation]
+brief: >-
+  isSlug(value) must accept a slug only when the whole string is one.
+  Right now strings that merely start with a valid slug pass, including
+  trailing junk and a double hyphen in the middle.
+files:
+  - path: src/slug.js
+    content: |
+      const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*/;
+
+      export function isSlug(value) {
+        return SLUG.test(value);
+      }
+  - path: test/slug.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { isSlug } from '../src/slug.js';
+
+      test('a normal slug is accepted', () => {
+        assert.equal(isSlug('order-42'), true);
+      });
+
+      test('uppercase is not a slug', () => {
+        assert.equal(isSlug('Order-42'), false);
+      });
+
+      test('trailing junk is not a slug', () => {
+        assert.equal(isSlug('order-42###'), false);
+      });
+
+      test('an empty segment is not a slug', () => {
+        assert.equal(isSlug('order--42'), false);
+      });
+solution:
+  - path: src/slug.js
+    content: |
+      const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+      export function isSlug(value) {
+        return SLUG.test(value);
+      }
+tests: 4

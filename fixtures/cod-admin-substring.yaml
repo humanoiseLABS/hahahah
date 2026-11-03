@@ -1,0 +1,44 @@
+schema: hahahah.coding.fixture/v1
+id: cod-admin-substring
+language: id
+hidden: true
+tags: [authorization, path-handling, security]
+brief: >-
+  isAdminRoute(path) nentuin apakah sebuah route termasuk area admin.
+  Yang admin cuma kalau segmen pertama path-nya memang "admin" —
+  halaman profil tim admin di bawah route lain bukan area admin.
+files:
+  - path: src/routes.js
+    content: |
+      export function isAdminRoute(path) {
+        return path.includes('/admin');
+      }
+  - path: test/routes.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { isAdminRoute } from '../src/routes.js';
+
+      test('route admin itu area admin', () => {
+        assert.equal(isAdminRoute('/admin'), true);
+      });
+
+      test('sub route admin tetap area admin', () => {
+        assert.equal(isAdminRoute('/admin/users'), true);
+      });
+
+      test('orang yang cuma nyebut admin di path bukan admin', () => {
+        assert.equal(isAdminRoute('/public/admin/dashboard'), false);
+      });
+
+      test('nama yang diawali admin bukan admin', () => {
+        assert.equal(isAdminRoute('/administrator'), false);
+      });
+solution:
+  - path: src/routes.js
+    content: |
+      export function isAdminRoute(path) {
+        const first = path.split('/').filter(Boolean)[0];
+        return first === 'admin';
+      }
+tests: 4

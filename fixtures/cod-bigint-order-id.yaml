@@ -1,0 +1,42 @@
+schema: hahahah.coding.fixture/v1
+id: cod-bigint-order-id
+language: en
+tags: [json, precision, ids]
+brief: >-
+  readOrderId(payload) returns the order id as a string. Order ids are
+  snowflake values that exceed Number.MAX_SAFE_INTEGER, so the digits
+  must survive parsing instead of being rounded by a float conversion.
+files:
+  - path: src/orderId.js
+    content: |
+      export function readOrderId(payload) {
+        return String(JSON.parse(payload).id);
+      }
+  - path: test/orderId.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { readOrderId } from '../src/orderId.js';
+
+      test('an id past the safe integer range keeps its digits', () => {
+        assert.equal(readOrderId('{"id":9007199254740993}'), '9007199254740993');
+      });
+
+      test('a small numeric id still reads correctly', () => {
+        assert.equal(readOrderId('{"id": 42}'), '42');
+      });
+
+      test('an id already quoted as a string is unchanged', () => {
+        assert.equal(readOrderId('{"id":"7788190782972841551"}'), '7788190782972841551');
+      });
+solution:
+  - path: src/orderId.js
+    content: |
+      export function readOrderId(payload) {
+        const found = payload.match(/"id"\s*:\s*"?(\d+)"?/);
+        if (!found) {
+          throw new Error('order payload has no id');
+        }
+        return found[1];
+      }
+tests: 3

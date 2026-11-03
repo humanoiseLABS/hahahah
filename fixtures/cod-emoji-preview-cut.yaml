@@ -1,0 +1,44 @@
+schema: hahahah.coding.fixture/v1
+id: cod-emoji-preview-cut
+language: id
+hidden: true
+tags: [unicode, truncation]
+brief: >-
+  preview(text, max) motong pesan chat jadi maksimal max karakter buat kartu notifikasi.
+  max itungannya emoji, bukan code unit — jadi "🙏🙏" itu 2 karakter, dan
+  potongan tidak boleh membelah satu emoji sampai tampil jadi kotak.
+files:
+  - path: src/preview.js
+    content: |
+      export function preview(text, max) {
+        return text.length > max ? `${text.slice(0, max)}...` : text;
+      }
+  - path: test/preview.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { preview } from '../src/preview.js';
+
+      test('max dihitung sebagai emoji, bukan code unit', () => {
+        assert.equal(preview('🙏🙏🙏🙏', 2), '🙏🙏...');
+      });
+
+      test('tepat max karakter tidak dipotong', () => {
+        assert.equal(preview('🙏🙏', 2), '🙏🙏');
+      });
+
+      test('teks biasa tetap dipotong seperti semula', () => {
+        assert.equal(preview('halo dunia', 4), 'halo...');
+      });
+
+      test('potongan tidak membelah satu emoji', () => {
+        assert.equal(preview('🙏🙏🙏', 1), '🙏...');
+      });
+solution:
+  - path: src/preview.js
+    content: |
+      export function preview(text, max) {
+        const chars = Array.from(text);
+        return chars.length > max ? `${chars.slice(0, max).join('')}...` : text;
+      }
+tests: 4

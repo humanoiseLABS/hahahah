@@ -1,0 +1,56 @@
+schema: hahahah.coding.fixture/v1
+id: cod-zero-is-a-value
+language: id
+tags: [falsy, validation]
+brief: >-
+  setDiscount(value) menerima angka 0 sebagai discount nol yang sah.
+  Yang ditolak cuma input kosong, null, undefined, dan bukan angka.
+  Batas atasnya tetap 100.
+files:
+  - path: src/discount.js
+    content: |
+      export function setDiscount(value) {
+        const pct = Number(value);
+        if (!pct) {
+          throw new Error('discount wajib diisi');
+        }
+        if (pct > 100) {
+          throw new Error('discount maksimal 100');
+        }
+        return pct;
+      }
+  - path: test/discount.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { setDiscount } from '../src/discount.js';
+
+      test('nol adalah nilai yang sah, bukan input kosong', () => {
+        assert.equal(setDiscount(0), 0);
+      });
+
+      test('string angka diterima', () => {
+        assert.equal(setDiscount('15'), 15);
+      });
+
+      test('string kosong ditolak', () => {
+        assert.throws(() => setDiscount(''), /wajib diisi/);
+      });
+
+      test('yang bukan angka ditolak', () => {
+        assert.throws(() => setDiscount('abc'), /wajib diisi/);
+      });
+solution:
+  - path: src/discount.js
+    content: |
+      export function setDiscount(value) {
+        const pct = Number(value);
+        if (value === '' || value === null || value === undefined || !Number.isFinite(pct)) {
+          throw new Error('discount wajib diisi');
+        }
+        if (pct > 100) {
+          throw new Error('discount maksimal 100');
+        }
+        return pct;
+      }
+tests: 4

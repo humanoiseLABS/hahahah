@@ -1,0 +1,43 @@
+schema: hahahah.coding.fixture/v1
+id: cod-query-regex-escape
+language: id
+tags: [regex, injection, search]
+brief: >-
+  findQuery(text, query) cari teks persis seperti yang diketik user.
+  Sekarang query dianggap expression, jadi titik jadi wildcard dan
+  tanda kurung bikin aplikasinya error.
+files:
+  - path: src/search.js
+    content: |
+      export function findQuery(text, query) {
+        return new RegExp(query, 'i').test(text);
+      }
+  - path: test/search.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { findQuery } from '../src/search.js';
+
+      test('angka dengan titik tetap ketemu', () => {
+        assert.equal(findQuery('harga: 10.5', '10.5'), true);
+      });
+
+      test('titik bukan wildcard', () => {
+        assert.equal(findQuery('harga: 10x5', '10.5'), false);
+      });
+
+      test('kurung di teks bukan masalah', () => {
+        assert.equal(findQuery('halo (edit)', '(edit)'), true);
+      });
+
+      test('kurung di query tidak membuat error', () => {
+        assert.equal(findQuery('halo dunia', '('), false);
+      });
+solution:
+  - path: src/search.js
+    content: |
+      export function findQuery(text, query) {
+        const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return new RegExp(escaped, 'i').test(text);
+      }
+tests: 4

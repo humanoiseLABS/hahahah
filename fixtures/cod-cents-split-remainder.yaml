@@ -1,0 +1,60 @@
+schema: hahahah.coding.fixture/v1
+id: cod-cents-split-remainder
+language: id
+tags: [money, rounding]
+brief: >-
+  splitBill(totalCents, people) bagi tagihan dalam satuan cents.
+  Bagiannya harus bilangan bulat dan totalnya harus kembali persis sama —
+  1000 dibagi 3 tidak boleh jadi 999. Sisanya dibagikan mulai orang pertama.
+files:
+  - path: src/split.js
+    content: |
+      export function splitBill(totalCents, people) {
+        if (!Number.isInteger(totalCents) || totalCents < 0) {
+          throw new Error('total tidak valid');
+        }
+        if (!Number.isInteger(people) || people <= 0) {
+          throw new Error('jumlah orang tidak valid');
+        }
+        const each = Math.round(totalCents / people);
+        return Array.from({ length: people }, () => each);
+      }
+  - path: test/split.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { splitBill } from '../src/split.js';
+
+      test('sisa pembagian tidak hilang', () => {
+        assert.equal(
+          splitBill(1000, 3).reduce((total, cents) => total + cents, 0),
+          1000,
+        );
+      });
+
+      test('sisa jatuh ke orang pertama', () => {
+        assert.deepEqual(splitBill(1000, 3), [334, 333, 333]);
+      });
+
+      test('pembagian rata tidak dapat sisa', () => {
+        assert.deepEqual(splitBill(999, 3), [333, 333, 333]);
+      });
+
+      test('jumlah orang nol ditolak', () => {
+        assert.throws(() => splitBill(1000, 0), /jumlah orang/);
+      });
+solution:
+  - path: src/split.js
+    content: |
+      export function splitBill(totalCents, people) {
+        if (!Number.isInteger(totalCents) || totalCents < 0) {
+          throw new Error('total tidak valid');
+        }
+        if (!Number.isInteger(people) || people <= 0) {
+          throw new Error('jumlah orang tidak valid');
+        }
+        const base = Math.floor(totalCents / people);
+        const remainder = totalCents % people;
+        return Array.from({ length: people }, (_, index) => base + (index < remainder ? 1 : 0));
+      }
+tests: 4

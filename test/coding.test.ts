@@ -22,16 +22,21 @@ const root = process.cwd();
 
 test('every shipped coding fixture is red in its task state and green with the solution', () => {
   const checks = checkAll(root);
-  assert.ok(checks.length >= 12, `expected at least 12 fixtures, found ${checks.length}`);
+  assert.ok(checks.length >= 24, `expected at least 24 fixtures, found ${checks.length}`);
   const broken = checks.filter((check) => !check.ok);
   assert.deepEqual(
     broken.map((check) => `${check.id}: ${check.detail}`),
     [],
     'a fixture that cannot be graded would waste paid model runs',
   );
-  assert.ok(
-    checks.some((check) => check.hidden),
-    'the set needs hidden holdout tasks',
+  const hidden = checks.filter((check) => check.hidden);
+  assert.ok(hidden.length >= 4, 'the set needs hidden holdout tasks');
+  // A fixture that is red on every test is asking for a rewrite, not a fix.
+  const noGreen = checks.filter((check) => check.ok && check.testsFailingWhenBroken === 0);
+  assert.deepEqual(
+    noGreen.map((check) => check.id),
+    [],
+    'every valid fixture must fail at least one test before the fix',
   );
 });
 

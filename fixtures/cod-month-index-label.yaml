@@ -1,0 +1,42 @@
+schema: hahahah.coding.fixture/v1
+id: cod-month-index-label
+language: id
+tags: [dates, off-by-one]
+brief: >-
+  formatTanggal(date) ngeluarin "dd/mm/yyyy" untuk label invoice.
+  Bulan November keluar sebagai 10 dan Januari keluar sebagai 00.
+  Pakai bagian UTC dari tanggal supaya hasilnya tidak bergantung zona waktu mesin.
+files:
+  - path: src/dateLabel.js
+    content: |
+      export function formatTanggal(date) {
+        const d = String(date.getUTCDate()).padStart(2, '0');
+        const m = String(date.getUTCMonth()).padStart(2, '0');
+        return `${d}/${m}/${date.getUTCFullYear()}`;
+      }
+  - path: test/dateLabel.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { formatTanggal } from '../src/dateLabel.js';
+
+      test('november ditulis 11', () => {
+        assert.equal(formatTanggal(new Date(Date.UTC(2026, 10, 3))), '03/11/2026');
+      });
+
+      test('januari ditulis 01', () => {
+        assert.equal(formatTanggal(new Date(Date.UTC(2027, 0, 9))), '09/01/2027');
+      });
+
+      test('desember ditulis 12', () => {
+        assert.equal(formatTanggal(new Date(Date.UTC(2026, 11, 25))), '25/12/2026');
+      });
+solution:
+  - path: src/dateLabel.js
+    content: |
+      export function formatTanggal(date) {
+        const d = String(date.getUTCDate()).padStart(2, '0');
+        const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+        return `${d}/${m}/${date.getUTCFullYear()}`;
+      }
+tests: 3

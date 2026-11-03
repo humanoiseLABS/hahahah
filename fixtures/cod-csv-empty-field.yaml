@@ -1,0 +1,37 @@
+schema: hahahah.coding.fixture/v1
+id: cod-csv-empty-field
+language: id
+tags: [csv, column-shift]
+brief: >-
+  parseRow(line) memecah satu baris CSV jadi kolom-kolomnya. Kolom yang kosong
+  tetap satu kolom — jangan dibuang, kalau tidak isi kolom bergeser.
+files:
+  - path: src/csv.js
+    content: |
+      export function parseRow(line) {
+        return line.split(',').filter(Boolean);
+      }
+  - path: test/csv.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { parseRow } from '../src/csv.js';
+
+      test('kolom kosong tetap dihitung sebagai kolom', () => {
+        assert.deepEqual(parseRow('budi,,10'), ['budi', '', '10']);
+      });
+
+      test('baris lengkap tidak berubah', () => {
+        assert.deepEqual(parseRow('ani,5kg,20000'), ['ani', '5kg', '20000']);
+      });
+
+      test('kolom kosong di akhir tetap ada', () => {
+        assert.deepEqual(parseRow('x,,'), ['x', '', '']);
+      });
+solution:
+  - path: src/csv.js
+    content: |
+      export function parseRow(line) {
+        return line.split(',');
+      }
+tests: 3

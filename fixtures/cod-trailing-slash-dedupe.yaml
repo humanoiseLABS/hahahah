@@ -1,0 +1,44 @@
+schema: hahahah.coding.fixture/v1
+id: cod-trailing-slash-dedupe
+language: id
+tags: [url, normalization]
+brief: >-
+  normalizePath(path) dipakai buat manduin duplicate route.
+  "/produk/" dan "/produk" itu route yang sama, dan root "/" tetap "/".
+  Sekarang normalizePath cuman ngembaliin path apa adanya, jadi Set penuh duplikat.
+files:
+  - path: src/paths.js
+    content: |
+      export function normalizePath(path) {
+        return path;
+      }
+  - path: test/paths.test.js
+    content: |
+      import test from 'node:test';
+      import assert from 'node:assert/strict';
+      import { normalizePath } from '../src/paths.js';
+
+      test('garis miring di akhir dipangkas', () => {
+        assert.equal(normalizePath('/produk/'), '/produk');
+      });
+
+      test('root tetap root', () => {
+        assert.equal(normalizePath('/'), '/');
+      });
+
+      test('path tanpa garis miring akhir tidak berubah', () => {
+        assert.equal(normalizePath('/produk'), '/produk');
+      });
+
+      test('tiga penulisan route yang sama jadi satu entri', () => {
+        const seen = new Set(['/a/', '/a', '/a//'].map(normalizePath));
+        assert.equal(seen.size, 1);
+      });
+solution:
+  - path: src/paths.js
+    content: |
+      export function normalizePath(path) {
+        const stripped = path.replace(/\/+$/, '');
+        return stripped === '' ? '/' : stripped;
+      }
+tests: 4
