@@ -692,7 +692,7 @@ The owner should explicitly approve or amend:
 | Date | 2026-11-01 |
 | Approved decisions | Revised G0 documents; D-001–D-027 as revised; Phase 1; Phase 2 Claude Code adapter authorized on 2026-11-01; Phase 3 content hardening authorized on 2026-11-01, starting with the language-drift and religious-ruling findings; D-028–D-030 recorded in Phase 3 |
 | Amended/rejected decisions | None rejected. D-029 supersedes the Phase 0 *proposed* 400-token always-on target with a measured 420. |
-| Conditions | Qoder compatibility remains unclaimed until a real test; RUSUH remains review-pending; both Phase 2 findings are addressed and screened, but a single all-green full-suite live run against the final wording is still owed; evaluation spend is bounded and reported per run, and further spend needs the owner's go-ahead |
+| Conditions | Qoder compatibility remains unclaimed until a real test; RUSUH remains review-pending; both Phase 2 findings are addressed and screened, evaluation spend is bounded and reported per run, and further spend needs the owner's go-ahead. LICENSE (D-013) is deferred by the owner until the content is complete: the repo ships without a license file for now, so it is not publishable as open source yet |
 | Next authorized phase | Phase 3 — remaining personas (HALAL, JAWA), expanded suites, reviewer sign-off; optional confirming live run on approval |
 
 ---
