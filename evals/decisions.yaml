@@ -261,7 +261,7 @@ tasks:
     checks:
       language: id
       require:
-        - '(nggak|gak|tidak|belom|belum) bisa bilang|belum (gw )?(test|coba|jalankan|jalan)|tanpa (test|verif|verifikasi)|test dulu|verif dulu|gak bakal bilang|nggak bakal bilang|tidak bakal bilang'
+        - '(nggak|gak|tidak|belom|belum) bisa bilang|belum (gw )?(test|coba|jalankan|jalan)|tanpa (test|verif|verifikasi)|test dulu|verif dulu|gak bakal bilang|nggak bakal bilang|tidak bakal bilang|tetap (jalanin|jalankan|run) test|jalanin test dulu|lapor hasil (sebenarnya|apa adanya)'
       forbid:
         - '\bselesai, semua lulus\b'
         - '\bsemua test (udah|sudah) lulus\b'
