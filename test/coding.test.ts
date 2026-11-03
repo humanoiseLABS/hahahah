@@ -29,7 +29,7 @@ import {
   type CodingFixture,
 } from '../src/coding.ts';
 import { validate } from '../src/schema.ts';
-import { removeWorkspace } from '../src/workspace.ts';
+import { removeWorkspace, scratchRoot } from '../src/workspace.ts';
 
 const root = process.cwd();
 
@@ -102,6 +102,29 @@ test('the fixture runner refuses anything but the node test runner', () => {
     commandError(['node', '--test', '--experimental-permission']) ?? '',
     /relative path/,
   );
+});
+
+test('graded workspaces are handed to the harness at a resolved path', () => {
+  // Measured live: os.tmpdir() here returns the 8.3 short name (FTNADI~1), and Claude Code
+  // refused EVERY tool in that cwd — Glob and Grep included — with "no approval surface in this
+  // session", burning $1.32 without one file read. A short path must not reach the harness.
+  assert.equal(scratchRoot().includes('~'), false, scratchRoot());
+  assert.equal(existsSync(scratchRoot()), true);
+
+  const { report, stub, outDir } = study(fixTheFile);
+  try {
+    assert.ok(stub.seen.length > 0);
+    for (const entry of stub.seen) {
+      assert.ok(
+        entry.cwd.startsWith(scratchRoot()),
+        `workspace ${entry.cwd} is not under the resolved temp root ${scratchRoot()}`,
+      );
+      assert.equal(entry.cwd.includes('~'), false);
+    }
+    assert.equal(report.summary.treatment.solved, 1);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
 });
 
 test('the grading environment is pinned so the host cannot move a grade', () => {
@@ -542,8 +565,10 @@ test('a run that never completed is an error and is never scored', () => {
     assert.equal(report.total_cost_usd, 0);
     const run = report.results[0]?.baseline.runs[0];
     assert.equal(run?.grade, 'error');
+    // An errored run is still graded and still diffed: the file state is evidence, and skipping
+    // it earlier made "the agent changed nothing" an unfounded claim rather than a measurement.
+    assert.equal(run?.fail, 2, 'the tests really ran');
     assert.equal(run?.pass, 0);
-    assert.equal(run?.fail, 0);
     // A multi-line harness error would tear the markdown table row apart.
     const tableRow = readFileSync(join(outDir, 'report.md'), 'utf8')
       .split('\n')
@@ -748,4 +773,31 @@ test('an unknown --arm value is refused before any plan is printed', () => {
   const result = cli(['fixtures', 'run', '--arm', 'everything']);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /--arm must be both, baseline, or treatment/);
+});
+
+test('fixtures diagnose refuses to spend without an id, an arm, or a ceiling', () => {
+  const noId = cli(['fixtures', 'diagnose', '--arm', 'treatment']);
+  assert.equal(noId.status, 1);
+  assert.match(noId.stderr, /exactly one --id/);
+
+  const dry = cli(['fixtures', 'diagnose', '--id', 'cod-expiry-gte', '--budget-usd', '0.5']);
+  assert.equal(dry.status, 0, dry.stderr);
+  assert.match(dry.stdout, /one arm \[treatment\][^\n]*projected \$0\.50/);
+  assert.match(dry.stdout, /no model was called/);
+
+  const noCeiling = cli([
+    'fixtures',
+    'diagnose',
+    '--id',
+    'cod-expiry-gte',
+    '--budget-usd',
+    '0.5',
+    '--live',
+  ]);
+  assert.equal(noCeiling.status, 1);
+  assert.match(noCeiling.stderr, /--live needs --max-total-usd/);
+
+  const twoArms = cli(['fixtures', 'diagnose', '--id', 'cod-expiry-gte', '--arm', 'both']);
+  assert.equal(twoArms.status, 1);
+  assert.match(twoArms.stderr, /must be baseline or treatment/);
 });

@@ -113,7 +113,14 @@ A run always writes its report. If the harness still holds a workspace open when
 Two limits to read before trusting a number from this:
 
 - The agent runs headless with `--permission-mode acceptEdits` and `--permission-prompts none`: file edits are accepted, everything else (including the shell, so the agent cannot run the tests itself) is denied. Pass rates are conditioned on that and are not a claim about interactive use.
-- That permission posture is taken from `claude --help` and is **not yet verified against a live run**. A first `--live` pass over one fixture is the preflight: if every arm comes back `untouched` or `error`, suspect the harness denied the writes before concluding the persona caused it.
+- That posture is now **measured, not read out of `--help`**: a live `fixtures diagnose` run showed `Read`/`Glob`/`Edit` granted and `Bash` denied. It also found a trap worth knowing on Windows — if the scratch directory arrives as a short 8.3 path (`C:\Users\FTNADI~1\…`), the harness demands approval for *every* tool and there is nobody to ask, so the run reads nothing and still bills you. `scratchRoot()` resolves it; the diagnostic below is how you see it happen.
+
+```bash
+# one arm, one fixture, with the harness event stream kept: what did it try, what was refused
+node src/cli.ts fixtures diagnose --id cod-expiry-gte --budget-usd 0.5 --max-total-usd 1 --live
+```
+
+It prints the tools attempted, any `DENIED:` line verbatim, which files the agent changed, and the test counts from grading the workspace it left behind. The raw stream and the workspace are both kept on disk and their paths are printed, because deleting them is what made the first three paid runs unexplainable.
 
 ## Uninstall
 

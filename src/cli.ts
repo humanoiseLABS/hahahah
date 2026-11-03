@@ -3,6 +3,7 @@ import { parseArgs } from 'node:util';
 import { build, BuildError } from './build.ts';
 import {
   checkAll,
+  diagnoseFixture,
   loadFixtures,
   projectedCostUsd,
   runFixtureStudy,
@@ -22,6 +23,7 @@ Usage:
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
   node src/cli.ts fixtures check [--dir fixtures]
   node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--arm both|baseline|treatment] [--setting-sources <sources>] [--out <dir>] [--live]
+  node src/cli.ts fixtures diagnose --id <fixture> [--arm baseline|treatment] [--budget-usd <n>] [--max-total-usd <n>] [--out <dir>] [--live]
   node src/cli.ts doctor [--target <repo>]
   node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--setting-sources <sources>] [--out <dir>] [--strict]
 
@@ -122,7 +124,7 @@ try {
       'budget-usd': { type: 'string', default: '0.10' },
       'max-total-usd': { type: 'string' },
       model: { type: 'string' },
-      arm: { type: 'string', default: 'both' },
+      arm: { type: 'string' },
       'setting-sources': { type: 'string' },
       release: { type: 'boolean', default: false },
       'dry-run': { type: 'boolean', default: false },
@@ -221,7 +223,7 @@ try {
         : undefined;
       const repeats = positiveInt(parsed.values.repeats, '--repeats', 1);
       const budget = positiveNumber(parsed.values['budget-usd'], '--budget-usd');
-      const arm = parsed.values.arm;
+      const arm = parsed.values.arm ?? 'both';
       if (arm !== 'both' && arm !== 'baseline' && arm !== 'treatment') {
         throw new Error('--arm must be both, baseline, or treatment');
       }
@@ -271,6 +273,78 @@ try {
           outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'coding'),
         });
         printStudy(report);
+      }
+    } else if (action === 'diagnose') {
+      const ids = parsed.values.id;
+      if (ids.length !== 1) {
+        throw new Error('fixtures diagnose needs exactly one --id <fixture>');
+      }
+      // A diagnostic is one arm by definition: omitting --arm means treatment, while an
+      // explicit `both` is still refused rather than silently halving the cost.
+      const arm = parsed.values.arm ?? 'treatment';
+      if (arm !== 'baseline' && arm !== 'treatment') {
+        throw new Error('--arm must be baseline or treatment for a single-arm diagnostic');
+      }
+      const fixture = loadFixtures(process.cwd(), parsed.values.dir ?? 'fixtures').find(
+        (candidate) => candidate.id === ids[0],
+      );
+      if (!fixture) {
+        throw new Error(`Unknown fixture id(s): ${ids[0]}`);
+      }
+      const budget = positiveNumber(parsed.values['budget-usd'], '--budget-usd');
+      const projected = projectedCostUsd(1, 1, budget, 1);
+      const ceiling = parsed.values['max-total-usd']
+        ? positiveNumber(parsed.values['max-total-usd'], '--max-total-usd')
+        : 0;
+      console.log(
+        `diagnostic: ${fixture.id}, one arm [${arm}], $${budget.toFixed(2)} per run, projected $${projected.toFixed(2)} (caps are soft, see docs/phase-3-live-suite-results.md)`,
+      );
+      if (!parsed.values.live) {
+        console.log('dry run: no model was called. Add --live with --max-total-usd to run it.');
+      } else {
+        if (ceiling === 0) {
+          throw new Error(
+            `--live needs --max-total-usd: this diagnostic projects $${projected.toFixed(2)}`,
+          );
+        }
+        if (projected > ceiling) {
+          throw new Error(
+            `projected $${projected.toFixed(2)} exceeds the approved ceiling of $${ceiling.toFixed(2)}`,
+          );
+        }
+        const result = diagnoseFixture({
+          sourceRoot: process.cwd(),
+          profileId: parsed.values.profile,
+          fixture,
+          arm,
+          budgetUsd: budget,
+          model: parsed.values.model,
+          settingSources: parsed.values['setting-sources'],
+          outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'diagnostic'),
+        });
+        const { summary, graded } = result;
+        const tools = Object.entries(summary.tools)
+          .map(([name, count]) => `${name} x${count}`)
+          .join(', ');
+        console.log(
+          `stream: subtype=${summary.subtype ?? '?'} turns=${summary.numTurns ?? '?'} cost=$${(summary.totalCostUsd ?? 0).toFixed(4)} events=${summary.lines}`,
+        );
+        console.log(`tools attempted: ${tools || 'none'}`);
+        for (const denial of summary.denials) {
+          console.log(`DENIED: ${denial}`);
+        }
+        for (const error of summary.toolErrors) {
+          console.log(`tool error: ${error}`);
+        }
+        console.log(
+          `workspace: changed=[${graded.changedFiles.join(', ')}] new=[${graded.otherNewFiles.join(', ')}] missing=[${graded.missingFiles.join(', ')}]`,
+        );
+        console.log(`grade=${graded.grade} tests pass=${graded.pass} fail=${graded.fail}`);
+        console.log(`raw stream kept: ${result.rawPath}`);
+        console.log(`workspace kept for inspection: ${result.workspace} (delete when done)`);
+        if (graded.run.error) {
+          process.exitCode = 1;
+        }
       }
     } else {
       printUsage();

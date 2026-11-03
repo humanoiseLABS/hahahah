@@ -8,13 +8,18 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { dirname, join, relative, resolve } from 'node:path';
 import { parse } from 'yaml';
 import { install } from './install.ts';
 import { validate } from './schema.ts';
-import { median, runClaude, usageNumber } from './eval.ts';
-import { removeWorkspace } from './workspace.ts';
+import {
+  runClaudeStream,
+  summarizeStream,
+  writeRawStream,
+  type StreamSummary,
+} from './diagnose.ts';
+import { median, runClaude, usageNumber, type ClaudeOptions } from './eval.ts';
+import { removeWorkspace, scratchRoot } from './workspace.ts';
 
 export interface FixtureFile {
   path: string;
@@ -102,11 +107,11 @@ interface TestRun {
 // NODE_OPTIONS stays out so a fixture cannot inherit anything from the calling shell.
 export const GRADE_ENV: NodeJS.ProcessEnv = {
   PATH: process.env.PATH ?? '',
-  HOME: tmpdir(),
+  HOME: scratchRoot(),
   SYSTEMROOT: process.env.SYSTEMROOT ?? '',
-  TEMP: tmpdir(),
-  TMP: tmpdir(),
-  TMPDIR: tmpdir(),
+  TEMP: scratchRoot(),
+  TMP: scratchRoot(),
+  TMPDIR: scratchRoot(),
   TZ: 'UTC',
 };
 
@@ -200,7 +205,7 @@ export function loadFixtures(root: string, dir = 'fixtures'): CodingFixture[] {
 }
 
 export function checkFixture(fixture: CodingFixture): FixtureCheck {
-  const workspace = mkdtempSync(join(tmpdir(), 'hahahah-fixture-'));
+  const workspace = mkdtempSync(join(scratchRoot(), 'hahahah-fixture-'));
   try {
     const command = fixture.runner?.command ?? DEFAULT_COMMAND;
     const targets = testTargets(fixture, command);
@@ -342,17 +347,11 @@ export interface FixtureArmRun {
 }
 
 export function gradeRun(fixture: CodingFixture, workspace: string, run: AgentRun): FixtureArmRun {
-  const empty = {
-    changedFiles: [],
-    missingFiles: [],
-    extraTestFiles: [],
-    otherNewFiles: [],
-  };
-  if (run.error) return { grade: 'error', run, pass: 0, fail: 0, ...empty };
   const diff = diffWorkspace(fixture, workspace);
   const command = fixture.runner?.command ?? DEFAULT_COMMAND;
-  // The tests always run, including on a tampered workspace: the counts are the evidence
-  // that shows what the tampering bought the agent.
+  // The tests always run — including for a tampered workspace and for a run that errored. The
+  // counts and the file diff are the evidence; skipping them would turn "changed nothing" into
+  // an unfounded claim instead of a measurement.
   const result = runTests(workspace, command, testTargets(fixture, command));
   const tampered =
     diff.extraTestFiles.length > 0 ||
@@ -363,7 +362,8 @@ export function gradeRun(fixture: CodingFixture, workspace: string, run: AgentRu
     diff.missingFiles.length === 0 &&
     diff.otherNewFiles.length === 0;
   let grade: FixtureGrade;
-  if (tampered) grade = 'tampered';
+  if (run.error) grade = 'error';
+  else if (tampered) grade = 'tampered';
   else if (untouched) grade = 'untouched';
   // A grader that timed out or could not spawn says nothing about the agent's work, so it
   // must not be recorded as a failed task.
@@ -371,7 +371,6 @@ export function gradeRun(fixture: CodingFixture, workspace: string, run: AgentRu
   else grade = result.passed && result.pass >= fixture.tests ? 'solved' : 'failed';
   return { grade, run, pass: result.pass, fail: result.fail, ...diff };
 }
-
 export interface ArmSummary {
   runs: FixtureArmRun[];
   grades: FixtureGrade[];
@@ -584,7 +583,7 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
       for (const arm of order) {
         // A fresh workspace per repeat: if the previous run's edits carried over, the
         // second sample would be measuring the first one.
-        const dir = mkdtempSync(join(tmpdir(), `hahahah-study-${arm}-`));
+        const dir = mkdtempSync(join(scratchRoot(), `hahahah-study-${arm}-`));
         try {
           writeFiles(dir, fixture.files);
           // Seeded before the agent runs, so both arms get the same workspace and the
@@ -643,4 +642,55 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
   writeFileSync(join(outDir, 'report.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   writeFileSync(join(outDir, 'report.md'), studyMarkdown(report), 'utf8');
   return report;
+}
+
+export interface DiagnoseOptions {
+  sourceRoot: string;
+  profileId: string;
+  fixture: CodingFixture;
+  arm: 'baseline' | 'treatment';
+  budgetUsd: number;
+  outDir: string;
+  model?: string;
+  settingSources?: string;
+  runner?: (
+    cwd: string,
+    prompt: string,
+    budgetUsd: number,
+    options?: ClaudeOptions,
+  ) => { run: AgentRun; ndjson: string };
+}
+
+export interface DiagnoseResult {
+  summary: StreamSummary;
+  graded: FixtureArmRun;
+  rawPath: string;
+  workspace: string;
+}
+
+// One arm, one fixture, with the harness event stream captured. The workspace is deliberately
+// left in place and its path returned: the study path deletes exactly the evidence this command
+// exists to look at.
+export function diagnoseFixture(options: DiagnoseOptions): DiagnoseResult {
+  const dir = mkdtempSync(join(scratchRoot(), `hahahah-diagnose-${options.arm}-`));
+  writeFiles(dir, options.fixture.files);
+  ensureModuleMarker(dir);
+  if (options.arm === 'treatment') {
+    install({
+      sourceRoot: options.sourceRoot,
+      targetRoot: dir,
+      profileId: options.profileId,
+    });
+  }
+  const stream = options.runner ?? runClaudeStream;
+  const { run, ndjson } = stream(dir, fixturePrompt(options.fixture), options.budgetUsd, {
+    model: options.model,
+    settingSources: options.settingSources,
+  });
+  return {
+    summary: summarizeStream(ndjson),
+    graded: gradeRun(options.fixture, dir, run),
+    rawPath: writeRawStream(options.outDir, options.arm, ndjson),
+    workspace: dir,
+  };
 }

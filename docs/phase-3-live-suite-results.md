@@ -314,3 +314,53 @@ stream-json` (a small runner change, ≤$0.5) so tool calls and permission decis
 or invoke the budget/reviewer failure rule in `DEVELOPMENT_ROADMAP.md` and record the coding
 regression guard as **inconclusive**: the 60 fixtures, the validator, and the tamper check stay as
 free local machinery, and no correctness claim is made about the layer.
+
+## 15. The preflight answer: it was our temp path, not the harness
+
+Spend for this section: **$0.8295** — $0.2007 for the run that found it and $0.6288 for the run
+that proved the fix. That is above the ≤$0.5 this diagnostic was approved for, and the reason is
+the soft cap measured in §13/§14: a run capped at $0.50 reported $0.63.
+
+`fixtures diagnose` (`src/diagnose.ts`, `--output-format stream-json --verbose`) reads the per-tool
+events the single-result JSON format throws away. The first run, worth $0.2007, said plainly what
+three study runs could not:
+
+```
+tools attempted: Glob x1, Grep x1
+DENIED: Permission for this tool use was denied … this session has no approval surface …
+SAY: Path blocked. `FTNADI~1` (Windows short name) triggers security check. … Task cannot proceed.
+```
+
+**Root cause: our own scratch directory.** `os.tmpdir()` on this machine returns the 8.3 short form
+(`C:\Users\FTNADI~1\AppData\Local\Temp`), and `fs.realpathSync` hands that same short form back —
+only `fs.realpathSync.native` expands it. Given a short-named cwd, Claude Code asked for approval
+for *every* tool, including `Glob` and `Grep`, and `--permission-prompts none` means there is nobody
+to ask. So the six, seven and twelve-turn runs in §13/§14 were not slow models: they were a model
+knocking on a locked door, and the $1.32 bought zero file reads. `scratchRoot()` in
+`src/workspace.ts` now resolves the temp root and every workspace — study, eval and diagnostic — is
+created under the long path. A test pins it, because the failure was silent and expensive.
+
+**The corrected answer.** The second run, after the fix, in the same $0.50 cap:
+
+```
+tools attempted: Glob x2, Read x2, Edit x1, Bash x1
+workspace: changed=[src/token.js]   tests pass=3 fail=0   grade=error (capped at 6 turns)
+DENIED: Bash
+```
+
+So, measured rather than read out of `--help`:
+
+- `--permission-mode acceptEdits` **does** grant `Read`, `Glob` and `Edit` in headless `-p` mode.
+  The agent found the boundary bug unprompted (`exp === now` harusnya `<=`) and fixed it.
+- `Bash` is refused, exactly as the design intends: the agent cannot run the suite it is graded on.
+  The denial is recorded, not swallowed.
+- The fixture's own tests passed 3/3 in the workspace it left behind. The run still grades `error`
+  because the budget cap killed it before it could stop cleanly — which is the honest label, and
+  only visible at all because the grader now diffs and tests errored runs too (§14 correction).
+
+**What this changes about the study's price.** A one-character fix took six turns and $0.63 before
+the cap, having already solved the task. A run that is allowed to finish is realistically $1.0-1.5
+per arm, so 60 fixtures × 2 arms at k=1 is in the **$120-180** region, not the $42 that summing
+caps suggested and not the ≈$17 borrowed from conversational tasks. The preflight question is
+closed; what is open is whether that number is worth paying, and that is A-05's decision, not a
+technical one.

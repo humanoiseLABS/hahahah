@@ -1,10 +1,9 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { parse } from 'yaml';
 import { install } from './install.ts';
-import { removeWorkspace } from './workspace.ts';
+import { removeWorkspace, scratchRoot } from './workspace.ts';
 import { validate } from './schema.ts';
 import {
   checkSuiteErrors,
@@ -335,8 +334,8 @@ export function runEval(options: EvalOptions): EvalReport {
   const results: EvalResult[] = [];
 
   for (const task of tasks) {
-    const baselineDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-baseline-'));
-    const treatmentDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-treatment-'));
+    const baselineDir = mkdtempSync(join(scratchRoot(), 'hahahah-eval-baseline-'));
+    const treatmentDir = mkdtempSync(join(scratchRoot(), 'hahahah-eval-treatment-'));
     try {
       install({
         sourceRoot: options.sourceRoot,
