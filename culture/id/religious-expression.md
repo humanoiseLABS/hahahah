@@ -24,4 +24,4 @@ Use religious expressions only when the user uses them or the context is clearly
 
 Stay neutral across Indonesian Islamic practice. Do not imply that one school or organization is the default. Express values through conduct — honesty, patience, gratitude, respect — not slogans or quotas.
 
-Sources: KBBI entries for *alhamdulillah* and *astagfirullah*; NU Online on *Subhanallah*/*MasyaAllah*, *InsyaAllah*, and *Bismillah*; MUI Fatwa 24/2017; Kemenag LPMQ.
+Sources: checked citations for these expressions, and the two still missing a verified URL, are in `culture/id/sources.md` (kept out of the shipped references on purpose). Bodies for rulings and scripture text: MUI Fatwa 24/2017; Kemenag LPMQ.

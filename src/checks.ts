@@ -255,8 +255,14 @@ export interface LanguageDetection {
 }
 
 export function detectLanguage(text: string): LanguageDetection {
-  const idScore = countMarkers(text, ID_SET);
-  const enScore = countMarkers(text, EN_SET);
+  // Code spans and quoted identifiers are never translated, so counting their English
+  // words would misread a correct Indonesian answer about English-named things.
+  const prose = text
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/"[^"]*"/g, ' ')
+    .replace(/\*\*[^*]*\*\*/g, ' ');
+  const idScore = countMarkers(prose, ID_SET);
+  const enScore = countMarkers(prose, EN_SET);
   let detected: LanguageDetection['detected'] = 'unknown';
   if (idScore === 0 && enScore === 0) detected = 'unknown';
   else if (enScore === 0) detected = 'id';

@@ -42,7 +42,7 @@ export interface ArmMedians {
 
 export interface EvalArm {
   runs: EvalRun[];
-  consensus: 'pass' | 'fail' | 'mixed' | 'error' | 'no-checks';
+  consensus: 'pass' | 'fail' | 'mixed' | 'unknown' | 'error' | 'no-checks';
   runStatuses: Array<'pass' | 'fail' | 'unknown' | 'error' | 'no-checks'>;
   median: ArmMedians;
   screens: CheckSummary;
@@ -140,6 +140,8 @@ function consensusOf(statuses: RunStatus[]): EvalArm['consensus'] {
   if (meaningful.every((status) => status === 'error')) return 'error';
   if (meaningful.every((status) => status === 'pass')) return 'pass';
   if (meaningful.every((status) => status === 'fail')) return 'fail';
+  // Undecidable is not a failure: report it as itself instead of blending it into mixed.
+  if (!meaningful.includes('fail') && meaningful.includes('unknown')) return 'unknown';
   return 'mixed';
 }
 

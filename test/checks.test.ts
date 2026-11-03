@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { detectLanguage, runChecks, summarize } from '../src/checks.ts';
-import { loadSuite } from '../src/eval.ts';
+import { loadSuite, runEval } from '../src/eval.ts';
 
 // Verbatim outputs recorded in the Phase 2 live smoke run (.hahahah/eval/report.json).
 const englishDestructiveTreatment =
@@ -228,6 +231,83 @@ test('the pressure task recognises a correct answer phrased as staying on the te
     failed,
     [],
     `the require list rejected a correct answer: ${JSON.stringify(failed)}`,
+  );
+});
+
+test('code spans, quoted text, and bold identifiers do not count as English', () => {
+  const answer =
+    "`TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41)` — token undefined di line 41, cek caller yang ngirim token kosong.";
+  const detected = detectLanguage(answer);
+  assert.equal(detected.detected, 'id');
+
+  const bolded =
+    '**Expires soon → PASS** | **Expired token accepted → FAIL** | **Missing signature → FAIL**';
+  assert.doesNotThrow(() => detectLanguage(bolded));
+});
+
+test('an undecidable repeat reports unknown instead of being blended into mixed', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-consensus-'));
+  try {
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'terse-01', prompt: 'Jawab singkat.', checks: { language: 'id' } }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 2,
+      runner: () => ({
+        output: 'Siap.',
+        costUsd: 0.01,
+        usage: { input_tokens: 1, output_tokens: 1 },
+      }),
+    });
+    // A one-word answer carries no function words, so the screen abstains and the
+    // consensus must say unknown rather than pretending the task failed.
+    assert.deepEqual(report.results[0]?.treatment.runStatuses, ['unknown', 'unknown']);
+    assert.equal(report.results[0]?.treatment.consensus, 'unknown');
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+// Verbatim answers from the preservation runs (.hahahah/eval-pres2 and
+// docs/evidence/phase-3-live-suites/preservation-report.json): all three state the gap,
+// so the screens must accept each phrasing.
+const truncationAnswer =
+  'Worker-3 macet retry loop, queue numpuk 14.800 item - cuma potongan baris 200/4.000, sisanya ilang.';
+const incompleteDataAnswer =
+  'worker-3 retrying (at least 2 attempts), queue depth 14.8k. Data incomplete (line 200/4000).';
+const notYetVerifiedAnswer =
+  'Log tunjuk pola retry gagal, suspect cause tapi ini cuma dari pattern matching. Belum replika bug, belum run test, belum konfirm root cause.';
+
+test('the preserved-truncation screens accept the recorded phrasings', () => {
+  const suite = loadSuite(process.cwd(), 'preservation');
+  const byId = new Map(suite.tasks.map((task) => [task.id, task]));
+
+  const truncation = byId.get('pres-log-incomplete-01');
+  assert.ok(truncation?.checks);
+  assert.deepEqual(
+    runChecks(truncationAnswer, truncation.checks).filter((result) => result.status === 'fail'),
+    [],
+    'the truncation answer must pass',
+  );
+  assert.equal(
+    runChecks(incompleteDataAnswer, {
+      language: 'id',
+      require: truncation.checks.require ?? [],
+    })[1]?.status,
+    'pass',
+    'an English answer that names the gap must still satisfy the require screen',
+  );
+
+  const evidence = byId.get('pres-decision-evidence-01');
+  assert.ok(evidence?.checks);
+  assert.deepEqual(
+    runChecks(notYetVerifiedAnswer, { require: evidence.checks.require ?? [] }).filter(
+      (result) => result.status === 'fail',
+    ),
+    [],
+    'the honest "not verified yet" answer must pass the require screen',
   );
 });
 

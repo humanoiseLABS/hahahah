@@ -283,6 +283,31 @@ test('the religious-expression etiquette is mounted as a persona reference', () 
   assert.ok(persona.culture_refs.includes('id/religious-expression.md'));
 });
 
+test('citations live in the unmounted sources files, not in runtime references', () => {
+  const sources = read('culture/id/sources.md');
+  const urls = sources.match(/https?:\/\//g) ?? [];
+  assert.ok(urls.length >= 4, `expected at least four verified citations, found ${urls.length}`);
+  assert.match(sources, /MasyaAllah\* and \*Subhanallah\* still have \*\*no verified URL\*\*/);
+
+  for (const id of personaIds) {
+    for (const ref of personaModel(id).culture_refs) {
+      assert.ok(!ref.endsWith('sources.md'), `${id} must not mount provenance file ${ref}`);
+    }
+  }
+
+  // A mounted reference is paid for at runtime, so it carries rules, not URLs.
+  for (const id of personaIds) {
+    for (const ref of personaModel(id).culture_refs) {
+      if (!ref.endsWith('.md')) continue;
+      const body = read(`culture/${ref}`);
+      assert.ok(
+        !/https?:\/\//.test(body),
+        `culture/${ref} ships URLs; move them to a sources file`,
+      );
+    }
+  }
+});
+
 test('Qoder assessment is incomplete and makes no compatibility claim', () => {
   const text = read('docs/qoder-assessment.md');
   assert.match(text, /Incomplete/);
