@@ -10,8 +10,9 @@ adapters:
   - claude-code
   - opencode
   - agents-md
+  - antigravity
 budgets:
-  always_on_tokens: 420
+  always_on_tokens: 460
   skill_metadata_tokens: 90
   skill_body_tokens: 1500
   reference_tokens_max: 4600

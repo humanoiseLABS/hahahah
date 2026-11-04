@@ -6,6 +6,22 @@ Qoder is still an incomplete compatibility assessment and makes no compatibility
 
 ## Commands
 
+## Install: pick the adapter for the agent you actually run
+
+`--adapter` decides **which files land where**. Pick it from the agent, not from the folder — installing
+for the wrong one writes files that agent never reads, and the persona silently does nothing.
+
+| Agent you run | Command | What it writes |
+|---|---|---|
+| Claude Code (default) | `install --profile rusuh-id --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-rusuh/` |
+| opencode | `install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
+| Antigravity, one project | `install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
+| Antigravity, every project | `install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
+| Cursor / Codex / Qoder CLI / anything reading `AGENTS.md` | `install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
+
+`node src/cli.ts` with no arguments prints this same table. Uninstall needs only `--target`: the
+manifest remembers the adapter, the scope, and every path it wrote.
+
 ```bash
 npm ci
 npm run typecheck
@@ -22,10 +38,10 @@ node src/cli.ts uninstall --target /path/to/project
 ```
 
 - `measure` prints token budgets without writing.
-- `install` writes a managed `CLAUDE.md` block, `.claude/skills/hahahah-rusuh/`, and `.hahahah/manifest.json`.
+- `install` writes the managed block, the adapter's skill or rules tree, and `.hahahah/manifest.json`.
 - `doctor` verifies files, hashes, and the managed block.
 - `uninstall` removes only manifest-owned content.
-- `eval` runs baseline/treatment through headless Claude Code and writes `.hahahah/eval/report.{json,md}`. `--task <id>` selects tasks; `--strict` exits non-zero when a treatment answer fails a screen.
+- `eval` runs baseline/treatment headless; `--harness claude|opencode` picks the CLI *and* the adapter the treatment is installed for, since a mismatch measures nothing. `--task <id>` selects tasks; `--strict` exits non-zero when a treatment answer fails a screen.
 - `build` with the fake adapter remains available for deterministic contract tests.
 
 ## Current status
@@ -39,6 +55,6 @@ node src/cli.ts uninstall --target /path/to/project
 - Provenance: verified KBBI and NU Online citations for the religious expressions live in `culture/id/sources.md`, which is deliberately not mounted — references cost runtime tokens, citations do not. *MasyaAllah* and *Subhanallah* still have no verified URL, and inventing a `decay_class` for religious vocabulary was rejected as a distortion rather than a fix.
 - Personas: RUSUH, HALAL (`profiles/halal-id.yaml`), and JAWA (`profiles/jawa-id.yaml`) are drafted with voice, card, lexicon, examples, and a 12-scenario rubric file each — the count is a test assertion, not a note. Every review state is `pending`, all three install and uninstall cleanly through the same path, and `build --release` fails closed for each. Only RUSUH has been executed against a model; HALAL and JAWA have not.
 - Culture KB: small sourced seed; review pending. `culture/id/religious-expression.md` and the four expanded `core/*.md` policies are mounted as skill references; `culture/jv/registers.yaml` now carries `hahahah.culture.registers/v1` so the Javanese register map can be mounted at all, and its `reviewed_by: pending` state blocks release.
-- Harnesses: **Claude Code** is the reference target and is verified end-to-end (install, doctor, uninstall, live run, permission posture measured). **opencode** (1.18.31) now has its own adapter and is verified loading on this machine: `opencode debug skill` lists the installed `hahahah-rusuh` skill, and a live `opencode run` confirmed the `AGENTS.md` managed block reaches model context. Not yet true for opencode: no declarative permission file is written, so its default `* : allow` is looser than the study posture, and there is no eval/study runner for it — no cross-harness comparison may be claimed until both are done. `agents-md` (Codex/Gemini/Cursor/Qoder) and Qoder itself remain unimplemented/unverified; the Qoder assessment still says "Incomplete — no compatibility claim" (see `docs/qoder-assessment.md`).
+- Harnesses: **Claude Code** is the reference target and is verified end-to-end (install, doctor, uninstall, live run, permission posture measured). **opencode** (1.18.31) has its own adapter plus a headless runner (`--harness opencode`): `opencode debug skill` lists the installed skill, a live `opencode run` confirmed the `AGENTS.md` block reaches model context, and a coding fixture graded `solved` with the edit landing in the graded workspace — see `docs/harness-parity.md`. Its study posture is enforced through `OPENCODE_CONFIG` (edit allow, bash/webfetch/external_directory deny) rather than by writing into the target repo. **antigravity** has an adapter that writes `.agents/rules/*.md` with `always_on`/`model_decision` triggers, plus `--scope global` for `~/.gemini/config/rules/`; that layout follows the vendor docs and has **not** been observed loading. **agents-md** emits the vendor-neutral `AGENTS.md` + `.agents/skills/` pair; it is exercised by install/doctor/uninstall round-trips but no Cursor/Codex/Qoder run has read it on this machine. Qoder itself remains unverified — `docs/qoder-assessment.md` still says "Incomplete — no compatibility claim".
 
 See `docs/quickstart.md`, `docs/phase-2-integration-findings.md`, `docs/phase-3-content-hardening.md`, `docs/phase-3-live-suite-results.md`, and the Phase 0 documents.

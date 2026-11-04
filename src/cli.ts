@@ -53,15 +53,23 @@ function printUsage(): void {
   console.log(`HAHahah Phase 3
 
 Usage:
-  node src/cli.ts build --profile <id> [--adapter fake|claude-code|opencode|agents-md] [--out <dir>] [--release]
-  node src/cli.ts measure --profile <id> [--adapter fake|claude-code|opencode|agents-md]
-  node src/cli.ts install --profile <id> [--target <repo>] [--dry-run] [--force]
+  node src/cli.ts build --profile <id> [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
+  node src/cli.ts measure --profile <id> [--adapter fake|claude-code|opencode|agents-md|antigravity]
+  node src/cli.ts install --profile <id> [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
   node src/cli.ts fixtures check [--dir fixtures]
   node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--harness claude|opencode] [--arm both|baseline|treatment] [--setting-sources <sources>] [--out <dir>] [--live]
   node src/cli.ts fixtures diagnose --id <fixture> [--arm baseline|treatment] [--budget-usd <n>] [--max-total-usd <n>] [--out <dir>] [--live]
   node src/cli.ts doctor [--target <repo>]
   node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--harness claude|opencode] [--setting-sources <sources>] [--out <dir>] [--strict]
+
+Which --adapter to pass, by the agent you run (install into the project you want it active in):
+  Claude Code          --adapter claude-code    writes CLAUDE.md + .claude/skills/
+  opencode             --adapter opencode       writes AGENTS.md + .claude/skills/ (opencode reads that tree)
+  Antigravity          --adapter antigravity    writes AGENTS.md + .agents/rules/*.md; add --scope global with --target ~/.gemini for every project
+  Cursor / Codex / Qoder CLI / anything reading AGENTS.md
+                       --adapter agents-md      writes AGENTS.md + .agents/skills/
+Omitting --adapter installs for Claude Code. Uninstall needs only --target; the manifest remembers the rest.
 
 Eval checks are deterministic surface screens, not semantic judges. --strict exits non-zero when a treatment check fails.
 fixtures run grades the agent by executing each fixture's tests. Without --live it only prints the plan and calls no model; with --live it needs --max-total-usd.
@@ -170,6 +178,7 @@ if (isMainEntry()) {
         'max-total-usd': { type: 'string' },
         model: { type: 'string' },
         harness: { type: 'string' },
+        scope: { type: 'string' },
         arm: { type: 'string' },
         'setting-sources': { type: 'string' },
         release: { type: 'boolean', default: false },
@@ -200,16 +209,18 @@ if (isMainEntry()) {
         console.log(`out: ${result.outDir}`);
       }
     } else if (command === 'install') {
+      const scope = (parsed.values.scope ?? 'workspace') as 'workspace' | 'global';
       const result = install({
         sourceRoot: process.cwd(),
         targetRoot: parsed.values.target,
         profileId: parsed.values.profile,
         adapterId: parsed.values.adapter ?? 'claude-code',
+        scope,
         dryRun: parsed.values['dry-run'],
         force: parsed.values.force,
       });
       console.log(
-        `${result.dryRun ? 'Dry run: would install' : 'Installed'} ${result.manifest.profile} into ${result.targetRoot}`,
+        `${result.dryRun ? 'Dry run: would install' : 'Installed'} ${result.manifest.profile} into ${result.targetRoot} (${scope} scope)`,
       );
       console.log(
         `files: ${result.manifest.files.length} managed file(s) + ${result.manifest.block.path} block`,
