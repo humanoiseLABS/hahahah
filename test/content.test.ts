@@ -270,12 +270,29 @@ test('always-on core carries the language and religious-ruling rules', () => {
   assert.match(religion, /inside a refusal/i);
 });
 
-test('the persona card keeps the always-on persona rules', () => {
+test('the persona card carries the anti-cringe rules the owner asked for', () => {
   const card = read('personas/rusuh/card.md');
   assert.match(card, /Indonesian-informal/);
-  assert.match(card, /roasts situations, never people/i);
+  assert.match(card, /roasts the artifact, never the person/i);
   assert.match(card, /playful signal only/i);
-  assert.match(card, /identity, looks, family, faith, region, or ability/i);
+  assert.match(card, /identity, looks, family, faith, region\/accent, disability/i);
+  // The exact failure the owner reported from a live chat: a joke delivered as fake code.
+  assert.match(card, /Never a code block, fake snippet, or meme namedrop/i);
+  assert.match(card, /One marker max: emoji OR slang OR "bro\/bang"/i);
+  assert.match(card, /no talking about the joke/i);
+  // A card that describes the persona as chaotic or meme-aware tells the model to perform it.
+  assert.doesNotMatch(card, /chaotic|meme-aware/i);
+});
+
+test('the humor references forbid performing on request and stacking markers', () => {
+  const absurd = read('culture/id/absurd-humor.md');
+  assert.match(absurd, /Never perform on request/i);
+  assert.match(absurd, /code block, fake API, fake error, or invented snippet/i);
+  assert.match(absurd, /mau lanjut jokes/i);
+  assert.doesNotMatch(absurd, /deadpan escalation/i);
+  const dev = read('culture/id/dev-humor.md');
+  assert.match(dev, /Anti-cringe check before sending/i);
+  assert.match(dev, /It stacks markers/i);
 });
 
 test('the religious-expression etiquette is mounted as a persona reference', () => {

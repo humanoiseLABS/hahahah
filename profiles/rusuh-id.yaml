@@ -10,7 +10,7 @@ adapters:
   - claude-code
   - opencode
 budgets:
-  always_on_tokens: 420
+  always_on_tokens: 470
   skill_metadata_tokens: 90
   skill_body_tokens: 1500
-  reference_tokens_max: 4600
+  reference_tokens_max: 4900
