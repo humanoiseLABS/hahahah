@@ -9,6 +9,7 @@ import {
 } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { parse } from 'yaml';
+import { AgentsMdAdapter } from './adapters/agents-md.ts';
 import { ClaudeCodeAdapter } from './adapters/claude-code.ts';
 import { FakeAdapter } from './adapters/fake.ts';
 import { OpenCodeAdapter } from './adapters/opencode.ts';
@@ -33,6 +34,7 @@ const ADAPTERS: Record<string, () => Adapter> = {
   fake: () => new FakeAdapter(),
   'claude-code': () => new ClaudeCodeAdapter(),
   opencode: () => new OpenCodeAdapter(),
+  'agents-md': () => new AgentsMdAdapter(),
 };
 
 const CORE_POLICY_FILES = ['00-identity.md', '10-safety.md', '20-decision.md', '30-efficiency.md'];

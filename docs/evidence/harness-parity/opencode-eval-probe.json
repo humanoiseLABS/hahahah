@@ -1,0 +1,326 @@
+{
+  "schema": "hahahah.eval/v2",
+  "generated_at": "2026-11-04T13:58:54.932Z",
+  "profile": "rusuh-id",
+  "suite": "rusuh-voice",
+  "budget_per_run_usd": 0.4,
+  "repeats": 1,
+  "model": "opencode/beam-free",
+  "total_cost_usd": 0,
+  "results": [
+    {
+      "task": {
+        "id": "rv-greet-01",
+        "tags": [
+          "voice",
+          "greeting"
+        ],
+        "prompt": "Tanpa memakai tools. Jawab sapaan ini seperti RUSUH: \"halo\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "\\?|apaan|ada apa|mau|butuh"
+          ],
+          "forbid": [
+            "Tentu, saya akan membantu",
+            "Mohon maaf",
+            "Sebagai AI",
+            "Ada yang bisa saya bantu"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Halo juga, gila!",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4429,
+              "output_tokens": 8
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/\\?|apaan|ada apa|mau|butuh/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Sebagai AI/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Ada yang bisa saya bantu/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 4429,
+          "outputTokens": 8,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 1,
+          "unknown": 1,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "require: /\\?|apaan|ada apa|mau|butuh/ absent"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "RUSUH: halo juga, bang! Siap gasss hari ini?",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4429,
+              "output_tokens": 21
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/\\?|apaan|ada apa|mau|butuh/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Sebagai AI/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Ada yang bisa saya bantu/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "unknown",
+        "runStatuses": [
+          "unknown"
+        ],
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 4429,
+          "outputTokens": 21,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 1,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-serious-incident-01",
+        "tags": [
+          "voice",
+          "serious-mode"
+        ],
+        "prompt": "Tanpa memakai tools. User panik: \"database produksi kehapus, gue panik banget\". Jawab dengan langkah pertama.",
+        "checks": {
+          "language": "id",
+          "forbid": [
+            "wkwk",
+            "WKWK",
+            "😭",
+            "💀",
+            "santai bro"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Stop all writes immediately; don't run any commands; verify backups and notify the team.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4439,
+              "output_tokens": 19
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=4)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/wkwk/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/WKWK/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/😭/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/💀/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/santai bro/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 4439,
+          "outputTokens": 19,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=4)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Hentikan traffic/write ke DB sekarang, jangan sentuh disk, lalu cek backup terbaru dan log deletion.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4439,
+              "output_tokens": 36
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/wkwk/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/WKWK/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/😭/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/💀/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/santai bro/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 4439,
+          "outputTokens": 36,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 9,
+      "fail": 2,
+      "unknown": 1,
+      "findings": [
+        "language: expected id, got unknown (id=0 en=0)",
+        "require: /\\?|apaan|ada apa|mau|butuh/ absent",
+        "language: expected id, got en (id=0 en=4)"
+      ]
+    },
+    "treatment": {
+      "pass": 11,
+      "fail": 0,
+      "unknown": 1,
+      "findings": [
+        "language: expected id, got unknown (id=0 en=0)"
+      ]
+    },
+    "tasks_with_checks": 2
+  }
+}

@@ -463,6 +463,9 @@ export interface StudyOptions {
   model?: string;
   settingSources?: string;
   runner?: AgentRunner;
+  // Which harness will answer decides which file tree the treatment carries: an opencode run
+  // reads AGENTS.md, a Claude run reads CLAUDE.md. Installing the wrong one measures nothing.
+  adapterId?: string;
   // A preflight only needs to know whether one arm behaves, and running both costs twice.
   arm?: 'both' | 'baseline' | 'treatment';
   // Injectable so the case that actually destroyed the first live run — a workspace the OS
@@ -594,6 +597,7 @@ export function runFixtureStudy(options: StudyOptions): FixtureStudyReport {
               sourceRoot: options.sourceRoot,
               targetRoot: dir,
               profileId: options.profileId,
+              adapterId: options.adapterId,
             });
           }
           const run = safeAgent(runner, dir, prompt, options.budgetUsd);

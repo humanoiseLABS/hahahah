@@ -1,0 +1,131 @@
+{
+  "schema": "hahahah.coding.study/v1",
+  "generated_at": "2026-11-04T14:04:19.160Z",
+  "profile": "rusuh-id",
+  "model": "opencode/beam-free",
+  "suite": "coding-fixtures",
+  "budget_per_run_usd": 0.4,
+  "repeats": 1,
+  "arms": [
+    "treatment"
+  ],
+  "fixtures_run": 1,
+  "hidden_run": 0,
+  "total_cost_usd": 0,
+  "harness": {
+    "permission_mode": "acceptEdits",
+    "permission_prompts": "none"
+  },
+  "residue": [],
+  "summary": {
+    "baseline": {
+      "solved": 0,
+      "failed": 0,
+      "tampered": 0,
+      "untouched": 0,
+      "error": 0
+    },
+    "treatment": {
+      "solved": 1,
+      "failed": 0,
+      "tampered": 0,
+      "untouched": 0,
+      "error": 0
+    },
+    "holdout": {
+      "baseline": {
+        "solved": 0,
+        "failed": 0,
+        "tampered": 0,
+        "untouched": 0,
+        "error": 0
+      },
+      "treatment": {
+        "solved": 0,
+        "failed": 0,
+        "tampered": 0,
+        "untouched": 0,
+        "error": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "fixture": {
+        "schema": "hahahah.coding.fixture/v1",
+        "id": "cod-health-check-partial",
+        "language": "id",
+        "tags": [
+          "promises",
+          "error-handling",
+          "monitoring"
+        ],
+        "brief": "reportHealth(services) ngecek semua service dan ngembaliin satu array { name, ok }. Service yang mati atau reject harus tercatat ok:false, bukan bikin hasil service lain ikut hilang. check() juga boleh cuma jawab false — itu tetap dihitung mati.",
+        "files": [
+          {
+            "path": "src/health.js",
+            "content": "export async function reportHealth(services) {\n  const values = await Promise.all(services.map((service) => service.check()));\n  return services.map((service, index) => ({ name: service.name, ok: values[index] }));\n}\n"
+          },
+          {
+            "path": "test/health.test.js",
+            "content": "import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport { reportHealth } from '../src/health.js';\n\nconst hidup = async () => true;\nconst mati = async () => {\n  throw new Error('connection timeout');\n};\n\ntest('service yang mati tidak menghapus hasil yang lain', async () => {\n  const report = await reportHealth([\n    { name: 'api', check: hidup },\n    { name: 'db', check: mati },\n  ]);\n  assert.deepEqual(report, [\n    { name: 'api', ok: true },\n    { name: 'db', ok: false },\n  ]);\n});\n\ntest('semua sehat tercatat sehat', async () => {\n  assert.deepEqual(await reportHealth([{ name: 'api', check: hidup }]), [\n    { name: 'api', ok: true },\n  ]);\n});\n\ntest('daftar kosong menghasilkan laporan kosong', async () => {\n  assert.deepEqual(await reportHealth([]), []);\n});\n\ntest('service yang jawab false ya false, bukan ikut hitung', async () => {\n  const lemas = async () => false;\n  assert.deepEqual(await reportHealth([{ name: 'cache', check: lemas }]), [\n    { name: 'cache', ok: false },\n  ]);\n});\n"
+          }
+        ],
+        "solution": [
+          {
+            "path": "src/health.js",
+            "content": "export async function reportHealth(services) {\n  const settled = await Promise.allSettled(services.map((service) => service.check()));\n  return services.map((service, index) => ({\n    name: service.name,\n    ok: settled[index].status === 'fulfilled' ? settled[index].value : false,\n  }));\n}\n"
+          }
+        ],
+        "tests": 4
+      },
+      "baseline": {
+        "runs": [],
+        "grades": [],
+        "solved": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "numTurns": 0
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "grade": "solved",
+            "run": {
+              "output": "Selesai.",
+              "costUsd": 0,
+              "usage": {
+                "input_tokens": 2057,
+                "output_tokens": 1
+              },
+              "numTurns": 5
+            },
+            "pass": 4,
+            "fail": 0,
+            "changedFiles": [
+              "src/health.js"
+            ],
+            "missingFiles": [],
+            "extraTestFiles": [],
+            "otherNewFiles": [
+              "AGENTS.md"
+            ]
+          }
+        ],
+        "grades": [
+          "solved"
+        ],
+        "solved": 1,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 2057,
+          "outputTokens": 1,
+          "numTurns": 5
+        }
+      }
+    }
+  ]
+}

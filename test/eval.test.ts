@@ -131,6 +131,40 @@ function isTreatment(cwd: string): boolean {
   return existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md'));
 }
 
+test('the eval runner installs the harness-matched adapter tree when told which harness answers', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-'));
+  // The study deletes every workspace when it finishes, so each observation has to be taken
+  // while the runner is inside it.
+  const seen: Array<{ agents: boolean; claude: boolean; skill: boolean }> = [];
+  try {
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      adapterId: 'opencode',
+      tasks: [{ id: 'adapter-opencode-01', prompt: 'Reply once.' }],
+      outDir,
+      budgetUsd: 0.05,
+      runner: (cwd) => {
+        seen.push({
+          agents: existsSync(join(cwd, 'AGENTS.md')),
+          claude: existsSync(join(cwd, 'CLAUDE.md')),
+          skill: existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md')),
+        });
+        return { output: 'ok', costUsd: 0.01 };
+      },
+    });
+
+    assert.equal(report.results.length, 1);
+    // Baseline runs first in repeat 0: bare, then the treatment carrying AGENTS.md.
+    assert.deepEqual(seen, [
+      { agents: false, claude: false, skill: false },
+      { agents: true, claude: false, skill: true },
+    ]);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
 test('eval runner installs treatment, runs baseline and treatment, and writes a v2 report', () => {
   const outDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-'));
   try {

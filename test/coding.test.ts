@@ -387,6 +387,36 @@ test('only the treatment arm carries the installed profile', () => {
 
 const zeroTally = { solved: 0, failed: 0, tampered: 0, untouched: 0, error: 0 };
 
+test('the study installs the harness-matched adapter tree, not always the Claude one', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-study-adapter-'));
+  const seen: Array<{ agents: boolean; claude: boolean }> = [];
+  try {
+    runFixtureStudy({
+      sourceRoot: root,
+      profileId: 'rusuh-id',
+      fixtures: [miniFixture()],
+      outDir,
+      budgetUsd: 0.35,
+      adapterId: 'opencode',
+      runner: (cwd: string) => {
+        seen.push({
+          agents: existsSync(join(cwd, 'AGENTS.md')),
+          claude: existsSync(join(cwd, 'CLAUDE.md')),
+        });
+        writeFileSync(join(cwd, 'src', 'a.js'), 'export const value = 2;\n', 'utf8');
+        return { output: 'selesai', costUsd: 0.02 };
+      },
+    });
+    // Baseline runs first in repeat 0: bare, then the treatment carrying AGENTS.md.
+    assert.deepEqual(seen, [
+      { agents: false, claude: false },
+      { agents: true, claude: false },
+    ]);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
 test('a failed removal never throws and says whether the directory is gone', () => {
   const dir = mkdtempSync(join(tmpdir(), 'hahahah-residue-'));
   const held = join(dir, 'held.txt');

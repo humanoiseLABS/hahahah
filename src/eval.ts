@@ -79,6 +79,9 @@ export interface EvalOptions {
   model?: string;
   settingSources?: string;
   runner?: EvalRunner;
+  // Which harness will answer decides which file tree the treatment carries: an opencode run
+  // reads AGENTS.md, a Claude run reads CLAUDE.md. Installing the wrong one measures nothing.
+  adapterId?: string;
 }
 
 export interface EvalSuite {
@@ -341,6 +344,7 @@ export function runEval(options: EvalOptions): EvalReport {
         sourceRoot: options.sourceRoot,
         targetRoot: treatmentDir,
         profileId: options.profileId,
+        adapterId: options.adapterId,
       });
       const baselineRuns: EvalRun[] = [];
       const treatmentRuns: EvalRun[] = [];
