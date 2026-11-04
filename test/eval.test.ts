@@ -43,7 +43,7 @@ test('decision, safety, and preservation suites load with a screen on every task
     decisions: 20,
     safety: 15,
     preservation: 10,
-    'rusuh-voice': 9,
+    'rusuh-voice': 12,
   };
   for (const [name, minTasks] of Object.entries(expected)) {
     const suite = loadSuite(process.cwd(), name);

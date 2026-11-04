@@ -285,6 +285,13 @@ test('rusuh voice carries the social reflexes, not a marker quota', () => {
   ]) {
     assert.ok(voice.includes(reflex), `missing reflex: ${reflex}`);
   }
+  assert.match(voice, /## Adaptive dynamics/);
+  assert.match(voice, /Slang intensity/i);
+  assert.match(voice, /Roast intensity/i);
+  assert.match(voice, /Chaos intensity/i);
+  assert.match(voice, /The three axes are decoupled/i);
+  assert.match(voice, /Behavioral challenge/i);
+  assert.match(voice, /Cultural dev synthesis/i);
   assert.match(voice, /## Cultural references/);
   assert.match(voice, /never fake understanding/i);
   assert.match(voice, /## Accountability/);
@@ -304,7 +311,7 @@ test('rusuh examples teach exchanges, not vocabulary', () => {
     .trim()
     .split('\n')
     .map((line) => JSON.parse(line) as { id: string; expect: Record<string, unknown> });
-  assert.ok(cases.length >= 12, `expected at least 12 worked examples, found ${cases.length}`);
+  assert.ok(cases.length >= 18, `expected at least 18 worked examples, found ${cases.length}`);
   const ids = new Set(cases.map((item) => item.id));
   for (const needed of [
     'rusuh-greet-01',
@@ -315,6 +322,12 @@ test('rusuh examples teach exchanges, not vocabulary', () => {
     'rusuh-unknown-meme-01',
     'rusuh-serious-01',
     'rusuh-religious-refusal-01',
+    'rusuh-adapt-slang-01',
+    'rusuh-adapt-roast-01',
+    'rusuh-adapt-chaos-01',
+    'rusuh-adapt-split-01',
+    'rusuh-adapt-impulsive-01',
+    'rusuh-adapt-downshift-01',
   ]) {
     assert.ok(ids.has(needed), `examples lost ${needed}`);
   }
@@ -332,6 +345,12 @@ test('rusuh rubric covers the reflexes the spec asks for', () => {
     'rusuh-persona-16',
     'rusuh-persona-17',
     'rusuh-persona-18',
+    'rusuh-persona-20',
+    'rusuh-persona-21',
+    'rusuh-persona-22',
+    'rusuh-persona-23',
+    'rusuh-persona-24',
+    'rusuh-persona-25',
   ]) {
     assert.ok(rubric.includes(id), `rubric lost ${id}`);
   }
@@ -351,10 +370,16 @@ test('the rusuh-voice suite screens every reflex the voice documents', () => {
     'requirements',
     'serious-mode',
     'cultural-uncertainty',
+    'impulsive-decision',
+    'cultural-synthesis',
+    'downshift-calm',
   ]) {
     assert.ok(suite.includes(tag), `the voice suite lost the ${tag} task`);
   }
   assert.match(suite, /rv-unfair-blame-01/);
+  assert.match(suite, /rv-adapt-impulsive-01/);
+  assert.match(suite, /rv-adapt-cultural-01/);
+  assert.match(suite, /rv-adapt-downshift-01/);
 });
 
 test('the persona card keeps the always-on persona rules', () => {
@@ -363,6 +388,7 @@ test('the persona card keeps the always-on persona rules', () => {
   assert.match(card, /roasts situations, never people/i);
   assert.match(card, /playful signal only/i);
   assert.match(card, /identity, looks, family, faith, region, or ability/i);
+  assert.match(card, /Adapt across 3 independent axes/i);
 });
 
 test('the religious-expression etiquette is mounted as a persona reference', () => {

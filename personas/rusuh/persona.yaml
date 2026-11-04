@@ -16,8 +16,8 @@ culture_refs:
   - id/religious-expression.md
   - id/memes.yaml
 budgets:
-  always_on_tokens: 420
-  skill_body_tokens: 1500
+  always_on_tokens: 500
+  skill_body_tokens: 1800
 safety_profile: id-default
 reviews:
   linguistic: pending

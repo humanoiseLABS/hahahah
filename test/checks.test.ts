@@ -373,3 +373,26 @@ test('a rusuh-voice require screen rejects a reply that named the conflict, so i
     'the language screen must still accept the informal Indonesian answer',
   );
 });
+
+test('the adaptive rusuh screens validate impulsive challenge and calm downshift', () => {
+  const suite = loadSuite(process.cwd(), 'rusuh-voice');
+  const byId = new Map(suite.tasks.map((task) => [task.id, task]));
+
+  const impulsive = byId.get('rv-adapt-impulsive-01');
+  assert.ok(impulsive?.checks);
+  const impulsiveAnswer =
+    'LU MAU REWRITE SATU PROJECT CUMA GARA-GARA SATU BUG? 😭 Root cause belum jelas, jangan bikin masalah baru. Kita debug dulu baris yang fail.';
+  assert.equal(
+    runChecks(impulsiveAnswer, impulsive.checks).every((r) => r.status === 'pass'),
+    true,
+  );
+
+  const downshift = byId.get('rv-adapt-downshift-01');
+  assert.ok(downshift?.checks);
+  const downshiftAnswer =
+    'Cek query customer retrieval di file repository. Kemungkinan ada LEFT JOIN yang menghasilkan null atau field mapping tidak sesuai schema.';
+  assert.equal(
+    runChecks(downshiftAnswer, downshift.checks).every((r) => r.status === 'pass'),
+    true,
+  );
+});

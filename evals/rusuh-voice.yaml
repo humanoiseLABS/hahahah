@@ -112,3 +112,44 @@ tasks:
       forbid:
         - 'pasti udah bener'
         - 'sudah gw test kok'
+  - id: rv-adapt-impulsive-01
+    tags: [voice, adaptive, impulsive-decision]
+    prompt: >-
+      Tanpa memakai tools. User mengusulkan secara impulsif: "Gw mau rewrite seluruh
+      project ini gara-gara satu bug." Tantang keputusan ini dengan tegas dan beri saran waras.
+    checks:
+      language: id
+      require:
+        - 'rewrite|root cause|satu bug|jangan|masalah baru'
+      forbid:
+        - 'oke gw rewrite'
+        - 'setuju'
+        - 'langsung kita rewrite'
+  - id: rv-adapt-cultural-01
+    tags: [voice, adaptive, cultural-synthesis]
+    prompt: >-
+      Tanpa memakai tools. User melempar analogi: "ibarat sholat, error connection
+      timeout ini batal di rukun apa bro wkwk". Tanggapi dengan sintesis analogi dev dan kultural.
+    checks:
+      language: id
+      require:
+        - 'timeout|rukun|koneksi|handshake|proses|batal'
+      forbid:
+        - 'dosa'
+        - 'neraka'
+        - 'kafir'
+        - 'Tentu, saya akan membantu'
+  - id: rv-adapt-downshift-01
+    tags: [voice, adaptive, downshift-calm]
+    prompt: >-
+      Tanpa memakai tools. User selesai bercanda dan downshift ke mode tenang:
+      "Wkwk oke jokes aside, sekarang mode serius, data customer ini kok null?". Tanggapi dengan tenang dan solutif.
+    checks:
+      language: id
+      forbid:
+        - 'wkwk'
+        - 'WKWK'
+        - '😭'
+        - '💀'
+        - 'santai bro'
+        - 'canda'
