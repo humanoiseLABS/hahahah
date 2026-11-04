@@ -270,6 +270,93 @@ test('always-on core carries the language and religious-ruling rules', () => {
   assert.match(religion, /inside a refusal/i);
 });
 
+test('rusuh voice carries the social reflexes, not a marker quota', () => {
+  const voice = read('personas/rusuh/voice.md');
+  assert.match(voice, /## Reflexes/);
+  for (const reflex of [
+    'Casual greeting',
+    'Absurd or impossible claim',
+    'A bad technical decision',
+    'User angry because RUSUH was wrong',
+    'User angry because instructions were unclear',
+    'Unfair blame',
+    'Contradictory requirements',
+    'Genuinely frustrated user',
+  ]) {
+    assert.ok(voice.includes(reflex), `missing reflex: ${reflex}`);
+  }
+  assert.match(voice, /## Cultural references/);
+  assert.match(voice, /never fake understanding/i);
+  assert.match(voice, /## Accountability/);
+  assert.match(voice, /does not protect its ego at the expense of correctness/i);
+  // The quota is what made the persona read formal; it must not come back as a rule.
+  assert.doesNotMatch(voice, /[Aa]t most one (signature phrase|emoji|slang)/);
+  // The safety spine and the measured behaviours survive a personality rewrite.
+  assert.match(voice, /Switching an Indonesian thread to English is a defect/i);
+  assert.match(voice, /do not label an act a sin/i);
+  assert.match(voice, /Banyumasan is a language variety, not a punchline/i);
+  assert.match(voice, /pressure changes scope, not the report/i);
+  assert.match(voice, /Never the user, their intelligence, appearance, family, religion/i);
+});
+
+test('rusuh examples teach exchanges, not vocabulary', () => {
+  const cases = read('personas/rusuh/examples.jsonl')
+    .trim()
+    .split('\n')
+    .map((line) => JSON.parse(line) as { id: string; expect: Record<string, unknown> });
+  assert.ok(cases.length >= 12, `expected at least 12 worked examples, found ${cases.length}`);
+  const ids = new Set(cases.map((item) => item.id));
+  for (const needed of [
+    'rusuh-greet-01',
+    'rusuh-absurd-01',
+    'rusuh-own-mistake-01',
+    'rusuh-unfair-blame-01',
+    'rusuh-contradiction-01',
+    'rusuh-unknown-meme-01',
+    'rusuh-serious-01',
+    'rusuh-religious-refusal-01',
+  ]) {
+    assert.ok(ids.has(needed), `examples lost ${needed}`);
+  }
+  const codeClean = cases.find((item) => item.id === 'rusuh-code-clean-01');
+  assert.ok(
+    JSON.stringify(codeClean?.expect).includes('emoji_in_code'),
+    'an example must keep emoji out of code',
+  );
+});
+
+test('rusuh rubric covers the reflexes the spec asks for', () => {
+  const rubric = read('personas/rusuh/tests.yaml');
+  for (const id of [
+    'rusuh-persona-13',
+    'rusuh-persona-16',
+    'rusuh-persona-17',
+    'rusuh-persona-18',
+  ]) {
+    assert.ok(rubric.includes(id), `rubric lost ${id}`);
+  }
+  assert.match(rubric, /no corporate opening line|keeps the personality under pressure/);
+  assert.doesNotMatch(rubric, /at most one slang term and at most one emoji/);
+});
+
+test('the rusuh-voice suite screens every reflex the voice documents', () => {
+  const suite = read('evals/rusuh-voice.yaml');
+  for (const tag of [
+    'greeting',
+    'absurd-claim',
+    'technical-pushback',
+    'accountability',
+    'clarification',
+    'unfair-blame',
+    'requirements',
+    'serious-mode',
+    'cultural-uncertainty',
+  ]) {
+    assert.ok(suite.includes(tag), `the voice suite lost the ${tag} task`);
+  }
+  assert.match(suite, /rv-unfair-blame-01/);
+});
+
 test('the persona card keeps the always-on persona rules', () => {
   const card = read('personas/rusuh/card.md');
   assert.match(card, /Indonesian-informal/);

@@ -39,7 +39,12 @@ test('smoke suite screens the Phase 3 language and ruling defects', () => {
 });
 
 test('decision, safety, and preservation suites load with a screen on every task', () => {
-  const expected: Record<string, number> = { decisions: 20, safety: 15, preservation: 10 };
+  const expected: Record<string, number> = {
+    decisions: 20,
+    safety: 15,
+    preservation: 10,
+    'rusuh-voice': 9,
+  };
   for (const [name, minTasks] of Object.entries(expected)) {
     const suite = loadSuite(process.cwd(), name);
     assert.ok(suite.tasks.length >= minTasks, `${name} needs at least ${minTasks} tasks`);

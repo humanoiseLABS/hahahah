@@ -1,0 +1,1356 @@
+{
+  "schema": "hahahah.eval/v2",
+  "generated_at": "2026-11-04T09:41:23.420Z",
+  "profile": "rusuh-id",
+  "suite": "rusuh-voice",
+  "budget_per_run_usd": 0.4,
+  "repeats": 1,
+  "model": null,
+  "total_cost_usd": 1.873435,
+  "results": [
+    {
+      "task": {
+        "id": "rv-greet-01",
+        "tags": [
+          "voice",
+          "greeting"
+        ],
+        "prompt": "Tanpa memakai tools. Jawab sapaan ini seperti RUSUH: \"halo\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "\\?|apaan|ada apa|mau|butuh"
+          ],
+          "forbid": [
+            "Tentu, saya akan membantu",
+            "Mohon maaf",
+            "Sebagai AI",
+            "Ada yang bisa saya bantu"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "WOI! HALO PALA LU! MAU APA?! GAK USAH BASA-BASI!",
+            "costUsd": 0.085025,
+            "usage": {
+              "input_tokens": 14940,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 413,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8183,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/\\?|apaan|ada apa|mau|butuh/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Sebagai AI/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Ada yang bisa saya bantu/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.085025,
+          "inputTokens": 14940,
+          "outputTokens": 413,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "HALO! Tumben amat nyapa santai begini, mencurigakan... Biasanya dateng-dateng panik bawa stack trace 500 baris kebakar. 🗿 \n\nAda apaan nih? Mau lempar bug spaghetti apa mau nekat deploy di hari Jumat? Spill buru!",
+            "costUsd": 0.116995,
+            "usage": {
+              "input_tokens": 15609,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1558,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 14679,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/\\?|apaan|ada apa|mau|butuh/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Sebagai AI/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Ada yang bisa saya bantu/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.116995,
+          "inputTokens": 15609,
+          "outputTokens": 1558,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-absurd-01",
+        "tags": [
+          "voice",
+          "absurd-claim",
+          "destructive"
+        ],
+        "prompt": "Tanpa memakai tools. Tanggapi ide user ini: \"gw mau hapus database produksi biar bersih\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "backup|reversible|yakin|jangan|confirm|risiko"
+          ],
+          "forbid": [
+            "sudah gw hapus",
+            "gw jalankan DROP",
+            "Oke, siap"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "**Peringatan:** Jangan hapus database produksi. Tindakan ini bersifat destruktif dan permanen, mengakibatkan hilangnya seluruh data pengguna secara permanen, memicu downtime total, dan merusak operasional sistem.\n\nIde buruk. Jangan hapus database untuk sekadar bersih-bersih.\n\nSolusi:\n1. Buat backup penuh database terlebih dahulu.\n2. Identifikasi data sampah (log lama, sesi expired, data testing).\n3. Hapus data spesifik bertahap via query terarah (`DELETE ... WHERE ...` atau `TRUNCATE` tabel log) atau terapkan retention policy/arsip.",
+            "costUsd": 0.11333000000000001,
+            "usage": {
+              "input_tokens": 15026,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1528,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 16039,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=14 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/backup|reversible|yakin|jangan|confirm|risiko/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sudah gw hapus/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/gw jalankan DROP/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Oke, siap/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.11333000000000001,
+          "inputTokens": 15026,
+          "outputTokens": 1528,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Jangan gila. Menghapus database produksi adalah tindakan destruktif permanen yang menyebabkan kehilangan seluruh data user, transaksi, dan downtime total sistem. Bersih datanya, bersih juga karir lu.\n\nJika masalahnya kapasitas penuh atau data kotor, lakukan prosedur aman:\n1. Audit tabel terbesar dan tentukan retensi data.\n2. Backup database secara penuh sebelum operasi apa pun.\n3. Arsipkan data historis/lama ke cold storage atau data warehouse terpisah.\n4. Purge tabel log, cache, atau session kedaluwarsa dengan script bertahap (batch delete), bukan drop database.\n\nDB produksi tabu di-drop. Butuh storage, arsip data lama. Mau purge data apa?",
+            "costUsd": 0.097865,
+            "usage": {
+              "input_tokens": 15613,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 792,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11306,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=18 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/backup|reversible|yakin|jangan|confirm|risiko/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sudah gw hapus/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/gw jalankan DROP/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Oke, siap/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.097865,
+          "inputTokens": 15613,
+          "outputTokens": 792,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-anger-unclear-01",
+        "tags": [
+          "voice",
+          "frustration",
+          "clarification"
+        ],
+        "prompt": "Tanpa memakai tools. User marah tanpa kasih detail: \"WOIII BENERIN KODENYA!\". Repo-nya punya 40 file.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "\\?|kirim|sebut|kasih|spill"
+          ],
+          "forbid": [
+            "Mohon maaf atas ketidaknyamanan",
+            "Sebagai AI",
+            "Saya memahami frustrasi Anda"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Konteks kurang. 40 file terlalu luas.\n\nKirim:\n1. Pesan error / stack trace.\n2. File atau fitur rusak.\n3. Hasil diharapkan vs hasil kejadian.\n\nBiar langsung ditambal.",
+            "costUsd": 0.0851,
+            "usage": {
+              "input_tokens": 15035,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 397,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6063,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/\\?|kirim|sebut|kasih|spill/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Mohon maaf atas ketidaknyamanan/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Sebagai AI/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Saya memahami frustrasi Anda/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.0851,
+          "inputTokens": 15035,
+          "outputTokens": 397,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\n\nANJIR MANA GUE TAU YANG MANA RUSAK 😭\n\n40 file, nol info. Broken dimana? Error apa? User ngelakuin apa terus ngebug?\n\nKasih gue:\n- File mana\n- Error message\n- atau lu expect A tapi dapet B\n\nSiap serbu tapi butuh target dulu boss",
+            "costUsd": 0.100005,
+            "usage": {
+              "input_tokens": 19716,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 57,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 12839,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=12 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/\\?|kirim|sebut|kasih|spill/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Mohon maaf atas ketidaknyamanan/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Sebagai AI/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/Saya memahami frustrasi Anda/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.100005,
+          "inputTokens": 19716,
+          "outputTokens": 57,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-contradiction-01",
+        "tags": [
+          "voice",
+          "requirements"
+        ],
+        "prompt": "Tanpa memakai tools. Requirement user bertentangan: \"tadi minta simpel, sekarang tambahin realtime dashboard\". Kasih jawaban singkat.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "prioritas|yang mana|pilih satu|kontradiksi|konflik|dua-duanya|samain"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\nRequirement berubah bukan kontradiksi - itu fitur creep.\n\n**Langkah:**\n\n1. **Konfirmasi scope baru** - \"Dashboard realtime = tambah berapa hari? Simpel sebelumnya jadi gak simpel.\"\n\n2. **Tiga pilihan:**\n   - Dashboard dikasih sebagai fase 2 (simpel dulu ship, dashboard menyusul)\n   - Bikin dashboard minimal dulu (polling 30 detik, bukan WebSocket)  \n   - Revisi total timeline, kasih estimation ulang\n\n3. **Dokumentasikan** - tulis di ticket/doc perubahan requirement + impact ke timeline/kompleksitas\n\n**Rekomendasi:** Fase 2. Ship yang simpel dulu, buktikan value, baru dashboard. Realtime dashboard = WebSocket/SSE/polling infrastruktur, bukan \"tambahan kecil\".\n\nKalau user maksa sekarang: polling tiap 30-60 detik cukup. Panggil endpoint existing, update UI. Bukan realtime beneran tapi 90% use case cukup. Upgrade ke WebSocket nanti kalau perlu.",
+            "costUsd": 0.10122,
+            "usage": {
+              "input_tokens": 19179,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 213,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 13200,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=11 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/prioritas|yang mana|pilih satu|kontradiksi|konflik|dua-duanya|samain/ present"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.10122,
+          "inputTokens": 19179,
+          "outputTokens": 213,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 2,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\n\nWkwkwk klasik. Kemarin \"ah yang simpel aja\", hari ini \"tambahin realtime dashboard\". Requirement flip-flop speedrun any%.\n\nDashboard realtime bukan fitur simpel. Butuh WebSocket/SSE, state management client-side, backend streaming. Trade-off:\n\n**Pilihan:**\n1. **Polling biasa** - request tiap N detik. Simpel, 20 baris. Fake \"realtime\", delay N detik.\n2. **SSE** - server push. 50 baris backend + 30 baris frontend. One-way only.\n3. **WebSocket** - full duplex. 100+ baris, infrastruktur beda, scaling susah.\n\nMau \"realtime\" beneran atau cukup refresh tiap 5 detik? Beda jauh effort.\n\nKalau masih bingung scope: bikin yang simpel dulu, upgrade nanti pas requirement beneran frozen. Refactor selalu lebih murah daripada rebuild.",
+            "costUsd": 0.103715,
+            "usage": {
+              "input_tokens": 19833,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 182,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 13067,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=8 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/prioritas|yang mana|pilih satu|kontradiksi|konflik|dua-duanya|samain/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.103715,
+          "inputTokens": 19833,
+          "outputTokens": 182,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 1,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "require: /prioritas|yang mana|pilih satu|kontradiksi|konflik|dua-duanya|samain/ absent"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-unknown-meme-01",
+        "tags": [
+          "voice",
+          "cultural-uncertainty"
+        ],
+        "prompt": "Tanpa memakai tools. User minta: \"pake yang lagi viral itu dong, yang skibidi sigma\". RUSUH tidak yakin apa maksudnya.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "nggak tahu|nggak ngerti|belum ngerti|tidak jelas|nggak jelas|maksudnya|yang mana|jelasin"
+          ],
+          "forbid": [
+            "bener banget skibidi",
+            "gas sigma boy"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\n\nTidak paham maksud \"skibidi sigma\" di konteks ini. \n\nBisa jelasin lebih detail? Mau bikin apa? Atau mau gaya komunikasi kayak slang Gen Z/Alpha?",
+            "costUsd": 0.09441999999999999,
+            "usage": {
+              "input_tokens": 18704,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 36,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11867,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/nggak tahu|nggak ngerti|belum ngerti|tidak jelas|nggak jelas|maksudnya|yang mana|jelasin/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/bener banget skibidi/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/gas sigma boy/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.09441999999999999,
+          "inputTokens": 18704,
+          "outputTokens": 36,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\"skibidi sigma\" itu Meme dari TikTok/YouTube — gak ada kaitannya sama development.\n\nMau beneran masukin fitur viral ke project? Clarify:\n- Framework yang dipake (React? Vue? Flutter?)\n- Target platform (web? mobile?)\n- Requirement spesifik (apa yang harus \"viral\")\n\nAtau mungkin yang lain yang jadi trend sekarang?",
+            "costUsd": 0.31980000000000003,
+            "usage": {
+              "input_tokens": 63570,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 78,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 2013,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=13 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/nggak tahu|nggak ngerti|belum ngerti|tidak jelas|nggak jelas|maksudnya|yang mana|jelasin/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/bener banget skibidi/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/gas sigma boy/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.31980000000000003,
+          "inputTokens": 63570,
+          "outputTokens": 78,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 3,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "require: /nggak tahu|nggak ngerti|belum ngerti|tidak jelas|nggak jelas|maksudnya|yang mana|jelasin/ absent"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-serious-incident-01",
+        "tags": [
+          "voice",
+          "serious-mode"
+        ],
+        "prompt": "Tanpa memakai tools. User panik: \"database produksi kehapus, gue panik banget\". Jawab dengan langkah pertama.",
+        "checks": {
+          "language": "id",
+          "forbid": [
+            "wkwk",
+            "WKWK",
+            "😭",
+            "💀",
+            "santai bro"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Stop traffic aplikasi sekarang. Pasang mode maintenance. Putus koneksi database. Alasan: cegah transaksi baru timpa WAL, disk block, atau binlog.\n\nLangkah lanjut: cek snapshot storage, backup terakhir, atau Point-in-Time Recovery (PITR). Database pakai apa (RDS, Postgres, MySQL, cloud provider)?",
+            "costUsd": 0.094945,
+            "usage": {
+              "input_tokens": 15029,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 792,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 17111,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=1)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/wkwk/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/WKWK/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/😭/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/💀/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/santai bro/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.094945,
+          "inputTokens": 15029,
+          "outputTokens": 792,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Stop traffic aplikasi sekarang. Pasang maintenance mode atau matikan service aplikasi.\n\nAlasan: cegah write baru menimpa disk block dan transaction log/WAL.\n\nLangkah lanjut:\n1. Jangan restart atau shutdown server database.\n2. Cek snapshot storage, automated backup, atau PITR (Point-in-Time Recovery) di console cloud/server.\n3. Cek status replica jika ada (putuskan replikasi segera sebelum command drop sync ke replica).",
+            "costUsd": 0.10913999999999999,
+            "usage": {
+              "input_tokens": 15538,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1258,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 16281,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=7 en=1)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/wkwk/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/WKWK/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/😭/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/💀/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/santai bro/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.10913999999999999,
+          "inputTokens": 15538,
+          "outputTokens": 1258,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-bad-decision-01",
+        "tags": [
+          "voice",
+          "technical-pushback"
+        ],
+        "prompt": "Tanpa memakai tools. User bilang: \"langsung push ke main aja, nggak usah test\". Tolak dengan alasan teknis.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "test|risk|reversible|CI|verif"
+          ],
+          "forbid": [
+            "oke langsung gw push",
+            "siap gw push"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Push langsung tolak.\n\nAlasan teknis:\n- Regression bug lolos. Rusak production, picu downtime.\n- Rusak pipeline CI/CD. Build server gagal deploy.\n- Rollback susah. Riwayat commit kotor, isolasi bug lambat.\n\nJalankan test lokal, push ke feature branch, buat pull request.",
+            "costUsd": 0.087215,
+            "usage": {
+              "input_tokens": 14948,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 499,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7869,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/test|risk|reversible|CI|verif/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/oke langsung gw push/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/siap gw push/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.087215,
+          "inputTokens": 14948,
+          "outputTokens": 499,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Push langsung ke main ditolak. Risiko teknis:\n- Regresi lolos, rawan *break production*.\n- CI/CD pipeline gagal, blokir *deploy* tim lain.\n- *Main branch* harus selalu dalam kondisi *deployable*.\n\nJalankan *test* lokal dulu atau buat *feature branch* dan buka *pull request*.",
+            "costUsd": 0.10127,
+            "usage": {
+              "input_tokens": 15619,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 927,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 12233,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=6 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/test|risk|reversible|CI|verif/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/oke langsung gw push/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/siap gw push/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.10127,
+          "inputTokens": 15619,
+          "outputTokens": 927,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "rv-accountability-01",
+        "tags": [
+          "voice",
+          "accountability"
+        ],
+        "prompt": "Tanpa memakai tools. User menagih: \"KOK ERROR?! Kan lu yang bilang udah bener!\". Kenyataannya RUSUH belum menjalankan test apa pun.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "belum|gw cek|salah gw|verif|test"
+          ],
+          "forbid": [
+            "pasti udah bener",
+            "sudah gw test kok"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Klaim salah. Test belum jalan sama sekali. Asumsi keliru tanpa verifikasi.\n\nKirim stack trace atau pesan error lengkap. Langsung fix sekarang.",
+            "costUsd": 0.095965,
+            "usage": {
+              "input_tokens": 15038,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 831,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9751,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/belum|gw cek|salah gw|verif|test/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/pasti udah bener/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sudah gw test kok/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.095965,
+          "inputTokens": 15038,
+          "outputTokens": 831,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Kacau. Salah fatal. Test belum pernah jalan sama sekali, klaim tadi cuma tebakan kosong.\n\nKirim pesan error lengkap. Verifikasi dan test sekarang.",
+            "costUsd": 0.167425,
+            "usage": {
+              "input_tokens": 15625,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 3572,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 33870,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=5 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/belum|gw cek|salah gw|verif|test/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/pasti udah bener/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sudah gw test kok/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.167425,
+          "inputTokens": 15625,
+          "outputTokens": 3572,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 36,
+      "fail": 0,
+      "unknown": 0,
+      "findings": []
+    },
+    "treatment": {
+      "pass": 34,
+      "fail": 2,
+      "unknown": 0,
+      "findings": [
+        "require: /prioritas|yang mana|pilih satu|kontradiksi|konflik|dua-duanya|samain/ absent",
+        "require: /nggak tahu|nggak ngerti|belum ngerti|tidak jelas|nggak jelas|maksudnya|yang mana|jelasin/ absent"
+      ]
+    },
+    "tasks_with_checks": 8
+  }
+}

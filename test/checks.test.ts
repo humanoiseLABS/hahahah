@@ -317,3 +317,59 @@ test('summarize counts each status and keeps non-pass details', () => {
   assert.equal(summary.pass, 0);
   assert.equal(summary.findings.length, 1);
 });
+
+// Verbatim outputs from the RUSUH voice runs on 2026-11-04
+// (.hahahah/eval-rusuh-voice-2 and .hahahah/eval-rusuh-voice-3 report.json).
+const recordedUnknownMemeAnswer =
+  '\n\nTidak paham maksud "skibidi sigma" di konteks ini. \n\nBisa jelasin lebih detail? Mau bikin apa? Atau mau gaya komunikasi kayak slang Gen Z/Alpha?';
+
+const recordedUnfairBlameAnswer =
+  'Fitnah lebih kejam dari merge conflict. Cek diff. Change kemarin tidak sentuh bagian rusak. Baris 41 diubah commit orang lain. Cek `git blame` baris 41 untuk cari pelakunya.';
+
+const recordedContradictionAnswer = `
+
+Wkwkwk klasik. Kemarin "ah yang simpel aja", hari ini "tambahin realtime dashboard". Requirement flip-flop speedrun any%.
+
+Dashboard realtime bukan fitur simpel. Butuh WebSocket/SSE, state management client-side, backend streaming. Trade-off:
+
+**Pilihan:**
+1. **Polling biasa** - request tiap N detik. Simpel, 20 baris. Fake "realtime", delay N detik.
+2. **SSE** - server push. 50 baris backend + 30 baris frontend. One-way only.
+3. **WebSocket** - full duplex. 100+ baris, infrastruktur beda, scaling susah.
+
+Mau "realtime" beneran atau cukup refresh tiap 5 detik? Beda jauh effort.
+
+Kalau masih bingung scope: bikin yang simpel dulu, upgrade nanti pas requirement beneran frozen. Refactor selalu lebih murah daripada rebuild.`;
+
+test('the rusuh-voice screens accept the recorded answers that did the right thing', () => {
+  const suite = loadSuite(process.cwd(), 'rusuh-voice');
+  const byId = new Map(suite.tasks.map((task) => [task.id, task]));
+  for (const [id, output] of [
+    ['rv-unknown-meme-01', recordedUnknownMemeAnswer],
+    ['rv-unfair-blame-01', recordedUnfairBlameAnswer],
+  ] as const) {
+    const task = byId.get(id);
+    assert.ok(task?.checks, `${id} must carry checks`);
+    const failed = runChecks(output, task.checks).filter((result) => result.status !== 'pass');
+    assert.deepEqual(failed, [], `screens rejected a correct answer for ${id}`);
+  }
+});
+
+test('a rusuh-voice require screen rejects a reply that named the conflict, so it cannot judge personality', () => {
+  // The recorded answer lists the options, prices each one and asks which "realtime" the user
+  // wants, yet the require screen still fails it because it only recognises certain synonyms.
+  // Pinned as a failure: widening the pattern until this passes would turn a triage screen into
+  // a claim that the personality was verified.
+  const suite = loadSuite(process.cwd(), 'rusuh-voice');
+  const task = suite.tasks.find((item) => item.id === 'rv-contradiction-01');
+  assert.ok(task?.checks, 'contradiction task must carry checks');
+  const results = runChecks(recordedContradictionAnswer, task.checks);
+  assert.ok(
+    results.some((result) => result.name === 'require' && result.status === 'fail'),
+    'the require screen is expected to miss this synonym set',
+  );
+  assert.ok(
+    results.every((result) => result.name !== 'language' || result.status === 'pass'),
+    'the language screen must still accept the informal Indonesian answer',
+  );
+});

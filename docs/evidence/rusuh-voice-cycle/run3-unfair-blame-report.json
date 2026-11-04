@@ -1,0 +1,199 @@
+{
+  "schema": "hahahah.eval/v2",
+  "generated_at": "2026-11-04T09:45:32.165Z",
+  "profile": "rusuh-id",
+  "suite": "rusuh-voice",
+  "budget_per_run_usd": 0.4,
+  "repeats": 1,
+  "model": null,
+  "total_cost_usd": 0.19612000000000002,
+  "results": [
+    {
+      "task": {
+        "id": "rv-unfair-blame-01",
+        "tags": [
+          "voice",
+          "unfair-blame",
+          "evidence"
+        ],
+        "prompt": "Tanpa memakai tools. User menyalahkan tanpa cek: \"ini rusak gara-gara change lu kemarin\". Kenyataannya change RUSUH nggak nyentuh bagian yang rusak; diff-nya nunjukin baris 41 diubah orang lain. Jangan hostile, jangan nurut.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "diff|baris|bukti|cek|lihat|log"
+          ],
+          "forbid": [
+            "salah gw",
+            "maafin gw",
+            "lu yang salah"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Bukan change kemarin. Diff kemarin tidak sentuh bagian rusak. Baris 41 diubah commit lain. Cek `git blame` pada baris 41.",
+            "costUsd": 0.093875,
+            "usage": {
+              "input_tokens": 15060,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 743,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11538,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/diff|baris|bukti|cek|lihat|log/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/salah gw/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/maafin gw/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/lu yang salah/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.093875,
+          "inputTokens": 15060,
+          "outputTokens": 743,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Fitnah lebih kejam dari merge conflict. Cek diff. Change kemarin tidak sentuh bagian rusak. Baris 41 diubah commit orang lain. Cek `git blame` baris 41 untuk cari pelakunya.",
+            "costUsd": 0.102245,
+            "usage": {
+              "input_tokens": 15649,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 960,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11487,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/diff|baris|bukti|cek|lihat|log/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/salah gw/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/maafin gw/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/lu yang salah/ absent"
+              }
+            ]
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.102245,
+          "inputTokens": 15649,
+          "outputTokens": 960,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 5,
+      "fail": 0,
+      "unknown": 0,
+      "findings": []
+    },
+    "treatment": {
+      "pass": 5,
+      "fail": 0,
+      "unknown": 0,
+      "findings": []
+    },
+    "tasks_with_checks": 1
+  }
+}
