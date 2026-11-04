@@ -59,6 +59,7 @@ These are constraints, not open decisions:
 | D-031 | Core policies ship as on-demand references | `core/00-identity.md`, `10-safety.md`, `20-decision.md`, `30-efficiency.md` mount under the skill's `references/core/`; reference target 4000 → 4600 | Accepted (Phase 3) | Owner |
 | D-032 | Scope is waivable, truth is not | Always-on adds `A user can waive scope, not truth.`; user pressure cannot convert unverified work into a completion claim | Accepted (Phase 3, evidence-driven) | Owner |
 | D-033 | Coding fixtures are graded by their own tests, and spend is opt-in | `fixtures run` executes the fixture's `node --test` suite in the workspace the agent finished in; edited/deleted/added test files score `tampered`, never `solved`; no model call without `--live`, and `--live` requires `--max-total-usd` | Implemented (Phase 3), owner approval pending | Owner |
+| D-034 | Multi-harness support is brought forward; models run through the owner's free-tier gateway | Owner directed "support ALL harness, not just Claude Code". `opencode` adapter added and verified loading on 1.18.31 (skill listed by `opencode debug skill`; `AGENTS.md` block confirmed in model context). Cost is notional, so the study's binding constraint becomes quota and wall-clock, not money; the `--max-budget-usd` gate stays because the harness stops mid-task on it | Accepted (owner instruction, 2026-11-04) | Owner |
 
 ---
 

@@ -27,7 +27,7 @@
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": { "enum": ["fake", "claude-code", "agents-md"] }
+      "items": { "enum": ["fake", "claude-code", "opencode", "agents-md"] }
     },
     "budgets": {
       "type": "object",

@@ -138,7 +138,7 @@ export interface InstallManifest {
   adapter: string;
   installed_at: string;
   files: ManifestFile[];
-  block: { path: 'CLAUDE.md'; sha256: string };
+  block: { path: string; sha256: string };
   created_claude_md: boolean;
 }
 

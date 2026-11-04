@@ -113,7 +113,7 @@ try {
     strict: true,
     options: {
       profile: { type: 'string', default: 'rusuh-id' },
-      adapter: { type: 'string', default: 'fake' },
+      adapter: { type: 'string' },
       target: { type: 'string', default: process.cwd() },
       out: { type: 'string' },
       suite: { type: 'string', default: 'smoke' },
@@ -144,7 +144,7 @@ try {
     const result = build({
       root: process.cwd(),
       profileId: parsed.values.profile,
-      adapterId: parsed.values.adapter,
+      adapterId: parsed.values.adapter ?? 'fake',
       outDir: parsed.values.out,
       release: parsed.values.release,
       write: command === 'build',
@@ -158,13 +158,16 @@ try {
       sourceRoot: process.cwd(),
       targetRoot: parsed.values.target,
       profileId: parsed.values.profile,
+      adapterId: parsed.values.adapter ?? 'claude-code',
       dryRun: parsed.values['dry-run'],
       force: parsed.values.force,
     });
     console.log(
       `${result.dryRun ? 'Dry run: would install' : 'Installed'} ${result.manifest.profile} into ${result.targetRoot}`,
     );
-    console.log(`files: ${result.manifest.files.length} managed file(s) + CLAUDE.md block`);
+    console.log(
+      `files: ${result.manifest.files.length} managed file(s) + ${result.manifest.block.path} block`,
+    );
     for (const warning of result.warnings) {
       console.log(`warning: ${warning}`);
     }

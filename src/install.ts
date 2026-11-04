@@ -23,6 +23,7 @@ export interface InstallOptions {
   sourceRoot: string;
   targetRoot: string;
   profileId: string;
+  adapterId?: string;
   force?: boolean;
   dryRun?: boolean;
 }
@@ -151,17 +152,21 @@ function installBlock(
 
 export function install(options: InstallOptions): InstallResult {
   const targetRoot = resolve(options.targetRoot);
+  const adapterId = options.adapterId ?? 'claude-code';
   const built = build({
     root: options.sourceRoot,
     profileId: options.profileId,
-    adapterId: 'claude-code',
+    adapterId,
     write: false,
   });
-  const blockArtifact = built.artifacts.find((artifact) => artifact.path === BLOCK_PATH);
+  const blockArtifact = built.artifacts.find((artifact) => artifact.kind === 'always_on');
   if (!blockArtifact) {
-    throw new InstallError('Claude Code adapter did not render CLAUDE.md');
+    throw new InstallError(`Adapter ${adapterId} rendered no always-on managed block`);
   }
-  const artifactFiles = built.artifacts.filter((artifact) => artifact.path !== BLOCK_PATH);
+  // The block file is whatever the adapter decided to own: CLAUDE.md for Claude Code,
+  // AGENTS.md for opencode. Only the marker comments are constant.
+  const blockPath = blockArtifact.path;
+  const artifactFiles = built.artifacts.filter((artifact) => artifact.kind !== 'always_on');
   const block = blockContent(blockArtifact);
   const blockHash = sha256(block.trimEnd());
 
@@ -185,7 +190,7 @@ export function install(options: InstallOptions): InstallResult {
     }
   }
 
-  const claudePath = join(targetRoot, BLOCK_PATH);
+  const claudePath = join(targetRoot, blockPath);
   const existingClaude = existsSync(claudePath) ? readFileSync(claudePath, 'utf8') : '';
   const merged = installBlock(existingClaude, block, old, options.force === true);
   const createdClaudeMd = merged.createdFile;
@@ -204,7 +209,7 @@ export function install(options: InstallOptions): InstallResult {
         tokens: artifact.tokens,
       }))
       .sort((a, b) => a.path.localeCompare(b.path)),
-    block: { path: BLOCK_PATH, sha256: blockHash },
+    block: { path: blockPath, sha256: blockHash },
     created_claude_md: createdClaudeMd,
   };
   validate('install', manifest, 'install manifest', process.cwd());
@@ -251,7 +256,7 @@ export function uninstall(options: {
     throw new InstallError(`No HAHahah install manifest at ${targetRoot}`);
   }
 
-  const claudePath = join(targetRoot, BLOCK_PATH);
+  const claudePath = join(targetRoot, old.block.path);
   const existingClaude = existsSync(claudePath) ? readFileSync(claudePath, 'utf8') : '';
   const parsed = parseBlock(existingClaude);
   if (parsed && parsed.hash !== old.block.sha256 && !options.force) {
@@ -311,9 +316,9 @@ export function doctor(options: { targetRoot: string }): DoctorReport {
     }
   }
 
-  const claudePath = join(targetRoot, BLOCK_PATH);
+  const claudePath = join(targetRoot, old.block.path);
   if (!existsSync(claudePath)) {
-    errors.push('Missing CLAUDE.md');
+    errors.push(`Missing ${old.block.path}`);
   } else {
     try {
       const parsed = parseBlock(readFileSync(claudePath, 'utf8'));

@@ -40,7 +40,11 @@
       "additionalProperties": false,
       "required": ["path", "sha256"],
       "properties": {
-        "path": { "const": "CLAUDE.md" },
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9._-]*\\.md$",
+          "enum": ["CLAUDE.md", "AGENTS.md"]
+        },
         "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
       }
     },

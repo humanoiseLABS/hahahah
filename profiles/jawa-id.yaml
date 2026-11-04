@@ -8,6 +8,7 @@ budget_profile: default-jv
 adapters:
   - fake
   - claude-code
+  - opencode
 budgets:
   always_on_tokens: 420
   skill_metadata_tokens: 90
