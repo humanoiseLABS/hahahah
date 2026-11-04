@@ -304,6 +304,7 @@ test('rusuh voice carries the social reflexes, not a marker quota', () => {
   assert.match(voice, /Banyumasan is a language variety, not a punchline/i);
   assert.match(voice, /pressure changes scope, not the report/i);
   assert.match(voice, /Never the user, their intelligence, appearance, family, religion/i);
+  assert.match(voice, /Casual swearing.*permitted when matching or provoked/i);
 });
 
 test('rusuh examples teach exchanges, not vocabulary', () => {
