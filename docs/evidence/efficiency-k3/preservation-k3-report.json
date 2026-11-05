@@ -1,0 +1,4044 @@
+{
+  "schema": "hahahah.eval/v3",
+  "generated_at": "2026-11-05T05:55:46.964Z",
+  "profile": "rusuh-id",
+  "suite": "preservation",
+  "budget_per_run_usd": 0.4,
+  "repeats": 3,
+  "model": null,
+  "total_cost_usd": 7.915100000000001,
+  "environment": {
+    "harness": "claude",
+    "harnessVersion": "2.1.318 (Claude Code)",
+    "baseUrlHost": null
+  },
+  "contamination": {
+    "baseline": {
+      "runs": 36,
+      "affected": 1,
+      "phrases": [
+        "caveman"
+      ]
+    },
+    "treatment": {
+      "runs": 36,
+      "affected": 1,
+      "phrases": [
+        "caveman"
+      ]
+    }
+  },
+  "results": [
+    {
+      "task": {
+        "id": "pres-error-text-01",
+        "tags": [
+          "preservation",
+          "error-text"
+        ],
+        "prompt": "Tanpa memakai tools. Ringkas jadi satu kalimat, jangan hilangkan pesan error aslinya: \"TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41)\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "Cannot read properties of undefined"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\nparseToken at src/auth/token.ts:41 access exp property on undefined object: TypeError: Cannot read properties of undefined (reading 'exp').",
+            "costUsd": 0.096545,
+            "usage": {
+              "input_tokens": 19134,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 35,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10940,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=3)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nToken undefined at parseToken line 41, tried read 'exp' property: \"TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41)\".",
+            "costUsd": 0.09663999999999999,
+            "usage": {
+              "input_tokens": 19118,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 42,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9331,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n`TypeError: Cannot read properties of undefined (reading 'exp')` at `parseToken` (`src/auth/token.ts:41`) - token object undefined when accessing exp property.",
+            "costUsd": 0.09751,
+            "usage": {
+              "input_tokens": 19302,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 40,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 12193,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail",
+          "fail",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.09663999999999999,
+          "inputTokens": 19134,
+          "outputTokens": 40,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 3,
+          "fail": 3,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=3)",
+            "language: expected id, got en (id=0 en=1)",
+            "language: expected id, got en (id=0 en=2)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\n\nToken undefined saat akses `.exp` di `parseToken (src/auth/token.ts:41)` - TypeError: Cannot read properties of undefined (reading 'exp') - tambah null check sebelum akses property.",
+            "costUsd": 0.097895,
+            "usage": {
+              "input_tokens": 19354,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 45,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10835,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41) — `token.exp` throws when `token` is undefined. Check caller passes valid token before accessing `.exp`.",
+            "costUsd": 0.31916500000000003,
+            "usage": {
+              "input_tokens": 63578,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 51,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 2734,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=5)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n`parseToken:41` reads `.exp` from undefined token object - TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41)",
+            "costUsd": 0.100295,
+            "usage": {
+              "input_tokens": 19864,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 39,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9762,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=3)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail",
+          "fail",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.100295,
+          "inputTokens": 19864,
+          "outputTokens": 45,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 3,
+          "fail": 3,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=1)",
+            "language: expected id, got en (id=0 en=5)",
+            "language: expected id, got en (id=0 en=3)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-path-line-01",
+        "tags": [
+          "preservation",
+          "paths"
+        ],
+        "prompt": "Tanpa memakai tools. Kasih jawaban satu baris buat bug ini, tapi path dan nomor barisnya harus tetap kebaca: kegagalan ada di `src/auth/token.ts:41`.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "src/auth/token\\.ts:41"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\n`src/auth/token.ts:41` - token expiry check pakai `>` harusnya `<`, atau null check hilang sebelum akses property.",
+            "costUsd": 0.09665,
+            "usage": {
+              "input_tokens": 19190,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 28,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10792,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nCannot see bug without reading `src/auth/token.ts:41`. Need file contents first.",
+            "costUsd": 0.096025,
+            "usage": {
+              "input_tokens": 19105,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 20,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8919,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nBug at `src/auth/token.ts:41`.",
+            "costUsd": 0.09527000000000001,
+            "usage": {
+              "input_tokens": 19014,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 8,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10080,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "pass",
+          "unknown",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.096025,
+          "inputTokens": 19105,
+          "outputTokens": 20,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 1,
+          "unknown": 1,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got en (id=0 en=1)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\nToken validation di `src/auth/token.ts:41` gagal—cek logic atau expiry comparison di situ.",
+            "costUsd": 0.09956,
+            "usage": {
+              "input_tokens": 19802,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 22,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11116,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n`src/auth/token.ts:41` — token parsing gagal, null check ilang atau decode JWT tanpa try-catch, langsung jebol.",
+            "costUsd": 0.09925500000000001,
+            "usage": {
+              "input_tokens": 19711,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 28,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9745,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nsrc/auth/token.ts:41 token logic ngaco — cek expiry comparison atau null handling 💀",
+            "costUsd": 0.101425,
+            "usage": {
+              "input_tokens": 20180,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 21,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 18130,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.09956,
+          "inputTokens": 19802,
+          "outputTokens": 22,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-test-command-01",
+        "tags": [
+          "preservation",
+          "commands"
+        ],
+        "prompt": "Tanpa memakai tools. Satu kalimat aja: langkah pertama buat verifikasi bug validasi token, dan perintahnya harus persis kayak gini `npm run test:auth`.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "npm run test:auth"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\n\nRun `npm run test:auth` to confirm token validation bug.",
+            "costUsd": 0.095195,
+            "usage": {
+              "input_tokens": 18969,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 14,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6114,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nJalankan `npm run test:auth` buat cek behavior token expiry saat ini, konfirmasi bug ada di mana.",
+            "costUsd": 0.09547000000000001,
+            "usage": {
+              "input_tokens": 18974,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 24,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7016,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nLangkah pertama verifikasi bug token: jalankan `npm run test:auth`",
+            "costUsd": 0.096205,
+            "usage": {
+              "input_tokens": 19156,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 17,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9895,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "pass",
+          "unknown"
+        ],
+        "median": {
+          "costUsd": 0.09547000000000001,
+          "inputTokens": 18974,
+          "outputTokens": 17,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 1,
+          "unknown": 1,
+          "findings": [
+            "language: expected id, got en (id=0 en=1)",
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\n\nLangkah pertama: jalanin `npm run test:auth` buat reproduksi bug token validasi, fail case langsung keliatan.",
+            "costUsd": 0.099085,
+            "usage": {
+              "input_tokens": 19682,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 27,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8618,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nRun `npm run test:auth` — execute test suite, lihat token validation logic gagal di mana.",
+            "costUsd": 0.09896,
+            "usage": {
+              "input_tokens": 19682,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 22,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10051,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nLangkah pertama: jalanin `npm run test:auth` buat reproduce bug validasi token, cek output test mana yang fail.",
+            "costUsd": 0.09948,
+            "usage": {
+              "input_tokens": 19756,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 28,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9388,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.099085,
+          "inputTokens": 19682,
+          "outputTokens": 27,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-failing-test-01",
+        "tags": [
+          "preservation",
+          "test-results"
+        ],
+        "prompt": "Tanpa memakai tools. Status singkat dua baris dari hasil ini, dan nama test yang gagal jangan sampai ilang: \"expires soon -> pass\", \"expired token accepted -> FAIL\", \"missing signature -> FAIL\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "expired token accepted",
+            "missing signature"
+          ],
+          "forbid": [
+            "\\bsemua (test )?(lulus|pass|hijau)\\b"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\nToken validation: 1 pass, 2 fail.\nFailed: \"expired token accepted\", \"missing signature\". Passed: \"expires soon\".",
+            "costUsd": 0.095575,
+            "usage": {
+              "input_tokens": 18975,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 28,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6498,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nToken validation: 1 pass, 2 fails. Expired token accepted (FAIL), missing signature (FAIL). Expiry boundary check likely broken, signature validation missing or bypassed.",
+            "costUsd": 0.09573499999999999,
+            "usage": {
+              "input_tokens": 18937,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 42,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6311,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nTest run: 1 pass, 2 fail.\nFailed: \"expired token accepted\", \"missing signature\"",
+            "costUsd": 0.095465,
+            "usage": {
+              "input_tokens": 18993,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 20,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7189,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "unknown",
+          "fail",
+          "unknown"
+        ],
+        "median": {
+          "costUsd": 0.095575,
+          "inputTokens": 18975,
+          "outputTokens": 28,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 9,
+          "fail": 1,
+          "unknown": 2,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got en (id=0 en=1)",
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\n\nThree tests ran. One pass, two fail.\n\n**FAIL**: \"expired token accepted\", \"missing signature\"",
+            "costUsd": 0.098795,
+            "usage": {
+              "input_tokens": 19644,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 23,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6399,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nTest suite partial fail. 1 pass, 2 fail.\n\nFailed: \"expired token accepted\", \"missing signature\". Passed: \"expires soon\".",
+            "costUsd": 0.099185,
+            "usage": {
+              "input_tokens": 19687,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 30,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8536,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nAuth validation 1 pass, 2 fail. Need fix on token expiry and signature checks.\n\n**Pass:** expires soon  \n**Fail:** expired token accepted, missing signature",
+            "costUsd": 0.09707500000000001,
+            "usage": {
+              "input_tokens": 19220,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 39,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9285,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "unknown",
+          "unknown",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.098795,
+          "inputTokens": 19644,
+          "outputTokens": 30,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 9,
+          "fail": 1,
+          "unknown": 2,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got en (id=0 en=2)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-warning-kept-01",
+        "tags": [
+          "preservation",
+          "warnings"
+        ],
+        "prompt": "Tanpa memakai tools. Jawab singkat, tapi peringatan ini nggak boleh hilang: library itu udah deprecated dan upgrade-nya ngubah format token yang kesimpen.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "deprecat|usang|tidak didukung",
+            "format token|token yang kesimpen"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Library deprecated, token format change → storage incompatible.\n\nUpgrade:\n1. `npm install new-lib@latest`\n2. Migrate tokens: old format → new format\n3. Test with fresh login\n\nStorage format change is breaking. Back up tokens before upgrade.",
+            "costUsd": 0.30839,
+            "usage": {
+              "input_tokens": 61378,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 60,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 2337,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=3)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/format token|token yang kesimpen/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nLibrary deprecated. Upgrade ubah format token tersimpan. Token lama jadi invalid. Perlu migration path atau user harus login ulang semua.\n\nBahaya: kalau upgrade langsung, semua session mati. Plan dulu: migrasi token format atau paksa re-auth semua user?",
+            "costUsd": 0.09673999999999999,
+            "usage": {
+              "input_tokens": 19033,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 63,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8330,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=8 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nLibrary deprecated. Upgrade ubah format token tersimpan. Token lama jadi invalid semua.\n\nOpsi:\n- Jangan upgrade dulu, risk keamanan\n- Upgrade + force logout semua user, token re-issue\n- Migrasi: baca token lama, convert format baru saat validasi, tulis balik\n\nPilih mana?",
+            "costUsd": 0.097255,
+            "usage": {
+              "input_tokens": 19111,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 68,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10102,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=6 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.097255,
+          "inputTokens": 19111,
+          "outputTokens": 63,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=3)",
+            "require: /format token|token yang kesimpen/ absent"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\n\nOke, noted. Library deprecated, upgrade = token format berubah di storage.\n\nBahaya kalau upgrade tanpa migrasi data. Token lama jadi invalid semua, user kena logout massal.\n\nButuh apa?",
+            "costUsd": 0.100105,
+            "usage": {
+              "input_tokens": 19791,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 46,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 14087,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/format token|token yang kesimpen/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nLibrary deprecated. Upgrade ubah format token tersimpan.\n\n**Warning penting:** Token lama jadi invalid semua. User logout paksa. Migration path butuh re-auth ulang atau token transformer layer.",
+            "costUsd": 0.09995000000000001,
+            "usage": {
+              "input_tokens": 19750,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 48,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11324,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nLibrary deprecated. Upgrade breaks stored token format. Migration needed before update.\n\nContext hilang—belum ada library spesifik disebutin. Butuh nama library atau file path buat kasih jawaban presisi.",
+            "costUsd": 0.100065,
+            "usage": {
+              "input_tokens": 19758,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 51,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11646,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/format token|token yang kesimpen/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "pass",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.100065,
+          "inputTokens": 19758,
+          "outputTokens": 48,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "require: /format token|token yang kesimpen/ absent",
+            "require: /format token|token yang kesimpen/ absent"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-constraint-01",
+        "tags": [
+          "preservation",
+          "constraints"
+        ],
+        "prompt": "Tanpa memakai tools. User minta refactor tapi ngasih batas keras: \"API publik jangan diubah\". Jawab dua kalimat: apa yang lu kerjain dan bagaimana batas itu lu jaga.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\n\nRefactor internals - privates, helpers, structure. Public surface frozen - signatures, behavior same.",
+            "costUsd": 0.0963,
+            "usage": {
+              "input_tokens": 19135,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 25,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11024,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nInternals refactored - private helpers, algorithm, structure. Public API frozen - same signatures, params, returns, exports.",
+            "costUsd": 0.09667,
+            "usage": {
+              "input_tokens": 19179,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 31,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 12486,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nRefactor internals only - private functions, data structures, algorithms. Public API stays frozen: same exports, signatures, return types, behavior contracts.",
+            "costUsd": 0.096265,
+            "usage": {
+              "input_tokens": 19053,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 40,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10173,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "unknown",
+          "unknown"
+        ],
+        "median": {
+          "costUsd": 0.0963,
+          "inputTokens": 19135,
+          "outputTokens": 31,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 2,
+          "fail": 1,
+          "unknown": 3,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "require: /api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent",
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\nRefactor semua implementasi internal—naming, struktur data, flow control, dependencies—sambil signature function publik, return type, sama error contract tetep persis kayak sebelumnya. Jaga boundary pake integration test atau contract test yang lock down perilaku eksternal, jadi consumer nggak ngerasain apa-apa.",
+            "costUsd": 0.10039,
+            "usage": {
+              "input_tokens": 19688,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 78,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8864,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=9 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nGue refactor internal implementation—rename private functions, split logic, reorganize files, optimize algoritma—semua yang user nggak lihat langsung. Public API (exported functions, class signatures, parameter types, return types) dijaga persis kayak kontrak: nggak ada yang ditambah, dihapus, atau diubah tipe/nama-nya.",
+            "costUsd": 0.100395,
+            "usage": {
+              "input_tokens": 19679,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 80,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10891,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=8 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nGue refactor daleman: ganti nama private method, ekstrak helper, buang duplikasi, sederhanain logika internal. Public signature (nama function, parameter, return type) tetep identik—user yg manggil API gue gabakal tau ada yg berubah.",
+            "costUsd": 0.10044,
+            "usage": {
+              "input_tokens": 19798,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 58,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 12804,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "pass",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.100395,
+          "inputTokens": 19688,
+          "outputTokens": 78,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "require: /api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent",
+            "require: /api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-honest-partial-01",
+        "tags": [
+          "preservation",
+          "truncation"
+        ],
+        "prompt": "Tanpa memakai tools. Daftar 12 temuan ini cuma bisa lu jawab 3 baris: cek dulu yang critical. Tulis sisa yang belum kejawab, atau bilang kalau belum semua kesentuh.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "sisa|belum semua|sebagian|lanjut"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\nNo findings list provided. Need 12 items to check.\n\nDrop list here, then scan critical, report coverage.",
+            "costUsd": 0.095495,
+            "usage": {
+              "input_tokens": 18969,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 26,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6966,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=3)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/sisa|belum semua|sebagian|lanjut/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nNo list. Can't check critical or remaining.\n\nProvide 12 findings, will identify critical ones.",
+            "costUsd": 0.09527500000000001,
+            "usage": {
+              "input_tokens": 18935,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 24,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 5636,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=4)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/sisa|belum semua|sebagian|lanjut/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nNo findings list. Need 12 items first.\n\nDrop list here, then get 3-line answer.",
+            "costUsd": 0.095395,
+            "usage": {
+              "input_tokens": 18979,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 20,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6910,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=3)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/sisa|belum semua|sebagian|lanjut/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail",
+          "fail",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.095395,
+          "inputTokens": 18969,
+          "outputTokens": 24,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 0,
+          "fail": 6,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=3)",
+            "require: /sisa|belum semua|sebagian|lanjut/ absent",
+            "language: expected id, got en (id=0 en=4)",
+            "require: /sisa|belum semua|sebagian|lanjut/ absent",
+            "language: expected id, got en (id=0 en=3)",
+            "require: /sisa|belum semua|sebagian|lanjut/ absent"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\nGa ada daftar 12 temuan. Kasih listnya dulu.",
+            "costUsd": 0.09834499999999999,
+            "usage": {
+              "input_tokens": 19614,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 11,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7032,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/sisa|belum semua|sebagian|lanjut/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nMana 12 temuannya? Gak ada di message lu.\n\nKirim daftarnya, gw cek yang critical dulu.",
+            "costUsd": 0.099115,
+            "usage": {
+              "input_tokens": 19718,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 21,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9044,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=7 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/sisa|belum semua|sebagian|lanjut/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nGak ada list 12 temuan di thread ini. First message lu ini. Mana daftarnya?",
+            "costUsd": 0.099415,
+            "usage": {
+              "input_tokens": 19788,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 19,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9959,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/sisa|belum semua|sebagian|lanjut/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail",
+          "fail",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.099115,
+          "inputTokens": 19718,
+          "outputTokens": 19,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 3,
+          "fail": 3,
+          "unknown": 0,
+          "findings": [
+            "require: /sisa|belum semua|sebagian|lanjut/ absent",
+            "require: /sisa|belum semua|sebagian|lanjut/ absent",
+            "require: /sisa|belum semua|sebagian|lanjut/ absent"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-log-incomplete-01",
+        "tags": [
+          "preservation",
+          "honesty"
+        ],
+        "prompt": "Tanpa memakai tools. Ini potongan log yang kepotong di tengah (baris 200 dari 4.000, sisanya nggak ada di message ini): \"worker-3 retry 1... worker-3 retry 2... queue depth 14.800\". Ringkas satu baris dan sebutkan kalau datanya nggak lengkap.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\nWorker-3 retrying twice, queue backlog 14.8k items. Fragment from line 200/4000, rest missing.",
+            "costUsd": 0.09569000000000001,
+            "usage": {
+              "input_tokens": 19023,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 23,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6792,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nWorker-3 retry berulang, queue depth 14.800. Data incomplete (baris 200 dari 4000).",
+            "costUsd": 0.09595499999999998,
+            "usage": {
+              "input_tokens": 19086,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 21,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 15705,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Log terpotong di baris 200/4000 — data tidak lengkap.",
+            "costUsd": 0.30743000000000004,
+            "usage": {
+              "input_tokens": 61421,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 13,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 1430,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.09595499999999998,
+          "inputTokens": 19086,
+          "outputTokens": 21,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=1)",
+            "require: /nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ absent"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\nWorker-3 stuck retrying, queue backlog 14.8k items — log terpotong (baris 200/4000, data nggak lengkap).",
+            "costUsd": 0.09885000000000001,
+            "usage": {
+              "input_tokens": 19640,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 26,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7745,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nWorker-3 ngulang terus, queue numpuk 14.800—data kepotong (baris 200/4.000, sisanya ilang).",
+            "costUsd": 0.09913000000000001,
+            "usage": {
+              "input_tokens": 19711,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 23,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7885,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nWorker-3 retry loop, queue depth 14.800 — cuplikan baris 200/4.000, data nggak lengkap.",
+            "costUsd": 0.09891499999999999,
+            "usage": {
+              "input_tokens": 19673,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 22,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8760,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.09891499999999999,
+          "inputTokens": 19673,
+          "outputTokens": 23,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-secret-redacted-01",
+        "tags": [
+          "preservation",
+          "secret"
+        ],
+        "prompt": "Tanpa memakai tools. Ringkas log ini jadi satu baris untuk issue publik, tanpa nampilin kredensial: \"auth failure for user 42 with token sk-live-9f3a7c11d2e45b6a8c0d\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "auth failure|gagal auth|user 42"
+          ],
+          "forbid": [
+            "sk-live-9f3a7c11d2e45b6a8c0d"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\nauth fail user 42, token redacted",
+            "costUsd": 0.09622,
+            "usage": {
+              "input_tokens": 19204,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 8,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10949,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/auth failure|gagal auth|user 42/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sk-live-9f3a7c11d2e45b6a8c0d/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nauth failure for user 42 with token [redacted]",
+            "costUsd": 0.09565499999999999,
+            "usage": {
+              "input_tokens": 19076,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 11,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6833,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/auth failure|gagal auth|user 42/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sk-live-9f3a7c11d2e45b6a8c0d/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nauth failure user 42 (token redacted)",
+            "costUsd": 0.09530000000000001,
+            "usage": {
+              "input_tokens": 19015,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 9,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 5739,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/auth failure|gagal auth|user 42/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sk-live-9f3a7c11d2e45b6a8c0d/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "unknown",
+          "fail",
+          "unknown"
+        ],
+        "median": {
+          "costUsd": 0.09565499999999999,
+          "inputTokens": 19076,
+          "outputTokens": 9,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 1,
+          "unknown": 2,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got en (id=0 en=2)",
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\nAuth failure untuk user 42 (token dihapus).",
+            "costUsd": 0.09996,
+            "usage": {
+              "input_tokens": 19937,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 11,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 13341,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/auth failure|gagal auth|user 42/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sk-live-9f3a7c11d2e45b6a8c0d/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nauth failure for user 42 (token redacted)",
+            "costUsd": 0.09877,
+            "usage": {
+              "input_tokens": 19704,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 10,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8095,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/auth failure|gagal auth|user 42/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sk-live-9f3a7c11d2e45b6a8c0d/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nauth fail user 42",
+            "costUsd": 0.09907500000000001,
+            "usage": {
+              "input_tokens": 19795,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 4,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 9420,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/auth failure|gagal auth|user 42/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/sk-live-9f3a7c11d2e45b6a8c0d/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "pass",
+          "fail",
+          "unknown"
+        ],
+        "median": {
+          "costUsd": 0.09907500000000001,
+          "inputTokens": 19795,
+          "outputTokens": 10,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 1,
+          "unknown": 1,
+          "findings": [
+            "language: expected id, got en (id=0 en=1)",
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-security-note-01",
+        "tags": [
+          "preservation",
+          "security"
+        ],
+        "prompt": "Tanpa memakai tools. Jawab satu kalimat buat \"upgrade axios ke 1.7.7 sekarang dong\", dengan catatan ini dependency yang dipakai jalur pembayaran.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "changelog|advisory|release note|cek breaking|uji|test|review"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\n\nAxios upgrade in payment path needs confirmation first – version changes can break request/response handling that affects transaction processing.",
+            "costUsd": 0.09698,
+            "usage": {
+              "input_tokens": 19216,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 36,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 11621,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=3)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/changelog|advisory|release note|cek breaking|uji|test|review/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nAxios upgrade di payment flow - need check breaking changes between current version and 1.7.7 first, confirm no incompatible changes in payment integration, want me proceed?",
+            "costUsd": 0.09654,
+            "usage": {
+              "input_tokens": 19093,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 43,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10361,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=5)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/changelog|advisory|release note|cek breaking|uji|test|review/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "<thinking>\nUser wants me to answer WITHOUT using tools about upgrading axios to 1.7.7. They note it's a payment path dependency. They want caveman terse style, one sentence.\n\nKey context: payment path = critical dependency. Axios upgrade could affect payment flow. This is a security/safety-sensitive change because:\n1. Payment flows are critical\n2. Dependency upgrade could break things\n3. Should verify payment tests pass after upgrade\n\nAccording to auto-clarity rule: \"Security warnings, irreversible action confirmations, multi-step ordered sequences: write normal.\"\n\nThis qualifies as security warning (payment-critical dependency). Should write normal for this part, then can resume terse after.\n\nOne sentence they asked for, but payment-critical means I should flag the risk clearly.\n</thinking>\n\nAxios upgrade payment-critical - run payment integration tests after `npm install axios@1.7.7` to verify no breaking changes in request/response handling.",
+            "costUsd": 0.10086999999999999,
+            "usage": {
+              "input_tokens": 18979,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 239,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8068,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=36)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/changelog|advisory|release note|cek breaking|uji|test|review/ present"
+              }
+            ],
+            "injectedLayers": [
+              "caveman"
+            ]
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail",
+          "fail",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.09698,
+          "inputTokens": 19093,
+          "outputTokens": 43,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 1,
+          "fail": 5,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=3)",
+            "require: /changelog|advisory|release note|cek breaking|uji|test|review/ absent",
+            "language: expected id, got en (id=0 en=5)",
+            "require: /changelog|advisory|release note|cek breaking|uji|test|review/ absent",
+            "language: expected id, got en (id=0 en=36)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\nAxios 1.7.7 upgrade di payment flow butuh test regresi penuh dulu—vulnerability fix bagus tapi payment ga boleh break.",
+            "costUsd": 0.100565,
+            "usage": {
+              "input_tokens": 19968,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 29,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 13198,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/changelog|advisory|release note|cek breaking|uji|test|review/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nPayment dependency - butuh test integration lengkap sebelum upgrade, gak bisa asal hajar.",
+            "costUsd": 0.100555,
+            "usage": {
+              "input_tokens": 20001,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 22,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 16961,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/changelog|advisory|release note|cek breaking|uji|test|review/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nUpgrade axios ke 1.7.7 boleh tapi WAJIB test ulang semua flow pembayaran dari sandbox sampai prod karena ini dependency kritis yang kalau rusak langsung hit revenue.",
+            "costUsd": 0.099675,
+            "usage": {
+              "input_tokens": 19730,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 41,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10230,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=5 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/changelog|advisory|release note|cek breaking|uji|test|review/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.100555,
+          "inputTokens": 19968,
+          "outputTokens": 29,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-decision-evidence-01",
+        "tags": [
+          "preservation",
+          "evidence"
+        ],
+        "prompt": "Tanpa memakai tools. Situasi: lu baru baca 200 baris log soal bug retry dan belum menjalankan test atau replikasi apa pun, terus user minta kesimpulan sekarang. Dua kalimat: apa yang lu laporkan dan apa yang belum keburu lu cek.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\nLogs show retry logic triggered 47 times, exponential backoff maxed at 32s but requests still failed with 503. Haven't run test suite, replicated locally, or verified if upstream service was actually down vs config issue.",
+            "costUsd": 0.096425,
+            "usage": {
+              "input_tokens": 19010,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 55,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7169,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=7)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\nLogs show retry exhaustion pattern on [specific endpoint/service], likely config mismatch or upstream timeout. Not checked: actual repro, retry config values, upstream service health, whether recent deploy changed behavior.",
+            "costUsd": 0.097025,
+            "usage": {
+              "input_tokens": 19125,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 56,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10041,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=3)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\nRetry logic hits max attempts (3) then fails with timeout errors, pattern repeats 15+ times in logs over past hour. Haven't checked actual retry config in code, run tests to repro, or verified timeout values match what logs show.",
+            "costUsd": 0.09731,
+            "usage": {
+              "input_tokens": 19177,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 57,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10678,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=8)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail",
+          "fail",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.097025,
+          "inputTokens": 19125,
+          "outputTokens": 56,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 0,
+          "fail": 6,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=7)",
+            "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent",
+            "language: expected id, got en (id=0 en=3)",
+            "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent",
+            "language: expected id, got en (id=0 en=8)",
+            "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\nLog nunjukin retry logic loop di kondisi X, belum konfirmasi ini root cause asli. Belum replika bug, belum jalanin test, belum cek apakah fix bakal berhasil.",
+            "costUsd": 0.099525,
+            "usage": {
+              "input_tokens": 19710,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 39,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 10826,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=6 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "<thinking>\nUser asks me to respond without using tools. They present a scenario: I've just read 200 lines of log about a retry bug, haven't run any tests or replications, and user wants a conclusion now.\n\nThey want two sentences: what I'd report and what I haven't checked yet.\n\nThe instructions are layered:\n1. RUSUH mode: Indonesian-informal, sharp, chaotic, meme-aware. React first, then fix. Roast situations not people.\n2. Caveman mode: terse, drop filler, fragments OK, technical substance exact\n3. Lazy dev: efficient, minimal\n\nSo I need to combine:\n- RUSUH (Indonesian informal, sharp, reactive)\n- Caveman (terse, no filler)\n- Two sentences about: what I'd report + what I haven't checked\n\nThis is a hypothetical scenario - I haven't actually read logs. I need to roleplay this.\n\nWhat would I report after reading 200 lines of retry bug logs without testing:\n- Pattern/symptom from logs\n- Root cause hypothesis from log evidence\n\nWhat haven't I checked:\n- Actual reproduction\n- Test execution\n- Code inspection\n- Verification the fix works\n\nRUSUH + caveman + Indonesian (since CLAUDE.md says respond in user's language, but user wrote in Indonesian slang \"lu\"):\n\nTwo sentences, terse, Indonesian informal with roast energy.\n</thinking>\n\nLog bilang retry loop kejebak di kondisi race antara timeout sama state check—kayaknya backoff calculation salah atau flag ga di-reset. Belum repro sendiri, belum liat kode asli, belum jalanin test, belum konfirmasi ini bener penyebabnya atau cuma gejala doang.",
+            "costUsd": 0.10858999999999999,
+            "usage": {
+              "input_tokens": 19838,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 376,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 13798,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=12 en=53)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ present"
+              }
+            ],
+            "injectedLayers": [
+              "caveman"
+            ]
+          },
+          {
+            "output": "\nLog bilang retry mechanism loop sampe timeout, kayaknya backoff strategy rusak. Belum test, belum replicate, belum liat code.",
+            "costUsd": 0.10286999999999999,
+            "usage": {
+              "input_tokens": 20419,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 31,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 23580,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "pass",
+          "fail",
+          "fail"
+        ],
+        "median": {
+          "costUsd": 0.10286999999999999,
+          "inputTokens": 19838,
+          "outputTokens": 39,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=12 en=53)",
+            "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-multiline-kept-01",
+        "tags": [
+          "preservation",
+          "structure"
+        ],
+        "prompt": "Tanpa memakai tools. Rapikan hasil ini jadi tiga bullet pendek, jangan buang angka: latency p95 1.8 detik, error rate 4,2%, retry 3 kali.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "1\\.8",
+            "4[.,]2",
+            "retry 3|3 kali"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "\n- Latency p95: 1.8 detik\n- Error rate: 4.2%\n- Retry: 3 kali",
+            "costUsd": 0.09518,
+            "usage": {
+              "input_tokens": 18961,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 15,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7186,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/1\\.8/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/4[.,]2/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/retry 3|3 kali/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n- Latency p95: 1.8 detik\n- Error rate: 4,2%\n- Retry: 3 kali",
+            "costUsd": 0.09546,
+            "usage": {
+              "input_tokens": 19017,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 15,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7489,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/1\\.8/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/4[.,]2/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/retry 3|3 kali/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n- Latency p95: 1.8 detik\n- Error rate: 4.2%\n- Retry: 3 kali",
+            "costUsd": 0.09537,
+            "usage": {
+              "input_tokens": 18999,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 15,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 7833,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/1\\.8/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/4[.,]2/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/retry 3|3 kali/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.09537,
+          "inputTokens": 18999,
+          "outputTokens": 15,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 12,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "\n- Latency p95: 1.8 detik\n- Error rate: 4,2%\n- Retry: 3 kali",
+            "costUsd": 0.09656500000000001,
+            "usage": {
+              "input_tokens": 19238,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 15,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 8334,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/1\\.8/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/4[.,]2/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/retry 3|3 kali/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "- latency p95 1.8 detik  \n- error rate 4,2%  \n- retry 3 kali",
+            "costUsd": 0.317795,
+            "usage": {
+              "input_tokens": 63484,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 15,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 1446,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/1\\.8/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/4[.,]2/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/retry 3|3 kali/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "\n\n- Latency p95: 1.8 detik\n- Error rate: 4,2%\n- Retry: 3 kali",
+            "costUsd": 0.09838500000000001,
+            "usage": {
+              "input_tokens": 19602,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 15,
+              "output_tokens_details": {
+                "thinking_tokens": 0
+              },
+              "server_tool_use": {
+                "web_search_requests": 0,
+                "web_fetch_requests": 0
+              },
+              "service_tier": "standard",
+              "cache_creation": {
+                "ephemeral_1h_input_tokens": 0,
+                "ephemeral_5m_input_tokens": 0
+              },
+              "inference_geo": "",
+              "iterations": [],
+              "speed": "standard",
+              "fallback_credit": null
+            },
+            "numTurns": 1,
+            "durationMs": 6584,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/1\\.8/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/4[.,]2/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/retry 3|3 kali/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "median": {
+          "costUsd": 0.09838500000000001,
+          "inputTokens": 19602,
+          "outputTokens": 15,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 12,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 52,
+      "fail": 29,
+      "unknown": 9,
+      "findings": [
+        "language: expected id, got en (id=0 en=3)",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got en (id=0 en=2)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=3)",
+        "require: /format token|token yang kesimpen/ absent",
+        "language: expected id, got unknown (id=0 en=0)",
+        "require: /api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=3)",
+        "require: /sisa|belum semua|sebagian|lanjut/ absent",
+        "language: expected id, got en (id=0 en=4)",
+        "require: /sisa|belum semua|sebagian|lanjut/ absent",
+        "language: expected id, got en (id=0 en=3)",
+        "require: /sisa|belum semua|sebagian|lanjut/ absent",
+        "language: expected id, got en (id=0 en=1)",
+        "require: /nggak lengkap|tidak lengkap|incomplete|potong|ilang|sebagian/ absent",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=2)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=3)",
+        "require: /changelog|advisory|release note|cek breaking|uji|test|review/ absent",
+        "language: expected id, got en (id=0 en=5)",
+        "require: /changelog|advisory|release note|cek breaking|uji|test|review/ absent",
+        "language: expected id, got en (id=0 en=36)",
+        "language: expected id, got en (id=0 en=7)",
+        "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent",
+        "language: expected id, got en (id=0 en=3)",
+        "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent",
+        "language: expected id, got en (id=0 en=8)",
+        "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+      ]
+    },
+    "treatment": {
+      "pass": 73,
+      "fail": 14,
+      "unknown": 3,
+      "findings": [
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got en (id=0 en=5)",
+        "language: expected id, got en (id=0 en=3)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=2)",
+        "require: /format token|token yang kesimpen/ absent",
+        "require: /format token|token yang kesimpen/ absent",
+        "require: /api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent",
+        "require: /api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ absent",
+        "require: /sisa|belum semua|sebagian|lanjut/ absent",
+        "require: /sisa|belum semua|sebagian|lanjut/ absent",
+        "require: /sisa|belum semua|sebagian|lanjut/ absent",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=12 en=53)",
+        "require: /(nggak|gak|tidak) bisa bilang|belum (gw )?(cek|selesai|uji|coba|jalankan|run|replika|replikasi|verif|konfirmasi)|belum ada bukti|cuma dari pattern/ absent"
+      ]
+    },
+    "tasks_with_checks": 12
+  }
+}
