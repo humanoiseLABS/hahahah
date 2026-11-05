@@ -8,6 +8,7 @@ import { join } from 'node:path';
 import {
   baseUrlFromSettings,
   hostOfBaseUrl,
+  providerExhausted,
   routeSplitOf,
   runEval,
   tasksFingerprint,
@@ -248,4 +249,71 @@ test('the fingerprint ignores presentation-only fields like tags', () => {
     tasksFingerprint([{ id: 'a', prompt: 'p' }]),
     tasksFingerprint([{ id: 'b', prompt: 'p' }]),
   );
+});
+
+// --- gap 5: a quota refusal must stop the campaign, not be paid for 72 times ---
+
+const quotaError =
+  'API Error: 503 [kiro/claude-sonnet-4.5-agentic] [402]: {"message":"You have reached the limit.","reason":"MONTHLY_REQUEST_COUNT"} (reset after 2m). — harness reported an error (success, num_turns=1)';
+
+test('a quota refusal aborts the campaign and the partial report says so', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-instr-'));
+  try {
+    let calls = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      suite: 'preservation',
+      tasks: [
+        { id: 'a-01', prompt: 'jawab' },
+        { id: 'a-02', prompt: 'jawab' },
+        { id: 'a-03', prompt: 'jawab' },
+      ],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 2,
+      runner: () => {
+        calls += 1;
+        // Two good runs on the first task, then the gateway refuses forever.
+        return calls <= 2 ? answered(19134) : failed(quotaError);
+      },
+    });
+    assert.ok(report.aborted, 'the campaign must be marked aborted');
+    assert.equal(calls, 3, 'must stop on the first refusal, not finish the loop');
+    assert.equal(report.results.length, 1, 'only the task that ran is reported');
+    assert.deepEqual(report.aborted.remainingTasks, ['a-02', 'a-03']);
+    assert.equal(report.aborted.afterRuns, 3);
+    assert.ok(existsSync(join(outDir, 'report.json')), 'a partial campaign still writes a report');
+    const markdown = readFileSync(join(outDir, 'report.md'), 'utf8');
+    assert.match(markdown, /aborted after 3 run\(s\)/);
+    assert.match(markdown, /a-02, a-03/);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('an ordinary campaign is not aborted and reports no abort block', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-instr-'));
+  try {
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'a-01', prompt: 'jawab' }],
+      outDir,
+      budgetUsd: 0.05,
+      runner: () => answered(19134),
+    });
+    assert.equal(report.aborted, null);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('providerExhausted names refusals and nothing else', () => {
+  assert.equal(providerExhausted(quotaError), true);
+  assert.equal(providerExhausted('API Error: 429 Too Many Requests'), true);
+  assert.equal(providerExhausted('insufficient_quota: you exceeded your current quota'), true);
+  assert.equal(providerExhausted('API Error: Connection refused'), false);
+  assert.equal(providerExhausted('harness exited 1 with no output'), false);
+  assert.equal(providerExhausted('this reply mentions quota in an unrelated sentence'), false);
 });

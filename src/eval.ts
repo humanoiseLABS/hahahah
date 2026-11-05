@@ -96,14 +96,17 @@ export interface EvalReport {
   // baseline assumed to be neutral, and that assumption is now known to be wrong on some providers.
   // v4 adds `routing` and per-arm `errored`: the k=3 preservation run turned out to be served by
   // four different upstream models, and a dead route had previously looked like a slow campaign.
-  // v5 adds `tasksSha256`: the clean re-run also changed what the screens measure - answers are now
-  // graded without the reasoning blocks some gateways return inline - so a pass rate computed by a
-  // different ruler must not be quoted against this one, and the fingerprint says which ruler ran.
-  schema: 'hahahah.eval/v5';
+  // v5 adds `tasksSha256`, because the clean re-run also changed what the screens measure - answers
+  // are graded without the reasoning blocks some gateways return inline - and a pass rate computed
+  // by a different ruler must not be quoted against this one.
+  // v6 adds `aborted`: a gateway that refuses on quota answers every remaining call with the same
+  // error, so a campaign that continues is not measuring, and the report has to say what is missing.
+  schema: 'hahahah.eval/v6';
   generated_at: string;
   profile: string;
   suite: string;
   tasksSha256: string;
+  aborted: EvalAbort | null;
   budget_per_run_usd: number;
   repeats: number;
   model: string | null;
@@ -418,6 +421,18 @@ function erroredLine(report: EvalReport): string[] {
   ];
 }
 
+function abortedLine(report: EvalReport): string[] {
+  const abort = report.aborted;
+  if (!abort) return [];
+  const missing =
+    abort.remainingTasks.length > 0
+      ? `Not measured at all: ${abort.remainingTasks.join(', ')}.`
+      : 'Every task was started, but the last one is incomplete.';
+  return [
+    `**the campaign was aborted after ${abort.afterRuns} run(s)** by a provider refusal (${abort.reason}) ${missing} ${abort.partialTask} is reported with only the repeats it actually got, so these numbers cover fewer tasks than the suite defines.`,
+  ];
+}
+
 function reportMarkdown(report: EvalReport): string {
   const lines = [
     `# HAHahah eval report`,
@@ -439,6 +454,7 @@ function reportMarkdown(report: EvalReport): string {
     ...contaminationLines(report),
     ...routingLine(report),
     ...erroredLine(report),
+    ...abortedLine(report),
     '',
     'Cost and token figures are medians across the repeats: this provider bills heavy-tailed spikes, so a single run is not a measurement.',
     '',
@@ -548,6 +564,26 @@ export function probeRoute(runner: EvalRunner, budgetUsd: number): void {
   }
 }
 
+// A gateway that has run out of request allowance answers every remaining call with the same
+// refusal, at zero cost and zero information. Continuing is not persistence, it is burning the rest
+// of the campaign for nothing - this is how 12 runs were lost without any of them being measured.
+const EXHAUSTION_PATTERNS = [
+  /\[402\]|status 402|error code 402/i,
+  /\b429\b|too many requests|rate[ -]limit/i,
+  /MONTHLY_REQUEST_COUNT|insufficient_quota|exceeded your current quota|reached the limit|quota[ -]?exhausted/i,
+];
+
+export function providerExhausted(error: string): boolean {
+  return EXHAUSTION_PATTERNS.some((pattern) => pattern.test(error));
+}
+
+export interface EvalAbort {
+  reason: string;
+  afterRuns: number;
+  partialTask: string;
+  remainingTasks: string[];
+}
+
 export function runEval(options: EvalOptions): EvalReport {
   const tasks = options.tasks.slice(0, options.limit ?? options.tasks.length);
   const repeats = options.repeats ?? 1;
@@ -560,8 +596,12 @@ export function runEval(options: EvalOptions): EvalReport {
       }));
   if (options.probe ?? options.runner === undefined) probeRoute(runner, options.budgetUsd);
   const results: EvalResult[] = [];
+  let exhausted: string | null = null;
+  let stoppedAt = -1;
+  let runCount = 0;
 
-  for (const task of tasks) {
+  for (const [taskIndex, task] of tasks.entries()) {
+    if (exhausted) break;
     const baselineDir = mkdtempSync(join(scratchRoot(), 'hahahah-eval-baseline-'));
     const treatmentDir = mkdtempSync(join(scratchRoot(), 'hahahah-eval-treatment-'));
     try {
@@ -573,17 +613,23 @@ export function runEval(options: EvalOptions): EvalReport {
       });
       const baselineRuns: EvalRun[] = [];
       const treatmentRuns: EvalRun[] = [];
-      for (let index = 0; index < repeats; index += 1) {
+      for (let index = 0; index < repeats && !exhausted; index += 1) {
         // Alternate which arm runs first so a provider-side ordering effect cannot
         // land on the same arm in every repeat.
         const order = index % 2 === 0 ? ['baseline', 'treatment'] : ['treatment', 'baseline'];
         for (const arm of order) {
+          if (exhausted) break;
           const run = safeRun(
             runner,
             arm === 'baseline' ? baselineDir : treatmentDir,
             task.prompt,
             options.budgetUsd,
           );
+          runCount += 1;
+          if (run.error && providerExhausted(run.error)) {
+            exhausted = run.error;
+            stoppedAt = taskIndex;
+          }
           (arm === 'baseline' ? baselineRuns : treatmentRuns).push(run);
         }
       }
@@ -614,11 +660,19 @@ export function runEval(options: EvalOptions): EvalReport {
 
   const harness = options.harness ?? 'claude';
   const report: EvalReport = {
-    schema: 'hahahah.eval/v5',
+    schema: 'hahahah.eval/v6',
     generated_at: new Date().toISOString(),
     profile: options.profileId,
     suite: options.suite ?? 'custom',
     tasksSha256: tasksFingerprint(options.tasks),
+    aborted: exhausted
+      ? {
+          reason: exhausted.replace(/\s+/g, ' ').slice(0, 300),
+          afterRuns: runCount,
+          partialTask: tasks[stoppedAt]?.id ?? '',
+          remainingTasks: tasks.slice(stoppedAt + 1).map((task) => task.id),
+        }
+      : null,
     budget_per_run_usd: options.budgetUsd,
     repeats,
     model: options.model ?? null,

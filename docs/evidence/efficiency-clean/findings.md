@@ -28,6 +28,10 @@ beyond that - hammering a quota is not a measurement strategy.
 what made this run interpretable at all. `contamination` reads 0 of 36 per arm: neither Caveman nor
 Ponytail left any trace, which is consistent with the toggles and no longer contradicts anything.
 
+The runner now aborts on a refusal like this one instead of walking into it 24 times: `hahahah.eval/v6`
+carries `aborted` with the reason, the run count at the moment it stopped, and the task ids it never
+started, and the CLI prints that on the first line of its output.
+
 ## Length: the answer depends entirely on what you count, and one of the two numbers is a trap
 
 Counting the text the harness returns, per-task medians: baseline **4,683 -> treatment 2,284**

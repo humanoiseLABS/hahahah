@@ -471,6 +471,11 @@ if (isMainEntry()) {
       console.log(
         `eval: ${report.results.length} task(s) x ${report.repeats} repeat(s) = ${runs} runs, cost $${report.total_cost_usd.toFixed(4)}`,
       );
+      if (report.aborted) {
+        console.log(
+          `ABORTED after ${report.aborted.afterRuns} run(s): the provider refused further requests (${report.aborted.reason.slice(0, 120)}). Not measured: ${report.aborted.remainingTasks.join(', ') || `${report.aborted.partialTask} (partial)`}. Nothing further was spent.`,
+        );
+      }
       for (const result of report.results) {
         const state = (arm: EvalArm) => {
           if (arm.consensus === 'error') return `ERROR: ${arm.runs[0]?.error ?? 'no runs'}`;
