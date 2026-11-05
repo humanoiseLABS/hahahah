@@ -338,6 +338,25 @@ export interface CheckSummary {
   findings: string[];
 }
 
+// A provider or harness can inject its own style instructions into the system prompt, which means
+// the arm with no HAHahah files is not measuring "no layer" — it is measuring somebody else's
+// layer. The only place this becomes visible is when the model quotes the instruction back while
+// reasoning, so that is what this looks for. Each pattern is deliberately narrow: `senior dev`
+// alone would match our own persona card and accuse the treatment of a layer it does not have.
+const INJECTED_STYLE_LAYERS: Array<{ label: string; pattern: RegExp }> = [
+  { label: 'caveman', pattern: /\bcaveman\b/i },
+  { label: 'lazy senior developer', pattern: /\blazy senior dev(?:eloper)?\b/i },
+  { label: 'auto-clarity', pattern: /\bAuto-Clarity\b/ },
+  { label: 'ponytail', pattern: /\bponytail\b/i },
+];
+
+export function detectInjectedStyleLayers(text: string): string[] {
+  const found = INJECTED_STYLE_LAYERS.filter((layer) => layer.pattern.test(text)).map(
+    (layer) => layer.label,
+  );
+  return found.sort();
+}
+
 export function summarize(results: CheckResult[]): CheckSummary {
   const summary: CheckSummary = { pass: 0, fail: 0, unknown: 0, findings: [] };
   for (const result of results) {

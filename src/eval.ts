@@ -7,6 +7,7 @@ import { removeWorkspace, scratchRoot } from './workspace.ts';
 import { validate } from './schema.ts';
 import {
   checkSuiteErrors,
+  detectInjectedStyleLayers,
   runChecks,
   summarize,
   type CheckResult,
@@ -29,6 +30,24 @@ export interface EvalRun {
   durationMs?: number;
   error?: string;
   checks?: CheckResult[];
+  /** Style layers the provider leaked into its own text; see detectInjectedStyleLayers. */
+  injectedLayers?: string[];
+}
+
+export interface ContaminationArm {
+  runs: number;
+  affected: number;
+  phrases: string[];
+}
+
+/**
+ * What the numbers were produced against. `baseUrlHost` is host and port only, never a credential
+ * or path, because this object is committed as evidence.
+ */
+export interface EvalEnvironment {
+  harness: string;
+  harnessVersion: string | null;
+  baseUrlHost: string | null;
 }
 
 export type EvalRunner = (cwd: string, prompt: string, budgetUsd: number) => EvalRun;
@@ -55,7 +74,9 @@ export interface EvalResult {
 }
 
 export interface EvalReport {
-  schema: 'hahahah.eval/v2';
+  // v3 added `environment` and `contamination`. Every number in a v2 report was read against a
+  // baseline assumed to be neutral, and that assumption is now known to be wrong on some providers.
+  schema: 'hahahah.eval/v3';
   generated_at: string;
   profile: string;
   suite: string;
@@ -63,6 +84,8 @@ export interface EvalReport {
   repeats: number;
   model: string | null;
   total_cost_usd: number;
+  environment: EvalEnvironment;
+  contamination: { baseline: ContaminationArm; treatment: ContaminationArm };
   results: EvalResult[];
   summary: { baseline: CheckSummary; treatment: CheckSummary; tasks_with_checks: number };
 }
@@ -82,6 +105,8 @@ export interface EvalOptions {
   // Which harness will answer decides which file tree the treatment carries: an opencode run
   // reads AGENTS.md, a Claude run reads CLAUDE.md. Installing the wrong one measures nothing.
   adapterId?: string;
+  /** Recorded in the report so the numbers carry the stack they came from. */
+  harness?: string;
 }
 
 export interface EvalSuite {
@@ -151,6 +176,9 @@ function consensusOf(statuses: RunStatus[]): EvalArm['consensus'] {
 function buildArm(runs: EvalRun[], checks?: TaskChecks): EvalArm {
   for (const run of runs) {
     if (!run.error && checks) run.checks = runChecks(run.output, checks);
+    // Recorded even when the task has no screens: contamination is about the reference arm, not
+    // about whether this particular answer passed.
+    run.injectedLayers = detectInjectedStyleLayers(run.output);
   }
   const statuses = runs.map(statusOf);
   return {
@@ -290,6 +318,21 @@ function medianCell(arm: EvalArm): string {
   return `$${arm.median.costUsd.toFixed(4)} (in ${Math.round(arm.median.inputTokens)}, out ${Math.round(arm.median.outputTokens)}, turns ${turns})`;
 }
 
+function contaminationLines(report: EvalReport): string[] {
+  const lines: string[] = [];
+  for (const arm of ['baseline', 'treatment'] as const) {
+    const armData = report.contamination[arm];
+    if (armData.affected === 0) continue;
+    lines.push(
+      `**${arm} is not a neutral reference**: ${armData.affected} of ${armData.runs} ${arm} run(s) name style layers the provider injected itself (${armData.phrases.join(', ')}).`,
+    );
+  }
+  if (lines.length === 0) {
+    lines.push('No provider-injected style layers were detected in either arm.');
+  }
+  return lines;
+}
+
 function reportMarkdown(report: EvalReport): string {
   const lines = [
     `# HAHahah eval report`,
@@ -304,6 +347,10 @@ function reportMarkdown(report: EvalReport): string {
     `- Tasks with checks: ${report.summary.tasks_with_checks}`,
     `- Baseline checks: ${report.summary.baseline.pass} pass, ${report.summary.baseline.fail} fail, ${report.summary.baseline.unknown} unknown`,
     `- Treatment checks: ${report.summary.treatment.pass} pass, ${report.summary.treatment.fail} fail, ${report.summary.treatment.unknown} unknown`,
+    `- Harness: ${report.environment.harness} ${report.environment.harnessVersion ?? '(version not readable)'}`,
+    `- Provider base URL host: ${report.environment.baseUrlHost ?? '(not set)'}`,
+    '',
+    ...contaminationLines(report),
     '',
     'Cost and token figures are medians across the repeats: this provider bills heavy-tailed spikes, so a single run is not a measurement.',
     '',
@@ -322,6 +369,52 @@ function reportMarkdown(report: EvalReport): string {
     '',
   ];
   return lines.join('\n');
+}
+
+function contaminationOf(runs: EvalRun[]): ContaminationArm {
+  const phrases = new Set<string>();
+  let affected = 0;
+  for (const run of runs) {
+    const found = run.injectedLayers ?? [];
+    if (found.length > 0) affected += 1;
+    for (const phrase of found) phrases.add(phrase);
+  }
+  return { runs: runs.length, affected, phrases: [...phrases].sort() };
+}
+
+// Provenance is best-effort: a version probe that fails must never take the paid report with it.
+function probeHarnessVersion(harness: string): string | null {
+  const command =
+    harness === 'opencode'
+      ? (process.env.HAHAHAH_OPENCODE_BIN ?? 'opencode')
+      : (process.env.HAHAHAH_CLAUDE_BIN ?? 'claude');
+  const args = harness === 'opencode' ? ['-v'] : ['--version'];
+  const spawn = (file: string, argv: string[]) =>
+    process.platform === 'win32'
+      ? spawnSync(process.env.ComSpec ?? 'cmd.exe', ['/d', '/s', '/c', [file, ...argv].join(' ')], {
+          encoding: 'utf8',
+          timeout: 20_000,
+        })
+      : spawnSync(file, argv, { encoding: 'utf8', timeout: 20_000 });
+  try {
+    const result = spawn(command, args);
+    const text = `${result.stdout ?? ''}`.trim() || `${result.stderr ?? ''}`.trim();
+    return text ? text.split('\n')[0]!.slice(0, 120) : null;
+  } catch {
+    return null;
+  }
+}
+
+// Only host and port. The base URL of a self-hosted gateway can carry credentials in its userinfo
+// or path, and this object is committed as evidence.
+function baseUrlHost(harness: string): string | null {
+  const raw = harness === 'opencode' ? null : process.env.ANTHROPIC_BASE_URL;
+  if (!raw) return null;
+  try {
+    return new URL(raw).host;
+  } catch {
+    return null;
+  }
 }
 
 export function runEval(options: EvalOptions): EvalReport {
@@ -383,8 +476,9 @@ export function runEval(options: EvalOptions): EvalReport {
   );
   const allRuns = results.flatMap((result) => [...result.baseline.runs, ...result.treatment.runs]);
 
+  const harness = options.harness ?? 'claude';
   const report: EvalReport = {
-    schema: 'hahahah.eval/v2',
+    schema: 'hahahah.eval/v3',
     generated_at: new Date().toISOString(),
     profile: options.profileId,
     suite: options.suite ?? 'custom',
@@ -392,6 +486,15 @@ export function runEval(options: EvalOptions): EvalReport {
     repeats,
     model: options.model ?? null,
     total_cost_usd: allRuns.reduce((total, run) => total + run.costUsd, 0),
+    environment: {
+      harness,
+      harnessVersion: probeHarnessVersion(harness),
+      baseUrlHost: baseUrlHost(harness),
+    },
+    contamination: {
+      baseline: contaminationOf(results.flatMap((result) => result.baseline.runs)),
+      treatment: contaminationOf(results.flatMap((result) => result.treatment.runs)),
+    },
     results,
     summary: {
       baseline: baselineSummary,

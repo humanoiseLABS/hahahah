@@ -194,7 +194,7 @@ test('eval runner installs treatment, runs baseline and treatment, and writes a 
     const json = JSON.parse(readFileSync(join(outDir, 'report.json'), 'utf8')) as {
       schema: string;
     };
-    assert.equal(json.schema, 'hahahah.eval/v2');
+    assert.equal(json.schema, 'hahahah.eval/v3');
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }

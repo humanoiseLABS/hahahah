@@ -457,6 +457,7 @@ if (isMainEntry()) {
         model: parsed.values.model,
         settingSources: parsed.values['setting-sources'],
         adapterId: HARNESS_ADAPTERS[harness],
+        harness,
         runner: runnerFor(harness, {
           model: parsed.values.model,
           settingSources: parsed.values['setting-sources'],
