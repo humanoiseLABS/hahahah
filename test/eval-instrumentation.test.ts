@@ -317,3 +317,89 @@ test('providerExhausted names refusals and nothing else', () => {
   assert.equal(providerExhausted('harness exited 1 with no output'), false);
   assert.equal(providerExhausted('this reply mentions quota in an unrelated sentence'), false);
 });
+
+// --- gap 6: a hung harness is not a slow campaign ---
+
+const timeoutError = 'spawnSync C:\WINDOWS\system32\cmd.exe ETIMEDOUT';
+
+test('three unanswered runs in a row abort the campaign', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-instr-'));
+  try {
+    let calls = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      suite: 'preservation',
+      tasks: [
+        { id: 'a-01', prompt: 'jawab' },
+        { id: 'a-02', prompt: 'jawab' },
+        { id: 'a-03', prompt: 'jawab' },
+      ],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 3,
+      runner: () => {
+        calls += 1;
+        return failed(timeoutError);
+      },
+    });
+    // Three, not seventy-two: the opencode route burned 180 s per run and would have run 72 of them.
+    assert.equal(calls, 3);
+    assert.ok(report.aborted, 'the campaign must abort');
+    assert.equal(report.aborted.kind, 'unresponsive');
+    assert.equal(report.aborted.afterRuns, 3);
+    assert.deepEqual(report.aborted.remainingTasks, ['a-02', 'a-03']);
+    const markdown = readFileSync(join(outDir, 'report.md'), 'utf8');
+    assert.match(markdown, /3 consecutive run\(s\) were answered/);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('intermittent failures do not trip the breaker, only a streak does', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-instr-'));
+  try {
+    let calls = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'a-01', prompt: 'jawab' }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 3,
+      runner: () => {
+        calls += 1;
+        // One failure, then an answer, then two more failures: never three in a row.
+        if (calls === 1 || calls === 3 || calls === 4) return failed(timeoutError);
+        return answered(19134);
+      },
+    });
+    assert.equal(calls, 6, 'a full 3-repeat campaign ran');
+    assert.equal(report.aborted, null);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('a quota refusal still aborts at once and is labelled differently', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-instr-'));
+  try {
+    let calls = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'a-01', prompt: 'jawab' }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 3,
+      runner: () => {
+        calls += 1;
+        return failed(quotaError);
+      },
+    });
+    assert.equal(calls, 1, 'a refusal is not worth two more attempts');
+    assert.equal(report.aborted?.kind, 'quota');
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});

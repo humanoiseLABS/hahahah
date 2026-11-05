@@ -462,6 +462,9 @@ if (isMainEntry()) {
           model: parsed.values.model,
           settingSources: parsed.values['setting-sources'],
         }),
+        // The runner is injected here so the harness can be chosen, which would otherwise disable
+        // the auto-probe. A real campaign always talks to a real gateway, so it must always probe.
+        probe: true,
         outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'eval'),
       });
       const runs = report.results.reduce(
@@ -472,8 +475,12 @@ if (isMainEntry()) {
         `eval: ${report.results.length} task(s) x ${report.repeats} repeat(s) = ${runs} runs, cost $${report.total_cost_usd.toFixed(4)}`,
       );
       if (report.aborted) {
+        const cause =
+          report.aborted.kind === 'quota'
+            ? 'the provider refused further requests'
+            : 'consecutive runs were answered with nothing at all - the harness or route is not answering';
         console.log(
-          `ABORTED after ${report.aborted.afterRuns} run(s): the provider refused further requests (${report.aborted.reason.slice(0, 120)}). Not measured: ${report.aborted.remainingTasks.join(', ') || `${report.aborted.partialTask} (partial)`}. Nothing further was spent.`,
+          `ABORTED after ${report.aborted.afterRuns} run(s): ${cause} (${report.aborted.reason.slice(0, 120)}). Not measured: ${report.aborted.remainingTasks.join(', ') || `${report.aborted.partialTask} (partial)`}. Nothing further was spent.`,
         );
       }
       for (const result of report.results) {

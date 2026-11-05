@@ -101,7 +101,9 @@ export interface EvalReport {
   // by a different ruler must not be quoted against this one.
   // v6 adds `aborted`: a gateway that refuses on quota answers every remaining call with the same
   // error, so a campaign that continues is not measuring, and the report has to say what is missing.
-  schema: 'hahahah.eval/v6';
+  // v7 splits `aborted.kind`: a hung harness that dies at the spawn timeout is a different failure
+  // from a refusal, needs a streak to prove it, and cost 33 minutes of nothing before it was named.
+  schema: 'hahahah.eval/v7';
   generated_at: string;
   profile: string;
   suite: string;
@@ -428,8 +430,12 @@ function abortedLine(report: EvalReport): string[] {
     abort.remainingTasks.length > 0
       ? `Not measured at all: ${abort.remainingTasks.join(', ')}.`
       : 'Every task was started, but the last one is incomplete.';
+  const cause =
+    abort.kind === 'quota'
+      ? `the provider refused further requests (${abort.reason})`
+      : `${UNANSWERED_STREAK} consecutive run(s) were answered with nothing at all (${abort.reason}) - the harness or the route behind it is not answering`;
   return [
-    `**the campaign was aborted after ${abort.afterRuns} run(s)** by a provider refusal (${abort.reason}) ${missing} ${abort.partialTask} is reported with only the repeats it actually got, so these numbers cover fewer tasks than the suite defines.`,
+    `**the campaign was aborted after ${abort.afterRuns} run(s)** by ${cause}. ${missing} ${abort.partialTask} is reported with only the repeats it actually got, so these numbers cover fewer tasks than the suite defines.`,
   ];
 }
 
@@ -578,11 +584,18 @@ export function providerExhausted(error: string): boolean {
 }
 
 export interface EvalAbort {
+  // `quota` is a refusal that predicts every later answer, so one occurrence stops the campaign.
+  // `unresponsive` needs a streak: a single harness failure can be a bad task, three in a row means
+  // there is nothing on the other end - the opencode route once hung for 180 s per run across 11.
+  kind: 'quota' | 'unresponsive';
   reason: string;
   afterRuns: number;
   partialTask: string;
   remainingTasks: string[];
 }
+
+/** How many unanswered runs in a row count as a dead route rather than a bad task. */
+const UNANSWERED_STREAK = 3;
 
 export function runEval(options: EvalOptions): EvalReport {
   const tasks = options.tasks.slice(0, options.limit ?? options.tasks.length);
@@ -596,12 +609,14 @@ export function runEval(options: EvalOptions): EvalReport {
       }));
   if (options.probe ?? options.runner === undefined) probeRoute(runner, options.budgetUsd);
   const results: EvalResult[] = [];
-  let exhausted: string | null = null;
+  let stopReason: string | null = null;
+  let stopKind: 'quota' | 'unresponsive' | null = null;
+  let unansweredStreak = 0;
   let stoppedAt = -1;
   let runCount = 0;
 
   for (const [taskIndex, task] of tasks.entries()) {
-    if (exhausted) break;
+    if (stopReason) break;
     const baselineDir = mkdtempSync(join(scratchRoot(), 'hahahah-eval-baseline-'));
     const treatmentDir = mkdtempSync(join(scratchRoot(), 'hahahah-eval-treatment-'));
     try {
@@ -613,12 +628,12 @@ export function runEval(options: EvalOptions): EvalReport {
       });
       const baselineRuns: EvalRun[] = [];
       const treatmentRuns: EvalRun[] = [];
-      for (let index = 0; index < repeats && !exhausted; index += 1) {
+      for (let index = 0; index < repeats && !stopReason; index += 1) {
         // Alternate which arm runs first so a provider-side ordering effect cannot
         // land on the same arm in every repeat.
         const order = index % 2 === 0 ? ['baseline', 'treatment'] : ['treatment', 'baseline'];
         for (const arm of order) {
-          if (exhausted) break;
+          if (stopReason) break;
           const run = safeRun(
             runner,
             arm === 'baseline' ? baselineDir : treatmentDir,
@@ -626,9 +641,19 @@ export function runEval(options: EvalOptions): EvalReport {
             options.budgetUsd,
           );
           runCount += 1;
-          if (run.error && providerExhausted(run.error)) {
-            exhausted = run.error;
-            stoppedAt = taskIndex;
+          if (run.error) {
+            unansweredStreak += 1;
+            if (providerExhausted(run.error)) {
+              stopKind = 'quota';
+            } else if (unansweredStreak >= UNANSWERED_STREAK) {
+              stopKind = 'unresponsive';
+            }
+            if (stopKind) {
+              stopReason = run.error;
+              stoppedAt = taskIndex;
+            }
+          } else {
+            unansweredStreak = 0;
           }
           (arm === 'baseline' ? baselineRuns : treatmentRuns).push(run);
         }
@@ -660,14 +685,15 @@ export function runEval(options: EvalOptions): EvalReport {
 
   const harness = options.harness ?? 'claude';
   const report: EvalReport = {
-    schema: 'hahahah.eval/v6',
+    schema: 'hahahah.eval/v7',
     generated_at: new Date().toISOString(),
     profile: options.profileId,
     suite: options.suite ?? 'custom',
     tasksSha256: tasksFingerprint(options.tasks),
-    aborted: exhausted
+    aborted: stopReason
       ? {
-          reason: exhausted.replace(/\s+/g, ' ').slice(0, 300),
+          kind: stopKind ?? 'unresponsive',
+          reason: stopReason.replace(/\s+/g, ' ').slice(0, 300),
           afterRuns: runCount,
           partialTask: tasks[stoppedAt]?.id ?? '',
           remainingTasks: tasks.slice(stoppedAt + 1).map((task) => task.id),

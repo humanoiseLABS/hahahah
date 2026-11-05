@@ -159,3 +159,35 @@ provider, k=3 - medians, not confidence intervals. Screens are surface checks: t
 an answer is *right*, and one of them just demonstrated it can score a correct answer as a failure.
 Character counts are not a measure of usefulness, and the reasoning-dump difference is a property of
 this route's baseline behaviour, not something RUSUH guarantees elsewhere.
+
+## Replication on a second harness: blocked, and what the block exposed
+
+The same suite was launched against `opencode` 1.18.31 with `--model opencode/beam-free` at 21:58Z,
+to test whether the conclusions above hold outside the kiro route. A 2-run smoke on that exact route
+had answered minutes earlier (04:53 local): both arms pass, `input_tokens` 4,457 and 5,101, cost
+$0.0000, `routing.deviating: 0`. So the route was live at the start.
+
+Every campaign run then died at the spawn timeout:
+
+- 11 runs consumed, spaced **exactly 180 s apart** (opencode.exe start times 04:58:38, 05:01:39,
+  05:04:39, 05:07:39, 05:10:39, 05:13:39, 05:16:39, 05:19:41, 05:22:41, 05:25:41, 05:28:41), with
+  workspace pairs appearing at 04:58:02, 05:01:38 and 05:19:41 - one task per 18 minutes.
+- Extrapolated, 72 runs would have taken **3.6 hours and produced an all-error report.**
+- A trivial one-word `opencode run` hung the same 180 s and emitted **0 bytes of stdout**, so this is
+  not prompt-specific, not a permission prompt, and not a quota refusal.
+- 12 `opencode.exe` processes were still alive with zero eval processes - orphans from the killed
+  campaign, and the probable cause: a wedged local server that every later `run` queues behind. They
+  were left running because an interactive session of the owner's cannot be told apart by name.
+
+Two defects this surfaced, both now fixed: the CLI injected its own runner, which silently disabled
+the route probe that was written to protect exactly this case (proved by running a campaign with a
+bogus model and getting `Route probe failed before the campaign`, with no report written); and a
+timeout was not classified as exhaustion, so the quota abort never fired. `aborted.kind` now
+distinguishes `quota` (stop at the first refusal) from `unresponsive` (stop after three consecutive
+runs answered with nothing at all), which caps the loss at ~9 minutes instead of 3.6 hours.
+
+The replication itself is still open. Its prediction, stated before measuring: the block's absolute
+input cost should stay ~+700 tokens (it is a fixed amount of text) on a base prompt of ~4,800 rather
+than ~30,900 - so the relative overhead should rise from ~2,3% to ~15%, while substance (+21,9%) and
+the reasoning-dump difference (-51%) may not replicate at all, since both are properties of the kiro
+route's baseline behaviour.
