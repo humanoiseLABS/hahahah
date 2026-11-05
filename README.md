@@ -17,7 +17,9 @@ for the wrong one writes files that agent never reads, and the persona silently 
 | opencode | `install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
 | Antigravity, one project | `install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
 | Antigravity, every project | `install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
-| Cursor / Codex / Qoder CLI / anything reading `AGENTS.md` | `install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
+| Cursor / Codex / anything reading `AGENTS.md` | `install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
+| Qoder CLI | `install --adapter qoder --target <project>` | `AGENTS.md` block + `.qoder/skills/` |
+| GitHub Copilot | `install --adapter copilot --target <project>` | `.github/copilot-instructions.md`, voice folded in — it documents no on-demand layer |
 
 `node src/cli.ts` with no arguments prints this same table. Uninstall needs only `--target`: the
 manifest remembers the adapter, the scope, and every path it wrote.
@@ -35,10 +37,19 @@ frontmatter drift from the documented ones, or if this table stops matching the 
 | `opencode` | `AGENTS.md` | `.claude/skills/…/SKILL.md` | verified on this machine | opencode 1.18.31 `debug skill` listed the installed skill locally |
 | `agents-md` | `AGENTS.md` | `.agents/skills/…/SKILL.md` | documented, not verified | https://agentskills.io/specification |
 | `antigravity` | `AGENTS.md` | `.agents/rules/*.md` | documented, not verified | https://antigravity.google/docs/rules/ |
+| `qoder` | `AGENTS.md` | `.qoder/skills/…/SKILL.md` | documented, not verified | https://docs.qoder.com/cli/Skills |
+| `copilot` | `.github/copilot-instructions.md` | none — the voice is folded into the file | documented, not verified | https://docs.github.com/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot |
 
 "Documented, not verified" means the files are exactly where the vendor says the agent will look,
 and the install round-trips — but no Cursor, Codex, Qoder or Antigravity run on this machine has
-yet been shown reading them. Do not present those two rows as tested compatibility.
+yet been shown reading them. Do not present those rows as tested compatibility.
+
+`copilot` is the one row that costs real tokens every turn. GitHub documents no on-demand layer for
+the coding agent, so the full voice has to live inside the instructions file: measured 2342 tokens
+of always-on content against 462 for the card-only layouts. The build says so in its warnings
+rather than letting the global card-sized budget hide it. Copilot is also the reason it is not the
+reference target — personal instructions outrank repository instructions, so a safety-sensitive
+layer cannot rely on being the last word.
 
 ```bash
 npm ci

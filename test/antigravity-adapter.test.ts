@@ -97,7 +97,7 @@ test('--scope global is refused for adapters whose tree has no user-level path',
           adapterId: 'claude-code',
           scope: 'global',
         }),
-      /only supported for the antigravity adapter/,
+      /needs a documented user-level path/,
     );
     assert.equal(existsSync(join(target, 'CLAUDE.md')), false, 'nothing may be written');
   } finally {

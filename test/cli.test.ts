@@ -95,7 +95,7 @@ test('eval rejects an unknown task id before calling the harness', () => {
 test('unknown adapter fails clearly', () => {
   const result = spawnSync(
     process.execPath,
-    ['src/cli.ts', 'measure', '--profile', 'rusuh-id', '--adapter', 'qoder'],
+    ['src/cli.ts', 'measure', '--profile', 'rusuh-id', '--adapter', 'not-a-harness'],
     { cwd: root, encoding: 'utf8' },
   );
   assert.equal(result.status, 1);

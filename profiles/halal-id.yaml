@@ -11,6 +11,8 @@ adapters:
   - opencode
   - agents-md
   - antigravity
+  - qoder
+  - copilot
 budgets:
   always_on_tokens: 460
   skill_metadata_tokens: 90

@@ -66,16 +66,6 @@ function resolveInside(base: string, child: string): string {
   return target;
 }
 
-// Antigravity reads workspace rules from `.agents/rules/` and user-level rules from
-// `~/.gemini/config/rules/` (https://antigravity.google/docs/rules/). The adapter renders the
-// workspace form because that is what its budget and tests describe; a global install is the same
-// content at the other path, so the remap belongs here rather than in a second adapter.
-function remapForScope(path: string, scope: 'workspace' | 'global'): string {
-  if (scope === 'workspace') return path;
-  if (path.startsWith('.agents/rules/')) return `config/${path.slice('.agents/'.length)}`;
-  return path;
-}
-
 function readManifest(targetRoot: string): InstallManifest | null {
   const path = join(targetRoot, MANIFEST_PATH);
   if (!existsSync(path)) {
@@ -167,10 +157,12 @@ function installBlock(
 export function install(options: InstallOptions): InstallResult {
   const targetRoot = resolve(options.targetRoot);
   const adapterId = options.adapterId ?? 'claude-code';
+  const scope = options.scope ?? 'workspace';
   const built = build({
     root: options.sourceRoot,
     profileId: options.profileId,
     adapterId,
+    scope,
     write: false,
   });
   const blockArtifact = built.artifacts.find((artifact) => artifact.kind === 'always_on');
@@ -180,18 +172,8 @@ export function install(options: InstallOptions): InstallResult {
   // The block file is whatever the adapter decided to own: CLAUDE.md for Claude Code,
   // AGENTS.md for opencode. Only the marker comments are constant.
   const blockPath = blockArtifact.path;
-  const scope = options.scope ?? 'workspace';
-  if (scope === 'global' && adapterId !== 'antigravity') {
-    throw new InstallError(
-      `--scope global is only supported for the antigravity adapter; ${adapterId} writes a skill tree that no user-level path reads`,
-    );
-  }
-  // Remap once, here, so the collision check, the manifest, doctor, and uninstall all agree on
-  // the same recorded path. A manifest holding the workspace path while the file sits at the
-  // global path would make uninstall leak.
-  const artifactFiles = built.artifacts
-    .filter((artifact) => artifact.kind !== 'always_on')
-    .map((artifact) => ({ ...artifact, path: remapForScope(artifact.path, scope) }));
+  // Paths come from the harness row, so install.ts holds no per-agent knowledge at all.
+  const artifactFiles = built.artifacts.filter((artifact) => artifact.kind !== 'always_on');
   const block = blockContent(blockArtifact);
   const blockHash = sha256(block.trimEnd());
 

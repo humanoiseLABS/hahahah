@@ -72,7 +72,7 @@ test('install and uninstall round-trip through the opencode adapter', () => {
 
 test('an unknown adapter is still refused for profiles that do not declare it', () => {
   assert.throws(
-    () => build({ root, profileId: 'rusuh-id', adapterId: 'qoder', write: false }),
+    () => build({ root, profileId: 'rusuh-id', adapterId: 'not-a-harness', write: false }),
     /does not declare adapter|not implemented/,
   );
 });

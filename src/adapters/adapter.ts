@@ -13,13 +13,7 @@ export interface AdapterInput {
 
 export interface Adapter {
   readonly id: string;
-  readonly capabilities: {
-    alwaysOnInstructions: boolean;
-    onDemandSkills: boolean;
-    progressiveDisclosure: boolean;
-    managedBlock: boolean;
-    toolPermissions: boolean;
-    hooks: boolean;
-  };
+  // `capabilities` used to be declared here and read by nobody. What a target can actually do is
+  // now recorded once per harness in src/harnesses.ts, where the coverage matrix can check it.
   render(input: AdapterInput): Artifact[];
 }

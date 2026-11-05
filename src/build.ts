@@ -9,12 +9,10 @@ import {
 } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { parse } from 'yaml';
-import { AgentsMdAdapter } from './adapters/agents-md.ts';
-import { AntigravityAdapter } from './adapters/antigravity.ts';
-import { ClaudeCodeAdapter } from './adapters/claude-code.ts';
 import { FakeAdapter } from './adapters/fake.ts';
-import { OpenCodeAdapter } from './adapters/opencode.ts';
+import { GenericHarnessAdapter } from './adapters/generic.ts';
 import type { Adapter } from './adapters/adapter.ts';
+import { HARNESS_SPECS, harnessSpec } from './harnesses.ts';
 import { evaluateBudget, type BudgetSpec } from './budget.ts';
 import { validate } from './schema.ts';
 import { countTokens, TOKENIZER_PROFILE } from './tokenizer.ts';
@@ -31,17 +29,21 @@ import type {
   RegisterFile,
 } from './types.ts';
 
-const ADAPTERS: Record<string, () => Adapter> = {
+// The harness table is the registry. Adding an agent is a row in src/harnesses.ts, not a class —
+// and test/adapter-coverage.test.ts fails CI if a row appears here without a documented path, a
+// verification status and an install round-trip.
+const ADAPTERS: Record<string, (scope: HarnessScope) => Adapter> = {
   fake: () => new FakeAdapter(),
-  'claude-code': () => new ClaudeCodeAdapter(),
-  opencode: () => new OpenCodeAdapter(),
-  'agents-md': () => new AgentsMdAdapter(),
-  antigravity: () => new AntigravityAdapter(),
+  ...Object.fromEntries(
+    HARNESS_SPECS.map((spec) => [
+      spec.id,
+      (scope: HarnessScope) => new GenericHarnessAdapter(spec, scope),
+    ]),
+  ),
 };
 
-// Exposed so a test can hold the registry to account: an adapter added here without a documented
-// harness spec and an install round-trip fails CI. The owner does not have every agent installed,
-// so the guarantee has to come from the matrix rather than from running each tool.
+export type HarnessScope = 'workspace' | 'global';
+
 export function adapterIds(): string[] {
   return Object.keys(ADAPTERS);
 }
@@ -62,6 +64,7 @@ export interface BuildOptions {
   outDir?: string;
   release?: boolean;
   write?: boolean;
+  scope?: HarnessScope;
 }
 
 export interface BuildResult {
@@ -334,7 +337,18 @@ export function build(options: BuildOptions): BuildResult {
   if (!makeAdapter) {
     throw new BuildError(`Adapter ${options.adapterId} is not implemented`);
   }
-  const adapter = makeAdapter();
+  const scope = options.scope ?? 'workspace';
+  const spec = harnessSpec(options.adapterId);
+  if (scope === 'global') {
+    // A global install is only meaningful where the vendor documents a user-level location.
+    // Anything else would write a tree no agent reads and still report success.
+    if (!spec?.globalOnDemandRoot) {
+      throw new BuildError(
+        `--scope global needs a documented user-level path: ${options.adapterId} has none (${spec ? spec.source : 'not a harness row'})`,
+      );
+    }
+  }
+  const adapter = makeAdapter(scope);
 
   const persona = loadPersona(root, profile.persona);
   const personaDir = join(root, 'personas', persona.id);
@@ -388,7 +402,12 @@ export function build(options: BuildOptions): BuildResult {
     'always_on' | 'skill_metadata' | 'skill_body' | 'references',
     BudgetSpec
   > = {
-    always_on: { target: profile.budgets.always_on_tokens, hardCap: HARD_CAPS.always_on },
+    // A folded block carries the whole voice, so the card-sized global numbers no longer
+    // describe it and the harness row states its own target and ceiling instead.
+    always_on: {
+      target: spec?.alwaysOnTarget ?? profile.budgets.always_on_tokens,
+      hardCap: spec?.alwaysOnHardCap ?? HARD_CAPS.always_on,
+    },
     skill_metadata: {
       target: profile.budgets.skill_metadata_tokens,
       hardCap: HARD_CAPS.skill_metadata,
@@ -396,6 +415,11 @@ export function build(options: BuildOptions): BuildResult {
     skill_body: { target: profile.budgets.skill_body_tokens, hardCap: HARD_CAPS.skill_body },
     references: { target: profile.budgets.reference_tokens_max, hardCap: HARD_CAPS.references },
   };
+  if (spec?.layout === 'fold') {
+    warnings.push(
+      `folded layout: ${spec.id} has no on-demand layer, so the full voice is injected on every turn (always_on ceiling ${spec.alwaysOnHardCap})`,
+    );
+  }
   const budgets = {
     always_on: evaluateBudget(budgetSpecs.always_on, sumTokens(measured, 'always_on')),
     skill_metadata: evaluateBudget(budgetSpecs.skill_metadata, skillMetadataTokens(measured)),
