@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -95,10 +96,14 @@ export interface EvalReport {
   // baseline assumed to be neutral, and that assumption is now known to be wrong on some providers.
   // v4 adds `routing` and per-arm `errored`: the k=3 preservation run turned out to be served by
   // four different upstream models, and a dead route had previously looked like a slow campaign.
-  schema: 'hahahah.eval/v4';
+  // v5 adds `tasksSha256`: the clean re-run also changed what the screens measure - answers are now
+  // graded without the reasoning blocks some gateways return inline - so a pass rate computed by a
+  // different ruler must not be quoted against this one, and the fingerprint says which ruler ran.
+  schema: 'hahahah.eval/v5';
   generated_at: string;
   profile: string;
   suite: string;
+  tasksSha256: string;
   budget_per_run_usd: number;
   repeats: number;
   model: string | null;
@@ -130,6 +135,18 @@ export interface EvalOptions {
   // Ask the route one cheap question before spending 72 paid ones on it. Auto: only when the real
   // harness is the runner, because an injected runner is in-process and cannot be unreachable.
   probe?: boolean;
+}
+
+// Two campaigns are only comparable if the ruler was the same. A screen edit silently changes every
+// pass rate in the suite, so the task definitions are fingerprinted and carried in the report; tags
+// and other presentation fields are excluded because they decide nothing about a grade.
+export function tasksFingerprint(tasks: EvalTask[]): string {
+  const canonical = tasks.map((task) => ({
+    id: task.id,
+    prompt: task.prompt,
+    checks: task.checks ?? null,
+  }));
+  return createHash('sha256').update(JSON.stringify(canonical)).digest('hex').slice(0, 16);
 }
 
 export interface EvalSuite {
@@ -407,6 +424,7 @@ function reportMarkdown(report: EvalReport): string {
     '',
     `- Profile: ${report.profile}`,
     `- Suite: ${report.suite}`,
+    `- Suite fingerprint: ${report.tasksSha256} (prompts and screens; a different value means two reports are not comparable)`,
     `- Model: ${report.model ?? 'harness default'}`,
     `- Generated: ${report.generated_at}`,
     `- Budget per run: $${report.budget_per_run_usd.toFixed(2)}`,
@@ -596,10 +614,11 @@ export function runEval(options: EvalOptions): EvalReport {
 
   const harness = options.harness ?? 'claude';
   const report: EvalReport = {
-    schema: 'hahahah.eval/v4',
+    schema: 'hahahah.eval/v5',
     generated_at: new Date().toISOString(),
     profile: options.profileId,
     suite: options.suite ?? 'custom',
+    tasksSha256: tasksFingerprint(options.tasks),
     budget_per_run_usd: options.budgetUsd,
     repeats,
     model: options.model ?? null,

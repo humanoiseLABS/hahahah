@@ -10,7 +10,9 @@ import {
   hostOfBaseUrl,
   routeSplitOf,
   runEval,
+  tasksFingerprint,
   type EvalRun,
+  type EvalTask,
 } from '../src/eval.ts';
 
 // Which arm a call belongs to is a fact about the workspace the runner is handed, not about call
@@ -195,4 +197,55 @@ test('an injected runner is not probed: one call per arm, no warm-up request', (
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }
+});
+
+test('the report records which suite definition produced it', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-instr-'));
+  try {
+    const tasks: EvalTask[] = [
+      { id: 'x-01', prompt: 'jawab', checks: { language: 'id', require: ['ada'] } },
+    ];
+    let calls = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks,
+      outDir,
+      budgetUsd: 0.05,
+      runner: () => {
+        calls += 1;
+        return answered(19134);
+      },
+    });
+    assert.match(report.tasksSha256, /^[a-f0-9]{16}$/);
+    const markdown = readFileSync(join(outDir, 'report.md'), 'utf8');
+    assert.ok(markdown.includes(report.tasksSha256), 'report.md must print the fingerprint');
+
+    // A screen edit must show up: the same suite name with a different ruler is not comparable.
+    const edited: EvalTask[] = [
+      { id: 'x-01', prompt: 'jawab', checks: { language: 'id', require: ['ada', 'kirim'] } },
+    ];
+    const second = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: edited,
+      outDir,
+      budgetUsd: 0.05,
+      runner: () => answered(19134),
+    });
+    assert.notEqual(second.tasksSha256, report.tasksSha256);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('the fingerprint ignores presentation-only fields like tags', () => {
+  assert.equal(
+    tasksFingerprint([{ id: 'a', prompt: 'p', tags: ['x'] }]),
+    tasksFingerprint([{ id: 'a', prompt: 'p' }]),
+  );
+  assert.notEqual(
+    tasksFingerprint([{ id: 'a', prompt: 'p' }]),
+    tasksFingerprint([{ id: 'b', prompt: 'p' }]),
+  );
 });
