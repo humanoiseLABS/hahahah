@@ -39,6 +39,13 @@ const ADAPTERS: Record<string, () => Adapter> = {
   antigravity: () => new AntigravityAdapter(),
 };
 
+// Exposed so a test can hold the registry to account: an adapter added here without a documented
+// harness spec and an install round-trip fails CI. The owner does not have every agent installed,
+// so the guarantee has to come from the matrix rather than from running each tool.
+export function adapterIds(): string[] {
+  return Object.keys(ADAPTERS);
+}
+
 const CORE_POLICY_FILES = ['00-identity.md', '10-safety.md', '20-decision.md', '30-efficiency.md'];
 
 const HARD_CAPS = {

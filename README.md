@@ -22,6 +22,24 @@ for the wrong one writes files that agent never reads, and the persona silently 
 `node src/cli.ts` with no arguments prints this same table. Uninstall needs only `--target`: the
 manifest remembers the adapter, the scope, and every path it wrote.
 
+### How far each of those claims actually goes
+
+Two different things get confused easily, so they are recorded separately: what the vendor
+documents, and what anyone has **observed** on real hardware. `test/adapter-coverage.test.ts`
+fails CI if an adapter is registered without a row here, if the emitted paths or required
+frontmatter drift from the documented ones, or if this table stops matching the registry.
+
+| Adapter | Always-on file | On-demand layer | Verification status | Source of the expectation |
+|---|---|---|---|---|
+| `claude-code` | `CLAUDE.md` | `.claude/skills/…/SKILL.md` | verified on this machine | https://code.claude.com/docs/en/skills |
+| `opencode` | `AGENTS.md` | `.claude/skills/…/SKILL.md` | verified on this machine | opencode 1.18.31 `debug skill` listed the installed skill locally |
+| `agents-md` | `AGENTS.md` | `.agents/skills/…/SKILL.md` | documented, not verified | https://agentskills.io/specification |
+| `antigravity` | `AGENTS.md` | `.agents/rules/*.md` | documented, not verified | https://antigravity.google/docs/rules/ |
+
+"Documented, not verified" means the files are exactly where the vendor says the agent will look,
+and the install round-trips — but no Cursor, Codex, Qoder or Antigravity run on this machine has
+yet been shown reading them. Do not present those two rows as tested compatibility.
+
 ```bash
 npm ci
 npm run typecheck
