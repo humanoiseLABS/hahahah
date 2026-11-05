@@ -165,7 +165,7 @@ test('the eval runner installs the harness-matched adapter tree when told which 
   }
 });
 
-test('eval runner installs treatment, runs baseline and treatment, and writes a v2 report', () => {
+test('eval runner installs treatment, runs baseline and treatment, and writes a v4 report', () => {
   const outDir = mkdtempSync(join(tmpdir(), 'hahahah-eval-'));
   try {
     const report = runEval({
@@ -194,7 +194,7 @@ test('eval runner installs treatment, runs baseline and treatment, and writes a 
     const json = JSON.parse(readFileSync(join(outDir, 'report.json'), 'utf8')) as {
       schema: string;
     };
-    assert.equal(json.schema, 'hahahah.eval/v3');
+    assert.equal(json.schema, 'hahahah.eval/v4');
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }

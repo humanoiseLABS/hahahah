@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { parse } from 'yaml';
 import { install } from './install.ts';
@@ -63,8 +64,24 @@ export interface EvalArm {
   runs: EvalRun[];
   consensus: 'pass' | 'fail' | 'mixed' | 'unknown' | 'error' | 'no-checks';
   runStatuses: Array<'pass' | 'fail' | 'unknown' | 'error' | 'no-checks'>;
+  /** Runs that never answered. Excluded from every median and screen, but counted here. */
+  errored: number;
   median: ArmMedians;
   screens: CheckSummary;
+}
+
+/**
+ * Prompt-size spread across a campaign. A gateway that picks an upstream per request changes the
+ * model underneath an A/B, and the harness reports no model name per run, so prompt size is the
+ * only observable signal: an off-route run here measured 63,578 input tokens against a 19,150
+ * median. Counts runs, not proof of a model swap.
+ */
+export interface RouteSplit {
+  runs: number;
+  deviating: number;
+  byArm: { baseline: number; treatment: number };
+  medianInputTokens: number;
+  extremeInputTokens: number;
 }
 
 export interface EvalResult {
@@ -76,7 +93,9 @@ export interface EvalResult {
 export interface EvalReport {
   // v3 added `environment` and `contamination`. Every number in a v2 report was read against a
   // baseline assumed to be neutral, and that assumption is now known to be wrong on some providers.
-  schema: 'hahahah.eval/v3';
+  // v4 adds `routing` and per-arm `errored`: the k=3 preservation run turned out to be served by
+  // four different upstream models, and a dead route had previously looked like a slow campaign.
+  schema: 'hahahah.eval/v4';
   generated_at: string;
   profile: string;
   suite: string;
@@ -85,6 +104,7 @@ export interface EvalReport {
   model: string | null;
   total_cost_usd: number;
   environment: EvalEnvironment;
+  routing: RouteSplit;
   contamination: { baseline: ContaminationArm; treatment: ContaminationArm };
   results: EvalResult[];
   summary: { baseline: CheckSummary; treatment: CheckSummary; tasks_with_checks: number };
@@ -107,6 +127,9 @@ export interface EvalOptions {
   adapterId?: string;
   /** Recorded in the report so the numbers carry the stack they came from. */
   harness?: string;
+  // Ask the route one cheap question before spending 72 paid ones on it. Auto: only when the real
+  // harness is the runner, because an injected runner is in-process and cannot be unreachable.
+  probe?: boolean;
 }
 
 export interface EvalSuite {
@@ -181,27 +204,55 @@ function buildArm(runs: EvalRun[], checks?: TaskChecks): EvalArm {
     run.injectedLayers = detectInjectedStyleLayers(run.output);
   }
   const statuses = runs.map(statusOf);
+  // A run that never answered has zero cost and zero tokens, and a median over those reads as
+  // "the arm was cheaper", so failures are counted separately and kept out of every median.
+  const answered = runs.filter((run) => !run.error);
   return {
     runs,
     consensus: consensusOf(statuses),
     runStatuses: statuses,
+    errored: runs.length - answered.length,
     median: {
-      costUsd: median(runs.map((run) => run.costUsd)),
+      costUsd: median(answered.map((run) => run.costUsd)),
       inputTokens: median(
-        runs
+        answered
           .map((run) => usageNumber(run.usage, 'input_tokens'))
           .filter((value): value is number => value !== undefined),
       ),
       outputTokens: median(
-        runs
+        answered
           .map((run) => usageNumber(run.usage, 'output_tokens'))
           .filter((value): value is number => value !== undefined),
       ),
       numTurns: median(
-        runs.map((run) => run.numTurns).filter((value): value is number => value !== undefined),
+        answered.map((run) => run.numTurns).filter((value): value is number => value !== undefined),
       ),
     },
     screens: summarize(runs.flatMap((run) => run.checks ?? [])),
+  };
+}
+
+/** Input-token ratios this far from the campaign median are called a different route. */
+const ROUTE_RATIO_LO = 0.6;
+const ROUTE_RATIO_HI = 1.6;
+
+export function routeSplitOf(baseline: EvalRun[], treatment: EvalRun[]): RouteSplit {
+  const answered = (runs: EvalRun[]) =>
+    runs.filter((run) => !run.error && usageNumber(run.usage, 'input_tokens') !== undefined);
+  const both = [...answered(baseline), ...answered(treatment)];
+  const sizes = both.map((run) => usageNumber(run.usage, 'input_tokens') ?? 0);
+  const center = median(sizes);
+  const deviating = (runs: EvalRun[]) =>
+    answered(runs).filter((run) => {
+      const size = usageNumber(run.usage, 'input_tokens') ?? 0;
+      return center > 0 && (size / center < ROUTE_RATIO_LO || size / center > ROUTE_RATIO_HI);
+    }).length;
+  return {
+    runs: both.length,
+    deviating: deviating(baseline) + deviating(treatment),
+    byArm: { baseline: deviating(baseline), treatment: deviating(treatment) },
+    medianInputTokens: center,
+    extremeInputTokens: sizes.length > 0 ? Math.max(...sizes) : 0,
   };
 }
 
@@ -333,6 +384,23 @@ function contaminationLines(report: EvalReport): string[] {
   return lines;
 }
 
+function routingLine(report: EvalReport): string[] {
+  const { routing } = report;
+  if (routing.deviating === 0 || routing.runs === 0) return [];
+  return [
+    `**these runs were not all served by one route**: ${routing.deviating} of ${routing.runs} answered runs (${routing.byArm.baseline} baseline, ${routing.byArm.treatment} treatment) sit more than ${ROUTE_RATIO_HI}x or under ${ROUTE_RATIO_LO}x away from the campaign's median prompt size (median ${Math.round(routing.medianInputTokens)} input tokens, largest ${Math.round(routing.extremeInputTokens)}). The harness reports no model per run, so this is a size signal, not a model name: a gateway that picks an upstream per request changes the model underneath an A/B, and these arm medians mix upstreams.`,
+  ];
+}
+
+function erroredLine(report: EvalReport): string[] {
+  const baseline = report.results.reduce((total, result) => total + result.baseline.errored, 0);
+  const treatment = report.results.reduce((total, result) => total + result.treatment.errored, 0);
+  if (baseline + treatment === 0) return [];
+  return [
+    `${baseline} baseline and ${treatment} treatment run(s) never answered and are excluded from every median and screen; those cells describe fewer than ${report.repeats} repeats per task.`,
+  ];
+}
+
 function reportMarkdown(report: EvalReport): string {
   const lines = [
     `# HAHahah eval report`,
@@ -351,6 +419,8 @@ function reportMarkdown(report: EvalReport): string {
     `- Provider base URL host: ${report.environment.baseUrlHost ?? '(not set)'}`,
     '',
     ...contaminationLines(report),
+    ...routingLine(report),
+    ...erroredLine(report),
     '',
     'Cost and token figures are medians across the repeats: this provider bills heavy-tailed spikes, so a single run is not a measurement.',
     '',
@@ -407,13 +477,56 @@ function probeHarnessVersion(harness: string): string | null {
 
 // Only host and port. The base URL of a self-hosted gateway can carry credentials in its userinfo
 // or path, and this object is committed as evidence.
-function baseUrlHost(harness: string): string | null {
-  const raw = harness === 'opencode' ? null : process.env.ANTHROPIC_BASE_URL;
-  if (!raw) return null;
+export function hostOfBaseUrl(raw: string): string | null {
   try {
     return new URL(raw).host;
   } catch {
     return null;
+  }
+}
+
+// One key out of one file. The same settings file holds the provider's plaintext apiKey, so this
+// returns the URL or nothing, and never the object it came from.
+export function baseUrlFromSettings(text: string): string | null {
+  try {
+    const env = (JSON.parse(text) as { env?: Record<string, unknown> }).env;
+    const value = env?.ANTHROPIC_BASE_URL;
+    return typeof value === 'string' ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+// The shell usually does not carry ANTHROPIC_BASE_URL: the harness reads it from its own settings
+// file, which is why a v3 report logged "(not set)" for a campaign that was entirely proxied.
+function settingsBaseUrl(): string | null {
+  try {
+    return baseUrlFromSettings(readFileSync(join(homedir(), '.claude', 'settings.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function baseUrlHost(harness: string): string | null {
+  if (harness === 'opencode') return null;
+  const raw = process.env.ANTHROPIC_BASE_URL ?? settingsBaseUrl();
+  return raw ? hostOfBaseUrl(raw) : null;
+}
+
+// One cheap question before 72 paid ones. A stopped gateway makes every run time out at the harness
+// limit and the campaign only looks slow: 13 such runs were spent this way before the route was
+// checked. The probe's own cost is not folded into the report it is protecting.
+export function probeRoute(runner: EvalRunner, budgetUsd: number): void {
+  const dir = mkdtempSync(join(scratchRoot(), 'hahahah-eval-probe-'));
+  try {
+    const run = safeRun(runner, dir, 'Reply with exactly the word OK and nothing else.', budgetUsd);
+    if (run.error) {
+      throw new Error(
+        `Route probe failed before the campaign: ${run.error}\nNothing was measured: check the harness and the provider route, then re-run.`,
+      );
+    }
+  } finally {
+    removeWorkspace(dir);
   }
 }
 
@@ -427,6 +540,7 @@ export function runEval(options: EvalOptions): EvalReport {
         model: options.model,
         settingSources: options.settingSources,
       }));
+  if (options.probe ?? options.runner === undefined) probeRoute(runner, options.budgetUsd);
   const results: EvalResult[] = [];
 
   for (const task of tasks) {
@@ -475,10 +589,14 @@ export function runEval(options: EvalOptions): EvalReport {
     results.flatMap((result) => result.treatment.runs.flatMap((run) => run.checks ?? [])),
   );
   const allRuns = results.flatMap((result) => [...result.baseline.runs, ...result.treatment.runs]);
+  const routing = routeSplitOf(
+    results.flatMap((result) => result.baseline.runs),
+    results.flatMap((result) => result.treatment.runs),
+  );
 
   const harness = options.harness ?? 'claude';
   const report: EvalReport = {
-    schema: 'hahahah.eval/v3',
+    schema: 'hahahah.eval/v4',
     generated_at: new Date().toISOString(),
     profile: options.profileId,
     suite: options.suite ?? 'custom',
@@ -491,6 +609,7 @@ export function runEval(options: EvalOptions): EvalReport {
       harnessVersion: probeHarnessVersion(harness),
       baseUrlHost: baseUrlHost(harness),
     },
+    routing,
     contamination: {
       baseline: contaminationOf(results.flatMap((result) => result.baseline.runs)),
       treatment: contaminationOf(results.flatMap((result) => result.treatment.runs)),
