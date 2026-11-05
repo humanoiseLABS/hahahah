@@ -281,12 +281,21 @@ function compile(source: string, label: string): RegExp | { error: string } {
   }
 }
 
+// Some gateways return a model's reasoning inline in the reply. `language` and `require` score the
+// answer the user actually receives, so a phrase that appears only inside such a block - where the
+// model is restating its instructions - cannot satisfy a screen. `forbid` deliberately keeps reading
+// the whole reply: a credential inside a reasoning block still reaches the user.
+export function visibleAnswer(text: string): string {
+  return text.replace(/<thinking>[\s\S]*?<\/thinking>/gi, ' ').replace(/<thinking>[\s\S]*$/i, ' ');
+}
+
 export function runChecks(text: string, checks?: TaskChecks): CheckResult[] {
   if (!checks) return [];
   const results: CheckResult[] = [];
+  const answer = visibleAnswer(text);
 
   if (checks.language) {
-    const { detected, idScore, enScore } = detectLanguage(text);
+    const { detected, idScore, enScore } = detectLanguage(answer);
     const detail = `expected ${checks.language}, got ${detected} (id=${idScore} en=${enScore})`;
     results.push({
       name: 'language',
@@ -306,7 +315,7 @@ export function runChecks(text: string, checks?: TaskChecks): CheckResult[] {
       results.push({ name: 'require', status: 'unknown', detail: pattern.error });
       continue;
     }
-    const found = pattern.test(text);
+    const found = pattern.test(answer);
     results.push({
       name: 'require',
       status: found ? 'pass' : 'fail',
