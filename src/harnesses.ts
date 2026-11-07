@@ -118,7 +118,7 @@ export const HARNESS_SPECS: HarnessSpec[] = [
     globalOnDemandRoot: null,
     // core + card + voice measured at 2342 tokens on rusuh-id; the global 600 ceiling describes a
     // card-only block and would be a lie here.
-    alwaysOnTarget: 2400,
+    alwaysOnTarget: 2650,
     alwaysOnHardCap: 3000,
     status: 'documented, not verified',
     source:
