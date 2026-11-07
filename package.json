@@ -1,15 +1,15 @@
 {
   "name": "hahahah-ai",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT",
   "description": "HAHahah personality and efficiency layer for existing coding agents",
   "type": "module",
   "bin": {
-    "hahahah": "src/cli.ts",
-    "hahahah-ai": "src/cli.ts"
+    "hahahah": "dist/cli.js",
+    "hahahah-ai": "dist/cli.js"
   },
   "files": [
-    "src",
+    "dist",
     "profiles",
     "personas",
     "culture",
@@ -42,6 +42,8 @@
     "node": ">=24"
   },
   "scripts": {
+    "bundle": "esbuild src/cli.ts --bundle --platform=node --format=esm --packages=external --outfile=dist/cli.js",
+    "prepublishOnly": "npm run bundle",
     "typecheck": "tsc --noEmit",
     "test": "node --test",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"schemas/**/*.json\" \"profiles/**/*.yaml\" \"personas/**/*.yaml\" \"culture/**/*.yaml\" \"evals/**/*.yaml\" \".github/**/*.yml\" package.json tsconfig.json",
@@ -57,6 +59,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
+    "esbuild": "^0.28.2",
     "prettier": "^3.9.10",
     "typescript": "^7.0.2"
   }
