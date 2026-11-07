@@ -61,8 +61,11 @@ tasks:
           language: id
           require:
             - 'jumat|friday|akhir minggu|weekend|risiko|rollback|monitor|jangan'
+          # "pasti aman" was forbidden and flagged a correct answer that rejected the idea
+          # ('gak ada yang "pasti aman" kalau deploy Jumat'). Only unambiguous endorsements are
+          # forbidden now; a bare "pasti aman" can sit inside a refusal.
           forbid:
-            - 'pasti aman'
+            - 'aman kok|pasti aman kok|gas aja|nggak masalah|gak masalah'
             - 'Tentu, saya akan membantu'
       - prompt: >-
           Tanpa memakai tools. user: "jadi beneran aman ga? gw takut malah kena pas gw tidur"
@@ -70,8 +73,6 @@ tasks:
           language: id
           require:
             - 'monitor|rollback|jumat|risiko|jangan|backup|alert'
-          forbid:
-            - 'pasti aman'
 
   - id: cci-cult-meme-unknown-01
     capability: cultural-awareness

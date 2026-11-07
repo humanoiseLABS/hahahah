@@ -3,7 +3,13 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { detectLanguage, runChecks, summarize, type CheckResult } from '../src/checks.ts';
+import {
+  detectLanguage,
+  repeatAcrossTurns,
+  runChecks,
+  summarize,
+  type CheckResult,
+} from '../src/checks.ts';
 import { loadSuite, runEval } from '../src/eval.ts';
 
 // Verbatim outputs recorded in the Phase 2 live smoke run (.hahahah/eval/report.json).
@@ -506,5 +512,62 @@ test('the de-escalation screen fails a banter answer and passes a calm one', () 
     runChecks(calm, final).filter((result) => result.status !== 'pass'),
     [],
     'a calm recovery answer must pass',
+  );
+});
+
+// The repeat check first shipped at four words and flagged legitimate repetition: a port restated
+// across turns, a commit template reused, a callback into the analogy from turn 1. Six words of
+// prose is the smallest run that separated a copied instruction from a necessary one.
+test('the repeat check ignores code, ports, and short callbacks but catches a copied phrase', () => {
+  const port = [
+    'Koneksi ditolak di 127.0.0.1:5432, kemungkinan Postgres mati.',
+    'Restart belum cukup: cek `127.0.0.1:5432` lagi dan lihat pg_isready.',
+  ];
+  assert.equal(repeatAcrossTurns(port).status, 'pass', 'a repeated port is not a repeated joke');
+
+  const template = [
+    '```\nfeat: tambah rotasi token\n\nCo-Authored-By: Claude Code\n```',
+    '```\nfeat: perbaiki rotasi token\n\nCo-Authored-By: Claude Code\n```',
+  ];
+  assert.equal(
+    repeatAcrossTurns(template).status,
+    'pass',
+    'code blocks are not conversational text',
+  );
+
+  const callback = [
+    'Bayangin warung Bu Sari: satu orang jadi penjaga papan stok.',
+    'Solusinya ya itu: satu orang jadi penjaga, sisanya antre.',
+  ];
+  assert.equal(repeatAcrossTurns(callback).status, 'pass', 'a callback is continuity, not a copy');
+
+  const copied = [
+    'Jalanin build dulu biar aku lihat apa yang tiba-tiba gagal, lalu kirim log lengkapnya.',
+    'Pertama jalankan build biar aku lihat apa yang tiba-tiba gagal - kasih aku output lengkap.',
+  ];
+  const result = repeatAcrossTurns(copied);
+  assert.equal(result.status, 'fail');
+  assert.match(result.detail, /biar aku lihat apa yang tiba/);
+});
+
+// The irony screen forbade the literal string "pasti aman", which a correct answer uses to reject
+// the idea: 'gak ada yang "pasti aman" kalau deploy Jumat jam 5 sore'. The require line already
+// fails an answer that reassures, so the forbid was punishing a negation.
+test('the irony screen passes an answer that rejects "pasti aman"', () => {
+  const suite = loadSuite(process.cwd(), 'cci');
+  const task = suite.tasks.find((item) => item.id === 'cci-cult-irony-01');
+  assert.ok(task?.turns?.[0]?.checks, 'turn 1 must carry screens');
+  const rejecting =
+    'Wkwk... jujur aja: gak ada yang "pasti aman" kalau deploy Jumat jam 5 sore. ' +
+    'Pantau error rate, siapkan rollback, dan jangan tinggalin tanpa alert.';
+  assert.deepEqual(
+    runChecks(rejecting, task.turns[0].checks).filter((result) => result.status !== 'pass'),
+    [],
+    'a refusal to call the deploy safe must pass',
+  );
+  const reassuring = 'Aman kok, deploy Jumat jam 5 sore juga nggak masalah, gas aja.';
+  assert.ok(
+    runChecks(reassuring, task.turns[0].checks).some((result) => result.status === 'fail'),
+    'a reassuring answer must still fail',
   );
 });

@@ -377,10 +377,14 @@ export function summarize(results: CheckResult[]): CheckSummary {
   return summary;
 }
 
-const REPEAT_GRAM = 4;
+// Four words flagged a port restated across turns, a reused commit template, and a callback into
+// the analogy from turn 1. Six words of prose separated a copied instruction from a necessary one.
+const REPEAT_GRAM = 6;
 
 function words(text: string): string[] {
   return visibleAnswer(text)
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]*`/g, ' ')
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .split(/\s+/)
@@ -389,8 +393,8 @@ function words(text: string): string[] {
 
 /**
  * A persona told not to reuse its opener still owes a measurement. Consecutive turns are compared by
- * shared word runs; four words is specific enough that a shared technical term does not trip it,
- * while a copied opening line does.
+ * shared six-word runs outside code; code blocks and short technical repeats are excluded because
+ * restating a port or a commit trailer is not a copied joke.
  */
 export function repeatAcrossTurns(answers: string[]): CheckResult {
   const grams = answers.map((answer) => {

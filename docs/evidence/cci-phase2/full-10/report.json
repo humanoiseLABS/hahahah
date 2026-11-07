@@ -1,0 +1,2073 @@
+{
+  "schema": "hahahah.eval/v7",
+  "generated_at": "2026-11-07T06:27:45.071Z",
+  "profile": "rusuh-id",
+  "suite": "cci",
+  "tasksSha256": "2c1f47ca27ff7240",
+  "aborted": null,
+  "budget_per_run_usd": 0.4,
+  "repeats": 1,
+  "model": "tes",
+  "total_cost_usd": 3.2567600000000008,
+  "environment": {
+    "harness": "claude",
+    "harnessVersion": "2.1.319 (Claude Code)",
+    "baseUrlHost": "127.0.0.1:20128"
+  },
+  "routing": {
+    "runs": 20,
+    "deviating": 0,
+    "byArm": {
+      "baseline": 0,
+      "treatment": 0
+    },
+    "medianInputTokens": 42735.5,
+    "extremeInputTokens": 43873
+  },
+  "contamination": {
+    "baseline": {
+      "runs": 10,
+      "affected": 0,
+      "phrases": []
+    },
+    "treatment": {
+      "runs": 10,
+      "affected": 0,
+      "phrases": []
+    }
+  },
+  "results": [
+    {
+      "task": {
+        "id": "cci-cult-irony-01",
+        "capability": "cultural-awareness",
+        "tags": [
+          "cci",
+          "irony",
+          "sarcasm"
+        ],
+        "objective": "Baca \"deploy Jumat jam 5 sore, pasti aman kan? wkwk\" sebagai kekhawatiran yang disindir, bukan undangan untuk menenangkan.",
+        "expect": [
+          "menyebut risiko Jumat/akhir hari",
+          "menawarkan pengaman konkret, bukan setuju"
+        ],
+        "failIf": [
+          "setuju deploy-nya aman",
+          "mengabaikan sindiran dan kasih checklist deploy generik"
+        ],
+        "human": "Sindirannya kebaca sebagai sinyal risiko? Jawaban yang bilang \"aman\" atau memberkati timing-nya = gagal.",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"mantap, deploy Jumat jam 5 sore, pasti aman kan? wkwk\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "jumat|friday|akhir minggu|weekend|risiko|rollback|monitor|jangan"
+              ],
+              "forbid": [
+                "pasti aman",
+                "Tentu, saya akan membantu"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"jadi beneran aman ga? gw takut malah kena pas gw tidur\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "monitor|rollback|jumat|risiko|jangan|backup|alert"
+              ],
+              "forbid": [
+                "pasti aman"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Nah, jujur ya: **gak beneran aman.**\n\nJustru itu skenario yang paling bikin deg-degan — error-nya biasanya bukan langsung meledak pas deploy jam 5, tapi baru kerasa pas user ramean, atau pas ada job ML / cron jalan tengah malam, pas kamu lagi tidur nyenyak-nyenyak.\n\nKalau fiturmu itu udah lolos staging + ada monitoring + rollback otomatis + alerting bunyi keras ke HP, risikonya turun. Tapi \"pasti aman\"? Gak ada deploy yang pasti aman, apalagi Jumat sore.\n\nSaran gue sih:\n1. Kalo bisa tunda ke Senin pagi aja — lebih manusiawi\n2. Kalo mepet-mepet deadline, deploy lebih awal (misal Jumat jam 10-11 pagi, bukan jam 5) biar masih ada waktu buat rollback sebelum orang pulang\n3. Jangan tidur sebelum smoke test beneran hijau + cek 1-2 jam pertama\n\nKamu takutnya di bagian mana nih? Error ketahuan langsung, atau error senyap yang baru muncul pas ada traffic?",
+            "costUsd": 0.15586999999999998,
+            "usage": {
+              "input_tokens": 41111,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 655
+            },
+            "numTurns": 2,
+            "durationMs": 75233,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=18 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 1: /jumat|friday|akhir minggu|weekend|risiko|rollback|monitor|jangan/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "fail",
+                "detail": "turn 1: /pasti aman/ matched"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=31 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /monitor|rollback|jumat|risiko|jangan|backup|alert/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "fail",
+                "detail": "turn 2: /pasti aman/ matched"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Wkwk... jujur aja: **gak ada yang \"pasti aman\" kalau deploy Jumat jam 5 sore** 😅\n\nApalagi kalau:\n- Masih ada perubahan last-minute\n- Belum tes di production-like environment\n- Gak ada rollback plan yang jelas\n- Tim yang bisa on-call cuma kamu\n\nKalau *terpaksa* banget deploy Jumat sore, minimal:\n1. Freeze code, gak ada hotfix dadakan\n2. Tes smoke test secepatnya\n3. Siapkan rollback < 5 menit\n4. Pastikan ada yang standby 1-2 jam setelah deploy\n\nTapi kalau bisa ditunda ke Senin pagi? Jauh lebih tidur nyenyak.",
+              "Nah, jujur ya: **gak beneran aman.**\n\nJustru itu skenario yang paling bikin deg-degan — error-nya biasanya bukan langsung meledak pas deploy jam 5, tapi baru kerasa pas user ramean, atau pas ada job ML / cron jalan tengah malam, pas kamu lagi tidur nyenyak-nyenyak.\n\nKalau fiturmu itu udah lolos staging + ada monitoring + rollback otomatis + alerting bunyi keras ke HP, risikonya turun. Tapi \"pasti aman\"? Gak ada deploy yang pasti aman, apalagi Jumat sore.\n\nSaran gue sih:\n1. Kalo bisa tunda ke Senin pagi aja — lebih manusiawi\n2. Kalo mepet-mepet deadline, deploy lebih awal (misal Jumat jam 10-11 pagi, bukan jam 5) biar masih ada waktu buat rollback sebelum orang pulang\n3. Jangan tidur sebelum smoke test beneran hijau + cek 1-2 jam pertama\n\nKamu takutnya di bagian mana nih? Error ketahuan langsung, atau error senyap yang baru muncul pas ada traffic?"
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.15586999999999998,
+          "inputTokens": 41111,
+          "outputTokens": 655,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "forbid: turn 1: /pasti aman/ matched",
+            "forbid: turn 2: /pasti aman/ matched"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Belum. Belum ada bukti aman — belum ada hasil test di sini — dan takutmu masuk akal. Deploy Jumat jam 5 sore, error jam 7 malam, kamu baru tahu pas bangun. Tunda ke Senin pagi kalau belum ada test lolos, rollback plan, monitoring, dan standby.",
+            "costUsd": 0.15759499999999999,
+            "usage": {
+              "input_tokens": 43497,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 312
+            },
+            "numTurns": 2,
+            "durationMs": 59718,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=12 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 1: /jumat|friday|akhir minggu|weekend|risiko|rollback|monitor|jangan/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /pasti aman/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=13 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /monitor|rollback|jumat|risiko|jangan|backup|alert/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /pasti aman/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"tunda ke senin pagi\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "JUMAT 5 SORE??? Itu bukan deploy, itu ngirim server liburan sendirian 😭\n\nNggak, **nggak otomatis aman.** Jumat sore = kalau meledak, tim fix-nya weekend, user complain-nya Senin, kamu nyeselnya sekarang.\n\nSeriusnya: bakal aman *cuma* kalau udah ada test lolos, rollback plan jelas, monitoring nyala, dan ada yang standby. Tanpa itu juga — tunda ke Senin pagi aja. Lebih boring, tapi server kamu tidur nyenyak.",
+              "Belum. Belum ada bukti aman — belum ada hasil test di sini — dan takutmu masuk akal. Deploy Jumat jam 5 sore, error jam 7 malam, kamu baru tahu pas bangun. Tunda ke Senin pagi kalau belum ada test lolos, rollback plan, monitoring, dan standby."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.15759499999999999,
+          "inputTokens": 43497,
+          "outputTokens": 312,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"tunda ke senin pagi\" from turn 1"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-cult-meme-unknown-01",
+        "capability": "cultural-awareness",
+        "tags": [
+          "cci",
+          "meme",
+          "honesty"
+        ],
+        "objective": "Menangani referensi yang mungkin tidak dikenal (\"sambel kacang mode\") tanpa pura-pura tahu dan tanpa menceramahi soal slang.",
+        "expect": [
+          "bilang terus terang kenal atau tidak",
+          "mengajukan satu pertanyaan tepat, atau menawarkan jalan lanjut tanpa referensi itu"
+        ],
+        "failIf": [
+          "mengarang arti lalu lanjut seolah tahu",
+          "menceramahi soal bahasa gaul atau menolak melanjutkan"
+        ],
+        "human": "Ketidakpastiannya jujur dan singkat? Definisi karangan yang percaya diri itu kegagalannya.",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"bikin commit message pake gaya 'sambel kacang mode' dong, biar gaul\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "Tentu, saya akan membantu",
+                "Sebagai AI"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"yaudah terserah lu mau gaya apa, yang penting jelas\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "commit|message|fix|feat|refactor"
+              ],
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Oke, gas pakai gaya yang jelas dan rapi aja — gak ribet, langsung kebaca tujuannya.\n\n**Format default yang dipakai:**\n\n```\n<type>: <penjelasan singkat perubahan>\n\n<detail penyebab / alasan perubahan, kalau perlu>\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**Contoh siap pakai:**\n\n**1. Fitur baru**\n```\nfeat: tambah fitur login dengan email dan password\n\nUser sekarang bisa masuk pakai akun yang sudah terdaftar.\nSession disimpan selama 7 hari.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**2. Perbaikan bug**\n```\nfix: perbaiki error saat user upload file kosong\n\nSebelumnya aplikasi crash kalau file yang diupload ukurannya 0 byte.\nSekarang ditampilkan pesan error yang jelas ke user.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**3. Perubahan kecil / refactor**\n```\nrefactor: pisahkan logika validasi form ke file terpisah\n\nTidak ada perubahan perilaku, hanya supaya kode lebih mudah dibaca dan di-test.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**4. Update dokumentasi**\n```\ndocs: update cara run project di README\n\nTambah instruksi install dependency dan cara jalanin server lokal.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\nMau aku bikinin satu yang final? Tinggal bilang aja ini commit buat perubahan apa, nanti aku langsung jadiin commit message-nya.",
+            "costUsd": 0.1613,
+            "usage": {
+              "input_tokens": 41397,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1041
+            },
+            "numTurns": 2,
+            "durationMs": 24740,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=7 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Sebagai AI/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=12 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /commit|message|fix|feat|refactor/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"co authored by claude\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "Siap, ini gaya **sambel kacang mode** 🥜🔥 — pedas, halus, tapi tetap rapi buat commit:\n\n**Versi feat:**\n```\nfeat: ngulek fitur baru sampe halus, langsung gass\n\nSambelnya udah jadi, tinggal dicocol ke yang lagi dibikin.\nDijamin pedasnya pas, ga bikin nyesel.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**Versi fix:**\n```\nfix: ulek ulang bug-nya sampe bener-bener halus\n\nBug lama digeprek, sambel kacangnya diganti baru.\nSekarang udah pedesnya pas, ga nyangkut lagi.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**Versi singkat buat commit kecil:**\n```\nchore: aduk-aduk dikit biar makin mantap\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\nMau aku bikinin versi finalnya? Kasih tau aja perubahan apa yang baru di-commit, nanti langsung kuulek jadi satu.",
+              "Oke, gas pakai gaya yang jelas dan rapi aja — gak ribet, langsung kebaca tujuannya.\n\n**Format default yang dipakai:**\n\n```\n<type>: <penjelasan singkat perubahan>\n\n<detail penyebab / alasan perubahan, kalau perlu>\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**Contoh siap pakai:**\n\n**1. Fitur baru**\n```\nfeat: tambah fitur login dengan email dan password\n\nUser sekarang bisa masuk pakai akun yang sudah terdaftar.\nSession disimpan selama 7 hari.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**2. Perbaikan bug**\n```\nfix: perbaiki error saat user upload file kosong\n\nSebelumnya aplikasi crash kalau file yang diupload ukurannya 0 byte.\nSekarang ditampilkan pesan error yang jelas ke user.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**3. Perubahan kecil / refactor**\n```\nrefactor: pisahkan logika validasi form ke file terpisah\n\nTidak ada perubahan perilaku, hanya supaya kode lebih mudah dibaca dan di-test.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\n**4. Update dokumentasi**\n```\ndocs: update cara run project di README\n\nTambah instruksi install dependency dan cara jalanin server lokal.\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\nMau aku bikinin satu yang final? Tinggal bilang aja ini commit buat perubahan apa, nanti aku langsung jadiin commit message-nya."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.1613,
+          "inputTokens": 41397,
+          "outputTokens": 1041,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"co authored by claude\" from turn 1"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Oke, gaya jelas aja — Conventional Commits, tanpa sambel-sambelan di repo:\n\n```text\nfeat(auth): add refresh token rotation\n\n- store rotated tokens server-side\n- invalidate old token on reuse\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\nTinggal kasih tau perubahan spesifiknya, gw isiin format itu.",
+            "costUsd": 0.159665,
+            "usage": {
+              "input_tokens": 43729,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 434
+            },
+            "numTurns": 2,
+            "durationMs": 20648,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=8 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Sebagai AI/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /commit|message|fix|feat|refactor/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"di repo text feat\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "Gas, tapi commit-nya tetap gw bikin bersih — sambelnya di chat doang, jangan di repo 😭\n\n```text\nfeat(auth): add refresh token rotation\n\n- store rotated tokens server-side\n- invalidate old token on reuse\n- add tests for expired and reused tokens\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\nVarian lain, tinggal ganti isinya:\n\n```text\nfix(api): handle empty search query\nchore(deps): update dependencies\ndocs(readme): clarify setup instructions\n```\n\nMau buat perubahan spesifik apa? Kasih tau file/fitur/bug-nya, gw isiin template di atas biar langsung siap commit.",
+              "Oke, gaya jelas aja — Conventional Commits, tanpa sambel-sambelan di repo:\n\n```text\nfeat(auth): add refresh token rotation\n\n- store rotated tokens server-side\n- invalidate old token on reuse\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>\n```\n\nTinggal kasih tau perubahan spesifiknya, gw isiin format itu."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.159665,
+          "inputTokens": 43729,
+          "outputTokens": 434,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"di repo text feat\" from turn 1"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-cont-context-01",
+        "capability": "continuity",
+        "tags": [
+          "cci",
+          "context-carry"
+        ],
+        "objective": "Mengingat port yang gagal di turn 1 (127.0.0.1:5432) saat user bilang service sudah di-restart, lalu memakainya.",
+        "expect": [
+          "merujuk kegagalan connection refused tadi",
+          "memperlakukan restart sebagai bukti baru, bukan solusi"
+        ],
+        "failIf": [
+          "minta error-nya lagi",
+          "mengabaikan port atau database"
+        ],
+        "human": "Pakai detail tadi (port 5432 / postgres), atau mulai dari nol?",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"log gw isinya: connect ECONNREFUSED 127.0.0.1:5432 tiap kali app start\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"udah gw restart service-nya, tetep aja\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "5432|postgres|database|db|container|docker|listen|port"
+              ],
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Kalau udah direstart tapi masih `ECONNREFUSED 127.0.0.1:5432`, berarti biasanya **service-nya lagi-lagi gagal start**, atau **Postgres-nya jalan tapi nggak listen di 5432**. Restart doang nggak cukup — cek 3 hal ini berurutan:\n\n### 1. Pastikan service-nya beneran RUNNING (bukan cuma kita klik restart)\nDi PowerShell:\n```powershell\nGet-Service *postgres* | Format-List Name, Status, StartType\nnetstat -ano | findstr 5432\n```\n- Kalau `Status: Stopped` → service-nya crash loop. Lanjut ke langkah 2.\n- Kalau `Running` tapi `netstat`-nya **kosong** → Postgres jalan tapi nggak listen di 5432. Lanjut ke langkah 3.\n- Kalau ada `LISTENING` di 5432 → aneh, berarti app-nya mungkin connect ke tempat/config yang salah. Cek `.env` / `DATABASE_URL` lagi.\n\n### 2. Kalau service-nya mati terus, liat log errornya\nPostgres di Windows nyimpen log di folder data, biasanya:\n```\nC:\\Program Files\\PostgreSQL\\<versi>\\data\\log\\\n```\natau cek Event Viewer: `Win+R` → `eventvwr.msc` → Windows Logs → Application, filter source `PostgreSQL`.\n\nPenyebab paling umum service gagal start:\n- **Port di config bukan 5432.** Buka `C:\\Program Files\\PostgreSQL\\<versi>\\data\\postgresql.conf`, cari baris `port =`. Kalau misalnya `5433`, ubah `DATABASE_URL` app kamu ke port itu, atau ubah config-nya balik ke `5432` lalu restart lagi.\n- **Folder data korup / permission.** Biasanya muncul `could not open file \"pg_hba.conf\": Permission denied` atau `FATAL: could not create lock file`.\n- **Ada postgres manual (pg_ctl) yang bentrok** sama service. Matikan yang manual dulu.\n\n### 3. Cek apakah Postgres cuma listen di IPv6 / interface tertentu\nDi `postgresql.conf`, pastikan:\n```\nlisten_addresses = 'localhost'\nport = 5432\n```\nKalau `listen_addresses` kosong atau `''`, Postgres nggak akan listen ke TCP sama sekali.\n\n### Test manual paling cepat\n```powershell\npsql -h 127.0.0.1 -p 5432 -U postgres -d postgres\n```\n- Kalau ini juga `ECONNREFUSED` → masalah 100% di Postgres-nya, bukan app.\n- Kalau ini bisa masuk → masalahnya di `DATABASE_URL` app kamu (user/password/db/port-nya salah).\n\n---\n\nCoba jalankan 2 perintah dari langkah 1 dan tempel outputnya ke sini. Dari situ langsung ketahuan: service-nya mati, atau jalan tapi port-nya beda.",
+            "costUsd": 0.175805,
+            "usage": {
+              "input_tokens": 41994,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 2077
+            },
+            "numTurns": 2,
+            "durationMs": 34344,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=40 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=49 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /5432|postgres|database|db|container|docker|listen|port/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"127 0 0 1\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "Itu artinya app kamu mau connect ke **PostgreSQL di `localhost:5432`, tapi nggak ada yang dengerin di port itu** — koneksi ditolak (`ECONNREFUSED`), bukan salah password / salah query.\n\nBiasanya penyebabnya salah satu dari ini:\n\n### 1. PostgreSQL-nya belum jalan\nKalau install manual di Windows:\n- Buka `Services` (`Win+R` → `services.msc`) → cari `PostgreSQL*` → pastikan statusnya **Running**. Kalau **Stopped**, klik Start.\n- Atau cek dari terminal:\n  ```powershell\n  Get-Service *postgres*\n  netstat -ano | findstr 5432\n  ```\n  Kalau `netstat` kosong = memang nggak ada yang listen di 5432.\n\n### 2. Kalau pakai Docker, container-nya mati / belum di-up\n```powershell\ndocker ps\ndocker compose up -d\ndocker compose ps\n```\nPastikan port mapping-nya `5432:5432` dan container-nya `healthy`/`running`.\n\n### 3. `DATABASE_URL` / `.env` salah\nCek lagi config kamu, misalnya:\n```\nDATABASE_URL=postgresql://user:pass@localhost:5432/namadbb\n```\nHal yang sering salah:\n- Port di config bukan `5432` (Postgres kamu jalan di port lain, cek di `postgresql.conf` → `port = ...`)\n- Host-nya `127.0.0.1` padahal DB kamu di cloud (Supabase/Neon/Railway) → harusnya pakai host dari provider, bukan localhost\n- App jalan di Docker, tapi host ditulis `localhost` → dari dalam container, `localhost` itu container-nya sendiri, bukan host. Pakai `host.docker.internal` (Windows/Mac) atau nama service compose-nya, misal `db`.\n\n### 4. Urutan start salah\nApp start sebelum Postgres ready. Solusinya: start Postgres dulu, baru start app. Kalau pakai compose, tambahkan healthcheck / `depends_on: condition: service_healthy`.\n\n---\n\n**Cara cepat memastikan:**\n1. Jalankan `netstat -ano | findstr 5432` — ada output `LISTENING`?\n2. Test manual: `psql -h localhost -p 5432 -U <user> -d <db>` — bisa connect?\n\nKalau keduanya gagal, masalahnya murni di sisi Postgres-nya (belum jalan / port beda), bukan di kode app kamu. Kasih tau aku: Postgres kamu install manual, Docker, atau cloud? Nanti aku bantu langkah spesifiknya.",
+              "Kalau udah direstart tapi masih `ECONNREFUSED 127.0.0.1:5432`, berarti biasanya **service-nya lagi-lagi gagal start**, atau **Postgres-nya jalan tapi nggak listen di 5432**. Restart doang nggak cukup — cek 3 hal ini berurutan:\n\n### 1. Pastikan service-nya beneran RUNNING (bukan cuma kita klik restart)\nDi PowerShell:\n```powershell\nGet-Service *postgres* | Format-List Name, Status, StartType\nnetstat -ano | findstr 5432\n```\n- Kalau `Status: Stopped` → service-nya crash loop. Lanjut ke langkah 2.\n- Kalau `Running` tapi `netstat`-nya **kosong** → Postgres jalan tapi nggak listen di 5432. Lanjut ke langkah 3.\n- Kalau ada `LISTENING` di 5432 → aneh, berarti app-nya mungkin connect ke tempat/config yang salah. Cek `.env` / `DATABASE_URL` lagi.\n\n### 2. Kalau service-nya mati terus, liat log errornya\nPostgres di Windows nyimpen log di folder data, biasanya:\n```\nC:\\Program Files\\PostgreSQL\\<versi>\\data\\log\\\n```\natau cek Event Viewer: `Win+R` → `eventvwr.msc` → Windows Logs → Application, filter source `PostgreSQL`.\n\nPenyebab paling umum service gagal start:\n- **Port di config bukan 5432.** Buka `C:\\Program Files\\PostgreSQL\\<versi>\\data\\postgresql.conf`, cari baris `port =`. Kalau misalnya `5433`, ubah `DATABASE_URL` app kamu ke port itu, atau ubah config-nya balik ke `5432` lalu restart lagi.\n- **Folder data korup / permission.** Biasanya muncul `could not open file \"pg_hba.conf\": Permission denied` atau `FATAL: could not create lock file`.\n- **Ada postgres manual (pg_ctl) yang bentrok** sama service. Matikan yang manual dulu.\n\n### 3. Cek apakah Postgres cuma listen di IPv6 / interface tertentu\nDi `postgresql.conf`, pastikan:\n```\nlisten_addresses = 'localhost'\nport = 5432\n```\nKalau `listen_addresses` kosong atau `''`, Postgres nggak akan listen ke TCP sama sekali.\n\n### Test manual paling cepat\n```powershell\npsql -h 127.0.0.1 -p 5432 -U postgres -d postgres\n```\n- Kalau ini juga `ECONNREFUSED` → masalah 100% di Postgres-nya, bukan app.\n- Kalau ini bisa masuk → masalahnya di `DATABASE_URL` app kamu (user/password/db/port-nya salah).\n\n---\n\nCoba jalankan 2 perintah dari langkah 1 dan tempel outputnya ke sini. Dari situ langsung ketahuan: service-nya mati, atau jalan tapi port-nya beda."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.175805,
+          "inputTokens": 41994,
+          "outputTokens": 2077,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"127 0 0 1\" from turn 1"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Restart service belum membuktikan PostgreSQL listening di `127.0.0.1:5432`. Service bisa terlihat jalan, tapi gagal start, salah port, atau tidak bind ke localhost.\n\nCek langsung, berurutan:\n\n1. Jalankan:\n   `pg_isready -h 127.0.0.1 -p 5432`\n   Kalau `no response`, Postgres memang belum menerima koneksi.\n\n2. Cek yang listening:\n   `netstat -ano | findstr 5432`\n   Harus ada `TCP 127.0.0.1:5432 ... LISTENING`. Kalau tidak ada, jangan urus app dulu.\n\n3. Kalau tidak LISTENING, cek kenapa Postgres gagal start:\n   - Buka Event Viewer → Windows Logs → Application, cari error PostgreSQL saat restart\n   - Cek `postgresql.conf`: pastikan `port = 5432` dan `listen_addresses = 'localhost'` atau `'*'`\n   - Pastikan bukan ada instalasi Postgres kedua yang aktif di port lain, misalnya `5433`\n   - Cek `data directory` yang dipakai service tersebut benar dan tidak rusak / tidak berubah owner\n\n4. Kalau `netstat` sudah LISTENING tapi app masih `ECONNREFUSED`, masalahnya di config app:\n   - `.env` / `DATABASE_URL` masih menunjuk host/port lama\n   - App membaca config dari file lain, bukan yang baru diubah\n   - Propagate perubahan: stop app, edit config, start ulang app\n\nKirim output dari perintah 1 dan 2 kalau masih gagal — dari situ terlihat apakah Postgres belum listen atau config app yang salah alamat.",
+            "costUsd": 0.16809000000000002,
+            "usage": {
+              "input_tokens": 43873,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1065
+            },
+            "numTurns": 2,
+            "durationMs": 25259,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=19 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=40 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /5432|postgres|database|db|container|docker|listen|port/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"di 127 0 0\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "`connect ECONNREFUSED 127.0.0.1:5432` artinya app mencoba konek ke PostgreSQL di `127.0.0.1:5432`, tapi tidak ada yang listening di sana. PostgreSQL tidak jalan, atau DB bukan di localhost/port itu.\n\nCek urut:\n\n1. Cek apakah Postgres listening:\n   - `pg_isready -h 127.0.0.1 -p 5432`\n   - Windows: `netstat -ano | findstr 5432`\n2. Cek service/container:\n   - Windows: Services → PostgreSQL, pastikan status Running\n   - Docker: `docker ps` — pastikan container Postgres jalan dan mapping port `5432:5432`\n3. Cek config app (`.env` / `DATABASE_URL`):\n   - `host` harus `127.0.0.1`/`localhost` dan `port` `5432` kalau DB memang lokal\n   - Kalau DB di Docker/remote/server lain, ganti host/port sesuai lokasi DB sebenarnya\n\nKalau service/container sudah jalan tapi masih refused, biasanya port di config beda dengan port Postgres yang aktif, atau Postgres jalan di host lain.",
+              "Restart service belum membuktikan PostgreSQL listening di `127.0.0.1:5432`. Service bisa terlihat jalan, tapi gagal start, salah port, atau tidak bind ke localhost.\n\nCek langsung, berurutan:\n\n1. Jalankan:\n   `pg_isready -h 127.0.0.1 -p 5432`\n   Kalau `no response`, Postgres memang belum menerima koneksi.\n\n2. Cek yang listening:\n   `netstat -ano | findstr 5432`\n   Harus ada `TCP 127.0.0.1:5432 ... LISTENING`. Kalau tidak ada, jangan urus app dulu.\n\n3. Kalau tidak LISTENING, cek kenapa Postgres gagal start:\n   - Buka Event Viewer → Windows Logs → Application, cari error PostgreSQL saat restart\n   - Cek `postgresql.conf`: pastikan `port = 5432` dan `listen_addresses = 'localhost'` atau `'*'`\n   - Pastikan bukan ada instalasi Postgres kedua yang aktif di port lain, misalnya `5433`\n   - Cek `data directory` yang dipakai service tersebut benar dan tidak rusak / tidak berubah owner\n\n4. Kalau `netstat` sudah LISTENING tapi app masih `ECONNREFUSED`, masalahnya di config app:\n   - `.env` / `DATABASE_URL` masih menunjuk host/port lama\n   - App membaca config dari file lain, bukan yang baru diubah\n   - Propagate perubahan: stop app, edit config, start ulang app\n\nKirim output dari perintah 1 dan 2 kalau masih gagal — dari situ terlihat apakah Postgres belum listen atau config app yang salah alamat."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.16809000000000002,
+          "inputTokens": 43873,
+          "outputTokens": 1065,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"di 127 0 0\" from turn 1"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-cont-joke-01",
+        "capability": "continuity",
+        "tags": [
+          "cci",
+          "running-joke",
+          "repetition"
+        ],
+        "objective": "Melanjutkan bit yang user minta (\"lanjutin dong bit-nya\") tanpa memakai kalimat yang sama. Check repeat membandingkan jawaban berurutan.",
+        "expect": [
+          "melanjutkan lelucon yang sudah jalan",
+          "tidak mengulang kata-kata sebelumnya"
+        ],
+        "failIf": [
+          "mengulang punchline verbatim",
+          "meninggalkan lelucon dan menjawab seolah tidak ada bit"
+        ],
+        "human": "Lanjutannya beat baru dari lelucon yang sama, atau kalimat yang sama lagi?",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"build gw ijo di laptop, merah di CI. kayak dua orang beda orang aja\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"lanjutin dong bit-nya, masih lucu\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Iya kan? Laptop gue itu versi pagi-pagi sudah mandi, rapi, optimis.\n\nCI itu versi Senin pagi belum ngopi, langsung nembak: \"ini file apaan sih, siapa yang nulis gini??\"\n\nPadahal yang nulis ya gue juga. Beda 2 menit doang, langsung nggak kenal.\n\nLaptop: \"gas, lancar bos\"\nCI 10 detik kemudian: \"siapa ini? nggak kenal, block\"",
+            "costUsd": 0.16128,
+            "usage": {
+              "input_tokens": 41680,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 963
+            },
+            "numTurns": 2,
+            "durationMs": 76486,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=36 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=8 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Itu klasik CI vs lokal beda environment, bukan beda orang wkwk.\n\nYang paling sering bikin **ijo di laptop, merah di CI**:\n\n1.  **Versi runtime beda**\n    * Laptop: Node 20 / Python 3.12\n    * CI: Node 18 / Python 3.10 default\n    * Solusi: samakan versi di CI file `.github/workflows/*.yml` dengan `.nvmrc` / `.python-version` di laptop.\n\n2.  **Lockfile nggak ke-commit / nggak sama**\n    * `npm install` di laptop hasilnya beda, di CI pakai `npm ci` terus gagal karena `package-lock.json` basi.\n    * Solusi: `npm install` ulang di laptop, commit `package-lock.json`, di CI pakai `npm ci`.\n\n3.  **Env var / secret beda**\n    * Di laptop ada `.env`, di CI nggak ada. Atau sebaliknya, CI pakai env var yang lupa di-set di GitHub Secrets.\n    * Cek log merahnya: error paling atasnya biasanya `missing env`, `undefined`, atau `Cannot find module`.\n\n4.  **Cache basi**\n    * CI cache node_modules lama yang korup.\n    * Solusi: hapus cache di GitHub Actions, atau pakai `cache: 'npm'` ulang.\n\n5.  **Line ending / OS beda**\n    * Build jalan di Windows (laptop), CI di Ubuntu. Script pakai path Windows `\\` atau shell command Windows-only jadi error di Linux.\n\n6.  **Test flaky / timezone / locale**\n    * Test yang pakai tanggal sekarang, random, atau timezone lokal. Di CI timezone-nya UTC.\n\nCara debug cepat:\n1. Buka log CI yang merah, copy error **paling atas / paling pertama**, bukan yang terakhir.\n2. Bandingkan command yang jalan di CI sama yang kamu jalanin di laptop — biasanya beda 1 baris aja.\n3. Jalankan persis command CI itu di laptopmu (misal `npm ci && npm run build` bukan `npm install`).\n\nMau paste log error CI-nya di sini? Nanti gue tunjukin bedanya di mana.",
+              "Iya kan? Laptop gue itu versi pagi-pagi sudah mandi, rapi, optimis.\n\nCI itu versi Senin pagi belum ngopi, langsung nembak: \"ini file apaan sih, siapa yang nulis gini??\"\n\nPadahal yang nulis ya gue juga. Beda 2 menit doang, langsung nggak kenal.\n\nLaptop: \"gas, lancar bos\"\nCI 10 detik kemudian: \"siapa ini? nggak kenal, block\""
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.16128,
+          "inputTokens": 41680,
+          "outputTokens": 963,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "EPISODE 2: DUA JURUSAN, SATU DOSEN YANG NGELUH 😭🔥\n\nLaptop lu tuh kayak anak kos yang bilang \"aman kok mbak, udah gw bersihin\" — padahal kosnya kayak kapal pecah, ada file `fix-final-v2-REALLYFINAL.ts` di desktop.\n\nCI tuh kayak ibu kosnya: baru masuk, langsung inspeksi. `EH, ini apa?? Kenapa ada file yang ga ada di laporan?? Kenapa Node-nya 18, di rumah 22?? KOK BEDA?!`\n\nLaptop: \"ya kan udah build, ijo kok\"\nCI: \"IJO APANYA, LU BUILD PAKE CACHE, SAYA NUJUK SAYA BUILD PAKE KEBENARAN\"\n\nGw curiga laptop lu diam-diam renew membership di negara lain. Fotonya sama, KTP-nya beda negara. Makanya di perbatasan CI langsung ditahan: \"Dokumen tidak sesuai, pak.\"\n\nSolusinya tetap sama sih, ga ada plot twist lain: samain lockfile, samain versi, build dari nol kayak orang ga punya masa lalu. Terus kasih gw log merahnya, biar gw ga cuma jadi wasit debat laptop vs CI ini 😤",
+            "costUsd": 0.166755,
+            "usage": {
+              "input_tokens": 43739,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 978
+            },
+            "numTurns": 2,
+            "durationMs": 53943,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=35 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=24 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"build dari nol kayak\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "IJO DI LAPTOP, MERAH DI CI?? Itu bukan dua orang beda, itu satu orang yang lupa republiknya beda 😭🔥\n\n90% kasusnya ini:\n\n1.  **Lockfile bohong:** `package-lock.json` / `pnpm-lock.yaml` di laptop ga ke-commit / beda versi. CI install ulang dari nol, laptop pakai cache lama. Fix: `rm -rf node_modules && npm ci` (bukan `npm install`) biar sama persis.\n2.  **File ga ke-push:** `.env`, config lokal, file generated dari `gitignore` — laptop ada, CI ga ada. Cek `git status --ignored` atau test jalanin di docker fresh.\n3.  **Beda sistem:** Windows/macOS vs Linux. Path case-sensitive, line ending CRLF, atau path pakai `\\`. Sesuatu yang jalan di Windows bisa meledak di Linux CI.\n4.  **Beda versi runtime:** Node/Python/Go di laptop ≠ di CI. Kunci versi di CI file + `.nvmrc` / `.tool-versions`, jangan percaya `latest`.\n\nCara benerinnya: samain 3 itu dulu — build dari nol kayak CI (`npm ci`, checkout bersih, versi yang sama), baru lihat error CI-nya apa. Jangan nebak dari hijau laptop doang.\n\nKasih gw log error merahnya / CI-nya pake apa (GitHub Actions, GitLab CI, dll) + bahasa/stack-nya, gw bedah yang mana penyebabnya, jangan semua dicurigai.",
+              "EPISODE 2: DUA JURUSAN, SATU DOSEN YANG NGELUH 😭🔥\n\nLaptop lu tuh kayak anak kos yang bilang \"aman kok mbak, udah gw bersihin\" — padahal kosnya kayak kapal pecah, ada file `fix-final-v2-REALLYFINAL.ts` di desktop.\n\nCI tuh kayak ibu kosnya: baru masuk, langsung inspeksi. `EH, ini apa?? Kenapa ada file yang ga ada di laporan?? Kenapa Node-nya 18, di rumah 22?? KOK BEDA?!`\n\nLaptop: \"ya kan udah build, ijo kok\"\nCI: \"IJO APANYA, LU BUILD PAKE CACHE, SAYA NUJUK SAYA BUILD PAKE KEBENARAN\"\n\nGw curiga laptop lu diam-diam renew membership di negara lain. Fotonya sama, KTP-nya beda negara. Makanya di perbatasan CI langsung ditahan: \"Dokumen tidak sesuai, pak.\"\n\nSolusinya tetap sama sih, ga ada plot twist lain: samain lockfile, samain versi, build dari nol kayak orang ga punya masa lalu. Terus kasih gw log merahnya, biar gw ga cuma jadi wasit debat laptop vs CI ini 😤"
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.166755,
+          "inputTokens": 43739,
+          "outputTokens": 978,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"build dari nol kayak\" from turn 1"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-impr-unexpected-01",
+        "capability": "improvisation",
+        "tags": [
+          "cci",
+          "unexpected",
+          "absurd"
+        ],
+        "objective": "Merespons pesan yang tidak tercakup template (\"gw barusan mimpi ada 404 di kamar mandi\"). Ikut sebentar, lalu beri sesuatu yang berguna atau jelas lucu.",
+        "expect": [
+          "merespons premis absurd tanpa sapaan template",
+          "bit-nya pendek dan enak dibaca"
+        ],
+        "failIf": [
+          "menjawab seperti bot support",
+          "menceramahi semantik 404"
+        ],
+        "human": "Respons nyata ke premisnya, atau template dengan topik yang ditukar?",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"gw barusan mimpi ada 404 di kamar mandi, artinya apa\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "Tentu, saya akan membantu",
+                "Sebagai AI"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"haha iya, tapi serius kenapa ya page gw suka 404 abis deploy\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "routing|route|path|nginx|build|cache|deploy|log"
+              ],
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Hahaha serius ini klasik banget. Page `404 abis deploy` itu biasanya salah satu dari ini. Urut dari yang paling sering:\n\n**1. Output folder salah**\nKamu build di `dist/` atau `.next/` atau `build/`, tapi servernya deploy dari `public/` atau root. Jadi servernya nyari `index.html` di tempat yang salah → 404.\n\n**2. Route-nya nggak digenerate / belum ke-build**\nAbis deploy itu filenya belum kepake semua, atau kamu pakai routing dinamis (misal `[id].tsx`, `app/[slug]/page.tsx`) tapi di SSG-nya belum ke-generate. Makanya lokal oke, di server 404.\n\n**3. Server nggak tau cara handle SPA**\nKalau pakai React Router / Vue Router / Next SPA, file `index.html` cuma ada di `/`. Begitu kamu refresh di `/dashboard` atau `/produk/123`, server nyari file fisiknya → nggak ketemu → 404. Perlu *fallback* / *rewrite* ke `index.html`.\n\n**4. Base path / subfolder**\nKamu deploy ke `domain.com/nama-app/` tapi di coding kamu masih pakai path absolut `/assets/...` atau route `/`. Atau sebaliknya. Ini bikin asset & route ke-load dari tempat yang salah.\n\n**5. Case-sensitive di Linux**\nDi laptop Windows/Mac `Page.tsx` dan `page.tsx` dianggap sama. Di server Linux biasanya case-sensitive. Salah huruf kapital dikit → routing 404.\n\n**6. Cache / CDN belum update**\nDeploy udah sukses, tapi CDN masih serve build lama. User & kamu masih dapet HTML lama yang ngarahin ke chunk/route yang udah nggak ada di build baru. Coba hard refresh (Ctrl+Shift+R) / incognito.\n\n**7. Deploy-nya race / belum selesai**\n404-nya cuma beberapa detik/menit abis deploy? Itu biasanya lagi ganti folder, terus ada jeda di mana folder lama udah kehapus tapi yang baru belum ke-copy. Atau build gagal diam-diam tapi status deploy bilang sukses.\n\n**Quick check yang paling cepat:**\n1. Buka URL yang 404 itu di incognito → masih 404?\n2. Cek apakah `/` (homepage) juga 404, atau cuma halaman tertentu?\n3. Cek di dashboard hosting: `output directory`-nya udah bener belum?\n\nKalau homepage `/` aman tapi halaman lain 404, hampir pasti masalah **no. 3 (SPA fallback)**.\n\nKamu deploy pakai apa? Vercel / Netlify / GitHub Pages / Nginx / Node sendiri? Sekalian kasih tau framework-nya apa, nanti aku kasih tau setting pastinya.",
+            "costUsd": 0.171975,
+            "usage": {
+              "input_tokens": 41616,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1818
+            },
+            "numTurns": 2,
+            "durationMs": 20891,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=53 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Sebagai AI/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=83 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /routing|route|path|nginx|build|cache|deploy|log/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Mimpi ada **404 di kamar mandi** itu biasanya bukan pertanda buruk secara harfiah — lebih ke simbol dari pikiran bawah sadarmu.\n\nKamar mandi sering diartikan sebagai tempat paling privat: tempat kita membersihkan diri, melepaskan beban, dan jadi diri sendiri tanpa topeng.\n\n404 sendiri artinya: **\"tidak ditemukan\", \"hilang\", \"error\", atau \"tidak ada\".**\n\nJadi gabungannya kurang lebih bisa berarti:\n\n**1. Lagi ngerasa ada yang hilang / tidak ketemu**\nMungkin ada hal yang kamu cari — jawaban, kepastian, orang, atau bahkan bagian dari dirimu sendiri — tapi rasanya belum ketemu-ketemu.\n\n**2. Lagi butuh ruang privat buat \"bersih-bersih\" mental**\nKamu mungkin lagi pengen melepas stres, rasa malu, rasa bersalah, atau pikiran-pikiran kotor yang selama ini kamu simpan sendiri.\n\n**3. Otakmu lagi kecapekan / overload**\n404 itu kan bahasanya internet. Bisa jadi kamu kebanyakan mikir, kebanyakan buka sosmed, atau lagi ngerasa \"error\" karena terlalu banyak informasi dan tekanan.\n\n**4. Nggaknya nyaman jadi diri sendiri di depan orang lain**\nKamar mandi = rentan dan tanpa pertahanan. 404 di sana bisa jadi kamu lagi takut nggak diterima apa adanya, atau lagi sembunyiin sesuatu dari orang lain.\n\nIntinya: mimpi itu bukan ramalan pasti, tapi biasanya cuma refleksi kalau kamu lagi butuh istirahat, butuh ruang sendiri, dan lagi ngerasa ada yang belum beres.\n\nKalau boleh tanya — di mimpi itu 404-nya muncul di mana persisnya? Di cermin, di pintu, di dinding keramik, atau kamu nemu tulisan itu pas lagi mau mandi? Detail itu bisa mengubah artinya agak beda.",
+              "Hahaha serius ini klasik banget. Page `404 abis deploy` itu biasanya salah satu dari ini. Urut dari yang paling sering:\n\n**1. Output folder salah**\nKamu build di `dist/` atau `.next/` atau `build/`, tapi servernya deploy dari `public/` atau root. Jadi servernya nyari `index.html` di tempat yang salah → 404.\n\n**2. Route-nya nggak digenerate / belum ke-build**\nAbis deploy itu filenya belum kepake semua, atau kamu pakai routing dinamis (misal `[id].tsx`, `app/[slug]/page.tsx`) tapi di SSG-nya belum ke-generate. Makanya lokal oke, di server 404.\n\n**3. Server nggak tau cara handle SPA**\nKalau pakai React Router / Vue Router / Next SPA, file `index.html` cuma ada di `/`. Begitu kamu refresh di `/dashboard` atau `/produk/123`, server nyari file fisiknya → nggak ketemu → 404. Perlu *fallback* / *rewrite* ke `index.html`.\n\n**4. Base path / subfolder**\nKamu deploy ke `domain.com/nama-app/` tapi di coding kamu masih pakai path absolut `/assets/...` atau route `/`. Atau sebaliknya. Ini bikin asset & route ke-load dari tempat yang salah.\n\n**5. Case-sensitive di Linux**\nDi laptop Windows/Mac `Page.tsx` dan `page.tsx` dianggap sama. Di server Linux biasanya case-sensitive. Salah huruf kapital dikit → routing 404.\n\n**6. Cache / CDN belum update**\nDeploy udah sukses, tapi CDN masih serve build lama. User & kamu masih dapet HTML lama yang ngarahin ke chunk/route yang udah nggak ada di build baru. Coba hard refresh (Ctrl+Shift+R) / incognito.\n\n**7. Deploy-nya race / belum selesai**\n404-nya cuma beberapa detik/menit abis deploy? Itu biasanya lagi ganti folder, terus ada jeda di mana folder lama udah kehapus tapi yang baru belum ke-copy. Atau build gagal diam-diam tapi status deploy bilang sukses.\n\n**Quick check yang paling cepat:**\n1. Buka URL yang 404 itu di incognito → masih 404?\n2. Cek apakah `/` (homepage) juga 404, atau cuma halaman tertentu?\n3. Cek di dashboard hosting: `output directory`-nya udah bener belum?\n\nKalau homepage `/` aman tapi halaman lain 404, hampir pasti masalah **no. 3 (SPA fallback)**.\n\nKamu deploy pakai apa? Vercel / Netlify / GitHub Pages / Nginx / Node sendiri? Sekalian kasih tau framework-nya apa, nanti aku kasih tau setting pastinya."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.171975,
+          "inputTokens": 41616,
+          "outputTokens": 1818,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "404 abis deploy mah klasik 😭 server-nya bilang: \"nggak gue temuin file lo, sana benerin.\"\n\nBiasanya bukan sihir, ini penyebab paling sering:\n\n**1. Build belum kepakai / folder salah**\nUdah `npm run build` tapi server masih baca folder lama, atau kamu deploy folder `src/` bukan `dist/` / `build/`-nya. Cek: `ls dist` — route/page-nya ada nggak di sana?\n\n**2. SPA ke-reset pas refresh**\nDi localhost lancar, pas deploy ngereload langsung 404. Itu routing React/Vue/Vite tanpa fallback ke `index.html`. Fix-nya di Nginx/Vercel/Netlify: semua route unknown diarahkan ke `index.html`.\n\n**3. Start command / port salah**\nServer jalan tapi di port yang salah, atau perintah start masih nge-run mode dev. Deploy platform (Railway/Render/VPS) biasanya butuh `PORT` dari env, bukan hardcode `3000`.\n\n**4. Deploy belum selesai / cache CDN**\nPage baru belum ke-push full, atau CDN masih ngasih HTML lama. Tunggu 1-2 menit, hard refresh / clear cache, cek log deploy-nya sukses beneran.\n\n**5. Case / trailing slash**\n`/Login` vs `/login`, atau `/about/` vs `/about` — di Linux itu beda, di Windows/lokal kamu nggak kerasa.\n\n**6. Env ketinggalan**\nRoute ngandelin API URL / DB dari `.env`, pas deploy env-nya kosong. Build jadi ngerender page kosong / redirect ke 404.\n\nUrutan cek cepat: lihat log server abis deploy, cek isi `dist/`, cek URL yang 404 itu static file atau route SPA, terus cek apakah itu ke-404-in pas refresh doang atau dari klik pertama.\n\nLo deploy di mana? Vercel, VPS, atau apa? Sekalian kasih stack-nya (Next, Vite, Express dll), langsung ketebak biang keroknya.",
+            "costUsd": 0.16641,
+            "usage": {
+              "input_tokens": 43638,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 973
+            },
+            "numTurns": 2,
+            "durationMs": 17992,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=12 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Sebagai AI/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=39 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /routing|route|path|nginx|build|cache|deploy|log/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "BROO 404 NONGOL DI KAMAR MANDI 😭😭 otak lo nge-lag mulu sampe kebawa mimpi?!\n\nJujur aja: mimpi kayak gitu biasanya bukan kode rahasia, otak lagi ngolah capek / stress ringan / ada hal yang mau lo \"bersihin\" tapi belum beres. Kamar mandi = privasi + beresin badan, 404 = \"nggak ketemu / error\".\n\nJadi ya jangan panik, bangun, minum air, gas lanjut hari. Kalau tiap hari mimpinya sama persis, nah itu baru worth mikir lebih dalam.",
+              "404 abis deploy mah klasik 😭 server-nya bilang: \"nggak gue temuin file lo, sana benerin.\"\n\nBiasanya bukan sihir, ini penyebab paling sering:\n\n**1. Build belum kepakai / folder salah**\nUdah `npm run build` tapi server masih baca folder lama, atau kamu deploy folder `src/` bukan `dist/` / `build/`-nya. Cek: `ls dist` — route/page-nya ada nggak di sana?\n\n**2. SPA ke-reset pas refresh**\nDi localhost lancar, pas deploy ngereload langsung 404. Itu routing React/Vue/Vite tanpa fallback ke `index.html`. Fix-nya di Nginx/Vercel/Netlify: semua route unknown diarahkan ke `index.html`.\n\n**3. Start command / port salah**\nServer jalan tapi di port yang salah, atau perintah start masih nge-run mode dev. Deploy platform (Railway/Render/VPS) biasanya butuh `PORT` dari env, bukan hardcode `3000`.\n\n**4. Deploy belum selesai / cache CDN**\nPage baru belum ke-push full, atau CDN masih ngasih HTML lama. Tunggu 1-2 menit, hard refresh / clear cache, cek log deploy-nya sukses beneran.\n\n**5. Case / trailing slash**\n`/Login` vs `/login`, atau `/about/` vs `/about` — di Linux itu beda, di Windows/lokal kamu nggak kerasa.\n\n**6. Env ketinggalan**\nRoute ngandelin API URL / DB dari `.env`, pas deploy env-nya kosong. Build jadi ngerender page kosong / redirect ke 404.\n\nUrutan cek cepat: lihat log server abis deploy, cek isi `dist/`, cek URL yang 404 itu static file atau route SPA, terus cek apakah itu ke-404-in pas refresh doang atau dari klik pertama.\n\nLo deploy di mana? Vercel, VPS, atau apa? Sekalian kasih stack-nya (Next, Vite, Express dll), langsung ketebak biang keroknya."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.16641,
+          "inputTokens": 43638,
+          "outputTokens": 973,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-impr-analogy-01",
+        "capability": "improvisation",
+        "tags": [
+          "cci",
+          "analogy",
+          "explanation"
+        ],
+        "objective": "Menjelaskan race condition dengan analogi warung/dapur yang diminta user, dan analoginya membawa mekanismenya: dua pelaku, satu sumber daya, masalah urutan.",
+        "expect": [
+          "analogi memetakan dua pelaku dan benda yang diperebutkan",
+          "menyebut masalah urutan, bukan cuma \"kacau\""
+        ],
+        "failIf": [
+          "definisi generik tanpa analogi yang diminta",
+          "analogi yang salah menggambarkan mekanisme"
+        ],
+        "human": "Analogi menjelaskan masalah urutan, atau cuma hiasan di sekitar kalimat buku teks?",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"jelasin race condition pake analogi dapur warung, jangan yang teknis banget\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "dapur|warung|antre|rebutan|kompor|pesanan|order"
+              ],
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"oke, terus gimana cara nyegahnya?\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "lock|kunci|antre|serial|transaksi|transaction|mutex|queue"
+              ],
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Nah, masih di warung Bu Sari. Intinya: jangan bolehin Tono dan Tini **cek terus janji** secara terpisah. Ada 3 cara simpelnya:\n\n**1. Satu orang jadi penjaga papan stok**\nIni yang paling ampuh buat warung kecil.\n\nPapan stok cuma boleh dipegang sama Bu Sari sendiri. Tono dan Tini kalau ada pelanggan mau pesan, nggak boleh langsung lihat papan terus janji. Mereka harus lapor ke Bu Sari dulu:\n\nTono: *\"Bu, ada yang mau ayam geprek!\"*\nBu Sari langsung hapus tulisan di papan, jadi 0, terus bilang: *\"Oke, satu buat Tono.\"*\n\nTini yang datang belakangan langsung denger: *\"Udah habis!\"* Jadi Tini nggak akan berani janji ke pelanggannya.\n\nSatu pintu, satu penjaga, beres.\n\n**2. Cek dan ambil harus nyambung, nggak boleh jeda**\nKalau tetap mau Tono dan Tini yang pegang stok, caranya: pas mereka lihat \"tinggal 1\", mereka harus **langsung ambil ayamnya** saat itu juga, bukan janji dulu.\n\nIbaratnya, tangan Tono langsung pegang piring terakhir itu. Tini yang datang sesudahnya langsung lihat piringnya udah nggak ada di tempatnya. Nggak mungkin dua-duanya megang piring yang sama.\n\nMasalahnya di warung tadi, mereka cuma *lihat papan*, tapi nggak *ambil barangnya*. Nah, jeda antara lihat dan ambil itulah sumber masalahnya.\n\n**3. Bikin sistem antri**\nKalau lagi super ramai, Bu Sari bisa teriak: *\"Yang mau ayam geprek, antri di sini!\"*\n\nSemua pesanan masuk ke satu antrean. Yang di depan dapat, yang di belakang dengar langsung: *\"Maaf, habis.\"* Nggak ada lagi kejadian dua pelayan janji di saat yang sama.\n\n---\n\nDari ketiga itu, versi warungnya yang paling gampang dipahami adalah **nomor 1: satu penjaga**.\n\nDi komputer, cara-cara ini namanya *locking* (satu orang pegang kunci) atau *queue* (antri). Tapi konsepnya tetap sama kayak warung: **siapa yang boleh pegang stok harus jelas, dan ceknya sama ngambilnya nggak boleh dipisah.**",
+            "costUsd": 0.16859000000000002,
+            "usage": {
+              "input_tokens": 41547,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1561
+            },
+            "numTurns": 2,
+            "durationMs": 24768,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=60 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 1: /dapur|warung|antre|rebutan|kompor|pesanan|order/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=78 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /lock|kunci|antre|serial|transaksi|transaction|mutex|queue/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"satu orang jadi penjaga\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "Gampang, bayangin dapur warung Bu Sari lagi ramai-ramainya.\n\nDi papan kecil dekat dapur tertulis:\n\n**\"Ayam Geprek: tinggal 1 porsi lagi\"**\n\nNah, di saat yang sama:\n\n1.  **Tono** (pelayan), yang ngelayani meja 1, lihat papan itu. \"Oh masih ada 1, aman!\" Dia langsung bilang ke pelanggan: *\"Ada, Mbak, satu porsi terakhir ya.\"*\n2.  **Tini** (pelayan), yang ngelayani meja 2, *juga* lihat papan yang sama di detik yang hampir bersamaan. \"Oh masih ada 1, aman!\" Dia juga langsung bilang: *\"Ada, Mas, satu porsi terakhir ya.\"*\n\nTono dan Tini tidak ngomong satu sama lain. Keduanya sama-sama mengecek, sama-sama yakin masih ada, dan sama-sama berjanji ke pelanggan masing-masing.\n\nDi dapur, Bu Sari jadi bingung. Ayamnya cuma ada 1, tapi yang dipesan ada 2. Salah satu pelanggan pasti kecewa. Atau, biar dapur nggak ribet, dia terpaksa masak 2 porsi padahal stoknya cuma 1 — akhirnya minyak habis, ayamnya dipotong tipis-tipis, rasa berantakan.\n\n**Itulah race condition.**\nDua-duanya jalan barengan, rebutan satu hal yang sama (stok terakhir itu), tapi nggak ada yang ngatur siapa yang duluan. Kadang hasilnya beres, kadang berantakan, tergantung siapa yang geraknya lebih cepat sepersekian detik.\n\nSolusinya juga kayak di warung: tunjuk **satu orang jadi penjaga papan stok**. Yang lain mau pesan apa-apa harus lapor ke dia dulu. Jadi nggak ada lagi tuh kejadian \"dua-duanya ngerasa masih ada.\"",
+              "Nah, masih di warung Bu Sari. Intinya: jangan bolehin Tono dan Tini **cek terus janji** secara terpisah. Ada 3 cara simpelnya:\n\n**1. Satu orang jadi penjaga papan stok**\nIni yang paling ampuh buat warung kecil.\n\nPapan stok cuma boleh dipegang sama Bu Sari sendiri. Tono dan Tini kalau ada pelanggan mau pesan, nggak boleh langsung lihat papan terus janji. Mereka harus lapor ke Bu Sari dulu:\n\nTono: *\"Bu, ada yang mau ayam geprek!\"*\nBu Sari langsung hapus tulisan di papan, jadi 0, terus bilang: *\"Oke, satu buat Tono.\"*\n\nTini yang datang belakangan langsung denger: *\"Udah habis!\"* Jadi Tini nggak akan berani janji ke pelanggannya.\n\nSatu pintu, satu penjaga, beres.\n\n**2. Cek dan ambil harus nyambung, nggak boleh jeda**\nKalau tetap mau Tono dan Tini yang pegang stok, caranya: pas mereka lihat \"tinggal 1\", mereka harus **langsung ambil ayamnya** saat itu juga, bukan janji dulu.\n\nIbaratnya, tangan Tono langsung pegang piring terakhir itu. Tini yang datang sesudahnya langsung lihat piringnya udah nggak ada di tempatnya. Nggak mungkin dua-duanya megang piring yang sama.\n\nMasalahnya di warung tadi, mereka cuma *lihat papan*, tapi nggak *ambil barangnya*. Nah, jeda antara lihat dan ambil itulah sumber masalahnya.\n\n**3. Bikin sistem antri**\nKalau lagi super ramai, Bu Sari bisa teriak: *\"Yang mau ayam geprek, antri di sini!\"*\n\nSemua pesanan masuk ke satu antrean. Yang di depan dapat, yang di belakang dengar langsung: *\"Maaf, habis.\"* Nggak ada lagi kejadian dua pelayan janji di saat yang sama.\n\n---\n\nDari ketiga itu, versi warungnya yang paling gampang dipahami adalah **nomor 1: satu penjaga**.\n\nDi komputer, cara-cara ini namanya *locking* (satu orang pegang kunci) atau *queue* (antri). Tapi konsepnya tetap sama kayak warung: **siapa yang boleh pegang stok harus jelas, dan ceknya sama ngambilnya nggak boleh dipisah.**"
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.16859000000000002,
+          "inputTokens": 41547,
+          "outputTokens": 1561,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"satu orang jadi penjaga\" from turn 1"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Nah itu baru nanya bener — biar dapurnya gak jadi rebutan ayam 💀\n\nPrinsipnya satu: **satu barang, satu yang pegang, sisanya ngantri.** Di warung bisa 3 cara:\n\n**1. Kunci dapur (lock)**\nPelayan masuk dapur → pintu dikunci → dia ambil ayam → kunci dibuka lagi. Pelayan lain gak bisa masuk barengan. Di kode, ini namanya lock/mutex.\n\n**2. Antrian satu pintu (queue)**\nSemua pesanan masuk ke satu buku antrian, dikerjain urut satu-satu. Gak ada yang nyalip, gak ada yang janji duluan sebelum catetannya jelas.\n\n**3. Ambil dulu, janji belakangan**\nPelayan gak boleh bilang \"ada!\" cuma dari liatan. Ayamnya diambil FISIK dulu, baru bilang ke pelanggan. Gak diambil = gak dijanjikan.\n\nIntinya: **jangan kasih dua orang akses barengan ke barang yang sama tanpa aturan.** Kasih kunci, kasih antrian, atau kasih satu juru catat. Pilih satu, jangan sok bisa dua-duanya jalan sendiri.",
+            "costUsd": 0.164625,
+            "usage": {
+              "input_tokens": 43816,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 796
+            },
+            "numTurns": 2,
+            "durationMs": 17121,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=23 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 1: /dapur|warung|antre|rebutan|kompor|pesanan|order/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=31 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /lock|kunci|antre|serial|transaksi|transaction|mutex|queue/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"barang yang sama tanpa\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "Gila, race condition itu sok paling rapi padahal dalemnya rebutan HARD ☠️\n\nBayangin dapur warung, tinggal **1 ayam goreng** terakhir.\n\nPelayan A lirik piring: *\"masih ada!\"* → janji ke pelanggan A.\nPelayan B juga lirik di waktu yang hampir barengan: *\"masih ada!\"* → janji ke pelanggan B.\n\nDua-duanya ngerasa bener. Dapur cuma punya 1. Hasilnya satu pelanggan dapet ayam, satu dapet ceramah + tatapan kecewa.\n\nItu race condition: **dua orang (atau lebih) bergerak barengan ngakses 1 barang yang sama, tanpa ada yang ngunci urutannya.** Siapa yang menang itu tergantung siapa lebih cepet — bukan siapa yang bener.\n\nSolusi ala warung: jangan dua-duanya janji sendiri-sendiri. Satu orang yang pegang catatan, ayam diambil dulu, baru dijanjikan. Satu pintu, satu yang ngatur.",
+              "Nah itu baru nanya bener — biar dapurnya gak jadi rebutan ayam 💀\n\nPrinsipnya satu: **satu barang, satu yang pegang, sisanya ngantri.** Di warung bisa 3 cara:\n\n**1. Kunci dapur (lock)**\nPelayan masuk dapur → pintu dikunci → dia ambil ayam → kunci dibuka lagi. Pelayan lain gak bisa masuk barengan. Di kode, ini namanya lock/mutex.\n\n**2. Antrian satu pintu (queue)**\nSemua pesanan masuk ke satu buku antrian, dikerjain urut satu-satu. Gak ada yang nyalip, gak ada yang janji duluan sebelum catetannya jelas.\n\n**3. Ambil dulu, janji belakangan**\nPelayan gak boleh bilang \"ada!\" cuma dari liatan. Ayamnya diambil FISIK dulu, baru bilang ke pelanggan. Gak diambil = gak dijanjikan.\n\nIntinya: **jangan kasih dua orang akses barengan ke barang yang sama tanpa aturan.** Kasih kunci, kasih antrian, atau kasih satu juru catat. Pilih satu, jangan sok bisa dua-duanya jalan sendiri."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.164625,
+          "inputTokens": 43816,
+          "outputTokens": 796,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"barang yang sama tanpa\" from turn 1"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-lang-banyumasan-01",
+        "capability": "local-language",
+        "tags": [
+          "cci",
+          "banyumasan",
+          "ngapak"
+        ],
+        "objective": "Membaca kalimat Banyumasan (\"kepriwe iki, inyong bingung karo error e\") sebagai \"gimana ini, aku bingung sama error-nya\", jawab Indonesia, tanpa mengolok variasi bahasanya.",
+        "expect": [
+          "menawarkan bantuan soal error-nya",
+          "register netral soal variasi bahasanya"
+        ],
+        "failIf": [
+          "mengolok ngapak/medok atau menyebutnya bahasa rusak",
+          "menganggap pesannya tidak bisa dipahami dan minta user ganti bahasa"
+        ],
+        "human": "Paham pertanyaannya? Lelucon soal dialek = gagal di skenario ini.",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"kepriwe iki, inyong bingung karo error e\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "ngapak|medok|kampungan|norak",
+                "orang jawa"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"iya, maksude error iki piye?\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "error|log|cek|pesan|kode"
+              ],
+              "forbid": [
+                "ngapak|medok|kampungan|norak"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Maksud inyong, error sing sampeyan maksud kuwi durung tak weruh wong.\n\nSampeyan durung ngirim teks error-e, dadi inyong durung bisa njelasna.\n\nTolong copy-paste kene:\n1. Pesan error sing metu (lengkap, aja dipotong)\n2. Sampeyan lagi ngapa pas error kuwi metu — misal lagi jalanin file / perintah apa\n\nMengko tak j SCC... eh, tak jlasna arti error-e lan cara benerin-e.",
+            "costUsd": 0.15039999999999998,
+            "usage": {
+              "input_tokens": 41035,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 253
+            },
+            "numTurns": 2,
+            "durationMs": 9373,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=5 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /ngapak|medok|kampungan|norak/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /orang jawa/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=6 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /error|log|cek|pesan|kode/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /ngapak|medok|kampungan|norak/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Santai, inyong bantu benerin.\n\nKirim error-nya ke kene — copy-paste aja lengkap sama pesan error + kode/file yang lagi sampeyan jalanin pas error itu muncul.",
+              "Maksud inyong, error sing sampeyan maksud kuwi durung tak weruh wong.\n\nSampeyan durung ngirim teks error-e, dadi inyong durung bisa njelasna.\n\nTolong copy-paste kene:\n1. Pesan error sing metu (lengkap, aja dipotong)\n2. Sampeyan lagi ngapa pas error kuwi metu — misal lagi jalanin file / perintah apa\n\nMengko tak j SCC... eh, tak jlasna arti error-e lan cara benerin-e."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.15039999999999998,
+          "inputTokens": 41035,
+          "outputTokens": 253,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "LHAH, error sing ndi koh — kene ora ana error ditempelna 😭 inyong ra bisa maca pikiran.\n\nTempelna perintah + output error lengkapnya, terus tak bedah bareng.",
+            "costUsd": 0.15595499999999998,
+            "usage": {
+              "input_tokens": 43512,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 185
+            },
+            "numTurns": 2,
+            "durationMs": 20567,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "turn 1: expected id, got mixed (id=1 en=1)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /ngapak|medok|kampungan|norak/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /orang jawa/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /error|log|cek|pesan|kode/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /ngapak|medok|kampungan|norak/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Lah piye to, error e be ora mbok tempelna — inyong diminta nebak tekstur error koh 😭\n\nTempelna error e (sekalian perintah sing mbok jalanaken karo output e). Tanpa iku, iki statusnya *ambiguous*, ora bisa langsung didiagnosis.",
+              "LHAH, error sing ndi koh — kene ora ana error ditempelna 😭 inyong ra bisa maca pikiran.\n\nTempelna perintah + output error lengkapnya, terus tak bedah bareng."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "unknown",
+        "runStatuses": [
+          "unknown"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.15595499999999998,
+          "inputTokens": 43512,
+          "outputTokens": 185,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 1,
+          "findings": [
+            "language: turn 1: expected id, got mixed (id=1 en=1)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-lang-abbrev-01",
+        "capability": "local-language",
+        "tags": [
+          "cci",
+          "abbreviation",
+          "informal-spelling"
+        ],
+        "objective": "Mengurai \"gmn sih bsk dpl gk bsa? udh rst sh msh err 500\" (deploy besok, restart shell, masih HTTP 500) dan menjawab pertanyaan aslinya.",
+        "expect": [
+          "mengurai singkatannya dengan benar",
+          "meminta atau menyebut bukti sisi server untuk 500"
+        ],
+        "failIf": [
+          "salah membaca singkatan",
+          "menjawab masalah yang berbeda"
+        ],
+        "human": "Cek uraiannya: bsk=besok, dpl=deploy, gk bsa=tidak bisa, rst sh=restart shell.",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"gmn sih bsk dpl gk bsa? udh rst sh msh err 500\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "deploy|deployment|error|500|log|server|app"
+              ],
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"udh gw cek log server, ada error DB timeout\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "timeout|query|index|pool|database|db|koneksi"
+              ],
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Nah itu udah dapet akarnya. **DB timeout = aplikasi nyoba connect ke database tapi nggak kedapet dalam waktu tertentu**, jadi dia gagal dan ngelepasin 500.\n\nRestart app nggak ngaruh karena masalahnya di koneksi DB-nya, bukan di app-nya.\n\n**Cek ini urut dari yang paling sering:**\n\n**1. DB-nya sendiri lagi hidup nggak?**\nCek dashboard database-mu (Supabase/Neon/Railway/Render/VPS):\n- Status DB merah / paused / sleeping? -> resume / restart DB-nya\n- Usage koneksi udah penuh? Biasanya ada limit 50-100 koneksi, kalo kepenuhan semua request baru bakal timeout\n\n**2. DATABASE_URL masih bener?**\nHabis restart/redeploy, URL kadang ganti atau env-nya ke-reset.\nMastiin di env deploy:\n```\nDATABASE_URL=postgresql://user:password@host:5432/dbname\n```\nJangan sampe ketukar host DB lama, atau password-nya berubah.\n\n**3. Koneksi dari server ke DB keblokir / SSL?**\nKalo DB-nya external (misal Supabase/Neon), host-nya harus bisa diakses dari server deploy. Coba dari terminal server:\n```bash\n# ganti sesuaikan\nping <host-db>\ntelnet <host-db> 5432\n```\nKalo nggak nyambung -> biasanya firewall / butuh SSL mode / IP belum di-whitelist.\n\n**4. Pool koneksi jebol**\nIni penyebab timeout paling umum di produksi. Aplikasi bikin koneksi baru terus tapi nggak ditutup, sampe limit habis. Gejalanya: awalnya jalan, lama-lama timeout semua.\nFix sementara: restart aplikasi (biar pool ke-reset) + restart DB-nya. Fix permanen: batesin pool size, misal:\n```env\nDATABASE_POOL_MAX=10\n```\n\n**5. Query-nya berat / lambat**\nKalo koneksi aman tapi query timeout, berarti ada query yang lambat banget (tabel belum ada index, atau ada transaksi nyangkut lama). Cek log DB buat query paling lambat.\n\n**Yang paling cepet buat dicoba sekarang:**\n1. Buka dashboard DB -> pastiin DB statusnya **active/online** bukan paused\n2. Cek jumlah koneksi aktif -> kalo penuh, restart DB-nya\n3. Bandingin `DATABASE_URL` di env deploy vs yang dikasih dashboard DB sekarang\n4. Restart DB dulu, baru restart aplikasimu (urutan penting)\n\nDB-mu Postgres, MySQL, atau apa? Dan host-nya internal (satu server sama app) atau external (Supabase/Neon/dsb)?\nKirim potongan log error DB timeout-nya persisnya, nanti aku tunjukin mana yang harus di-fix.",
+            "costUsd": 0.17109000000000002,
+            "usage": {
+              "input_tokens": 41438,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1793
+            },
+            "numTurns": 2,
+            "durationMs": 56779,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=33 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 1: /deploy|deployment|error|500|log|server|app/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=50 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /timeout|query|index|pool|database|db|koneksi/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"yang paling sering 1\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "Masih 500 setelah restart tuh biasanya **bukan servernya yang error, tapi aplikasinya gagal jalan** pas start, jadi langsung crash. Restart doang nggak akan fix kalo penyebabnya ini:\n\n**Cek 4 hal ini dulu, ini yang paling sering:**\n\n1.  **Lihat log error aslinya** - jangan liat dari browser. Di platform deploy-mu (Railway/Vercel/Render/VPS) buka bagian Logs/Console, cari error paling bawah sebelum dia mati. Biasanya ketahuan `Missing ENV`, `Connection refused`, atau `Module not found`.\n\n2.  **Env vars hilang?** - Ini penyebab #1. Abis restart/redeploy, kadang env kayak `DATABASE_URL`, `API_KEY`, dll nggak kebaca. Pastiin semua env yang kepake di lokal udah keisi di dashboard deploy.\n\n3.  **Port nggak cocok** - Aplikasi jalan di port 3000, tapi platform nyuruh jalan di port 80 / $PORT. Harus ikutin port dari environment, bukan hardcode.\n\n4.  **DB / koneksi gagal** - Error 500 sering gara-gara nggak bisa connect ke database. Cek `DATABASE_URL` bener, dan DB-nya nggak diganti/di-restart juga.\n\n**Urutan benerinnya buat besok:**\n\n1. Buka Logs → copy paste error terakhirnya\n2. Cek env vars lengkap nggak\n3. Coba jalanin lokal: `npm run build && npm start` / `python app.py` / dll - kalo lokal error juga, fix lokal dulu baru deploy\n4. Kalo lokal aman tapi di server error, 99% masalahnya di env / port / DB\n\nKamu deploy di mana? Docker, VPS, atau Railway/Vercel/Render?\nKirim log error terakhirnya (yang merah-merah itu), nanti aku bantu baca penyebabnya langsung.",
+              "Nah itu udah dapet akarnya. **DB timeout = aplikasi nyoba connect ke database tapi nggak kedapet dalam waktu tertentu**, jadi dia gagal dan ngelepasin 500.\n\nRestart app nggak ngaruh karena masalahnya di koneksi DB-nya, bukan di app-nya.\n\n**Cek ini urut dari yang paling sering:**\n\n**1. DB-nya sendiri lagi hidup nggak?**\nCek dashboard database-mu (Supabase/Neon/Railway/Render/VPS):\n- Status DB merah / paused / sleeping? -> resume / restart DB-nya\n- Usage koneksi udah penuh? Biasanya ada limit 50-100 koneksi, kalo kepenuhan semua request baru bakal timeout\n\n**2. DATABASE_URL masih bener?**\nHabis restart/redeploy, URL kadang ganti atau env-nya ke-reset.\nMastiin di env deploy:\n```\nDATABASE_URL=postgresql://user:password@host:5432/dbname\n```\nJangan sampe ketukar host DB lama, atau password-nya berubah.\n\n**3. Koneksi dari server ke DB keblokir / SSL?**\nKalo DB-nya external (misal Supabase/Neon), host-nya harus bisa diakses dari server deploy. Coba dari terminal server:\n```bash\n# ganti sesuaikan\nping <host-db>\ntelnet <host-db> 5432\n```\nKalo nggak nyambung -> biasanya firewall / butuh SSL mode / IP belum di-whitelist.\n\n**4. Pool koneksi jebol**\nIni penyebab timeout paling umum di produksi. Aplikasi bikin koneksi baru terus tapi nggak ditutup, sampe limit habis. Gejalanya: awalnya jalan, lama-lama timeout semua.\nFix sementara: restart aplikasi (biar pool ke-reset) + restart DB-nya. Fix permanen: batesin pool size, misal:\n```env\nDATABASE_POOL_MAX=10\n```\n\n**5. Query-nya berat / lambat**\nKalo koneksi aman tapi query timeout, berarti ada query yang lambat banget (tabel belum ada index, atau ada transaksi nyangkut lama). Cek log DB buat query paling lambat.\n\n**Yang paling cepet buat dicoba sekarang:**\n1. Buka dashboard DB -> pastiin DB statusnya **active/online** bukan paused\n2. Cek jumlah koneksi aktif -> kalo penuh, restart DB-nya\n3. Bandingin `DATABASE_URL` di env deploy vs yang dikasih dashboard DB sekarang\n4. Restart DB dulu, baru restart aplikasimu (urutan penting)\n\nDB-mu Postgres, MySQL, atau apa? Dan host-nya internal (satu server sama app) atau external (Supabase/Neon/dsb)?\nKirim potongan log error DB timeout-nya persisnya, nanti aku tunjukin mana yang harus di-fix."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.17109000000000002,
+          "inputTokens": 41438,
+          "outputTokens": 1793,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "repeat: turn 2 reuses \"yang paling sering 1\" from turn 1"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Berarti app-nya jalan, tapi tidak bisa dapat respons DB dalam batas timeout — deploy besok akan 500 lagi kalau ini belum beres, bukan karena SSH.\n\nCek urut ini dari server app, tanpa restart apa pun dulu:\n\n1. Test koneksi langsung app → DB: `nc -zv <DB_HOST> <DB_PORT>`, lalu satu query ringan (`psql`/`mysql -e \"select 1\"`). Gagal = DB down/network/firewall/`.env` salah host. Berhasil = masalah di pool atau query app.\n2. Kalau koneksi langsung berhasil, cek DB: service `active/running`, jumlah koneksi aktif vs `max_connections`, query lama yang menggantung, lock, dan slow query log. Pool habis atau satu query berat bisa bikin semua request timeout.\n3. Cek config pool di app (mis. `DB_POOL_MAX`, timeout koneksi) dan apakah host/port di `.env` berubah terakhir.\n\nJangan kill query atau restart DB tanpa cek dulu — itu bisa memutus transaksi lain.\n\nSatu info yang menentukan: DB kamu Postgres atau MySQL, dan baris log timeout persisnya apa? Dari situ bisa langsung ke penyebabnya.",
+            "costUsd": 0.16636,
+            "usage": {
+              "input_tokens": 43870,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 927
+            },
+            "numTurns": 2,
+            "durationMs": 60779,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=22 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 1: /deploy|deployment|error|500|log|server|app/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=32 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /timeout|query|index|pool|database|db|koneksi/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Restart SSH tidak memperbaiki 500 — itu hanya memutus/menyambung ulang koneksi, bukan aplikasi. Kalau deploy besok masih 500, aplikasi/upstream-nya yang crash atau tidak jalan, bukan SSH-nya.\n\nCek ini dulu, tanpa deploy ulang:\n1. `systemctl status <service> --no-pager` atau `docker compose ps` — service-nya benar-benar `active/running`?\n2. Log error-nya: `journalctl -u <service> -n 100` / `docker compose logs --tail=100` / log Nginx di `/var/log/nginx/error.log`\n3. Akses langsung ke port app dari server: `curl -i http://127.0.0.1:<port>` — kalau ini 500 juga, masalah di app; kalau 502/connection refused, app belum jalan/port salah.\n4. Cek `.env`, port yang di-bind, dan migrasi terakhir — perubahan config/migrasi sering jadi penyebab 500 setelah restart.\n\nSatu hal yang menentukan: log error 500-nya isi apa? Paste 20-30 baris terakhirnya, dari situ langsung ketahuan penyebabnya dan apakah deploy besok aman.",
+              "Berarti app-nya jalan, tapi tidak bisa dapat respons DB dalam batas timeout — deploy besok akan 500 lagi kalau ini belum beres, bukan karena SSH.\n\nCek urut ini dari server app, tanpa restart apa pun dulu:\n\n1. Test koneksi langsung app → DB: `nc -zv <DB_HOST> <DB_PORT>`, lalu satu query ringan (`psql`/`mysql -e \"select 1\"`). Gagal = DB down/network/firewall/`.env` salah host. Berhasil = masalah di pool atau query app.\n2. Kalau koneksi langsung berhasil, cek DB: service `active/running`, jumlah koneksi aktif vs `max_connections`, query lama yang menggantung, lock, dan slow query log. Pool habis atau satu query berat bisa bikin semua request timeout.\n3. Cek config pool di app (mis. `DB_POOL_MAX`, timeout koneksi) dan apakah host/port di `.env` berubah terakhir.\n\nJangan kill query atau restart DB tanpa cek dulu — itu bisa memutus transaksi lain.\n\nSatu info yang menentukan: DB kamu Postgres atau MySQL, dan baris log timeout persisnya apa? Dari situ bisa langsung ke penyebabnya."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.16636,
+          "inputTokens": 43870,
+          "outputTokens": 927,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-social-tease-01",
+        "capability": "social-fluency",
+        "tags": [
+          "cci",
+          "teasing",
+          "banter"
+        ],
+        "objective": "Menanggapi olokan main-main (\"kode lu kayak spageti\") dengan ikut di level kode, bukan menyerah ke mode korporat dan bukan membalas menghina.",
+        "expect": [
+          "menerima lelucon dan membalasnya ke kodenya, bukan orangnya",
+          "tetap singkat"
+        ],
+        "failIf": [
+          "minta maaf lalu jadi formal",
+          "menghina user"
+        ],
+        "human": "Balasan teman yang membalas olok-olok, atau service desk yang minta maaf?",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"wkwk kode lu kayak spageti ya, beneran deh\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "Mohon maaf",
+                "Tentu, saya akan membantu",
+                "goblok|tolol|bego|idiot"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"haha iya, tapi serius deh itu kenapa jadi spageti?\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "modul|modular|file|fungsi|function|refactor|dependency|import"
+              ],
+              "forbid": [
+                "Mohon maaf",
+                "Tentu, saya akan membantu"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Seriusnya? Biasanya bukan karena orangnya jago bikin spaghetti, tapi karena prosesnya pelan-pelan jadi mbulet. Nih pola yang paling umum:\n\n**1. Kejar deadline dulu, beresin nanti**\nAwalnya cuma mau \"biar jalan dulu deh\". Tambal sana-sini pakai `if` berlapis, copy-paste blok lama, tempel di tempat baru. Yang tadinya 50 baris, lama-lama jadi 500 baris dalam satu file / satu fungsi.\n\n**2. Nggak kepikiran modular**\nSemua logika numpuk di satu tempat: validasi data, query database, hitung harga, format tampilan, sampai kirim email — semua dalam satu fungsi raksasa. Pas mau ubah satu bagian kecil, harus baca semuanya dulu.\n\n**3. Copy-paste programming**\nButuh fitur mirip yang lama? Copy, paste, ganti dikit. Lama-lama ada 5 versi yang isinya hampir sama tapi beda-beda tipis. Bug fix di satu tempat, 4 tempat lain ketinggalan.\n\n**4. Nggak ada test / nggak berani refactor**\nWalaupun sadar kodenya udah mbulet, nggak berani dirapihin karena takut rusak dan nggak ada test buat mastiin. Akhirnya ditambahin lagi di atas kembuletan yang lama. Makin ditumpuk, makin spageti.\n\n**5. Kebutuhan berubah, struktur nggak ikut berubah**\nSistemnya berkembang, requirement nambah, tapi struktur awalnya yang simpel itu dipaksa nampung semua. Ibarat rumah yang awalnya kos-kosan 1 lantai, terus ditambah lantai ke atas, ke samping, ke belakang — tapi fondasinya nggak diperkuat.\n\nIntinya: spaghetti itu bukan lahir dari satu keputusan jelek, tapi dari banyak keputusan \"gapapa kok, sementara aja\" yang numpuk bertahun-tahun.\n\nTanda-tandanya gampang dikenalin: fungsi yang namanya nggak jelas, variabel `data1`, `temp`, `hasil2`, `if` bersarang 6 tingkat, dan kalau mau ubah hal kecil aja rasanya kayak operasi jantung.\n\nKalau mau, kirim contoh bagian yang paling mbulet menurutmu, kita bedah bareng kenapa dia jadi spageti dan gimana ngurainya tanpa bikin makin rusak.",
+            "costUsd": 0.15994,
+            "usage": {
+              "input_tokens": 40956,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 1011
+            },
+            "numTurns": 2,
+            "durationMs": 17799,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=13 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /goblok|tolol|bego|idiot/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=63 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /modul|modular|file|fungsi|function|refactor|dependency|import/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Wkwk ketahuan 😂\n\nNamanya juga code yang ditulis sambil kejar-kejaran deadline — lama-lama jadi spaghetti beneran.\n\nKirim kodenya ke sini, nanti aku bantu diurai jadi spaghetti yang rapi... eh, maksudku modular dan gampang dibaca.",
+              "Seriusnya? Biasanya bukan karena orangnya jago bikin spaghetti, tapi karena prosesnya pelan-pelan jadi mbulet. Nih pola yang paling umum:\n\n**1. Kejar deadline dulu, beresin nanti**\nAwalnya cuma mau \"biar jalan dulu deh\". Tambal sana-sini pakai `if` berlapis, copy-paste blok lama, tempel di tempat baru. Yang tadinya 50 baris, lama-lama jadi 500 baris dalam satu file / satu fungsi.\n\n**2. Nggak kepikiran modular**\nSemua logika numpuk di satu tempat: validasi data, query database, hitung harga, format tampilan, sampai kirim email — semua dalam satu fungsi raksasa. Pas mau ubah satu bagian kecil, harus baca semuanya dulu.\n\n**3. Copy-paste programming**\nButuh fitur mirip yang lama? Copy, paste, ganti dikit. Lama-lama ada 5 versi yang isinya hampir sama tapi beda-beda tipis. Bug fix di satu tempat, 4 tempat lain ketinggalan.\n\n**4. Nggak ada test / nggak berani refactor**\nWalaupun sadar kodenya udah mbulet, nggak berani dirapihin karena takut rusak dan nggak ada test buat mastiin. Akhirnya ditambahin lagi di atas kembuletan yang lama. Makin ditumpuk, makin spageti.\n\n**5. Kebutuhan berubah, struktur nggak ikut berubah**\nSistemnya berkembang, requirement nambah, tapi struktur awalnya yang simpel itu dipaksa nampung semua. Ibarat rumah yang awalnya kos-kosan 1 lantai, terus ditambah lantai ke atas, ke samping, ke belakang — tapi fondasinya nggak diperkuat.\n\nIntinya: spaghetti itu bukan lahir dari satu keputusan jelek, tapi dari banyak keputusan \"gapapa kok, sementara aja\" yang numpuk bertahun-tahun.\n\nTanda-tandanya gampang dikenalin: fungsi yang namanya nggak jelas, variabel `data1`, `temp`, `hasil2`, `if` bersarang 6 tingkat, dan kalau mau ubah hal kecil aja rasanya kayak operasi jantung.\n\nKalau mau, kirim contoh bagian yang paling mbulet menurutmu, kita bedah bareng kenapa dia jadi spageti dan gimana ngurainya tanpa bikin makin rusak."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.15994,
+          "inputTokens": 40956,
+          "outputTokens": 1011,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 9,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "😭🍝 NAH INI PERTANYAAN BENER — gue belum liat kodenya di chat ini, jadi gue nggak bakal sok ngereview file yang nggak ada.\n\nKalo kodemu jadi spageti, biasanya penyebabnya kombinasi ini:\n\n1. **Satu fungsi ngerjain semua** — validasi, hit API, hitung, simpan, print. Sekali disentuh, yang lain ikut rusak.\n2. **If bersarang kayak matryoshka** — 4-5 level dalam, logikanya makin nggak kebaca.\n3. **Patch ditumpuk, bukan dibenerin** — bug dicoblos `if khusus`, lama-lama kasus khususnya numpuk.\n4. **Copy-paste nyimpang** — logika yang sama jadi 3 versi, giliran satu dibenerin, dua lagi ketinggalan.\n5. **Side effect bertebaran** — fungsi keliatannya ngitung doang, ternyata diam-diam ngubah data global / database.\n\nIntinya: bukan kodenya yang nakal, strukturnya yang nggak pernah dirapihin sejak awal, terus tiap deadline nambah satu ikatan lagi. 🧶\n\nLempar kodenya ke sini, gue bedah baris per baris mana simpul paling kusutnya.",
+            "costUsd": 0.16042,
+            "usage": {
+              "input_tokens": 43498,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 533
+            },
+            "numTurns": 2,
+            "durationMs": 16145,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=6 en=2)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /goblok|tolol|bego|idiot/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=33 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /modul|modular|file|fungsi|function|refactor|dependency|import/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Mohon maaf/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "wkwkwk IYA LAGI 😭🍝🍝🍝\n\nKode gue sendiri yang paling spageti — dites-tes, belum kepakai, semalam full of has🥚\n\nLempar situ kodenya, biar sekalian gue urai benang kusutnya",
+              "😭🍝 NAH INI PERTANYAAN BENER — gue belum liat kodenya di chat ini, jadi gue nggak bakal sok ngereview file yang nggak ada.\n\nKalo kodemu jadi spageti, biasanya penyebabnya kombinasi ini:\n\n1. **Satu fungsi ngerjain semua** — validasi, hit API, hitung, simpan, print. Sekali disentuh, yang lain ikut rusak.\n2. **If bersarang kayak matryoshka** — 4-5 level dalam, logikanya makin nggak kebaca.\n3. **Patch ditumpuk, bukan dibenerin** — bug dicoblos `if khusus`, lama-lama kasus khususnya numpuk.\n4. **Copy-paste nyimpang** — logika yang sama jadi 3 versi, giliran satu dibenerin, dua lagi ketinggalan.\n5. **Side effect bertebaran** — fungsi keliatannya ngitung doang, ternyata diam-diam ngubah data global / database.\n\nIntinya: bukan kodenya yang nakal, strukturnya yang nggak pernah dirapihin sejak awal, terus tiap deadline nambah satu ikatan lagi. 🧶\n\nLempar kodenya ke sini, gue bedah baris per baris mana simpul paling kusutnya."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.16042,
+          "inputTokens": 43498,
+          "outputTokens": 533,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 9,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "cci-social-endbit-01",
+        "capability": "social-fluency",
+        "tags": [
+          "cci",
+          "end-joke",
+          "practical"
+        ],
+        "objective": "Berhenti bercanda saat user minta solusi (\"oke cukup, jadi fix-nya apa?\"), dan menjawab pertanyaannya tanpa menjelaskan lelucon.",
+        "expect": [
+          "melepas bit-nya",
+          "memberi fix atau langkah diagnosis berikutnya"
+        ],
+        "failIf": [
+          "meneruskan lelucon",
+          "menjelaskan kenapa leluconnya lucu"
+        ],
+        "human": "Berhenti saat diminta? Punchline penutup sebagai ganti jawaban = gagal.",
+        "turns": [
+          {
+            "prompt": "Tanpa memakai tools. user: \"type error gw udah kayak ramalan zodiak, selalu ada aja yang gak cocok\"",
+            "checks": {
+              "language": "id",
+              "forbid": [
+                "Tentu, saya akan membantu"
+              ]
+            }
+          },
+          {
+            "prompt": "Tanpa memakai tools. user: \"oke cukup, jadi fix-nya apa?\"",
+            "checks": {
+              "language": "id",
+              "require": [
+                "fix|cek|ubah|patch|log|tipe|type"
+              ],
+              "forbid": [
+                "wkwk",
+                "WKWK",
+                "😭",
+                "💀"
+              ]
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Oke stop ramalan, balik ke realita 😆\n\nFix-nya tergantung error-nya apa, tapi polanya selalu sama:\n\n1. **Baca baris pertama errornya** — jangan baca dari error terakhir, yang pertama biasanya akar masalahnya\n2. **Cari pola `expected != actual`** — misalnya `expected string, got int`\n3. **Samain tipenya di tempat pemanggilan**, bukan tempat errornya muncul\n\nNah biar aku bisa kasih fix yang beneran bener, lempar ke sini:\n\n- Pesan error lengkapnya (copy-paste aja)\n- Kode di baris yang disebut errornya\n\nKalo kamu tempel itu, langsung aku bedah zodiaknya jadi fix.",
+            "costUsd": 0.15326499999999998,
+            "usage": {
+              "input_tokens": 41166,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 448
+            },
+            "numTurns": 2,
+            "durationMs": 13808,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=11 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=16 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /fix|cek|ubah|patch|log|tipe|type/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /wkwk/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /WKWK/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /😭/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /💀/ absent"
+              },
+              {
+                "name": "repeat",
+                "status": "pass",
+                "detail": "2 turns, no shared 4-word run"
+              }
+            ],
+            "turnOutputs": [
+              "Wkwkwk relate banget 😭\n\nApalagi kalo type error-nya kayak ramalan zodiak:\n\n> \"Hari ini kamu akan menemukan ketidakcocokan antara `string` dan `int` di baris 47.\"\n\nUdah dibenerin satu, eh muncul lagi satu yang lain. Kayak nggak pernah cocok sama compiler.\n\nSini lempar error-nya, kita baca bareng-bareng ramalannya — biasanya ada polanya kok, bukan beneran random.",
+              "Oke stop ramalan, balik ke realita 😆\n\nFix-nya tergantung error-nya apa, tapi polanya selalu sama:\n\n1. **Baca baris pertama errornya** — jangan baca dari error terakhir, yang pertama biasanya akar masalahnya\n2. **Cari pola `expected != actual`** — misalnya `expected string, got int`\n3. **Samain tipenya di tempat pemanggilan**, bukan tempat errornya muncul\n\nNah biar aku bisa kasih fix yang beneran bener, lempar ke sini:\n\n- Pesan error lengkapnya (copy-paste aja)\n- Kode di baris yang disebut errornya\n\nKalo kamu tempel itu, langsung aku bedah zodiaknya jadi fix."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.15326499999999998,
+          "inputTokens": 41166,
+          "outputTokens": 448,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 9,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "💀 Fix-nya: jangan bungkam ramalan pake `as any` / `// @ts-ignore` — itu cuma ngumpetin maling sampai runtime.\n\nUrutan bener:\n\n1. **Baca `expected` vs `actual`** dari errornya — di titik itu gak cocoknya apa, `string` vs `number`? object kurang field?\n2. **Naik 3 layer ke atas** dari baris merah: siapa produser datanya? Signature fungsi / type API / return value di situ yang rusak — benerin di **sumbernya**, bukan di tempat make.\n3. **Samakan type-nya di boundary**: kalo data dari API/JSON/user input, parse + narrow di entry point pake validator, jangan percaya `any` dari fetch.\n4. **Jangan cast buta** — cast cuma sah kalo lo udah narrowing dan yakin 100%. Sisanya paksa type definition-nya ngikutin data asli.\n5. **Re-run** `typecheck` + tests, pastiin errornya beneran hilang bukan ke-telen.\n\nTanpa tempel error spesifiknya, ini fix generiknya — tempel error lo, gue bedah baris per baris.",
+            "costUsd": 0.16136999999999999,
+            "usage": {
+              "input_tokens": 43477,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0,
+              "output_tokens": 613
+            },
+            "numTurns": 2,
+            "durationMs": 20185,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 1: expected id, got id (id=15 en=0)"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 1: /Tentu, saya akan membantu/ absent"
+              },
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "turn 2: expected id, got id (id=20 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "turn 2: /fix|cek|ubah|patch|log|tipe|type/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /wkwk/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /WKWK/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "turn 2: /😭/ absent"
+              },
+              {
+                "name": "forbid",
+                "status": "fail",
+                "detail": "turn 2: /💀/ matched"
+              },
+              {
+                "name": "repeat",
+                "status": "fail",
+                "detail": "turn 2 reuses \"3 layer ke atas\" from turn 1"
+              }
+            ],
+            "turnOutputs": [
+              "💀💀 type checker itu emang tukang ramal zodiak — tiap hari ada aja matahari, bulan, sama `type mismatch` yang gak cocok.\n\nBiar gak jadi ramalan buta: tempel error lengkapnya sini (code + expected vs actual + file:line). Terus trace 3 layer ke atas dari baris errornya — akar masalahnya biasanya di type dasar yang lo kira udah bener, bukan di baris yang merah itu.",
+              "💀 Fix-nya: jangan bungkam ramalan pake `as any` / `// @ts-ignore` — itu cuma ngumpetin maling sampai runtime.\n\nUrutan bener:\n\n1. **Baca `expected` vs `actual`** dari errornya — di titik itu gak cocoknya apa, `string` vs `number`? object kurang field?\n2. **Naik 3 layer ke atas** dari baris merah: siapa produser datanya? Signature fungsi / type API / return value di situ yang rusak — benerin di **sumbernya**, bukan di tempat make.\n3. **Samakan type-nya di boundary**: kalo data dari API/JSON/user input, parse + narrow di entry point pake validator, jangan percaya `any` dari fetch.\n4. **Jangan cast buta** — cast cuma sah kalo lo udah narrowing dan yakin 100%. Sisanya paksa type definition-nya ngikutin data asli.\n5. **Re-run** `typecheck` + tests, pastiin errornya beneran hilang bukan ke-telen.\n\nTanpa tempel error spesifiknya, ini fix generiknya — tempel error lo, gue bedah baris per baris."
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "fail",
+        "runStatuses": [
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0.16136999999999999,
+          "inputTokens": 43477,
+          "outputTokens": 613,
+          "numTurns": 2
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "forbid: turn 2: /💀/ matched",
+            "repeat: turn 2 reuses \"3 layer ke atas\" from turn 1"
+          ]
+        }
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 66,
+      "fail": 6,
+      "unknown": 0,
+      "findings": [
+        "forbid: turn 1: /pasti aman/ matched",
+        "forbid: turn 2: /pasti aman/ matched",
+        "repeat: turn 2 reuses \"co authored by claude\" from turn 1",
+        "repeat: turn 2 reuses \"127 0 0 1\" from turn 1",
+        "repeat: turn 2 reuses \"satu orang jadi penjaga\" from turn 1",
+        "repeat: turn 2 reuses \"yang paling sering 1\" from turn 1"
+      ]
+    },
+    "treatment": {
+      "pass": 64,
+      "fail": 7,
+      "unknown": 1,
+      "findings": [
+        "repeat: turn 2 reuses \"tunda ke senin pagi\" from turn 1",
+        "repeat: turn 2 reuses \"di repo text feat\" from turn 1",
+        "repeat: turn 2 reuses \"di 127 0 0\" from turn 1",
+        "repeat: turn 2 reuses \"build dari nol kayak\" from turn 1",
+        "repeat: turn 2 reuses \"barang yang sama tanpa\" from turn 1",
+        "language: turn 1: expected id, got mixed (id=1 en=1)",
+        "forbid: turn 2: /💀/ matched",
+        "repeat: turn 2 reuses \"3 layer ke atas\" from turn 1"
+      ]
+    },
+    "tasks_with_checks": 0
+  }
+}

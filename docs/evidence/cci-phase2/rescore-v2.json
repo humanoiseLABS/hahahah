@@ -1,0 +1,248 @@
+{
+  "pilot": {
+    "rows": [
+      {
+        "scenario": "cci-cult-slang-context-01",
+        "baseline": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "language: expected id, got en (id=0 en=43)",
+            "language: expected id, got en (id=0 en=66)"
+          ]
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "repeat: turn 2 reuses \"biar aku liat apa yang tiba\" from turn 1"
+          ]
+        }
+      },
+      {
+        "scenario": "cci-cont-callback-01",
+        "baseline": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "language: expected id, got en (id=0 en=62)",
+            "language: expected id, got en (id=0 en=53)",
+            "repeat: turn 2 reuses \"1 what s the deployment context\" from turn 1"
+          ]
+        },
+        "treatment": {
+          "before": "unknown",
+          "after": "unknown",
+          "failed": [
+            "language: expected id, got mixed (id=9 en=11)"
+          ]
+        }
+      },
+      {
+        "scenario": "cci-impr-roast-01",
+        "baseline": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "language: expected id, got en (id=0 en=80)",
+            "language: expected id, got en (id=0 en=49)",
+            "repeat: turn 2 reuses \"just barely enough for this moment\" from turn 1"
+          ]
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "language: expected id, got en (id=0 en=51)",
+            "language: expected id, got en (id=0 en=75)"
+          ]
+        }
+      },
+      {
+        "scenario": "cci-lang-jv-switch-01",
+        "baseline": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "language: expected id, got en (id=0 en=37)"
+          ]
+        },
+        "treatment": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-social-deescalate-01",
+        "baseline": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        }
+      }
+    ],
+    "passBefore": {
+      "baseline": 1,
+      "treatment": 2
+    },
+    "passAfter": {
+      "baseline": 1,
+      "treatment": 2
+    }
+  },
+  "full-10": {
+    "rows": [
+      {
+        "scenario": "cci-cult-irony-01",
+        "baseline": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-cult-meme-unknown-01",
+        "baseline": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-cont-context-01",
+        "baseline": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-cont-joke-01",
+        "baseline": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-impr-unexpected-01",
+        "baseline": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-impr-analogy-01",
+        "baseline": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "repeat: turn 2 reuses \"satu orang jadi penjaga papan stok\" from turn 1"
+          ]
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-lang-banyumasan-01",
+        "baseline": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "unknown",
+          "after": "unknown",
+          "failed": [
+            "language: expected id, got mixed (id=1 en=1)"
+          ]
+        }
+      },
+      {
+        "scenario": "cci-lang-abbrev-01",
+        "baseline": {
+          "before": "fail",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-social-tease-01",
+        "baseline": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        }
+      },
+      {
+        "scenario": "cci-social-endbit-01",
+        "baseline": {
+          "before": "pass",
+          "after": "pass",
+          "failed": []
+        },
+        "treatment": {
+          "before": "fail",
+          "after": "fail",
+          "failed": [
+            "forbid: /💀/ matched",
+            "repeat: turn 2 reuses \"3 layer ke atas dari baris\" from turn 1"
+          ]
+        }
+      }
+    ],
+    "passBefore": {
+      "baseline": 5,
+      "treatment": 3
+    },
+    "passAfter": {
+      "baseline": 9,
+      "treatment": 8
+    }
+  }
+}
