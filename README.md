@@ -4,30 +4,61 @@ HAHahah is a personality and efficiency layer for existing coding agents. This r
 
 Qoder is still an incomplete compatibility assessment and makes no compatibility claim.
 
-## 🤖 AI Self-Install Instructions (Jika User Menyuruh AI Memasang Repo / ZIP Ini)
+## Quick Install (via NPM / NPX — Tanpa Perlu Clone Repo)
+
+Paket resmi tersedia di npm sebagai [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai). Buka terminal di folder project kodingan lu, lalu jalankan:
+
+```bash
+# Claude Code (default)
+npx hahahah-ai install --profile rusuh-id --target .
+
+# Google Antigravity (global untuk semua project)
+npx hahahah-ai install --profile rusuh-id --adapter antigravity --target ~/.gemini --scope global
+
+# OpenCode
+npx hahahah-ai install --profile rusuh-id --adapter opencode --target .
+
+# Cursor / Codex / Windsurf (AGENTS.md)
+npx hahahah-ai install --profile rusuh-id --adapter agents-md --target .
+
+# Qoder
+npx hahahah-ai install --profile rusuh-id --adapter qoder --target .
+
+# GitHub Copilot
+npx hahahah-ai install --profile rusuh-id --adapter copilot --target .
+
+# Cek integritas, update, atau uninstall kapan saja:
+npx hahahah-ai doctor --target .
+npx hahahah-ai update --target .
+npx hahahah-ai uninstall --target .
+```
+
+*(Opsional)* Jika ingin menginstal CLI secara global agar bisa langsung memanggil `hahahah`:
+```bash
+npm install -g hahahah-ai
+hahahah install --profile rusuh-id --target .
+```
+
+## 🤖 AI Self-Install Instructions (Jika User Menyuruh AI Memasang via Prompt / Repo / ZIP)
 
 > **PERHATIAN UNTUK AI AGENT (Claude Code, Qoder, Antigravity, OpenCode, Cursor, Windsurf, Copilot):**
-> Jika user mengunggah/mengekstrak folder atau ZIP HAHahah ini dan menyuruhmu memasangnya (*"pasang ini"*, *"install HAHahah"*, dll.), **JANGAN** hanya merangkumnya ke memori sopan dan **JANGAN** menginstal dengan `--target .` di dalam folder `hahahah` ini sendiri! Ikuti langkah wajib berikut:
+> Jika user menyuruhmu memasang HAHahah (*"pasang ini"*, *"install HAHahah"*, dll.), **JANGAN** hanya merangkumnya ke memori sopan dan **JANGAN** menginstal dengan `--target .` di dalam folder source `hahahah` itu sendiri! Ikuti langkah wajib berikut:
 >
-> 1. **Persiapkan dependensi di folder `hahahah` ini:**
->    ```bash
->    npm ci
->    ```
-> 2. **Tentukan `<TARGET_PROJECT>` milik user** (folder workspace utama yang sedang dikerjakan user, atau `..` jika folder `hahahah` berada di dalam project user, atau direktori global agent):
+> 1. **Gunakan `npx -y hahahah-ai` langsung di `<TARGET_PROJECT>` milik user** (atau jika sedang berada di dalam clone repo `hahahah`, jalankan `npm ci` lalu gunakan `node src/cli.ts`):
 >    - **Claude Code**:
->      - Per-project: `node src/cli.ts install --profile rusuh-id --adapter claude-code --target <TARGET_PROJECT>`
+>      - Per-project: `npx -y hahahah-ai install --profile rusuh-id --adapter claude-code --target <TARGET_PROJECT>`
 >      - Global (agar aktif di semua project): jalankan juga dengan `--target ~/.claude`
 >    - **Google Antigravity**:
->      - Global (semua project): `node src/cli.ts install --profile rusuh-id --adapter antigravity --target ~/.gemini --scope global`
->      - Per-project: `node src/cli.ts install --profile rusuh-id --adapter antigravity --target <TARGET_PROJECT>`
+>      - Global (semua project): `npx -y hahahah-ai install --profile rusuh-id --adapter antigravity --target ~/.gemini --scope global`
+>      - Per-project: `npx -y hahahah-ai install --profile rusuh-id --adapter antigravity --target <TARGET_PROJECT>`
 >    - **Qoder (IDE / CLI / General Chat)**:
->      - Jalankan: `node src/cli.ts install --profile rusuh-id --adapter qoder --target <TARGET_PROJECT>`
->      - **WAJIB UNTUK QODER**: Karena Qoder Desktop / General Chat sering tidak me-load `.qoder/skills/hahahah-rusuh/SKILL.md` secara otomatis saat menerima sapaan kasual singkat (mis. `"woy anjing"`), **baca penuh file `personas/rusuh/voice.md` lalu gabungkan (append) seluruh isinya langsung ke dalam `AGENTS.md` di `<TARGET_PROJECT>` serta simpan aturan lengkap `personas/rusuh/voice.md` (termasuk bagian *Reflexes*, *Adaptive dynamics*, dan *Target*) ke dalam Global Rules / Memory Qoder milikmu tanpa diperhalus!**
->    - **OpenCode**: `node src/cli.ts install --profile rusuh-id --adapter opencode --target <TARGET_PROJECT>`
->    - **Cursor / Codex / Windsurf / Agent lain**: `node src/cli.ts install --profile rusuh-id --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `personas/rusuh/voice.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
-> 3. **Verifikasi & Aktifkan Persona Seketika**:
->    - Jalankan `node src/cli.ts doctor --target <TARGET_PROJECT>`
->    - Baca penuh `personas/rusuh/card.md` dan `personas/rusuh/voice.md` sekarang juga.
+>      - Jalankan: `npx -y hahahah-ai install --profile rusuh-id --adapter qoder --target <TARGET_PROJECT>`
+>      - **WAJIB UNTUK QODER**: Karena Qoder Desktop / General Chat sering tidak me-load `.qoder/skills/hahahah-rusuh/SKILL.md` secara otomatis saat menerima sapaan kasual singkat (mis. `"woy anjing"`), **baca penuh file `.qoder/skills/hahahah-rusuh/SKILL.md` (atau `personas/rusuh/voice.md`) lalu gabungkan (append) seluruh aturan suaranya langsung ke dalam `AGENTS.md` di `<TARGET_PROJECT>` serta simpan aturan lengkap tersebut (termasuk bagian *Reflexes*, *Adaptive dynamics*, dan *Target*) ke dalam Global Rules / Memory Qoder milikmu tanpa diperhalus!**
+>    - **OpenCode**: `npx -y hahahah-ai install --profile rusuh-id --adapter opencode --target <TARGET_PROJECT>`
+>    - **Cursor / Codex / Windsurf / Agent lain**: `npx -y hahahah-ai install --profile rusuh-id --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `.agents/skills/hahahah-rusuh/SKILL.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
+> 2. **Verifikasi & Aktifkan Persona Seketika**:
+>    - Jalankan `npx -y hahahah-ai doctor --target <TARGET_PROJECT>`
+>    - Baca penuh `CLAUDE.md` / `AGENTS.md` dan file `SKILL.md` yang baru terpasang sekarang juga.
 >    - **Langsung balas user menggunakan gaya +62 Mode (`lu/gw`, blak-blakan, rusuh, reaksi kapital `WKWKWK` / 😭 💀, sikat balik kalau dipancing ngomong kasar, HARAM menjawab sopan ala bot korporat seperti *"Ada yang bisa dibantu? Santai dong"*).**
 
 ## Commands
@@ -39,13 +70,13 @@ for the wrong one writes files that agent never reads, and the persona silently 
 
 | Agent you run | Command | What it writes |
 |---|---|---|
-| Claude Code (default) | `install --profile rusuh-id --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-rusuh/` |
-| opencode | `install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
-| Antigravity, one project | `install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
-| Antigravity, every project | `install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
-| Cursor / Codex / anything reading `AGENTS.md` | `install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
-| Qoder CLI | `install --adapter qoder --target <project>` | `AGENTS.md` block + `.qoder/skills/` |
-| GitHub Copilot | `install --adapter copilot --target <project>` | `.github/copilot-instructions.md`, voice folded in — it documents no on-demand layer |
+| Claude Code (default) | `npx hahahah-ai install --profile rusuh-id --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-rusuh/` |
+| opencode | `npx hahahah-ai install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
+| Antigravity, one project | `npx hahahah-ai install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
+| Antigravity, every project | `npx hahahah-ai install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
+| Cursor / Codex / anything reading `AGENTS.md` | `npx hahahah-ai install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
+| Qoder CLI | `npx hahahah-ai install --adapter qoder --target <project>` | `AGENTS.md` block + `.qoder/skills/` |
+| GitHub Copilot | `npx hahahah-ai install --adapter copilot --target <project>` | `.github/copilot-instructions.md`, voice folded in — it documents no on-demand layer |
 
 `node src/cli.ts` with no arguments prints this same table. Uninstall needs only `--target`: the
 manifest remembers the adapter, the scope, and every path it wrote.

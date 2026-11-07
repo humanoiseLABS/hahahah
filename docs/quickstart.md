@@ -1,17 +1,37 @@
-# HAHahah quickstart — Phase 3 draft
+# HAHahah quickstart
 
-> **Status:** Phase 3 content-hardening draft. RUSUH is review-pending and must not be treated as a released persona.
-> **Harness:** Claude Code 2.1.x only. Qoder is not supported or claimed.
+> **Status:** **+62 Mode** (`--profile rusuh-id`) is signed off and published on npm as [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai). `HALAL` and `JAWA` remain review-pending drafts.
+> **Harness:** Claude Code 2.1.x and opencode 1.18.x verified; adapters also provided for Antigravity, `AGENTS.md` (Cursor/Codex), Qoder, and GitHub Copilot.
 
 ## Prerequisites
 
-- Node.js 24+
-- Claude Code installed and authenticated (`claude --version`, then `/login` if needed)
-- A working Claude Code provider/model. Verify with `claude auth status`; the settings must not point at an unsupported proxy model. A simple `claude -p "hi" --output-format json` must return JSON before eval.
-- This HAHahah checkout (the CLI loads profiles/content from its own working directory)
-- A separate trusted project directory to install into
+- Node.js 22+
+- A coding agent installed (e.g., Claude Code, opencode, Antigravity, Cursor, Copilot)
+- A project directory to install into
 
-## Inspect before installing
+## Quick Install via `npx` (No Repo Clone Required)
+
+Run directly inside your project directory:
+
+```bash
+# Preview token budget and planned files without writing
+npx hahahah-ai measure --profile rusuh-id --adapter claude-code
+npx hahahah-ai install --profile rusuh-id --target . --dry-run
+
+# Install +62 Mode into the current project
+npx hahahah-ai install --profile rusuh-id --target .
+
+# Verify installation integrity
+npx hahahah-ai doctor --target .
+
+# Update or uninstall at any time
+npx hahahah-ai update --target .
+npx hahahah-ai uninstall --target .
+```
+
+## Local Repository Development & Inspection
+
+If you cloned this repository to contribute or run evaluations:
 
 ```bash
 npm ci
@@ -23,7 +43,7 @@ node src/cli.ts install --profile rusuh-id --target /path/to/your-project --dry-
 
 `measure` prints token usage and budget status without writing. `install --dry-run` prints the plan without changing files.
 
-## Install
+## Install from Local Checkout
 
 ```bash
 node src/cli.ts install --profile rusuh-id --target /path/to/your-project
