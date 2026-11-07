@@ -21,12 +21,7 @@ export default function InstallationGuide({
   const targetPath =
     selectedAgent.id === "antigravity" ? "~/.gemini" : "/path/ke/project-lu";
 
-  const workspaceCommand =
-    selectedAgent.id === "claude-code"
-      ? `npx -y hahahah-ai install --profile ${selectedPersona.id} --target .`
-      : `npx -y hahahah-ai install --profile ${selectedPersona.id} ${selectedAgent.adapterFlag} --target .`;
-
-  const aiSelfInstallPrompt = `Tolong jalankan perintah CLI berikut di terminal pada direktori project ini:\n\n${workspaceCommand}\n\nSetelah selesai, jalankan \`npx -y hahahah-ai doctor --target .\` untuk memverifikasi manifest, lalu baca file konfigurasi yang baru dibuat (CLAUDE.md / AGENTS.md) dan gunakan gaya bahasa Indonesia santai sesuai instruksi di dalamnya.`;
+  const aiSelfInstallPrompt = `Tolong jalankan \`${generatedCommand}\` di terminal untuk memasang profile ${selectedPersona.id} (${selectedPersona.name}) untuk ${selectedAgent.name} ke workspace utama gw (atau ikuti bagian "🤖 AI Self-Install Instructions" di README.md jika dari folder/ZIP HAHahah). Untuk Qoder/Cursor/IDE lain, pastikan aturan suara persona juga digabung langsung ke AGENTS.md & Global Rules/Memory lu. Kalau sudah beres, langsung balas gw pakai gaya ${selectedPersona.name}!`;
 
   const copyPrompt = () => {
     navigator.clipboard.writeText(aiSelfInstallPrompt);
@@ -131,7 +126,7 @@ export default function InstallationGuide({
           </a>
         </div>
         <p className="text-xs sm:text-sm text-[#3a3a3a] mb-3 leading-relaxed">
-          <strong>Penting:</strong> Command <code>npx hahahah-ai ...</code> di atas aslinya dijalankan di <strong>Terminal / CMD / PowerShell</strong>. Tapi kalau mau nyuruh AI yang ngetikin di dalam <strong>folder project</strong>, salin prompt aman (anti-mental guardrail) di bawah ini ke chat {selectedAgent.name}:
+          Malas ketik command manual di terminal? Langsung salin prompt di bawah ini ke chat {selectedAgent.name} Anda:
         </p>
         <div className="bg-[#141414] rounded-xl p-4 border-2 border-[#0d0d0d] font-mono text-xs relative">
           <pre className="text-[#ffd23f] overflow-x-auto whitespace-pre-wrap leading-relaxed pr-20">
