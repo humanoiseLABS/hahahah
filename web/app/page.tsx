@@ -20,10 +20,10 @@ export default function Home() {
   const generatedCommand =
     selectedPersona && selectedAgent
       ? selectedAgent.id === "claude-code"
-        ? `node src/cli.ts install --profile ${selectedPersona.id} --target /path/ke/project-lu`
+        ? `npx hahahah-ai install --profile ${selectedPersona.id} --target .`
         : selectedAgent.id === "antigravity"
-          ? `node src/cli.ts install --profile ${selectedPersona.id} --adapter antigravity --target ~/.gemini --scope global`
-          : `node src/cli.ts install --profile ${selectedPersona.id} ${selectedAgent.adapterFlag} --target /path/ke/project-lu`
+          ? `npx hahahah-ai install --profile ${selectedPersona.id} --adapter antigravity --target ~/.gemini --scope global`
+          : `npx hahahah-ai install --profile ${selectedPersona.id} ${selectedAgent.adapterFlag} --target .`
       : "";
 
   const copyCommand = () => {

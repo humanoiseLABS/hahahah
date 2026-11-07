@@ -63,8 +63,8 @@ export default function InstallationGuide({
       title: `Pasang ${selectedPersona.name} ke ${selectedAgent.name}`,
       desc:
         selectedAgent.id === "antigravity"
-          ? `Pasang secara global ke ~/.gemini agar aktif di semua project Antigravity Anda (atau ganti --target ke folder project spesifik).`
-          : `Ganti /path/ke/project-lu dengan lokasi folder project kodingan Anda (JANGAN pakai --target . jika masih berada di dalam folder hahahah!).`,
+          ? `Pasang secara global ke ~/.gemini agar aktif di semua project Antigravity Anda (atau hilangkan --scope global untuk per-project).`
+          : `Buka terminal di folder project kodingan Anda, lalu jalankan command di bawah:`,
       code: generatedCommand,
       outcome: `Managed-block & konfigurasi ${selectedAgent.whatItWrites} terpasang di project tujuan`,
       side: "left",
@@ -74,8 +74,11 @@ export default function InstallationGuide({
       phase: "Fase 04",
       badge: "Validasi Doctor",
       title: "Pemeriksaan Integritas",
-      desc: "Jalankan CLI doctor ke folder project tujuan untuk memastikan manifest, hash berkas, dan penempatan file valid.",
-      code: `node src/cli.ts doctor --target ${targetPath}`,
+      desc: "Jalankan CLI doctor untuk memastikan manifest, hash berkas, dan penempatan file valid.",
+      code:
+        selectedAgent.id === "antigravity"
+          ? "npx hahahah-ai doctor --target ~/.gemini"
+          : "npx hahahah-ai doctor --target .",
       outcome: "Integritas manifest diverifikasi 100%",
       side: "right",
     },
@@ -84,8 +87,8 @@ export default function InstallationGuide({
       phase: "Fase 05",
       badge: "Siap Digunakan",
       title: "Mulai Koding Bersama Agent",
-      desc: `Buka ${selectedAgent.name} di folder project tujuan Anda. Agent kini langsung aktif dengan karakter ${selectedPersona.name}!`,
-      code: `# Masuk ke folder project Anda lalu jalankan agent:\ncd ${targetPath}\nclaude  # atau buka di Qoder / Antigravity / OpenCode / Cursor`,
+      desc: `Buka ${selectedAgent.name} di project Anda. Agent kini langsung aktif dengan karakter ${selectedPersona.name}!`,
+      code: `# Jalankan agent Anda di folder project:\nclaude  # atau buka di Qoder / Antigravity / OpenCode / Cursor`,
       outcome: "Persona aktif penuh sejak chat pertama",
       side: "left",
     },
@@ -237,7 +240,7 @@ export default function InstallationGuide({
             </span>
           </div>
           <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">
-            git pull &amp;&amp; node src/cli.ts update --target {targetPath}
+            npx hahahah-ai update --target .
           </code>
         </div>
 
@@ -251,7 +254,7 @@ export default function InstallationGuide({
             </span>
           </div>
           <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">
-            node src/cli.ts uninstall --target {targetPath}
+            npx hahahah-ai uninstall --target .
           </code>
         </div>
       </div>
