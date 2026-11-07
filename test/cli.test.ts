@@ -69,6 +69,13 @@ test('install, doctor, and uninstall work through the CLI', () => {
     });
     assert.equal(doctorResult.status, 0, doctorResult.stderr);
 
+    const updateResult = spawnSync(process.execPath, ['src/cli.ts', 'update', '--target', target], {
+      cwd: root,
+      encoding: 'utf8',
+    });
+    assert.equal(updateResult.status, 0, updateResult.stderr);
+    assert.match(updateResult.stdout, /Updated rusuh-id/);
+
     const uninstallResult = spawnSync(
       process.execPath,
       ['src/cli.ts', 'uninstall', '--target', target],

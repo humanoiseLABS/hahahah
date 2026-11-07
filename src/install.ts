@@ -200,7 +200,7 @@ export function install(options: InstallOptions): InstallResult {
   const claudePath = join(targetRoot, blockPath);
   const existingClaude = existsSync(claudePath) ? readFileSync(claudePath, 'utf8') : '';
   const merged = installBlock(existingClaude, block, old, options.force === true);
-  const createdClaudeMd = merged.createdFile;
+  const createdClaudeMd = old ? old.created_claude_md : merged.createdFile;
 
   const manifest: InstallManifest = {
     schema: 'hahahah.install/v1',
@@ -356,6 +356,27 @@ export function doctor(options: { targetRoot: string }): DoctorReport {
   }
 
   return { ok: errors.length === 0, errors, warnings };
+}
+
+export function update(options: {
+  sourceRoot: string;
+  targetRoot: string;
+  dryRun?: boolean;
+  force?: boolean;
+}): InstallResult {
+  const targetRoot = resolve(options.targetRoot);
+  const old = readManifest(targetRoot);
+  if (!old) {
+    throw new InstallError(`No HAHahah install manifest at ${targetRoot}; run install first`);
+  }
+  return install({
+    sourceRoot: options.sourceRoot,
+    targetRoot,
+    profileId: old.profile,
+    adapterId: old.adapter,
+    dryRun: options.dryRun,
+    force: true,
+  });
 }
 
 export { MANIFEST_PATH, BLOCK_PATH, parseBlock };

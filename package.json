@@ -5,6 +5,9 @@
   "license": "MIT",
   "description": "HAHahah personality and efficiency layer for existing coding agents",
   "type": "module",
+  "bin": {
+    "hahahah": "src/cli.ts"
+  },
   "engines": {
     "node": ">=24"
   },

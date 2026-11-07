@@ -59,6 +59,7 @@ npm run measure
 node src/cli.ts measure --profile rusuh-id --adapter claude-code
 node src/cli.ts install --profile rusuh-id --target /path/to/project --dry-run
 node src/cli.ts install --profile rusuh-id --target /path/to/project
+node src/cli.ts update --target /path/to/project
 node src/cli.ts doctor --target /path/to/project
 node src/cli.ts eval --profile rusuh-id --suite smoke --limit 1 --budget-usd 0.10
 node src/cli.ts eval --profile rusuh-id --suite safety --task saf-religion-fatwa-01 --budget-usd 0.20 --strict
@@ -68,6 +69,7 @@ node src/cli.ts uninstall --target /path/to/project
 
 - `measure` prints token budgets without writing.
 - `install` writes the managed block, the adapter's skill or rules tree, and `.hahahah/manifest.json`.
+- `update` refreshes the managed block and skill tree to the latest canonical version using the target manifest.
 - `doctor` verifies files, hashes, and the managed block.
 - `uninstall` removes only manifest-owned content.
 - `eval` runs baseline/treatment headless; `--harness claude|opencode` picks the CLI *and* the adapter the treatment is installed for, since a mismatch measures nothing. `--task <id>` selects tasks; `--strict` exits non-zero when a treatment answer fails a screen.

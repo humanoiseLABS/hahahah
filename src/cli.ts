@@ -1,4 +1,5 @@
-import { readdirSync } from 'node:fs';
+#!/usr/bin/env node
+import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -20,7 +21,8 @@ import {
   type EvalArm,
   type EvalTurnRecord,
 } from './eval.ts';
-import { doctor, install, uninstall, InstallError } from './install.ts';
+import { doctor, install, uninstall, update, InstallError } from './install.ts';
+import { checkRemoteUpdate, formatUpdateNotice } from './notifier.ts';
 import { runOpencode } from './opencode.ts';
 
 export type Harness = 'claude' | 'opencode';
@@ -75,6 +77,7 @@ Usage:
   node src/cli.ts build --profile <id> [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
   node src/cli.ts measure --profile <id> [--adapter fake|claude-code|opencode|agents-md|antigravity]
   node src/cli.ts install --profile <id> [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
+  node src/cli.ts update [--target <repo>] [--dry-run] [--force]
   node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
   node src/cli.ts fixtures check [--dir fixtures]
   node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--harness claude|opencode] [--arm both|baseline|treatment] [--setting-sources <sources>] [--out <dir>] [--live]
@@ -179,7 +182,20 @@ function isMainEntry(): boolean {
   return fileURLToPath(import.meta.url) === resolve(invoked);
 }
 
+function getCliVersion(): string {
+  try {
+    const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as {
+      version?: string;
+    };
+    return pkg.version ?? '0.1.0';
+  } catch {
+    return '0.1.0';
+  }
+}
+
 if (isMainEntry()) {
+  const version = getCliVersion();
+  const updateCheck = checkRemoteUpdate(version);
   try {
     const parsed = parseArgs({
       allowPositionals: true,
@@ -241,6 +257,22 @@ if (isMainEntry()) {
       });
       console.log(
         `${result.dryRun ? 'Dry run: would install' : 'Installed'} ${result.manifest.profile} into ${result.targetRoot} (${scope} scope)`,
+      );
+      console.log(
+        `files: ${result.manifest.files.length} managed file(s) + ${result.manifest.block.path} block`,
+      );
+      for (const warning of result.warnings) {
+        console.log(`warning: ${warning}`);
+      }
+    } else if (command === 'update') {
+      const result = update({
+        sourceRoot: process.cwd(),
+        targetRoot: parsed.values.target,
+        dryRun: parsed.values['dry-run'],
+        force: parsed.values.force,
+      });
+      console.log(
+        `${result.dryRun ? 'Dry run: would update' : 'Updated'} ${result.manifest.profile} (${result.manifest.adapter}) in ${result.targetRoot}`,
       );
       console.log(
         `files: ${result.manifest.files.length} managed file(s) + ${result.manifest.block.path} block`,
@@ -541,5 +573,14 @@ if (isMainEntry()) {
       console.error(error);
     }
     process.exitCode = 1;
+  } finally {
+    try {
+      const latest = await updateCheck;
+      if (latest) {
+        console.error(formatUpdateNotice(version, latest));
+      }
+    } catch {
+      // ignore
+    }
   }
 }

@@ -11,7 +11,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { install, uninstall, doctor } from '../src/install.ts';
+import { install, uninstall, doctor, update } from '../src/install.ts';
 
 const sourceRoot = process.cwd();
 
@@ -73,6 +73,22 @@ test('reinstall keeps generated files stable and doctor detects corruption', () 
     const report = doctor({ targetRoot });
     assert.equal(report.ok, false);
     assert.ok(report.errors.some((error) => /hash|mismatch/i.test(error)));
+  } finally {
+    rmSync(targetRoot, { recursive: true, force: true });
+  }
+});
+
+test('update refreshes managed block and files using the existing manifest', () => {
+  const targetRoot = tempProject();
+  try {
+    writeFileSync(join(targetRoot, 'CLAUDE.md'), originalClaude);
+    install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    assert.equal(doctor({ targetRoot }).ok, true);
+
+    const updateResult = update({ sourceRoot, targetRoot });
+    assert.equal(updateResult.manifest.profile, 'rusuh-id');
+    assert.equal(updateResult.manifest.adapter, 'claude-code');
+    assert.equal(doctor({ targetRoot }).ok, true);
   } finally {
     rmSync(targetRoot, { recursive: true, force: true });
   }

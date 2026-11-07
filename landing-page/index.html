@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NUNGSA NARAYA — Saga of the Island of Kings | HAHahah Repository</title>
+  <meta name="description" content="Nungsa Naraya: Saga of the Island of Kings — Character design presentation & repository download for HAHahah agent personality layer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            editorial: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            nusa: {
+              bg: '#FFFFFF',
+              darkBg: '#0F1318',
+              surface: '#F8F9FA',
+              border: '#E5E7EB',
+              text: '#111827',
+              muted: '#6B7280',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Block Geometric Typography for Title matching Image 1 */
+    .title-block {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 0.88;
+    }
+    .hero-sky-gradient {
+      background: linear-gradient(180deg, #1A2634 0%, #2D4255 45%, #E38B4E 75%, #F4C472 88%, #1E3345 100%);
+    }
+    /* Sliced character lineup transition */
+    .char-slice {
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .char-slice:hover {
+      flex: 1.6;
+    }
+    .char-slice:hover .char-overlay {
+      opacity: 0.15;
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 font-sans antialiased selection:bg-amber-400 selection:text-black">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP HERO BANNER (Direct Mirror of Image 1) -->
+  <!-- ========================================== -->
+  <header class="relative w-full h-[520px] sm:h-[620px] hero-sky-gradient overflow-hidden flex flex-col items-center justify-between pt-8 pb-10 px-4 select-none">
+    
+    <!-- Ancient Stone Pillars, Temple Ruins & Vines (Vector Illustration Background) -->
+    <div class="absolute inset-0 pointer-events-none">
+      
+      <!-- Hanging jungle vines on top -->
+      <svg class="absolute top-0 inset-x-0 w-full h-24 text-[#0F1B16]/80" preserveAspectRatio="none" viewBox="0 0 1200 120" fill="currentColor">
+        <path d="M0,0 L1200,0 L1200,30 Q1050,90 900,40 Q750,110 600,30 Q450,100 300,30 Q150,90 0,20 Z"/>
+        <path d="M120,0 Q130,70 120,90 Q110,70 120,0 Z" fill="#142820"/>
+        <path d="M480,0 Q500,85 480,110 Q470,85 480,0 Z" fill="#142820"/>
+        <path d="M820,0 Q840,80 820,105 Q810,80 820,0 Z" fill="#142820"/>
+        <path d="M1020,0 Q1040,65 1020,85 Q1010,65 1020,0 Z" fill="#142820"/>
+      </svg>
+
+      <!-- Left Temple Candi Gate Ruins Pillar -->
+      <div class="absolute bottom-0 left-0 sm:left-6 w-36 sm:w-64 h-[440px] opacity-95">
+        <svg viewBox="0 0 200 400" fill="none" class="w-full h-full">
+          <!-- Main stone tower -->
+          <polygon points="10,400 190,400 170,300 185,300 160,200 175,200 150,100 160,100 130,20 70,20 40,100 50,100 25,200 40,200 15,300 30,300" fill="#92400E"/>
+          <!-- Highlighted stone tiers -->
+          <polygon points="20,400 180,400 160,320 140,220 120,120 80,120 60,220 40,320" fill="#B45309"/>
+          <!-- Carved stone guardian face relief on pillar -->
+          <rect x="75" y="150" width="50" height="40" rx="6" fill="#78350F"/>
+          <circle cx="88" cy="165" r="5" fill="#FDE68A"/>
+          <circle cx="112" cy="165" r="5" fill="#FDE68A"/>
+          <rect x="85" y="178" width="30" height="6" rx="2" fill="#FDE68A"/>
+          <!-- Moss & Jungle vines wrapping pillar -->
+          <path d="M30,350 Q80,310 50,250 Q10,210 60,160 Q120,120 70,70" stroke="#065F46" stroke-width="8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Right Temple Pillar Ruins -->
+      <div class="absolute bottom-0 right-0 sm:right-6 w-36 sm:w-64 h-[440px] opacity-95">
+        <svg viewBox="0 0 200 400" fill="none" class="w-full h-full">
+          <polygon points="190,400 10,400 30,300 15,300 40,200 25,200 50,100 40,100 70,20 130,20 160,100 150,100 175,200 160,200 185,300 170,300" fill="#92400E"/>
+          <polygon points="180,400 20,400 40,320 60,220 80,120 120,120 140,220 160,320" fill="#B45309"/>
+          <rect x="75" y="150" width="50" height="40" rx="6" fill="#78350F"/>
+          <circle cx="88" cy="165" r="5" fill="#FDE68A"/>
+          <circle cx="112" cy="165" r="5" fill="#FDE68A"/>
+          <rect x="85" y="178" width="30" height="6" rx="2" fill="#FDE68A"/>
+          <path d="M170,350 Q120,310 150,250 Q190,210 140,160 Q80,120 130,70" stroke="#065F46" stroke-width="8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Distant Island Hills & Calm Sea Horizon -->
+      <div class="absolute bottom-0 inset-x-0 h-32 pointer-events-none">
+        <svg viewBox="0 0 1200 160" preserveAspectRatio="none" class="w-full h-full">
+          <!-- Distant mountains -->
+          <path d="M0,100 Q150,40 320,80 Q550,20 780,70 Q1000,30 1200,90 L1200,160 L0,160 Z" fill="#1C2D3D" opacity="0.8"/>
+          <!-- Horizon water reflective plane -->
+          <rect x="0" y="110" width="1200" height="50" fill="#192A38"/>
+          <line x1="450" y1="120" x2="750" y2="120" stroke="#FDE68A" stroke-width="3" opacity="0.6"/>
+          <line x1="500" y1="126" x2="700" y2="126" stroke="#FDE68A" stroke-width="2" opacity="0.4"/>
+          <!-- Foreground tropical foliage silhouettes -->
+          <path d="M0,160 Q120,130 250,160 Q380,125 550,160 Q720,130 900,160 Q1050,125 1200,160 Z" fill="#0D1612"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Centered Folk Block Logo & Subtitle (Exact NUNGSA NARAYA Layout) -->
+    <div class="relative z-10 flex flex-col items-center justify-center my-auto text-center px-4">
+      
+      <!-- Custom Block Lettering: NUNGSA NARAYA -->
+      <div class="flex flex-col items-center">
+        <!-- Word 1: NUNGSA with custom geometric crown glyph on G -->
+        <div class="relative">
+          <h1 class="title-block text-white text-6xl sm:text-8xl md:text-9xl tracking-[0.06em] drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)] flex items-center justify-center">
+            <span>NUN</span>
+            <span class="relative inline-block mx-0.5">
+              <!-- Crown motif on top of G -->
+              <svg class="absolute -top-6 sm:-top-9 left-1/2 -translate-x-1/2 w-6 sm:w-9 h-5 sm:h-7 text-white" viewBox="0 0 24 16" fill="currentColor">
+                <polygon points="0,16 5,4 12,11 19,4 24,16"/>
+              </svg>
+              <span>G</span>
+            </span>
+            <span>SA</span>
+          </h1>
+        </div>
+
+        <!-- Word 2: NARAYA -->
+        <h1 class="title-block text-white text-6xl sm:text-8xl md:text-9xl tracking-[0.06em] -mt-2 sm:-mt-5 drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
+          NARAYA
+        </h1>
+      </div>
+
+      <!-- Subtitle (Exact spacing from Image 1) -->
+      <p class="text-white/95 text-xs sm:text-sm font-semibold tracking-[0.38em] uppercase mt-4 drop-shadow-md">
+        SAGA OF THE ISLAND OF KINGS
+      </p>
+
+      <!-- Quick Repository Action Buttons -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="#download" class="px-6 py-2.5 rounded-full bg-white text-slate-900 font-bold text-xs uppercase tracking-wider shadow-lg hover:bg-slate-100 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+          <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Download Repo (.ZIP)
+        </a>
+        <a href="https://github.com/ALIVEbyHUMANOISE/hahahah" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-full bg-black/40 hover:bg-black/60 text-white font-medium text-xs uppercase tracking-wider backdrop-blur-md border border-white/20 transition-all flex items-center gap-2">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub: ALIVEbyHUMANOISE
+        </a>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- ========================================== -->
+  <!-- 2. EDITORIAL STUDIO BAR (Direct Mirror of Image 1) -->
+  <!-- ========================================== -->
+  <section class="w-full bg-white border-b border-slate-200 py-8 px-6 lg:px-16 font-editorial">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6 items-center">
+      
+      <!-- Column 1: Stepsio Studios / ALIVE Studios -->
+      <div>
+        <div class="flex items-baseline gap-1">
+          <span class="text-2xl sm:text-3xl font-black tracking-tight text-black">Stepsio</span>
+          <span class="text-xs font-normal text-slate-500">&reg;</span>
+        </div>
+        <div class="text-base sm:text-lg font-bold text-black -mt-1 tracking-tight">Studios</div>
+      </div>
+
+      <!-- Column 2: INSPIRED BY LOCAL CULTURE -->
+      <div>
+        <span class="text-[11px] font-semibold text-slate-400 tracking-wider block uppercase">INSPIRED BY</span>
+        <span class="text-xs sm:text-sm font-bold text-black uppercase tracking-wide">LOCAL CULTURE</span>
+      </div>
+
+      <!-- Column 3: ILLUSTRATION / CHARACTER DESIGN -->
+      <div>
+        <span class="text-[11px] font-semibold text-slate-400 tracking-wider block uppercase">ILLUSTRATION/</span>
+        <span class="text-xs sm:text-sm font-bold text-black uppercase tracking-wide">CHARACTER DESIGN</span>
+      </div>
+
+      <!-- Column 4: 2022 / 2026 -->
+      <div class="sm:text-right">
+        <span class="text-xs sm:text-sm font-bold text-slate-900 tracking-wider">2026</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- 3. PANORAMIC 5-CHARACTER SLICE LINEUP (Direct Mirror of Image 1) -->
+  <!-- ========================================== -->
+  <section class="w-full bg-[#0E121A] overflow-hidden select-none">
+    <div class="w-full max-w-[1536px] mx-auto flex flex-col md:flex-row h-[520px] sm:h-[620px] divide-y md:divide-y-0 md:divide-x divide-black/40">
+      
+      <!-- CHARACTER 1: BORNEO (Skull War Paint, Dayak Feather Crown, Red Tattoo) -->
+      <div class="char-slice flex-1 relative h-full overflow-hidden cursor-pointer group bg-[#111927]">
+        <!-- Full Art Vector Representation -->
+        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 260 700" preserveAspectRatio="xMidYMid slice">
+          <!-- Background dark blue/slate tone -->
+          <rect width="260" height="700" fill="#141C2B"/>
+          <!-- Hornbill Feather War Crown (Cream, Yellow, Red, Black tips) -->
+          <polygon points="120,60 140,0 150,60 170,10 170,70 200,30 185,90 230,60 195,120" fill="#FEF3C7"/>
+          <polygon points="120,60 140,0 150,60 170,10 170,70" fill="#DC2626"/>
+          <polygon points="135,15 140,0 145,15" fill="#111"/>
+          <polygon points="165,25 170,10 175,25" fill="#111"/>
+          <!-- Warrior Face (Pale / Skull war paint, yellow headband, dynamic jaw) -->
+          <path d="M90,140 L170,130 L160,240 L110,250 Z" fill="#FEF3C7"/>
+          <rect x="85" y="130" width="90" height="18" fill="#F59E0B" rx="3"/>
+          <!-- Black eye socket with fierce yellow glowing pupil -->
+          <polygon points="105,155 125,150 130,170 110,175" fill="#1E293B"/>
+          <circle cx="118" cy="162" r="4" fill="#FDE047"/>
+          <!-- Dayak Red War Tattoo swirling down cheek and shoulder -->
+          <path d="M120,200 Q150,220 130,260 Q170,240 180,320" stroke="#DC2626" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <!-- Muscular Torso with bold Red and Black swirling tribal body paint -->
+          <path d="M70,270 L190,260 L220,550 L40,550 Z" fill="#F59E0B" opacity="0.8"/>
+          <path d="M90,320 Q60,400 120,440 Q160,420 140,490 Q90,520 130,580" stroke="#991B1B" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <path d="M110,300 Q150,380 90,440" stroke="#111827" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <!-- Golden arm cuff and wrist beads -->
+          <rect x="50" y="380" width="30" height="24" fill="#FBBF24" rx="4"/>
+          <rect x="45" y="440" width="35" height="16" fill="#FBBF24" rx="3"/>
+        </svg>
+
+        <div class="char-overlay absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all pointer-events-none"></div>
+
+        <!-- Floating Label on hover -->
+        <div class="absolute bottom-6 left-6 right-6 z-10 font-editorial">
+          <span class="text-[10px] font-mono tracking-widest text-red-400 font-bold uppercase block">BORNEO / AIR</span>
+          <h3 class="text-xl font-bold text-white uppercase tracking-tight">Kinyah Warrior</h3>
+          <p class="text-[11px] font-mono text-slate-300 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            Dayak Mandau master & Sababuha Mask.
+          </p>
+        </div>
+      </div>
+
+      <!-- CHARACTER 2: SUMATRA (Crimson Mask, Gold Ribbon, Nias Shield & Songket) -->
+      <div class="char-slice flex-1 relative h-full overflow-hidden cursor-pointer group bg-[#1B1212]">
+        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 260 700" preserveAspectRatio="xMidYMid slice">
+          <rect width="260" height="700" fill="#1B1212"/>
+          <!-- Golden looped rope/ribbon overhead -->
+          <path d="M60,20 Q120,120 180,40 Q220,150 150,220" stroke="#FDE68A" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- Crimson red spirit mask with golden eyes and black hair -->
+          <path d="M90,130 L165,120 L155,220 L95,225 Z" fill="#DC2626"/>
+          <!-- Spiky black hair crown -->
+          <polygon points="80,120 100,80 115,120 135,70 145,120 165,80 175,130" fill="#111827"/>
+          <!-- White stylized eyes & fierce mustache -->
+          <circle cx="110" cy="155" r="7" fill="#FFF"/>
+          <circle cx="140" cy="150" r="7" fill="#FFF"/>
+          <path d="M100,185 Q125,175 150,180" stroke="#111" stroke-width="6" fill="none"/>
+          <!-- Dynamic arm with cyan glowing power bands -->
+          <path d="M140,220 L210,180 L250,260 L180,280 Z" fill="#F59E0B" opacity="0.85"/>
+          <rect x="200" y="200" width="18" height="35" rx="3" fill="#06B6D4" transform="rotate(30 200 200)"/>
+          <!-- Red & Gold Songket Warrior Kilt with zigzag pattern -->
+          <path d="M70,280 L180,270 L210,540 L50,540 Z" fill="#991B1B"/>
+          <polygon points="70,330 90,360 110,330 130,360 150,330 170,360 190,330" fill="#FDE047"/>
+          <polygon points="70,410 90,440 110,410 130,440 150,410 170,440 190,410" fill="#FDE047"/>
+          <polygon points="70,490 90,520 110,490 130,520 150,490 170,520 190,490" fill="#FDE047"/>
+        </svg>
+
+        <div class="char-overlay absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all pointer-events-none"></div>
+
+        <div class="absolute bottom-6 left-6 right-6 z-10 font-editorial">
+          <span class="text-[10px] font-mono tracking-widest text-amber-400 font-bold uppercase block">SUMATRA / FIRE</span>
+          <h3 class="text-xl font-bold text-white uppercase tracking-tight">Cindaku Fataele</h3>
+          <p class="text-[11px] font-mono text-slate-300 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            Kerinci tiger spirit & Nias war dance.
+          </p>
+        </div>
+      </div>
+
+      <!-- CHARACTER 3: JAVA (Golden Topknot, Cyan War Paint, Tumenggung Mask, Parang Batik) -->
+      <div class="char-slice flex-1 relative h-full overflow-hidden cursor-pointer group bg-[#151D24]">
+        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 260 700" preserveAspectRatio="xMidYMid slice">
+          <rect width="260" height="700" fill="#151D24"/>
+          <!-- Topknot hair with gold bun wrap -->
+          <circle cx="130" cy="100" r="22" fill="#111827"/>
+          <rect x="115" y="90" width="30" height="14" rx="4" fill="#FBBF24"/>
+          <!-- Javanese Tumenggung Wooden Mask (Warm teak brown tone) -->
+          <ellipse cx="130" cy="180" rx="38" ry="46" fill="#78350F"/>
+          <!-- Eyes & serene expression -->
+          <rect x="105" y="165" width="20" height="6" rx="3" fill="#FEF3C7"/>
+          <rect x="135" y="165" width="20" height="6" rx="3" fill="#FEF3C7"/>
+          <path d="M115,195 Q130,205 145,195" stroke="#FEF3C7" stroke-width="3" fill="none"/>
+          <!-- Muscular bare shoulder with bright cyan geometric tattoos -->
+          <path d="M60,240 L190,230 L210,380 L90,390 Z" fill="#E2A06E"/>
+          <rect x="120" y="240" width="40" height="12" fill="#06B6D4" rx="2" transform="rotate(-15 120 240)"/>
+          <rect x="130" y="270" width="35" height="12" fill="#06B6D4" rx="2" transform="rotate(-15 130 270)"/>
+          <!-- White hand wraps / bandages holding bamboo staff -->
+          <line x1="80" y1="210" x2="180" y2="480" stroke="#78350F" stroke-width="12" stroke-linecap="round"/>
+          <circle cx="120" cy="320" r="16" fill="#FFF"/>
+          <circle cx="150" cy="400" r="16" fill="#FFF"/>
+          <!-- Royal Cream & Brown Batik Parang Kilt -->
+          <path d="M70,390 L190,380 L220,620 L50,620 Z" fill="#FEF3C7"/>
+          <!-- Parang Batik diagonal wavy stripes -->
+          <path d="M70,420 L180,480 M60,460 L190,530 M50,510 L200,580 M50,560 L210,630" stroke="#78350F" stroke-width="12" stroke-linecap="round"/>
+        </svg>
+
+        <div class="char-overlay absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all pointer-events-none"></div>
+
+        <div class="absolute bottom-6 left-6 right-6 z-10 font-editorial">
+          <span class="text-[10px] font-mono tracking-widest text-emerald-400 font-bold uppercase block">JAVA / EARTH</span>
+          <h3 class="text-xl font-bold text-white uppercase tracking-tight">Tumenggung Samberyawa</h3>
+          <p class="text-[11px] font-mono text-slate-300 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            Warak Ngendog & Wayang Wong adiluhung.
+          </p>
+        </div>
+      </div>
+
+      <!-- CHARACTER 4: SULAWESI (White Horned Jaw Mask, Kabasaran Red Hornbill Plumage, Bone Necklaces) -->
+      <div class="char-slice flex-1 relative h-full overflow-hidden cursor-pointer group bg-[#1A1A22]">
+        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 260 700" preserveAspectRatio="xMidYMid slice">
+          <rect width="260" height="700" fill="#1A1A22"/>
+          <!-- Black spiky warrior dreads -->
+          <polygon points="90,130 70,80 110,120 120,60 140,110 160,70 170,120" fill="#0F172A"/>
+          <!-- Giant White Bone/Beast Jaw Mask with black eye goggles -->
+          <path d="M85,130 L175,120 L160,210 L100,215 Z" fill="#FEF3C7"/>
+          <rect x="95" y="145" width="70" height="20" rx="6" fill="#0F172A"/>
+          <circle cx="112" cy="155" r="5" fill="#EF4444"/>
+          <circle cx="148" cy="155" r="5" fill="#EF4444"/>
+          <!-- Heavy curved boar tusks / bone teeth necklace -->
+          <path d="M75,210 Q130,260 185,200" stroke="#FDE68A" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="14,10"/>
+          <path d="M70,240 Q130,300 190,230" stroke="#FBBF24" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <!-- Muscular chest with Red and Cream Geometric Minahasa Sash -->
+          <path d="M60,260 L200,250 L230,550 L40,550 Z" fill="#9A3412"/>
+          <!-- Geometric chevron pattern belt -->
+          <polygon points="130,280 100,320 130,360 160,320" fill="#FEF3C7"/>
+          <polygon points="130,370 100,410 130,450 160,410" fill="#FEF3C7"/>
+          <!-- Heavy braided golden straw / fiber war skirt -->
+          <path d="M50,470 L210,460 L220,620 L40,620 Z" fill="#D97706"/>
+          <line x1="60" y1="480" x2="60" y2="610" stroke="#FEF3C7" stroke-width="6"/>
+          <line x1="90" y1="480" x2="90" y2="610" stroke="#FEF3C7" stroke-width="6"/>
+          <line x1="120" y1="480" x2="120" y2="610" stroke="#FEF3C7" stroke-width="6"/>
+          <line x1="150" y1="480" x2="150" y2="610" stroke="#FEF3C7" stroke-width="6"/>
+          <line x1="180" y1="480" x2="180" y2="610" stroke="#FEF3C7" stroke-width="6"/>
+        </svg>
+
+        <div class="char-overlay absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all pointer-events-none"></div>
+
+        <div class="absolute bottom-6 left-6 right-6 z-10 font-editorial">
+          <span class="text-[10px] font-mono tracking-widest text-sky-400 font-bold uppercase block">SULAWESI / STEEL</span>
+          <h3 class="text-xl font-bold text-white uppercase tracking-tight">Kabasaran Wolay</h3>
+          <p class="text-[11px] font-mono text-slate-300 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            Minahasa war crest & Kalimpau guardian.
+          </p>
+        </div>
+      </div>
+
+      <!-- CHARACTER 5: PAPUA (Leaping Warrior, Horned Bone Mask, Yellow/Red Plumage) -->
+      <div class="char-slice flex-1 relative h-full overflow-hidden cursor-pointer group bg-[#1E1418]">
+        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 260 700" preserveAspectRatio="xMidYMid slice">
+          <rect width="260" height="700" fill="#1E1418"/>
+          <!-- Huge horned beast/bird mask (Red, White, Yellow feathers) -->
+          <path d="M120,40 C60,20 60,110 100,140 C140,80 180,20 120,40 Z" fill="#DC2626"/>
+          <!-- Long curved yellow horns on mask -->
+          <path d="M90,110 C50,60 30,120 70,160 Z" fill="#FBBF24"/>
+          <path d="M160,105 C200,60 220,120 180,160 Z" fill="#FBBF24"/>
+          <!-- White clay Asaro skull mask -->
+          <polygon points="90,140 160,130 180,220 130,260 80,210" fill="#FEF3C7"/>
+          <circle cx="110" cy="170" r="8" fill="#111827"/>
+          <circle cx="145" cy="165" r="8" fill="#111827"/>
+          <!-- Triangular beak/jaw -->
+          <polygon points="120,195 140,190 130,240" fill="#B91C1C"/>
+          <!-- Dynamic leaping pose with ceremonial fiber skirt & leg ornaments -->
+          <path d="M70,260 L180,250 L220,450 L110,480 Z" fill="#991B1B"/>
+          <!-- Intricate geometric diamond cloth sash -->
+          <polygon points="110,290 80,340 110,390 140,340" fill="#FEF08A"/>
+          <polygon points="150,330 120,380 150,430 180,380" fill="#FEF08A"/>
+          <!-- Leaping bare legs with cowrie shell ankle wraps -->
+          <path d="M110,480 L90,590 L120,620 L130,550 Z" fill="#78350F"/>
+          <path d="M160,460 L190,560 L160,600 L140,530 Z" fill="#78350F"/>
+          <rect x="95" y="580" width="30" height="12" rx="3" fill="#FEF3C7"/>
+        </svg>
+
+        <div class="char-overlay absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all pointer-events-none"></div>
+
+        <div class="absolute bottom-6 left-6 right-6 z-10 font-editorial">
+          <span class="text-[10px] font-mono tracking-widest text-amber-300 font-bold uppercase block">PAPUA / WATER</span>
+          <h3 class="text-xl font-bold text-white uppercase tracking-tight">Murray Asaro</h3>
+          <p class="text-[11px] font-mono text-slate-300 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            Asaro clay spirit & Papua Perang dance.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- 4. ANATOMY & REGIONAL CULTURAL DIAGRAM (Exact Mirror of Image 1 Bottom) -->
+  <!-- ========================================== -->
+  <section class="w-full bg-white text-slate-900 py-20 px-6 sm:px-12 lg:px-20 font-editorial border-b border-slate-200">
+    <div class="max-w-6xl mx-auto">
+      
+      <!-- Container with exact layout of Image 1 bottom -->
+      <div class="relative w-full">
+        
+        <!-- Top Row: Borneo (Left) and Papua (Right) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 mb-8">
+          
+          <!-- Top Left: BORNEO -->
+          <div class="flex flex-col items-start">
+            <h4 class="text-base font-bold text-black tracking-tight">Borneo</h4>
+            <div class="text-xs text-slate-600 font-normal space-y-0.5 mt-1 font-sans">
+              <div>Lembuswana</div>
+              <div>Kinyah Uut Danum Dance</div>
+              <div>Sababuha Mask</div>
+            </div>
+            
+            <!-- Reference photo thumbnails -->
+            <div class="flex items-center gap-3 mt-4">
+              <!-- Thumbnail 1: Lembuswana Golden Statue -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-amber-100 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#B45309"/>
+                  <!-- Stylized golden Lembuswana statue (elephant trunk, eagle wings, lion body) -->
+                  <circle cx="40" cy="35" r="20" fill="#FBBF24"/>
+                  <path d="M30,30 Q15,40 25,60 Q35,50 35,40" stroke="#FDE68A" stroke-width="6" fill="none"/>
+                  <polygon points="45,20 65,10 55,35" fill="#D97706"/>
+                  <circle cx="45" cy="32" r="3" fill="#111"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Statue</span>
+              </div>
+              
+              <!-- Thumbnail 2: Dayak Sababuha Mask -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-amber-50 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#78350F"/>
+                  <!-- Dayak feathered masked dancer -->
+                  <polygon points="40,10 30,35 50,35" fill="#DC2626"/>
+                  <circle cx="40" cy="45" r="16" fill="#FEF3C7"/>
+                  <circle cx="34" cy="42" r="3" fill="#111"/>
+                  <circle cx="46" cy="42" r="3" fill="#111"/>
+                  <path d="M30,70 L50,70 L40,55 Z" fill="#F59E0B"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Mask</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Right: PAPUA -->
+          <div class="flex flex-col sm:items-end sm:text-right">
+            <h4 class="text-base font-bold text-black tracking-tight">Papua</h4>
+            <div class="text-xs text-slate-600 font-normal space-y-0.5 mt-1 font-sans">
+              <div>Murray</div>
+              <div>Perang Dance</div>
+              <div>Asaro Mask</div>
+            </div>
+            
+            <!-- Reference photo thumbnails -->
+            <div class="flex items-center gap-3 mt-4">
+              <!-- Thumbnail 1: Papua Perang Warrior -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-100 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#064E3B"/>
+                  <!-- Papua warrior with headdress & face paint -->
+                  <circle cx="40" cy="38" r="18" fill="#78350F"/>
+                  <polygon points="25,25 40,5 55,25" fill="#FEF3C7"/>
+                  <line x1="28" y1="38" x2="52" y2="38" stroke="#DC2626" stroke-width="4"/>
+                  <rect x="30" y="55" width="20" height="25" fill="#FBBF24"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Dance</span>
+              </div>
+
+              <!-- Thumbnail 2: Asaro Clay Mask -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-slate-100 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#334155"/>
+                  <!-- Asaro Mudman ghost mask -->
+                  <ellipse cx="40" cy="42" rx="20" ry="24" fill="#94A3B8"/>
+                  <circle cx="33" cy="38" r="4" fill="#0F172A"/>
+                  <circle cx="47" cy="38" r="4" fill="#0F172A"/>
+                  <rect x="35" y="52" width="10" height="6" rx="2" fill="#0F172A"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Asaro</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- Center Row: Silhouetted Dynamic Figures & Element Badges with Arrows -->
+        <div class="relative w-full max-w-3xl mx-auto my-6 py-4 flex items-center justify-center">
+          
+          <!-- Central Dynamic Silhouette Poses & Connecting Arrows SVG (Image 1 replica) -->
+          <svg viewBox="0 0 700 380" class="w-full h-auto text-slate-400">
+            
+            <!-- Connecting Arrow Lines from Borneo (top-left) to Air -->
+            <path d="M120,30 L260,30 L260,80" stroke="#111" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+            
+            <!-- Connecting Arrow Lines from Papua (top-right) to Steel -->
+            <path d="M580,30 L450,30 L450,80" stroke="#111" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+            <!-- Connecting Arrow Lines from Sumatra (mid-left) to Fire -->
+            <path d="M120,160 L230,160 L230,210" stroke="#111" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+            <!-- Connecting Arrow Lines from Sulawesi (mid-right) to Water -->
+            <path d="M580,180 L470,180 L470,210" stroke="#111" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+            <!-- Connecting Arrow Lines from Java (bottom-center) to Earth -->
+            <path d="M360,340 L360,285" stroke="#111" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+
+            <!-- Arrowhead definition -->
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#111"/>
+              </marker>
+            </defs>
+
+            <!-- Grey Silhouetted Action Warrior Figures (Center Group) -->
+            <g fill="#88929A">
+              <!-- Central staff-wielding martial artist stance (Earth / Java) -->
+              <path d="M330,150 L350,130 L365,150 L380,160 L360,200 L395,240 L360,230 L330,300 L300,280 L330,230 L270,240 L300,190 Z"/>
+              <!-- Air figure (top left leaps) -->
+              <path d="M280,100 Q300,70 320,90 Q310,120 290,140 Z"/>
+              <!-- Steel heavy brute silhouette (top right stance) -->
+              <path d="M390,95 L440,110 L430,160 L390,145 Z"/>
+              <!-- Fire agile low sweep silhouette (lower left) -->
+              <path d="M210,210 L260,195 L250,250 L195,240 Z"/>
+              <!-- Water fluid counter silhouette (lower right) -->
+              <path d="M410,195 L460,215 L430,265 L390,230 Z"/>
+              <!-- Crossed combat staves & spears -->
+              <line x1="220" y1="230" x2="480" y2="130" stroke="#475569" stroke-width="3"/>
+              <line x1="290" y1="120" x2="420" y2="280" stroke="#475569" stroke-width="3"/>
+            </g>
+
+          </svg>
+
+          <!-- 5 Element Badges Overlay (Exact rounded black pill shape in Image 1) -->
+          <!-- 1. Air Badge -->
+          <div class="absolute top-16 left-[34%] -translate-x-1/2 bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-md">
+            Air
+          </div>
+
+          <!-- 2. Steel Badge -->
+          <div class="absolute top-16 right-[33%] translate-x-1/2 bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-md">
+            Steel
+          </div>
+
+          <!-- 3. Fire Badge -->
+          <div class="absolute top-48 left-[28%] -translate-x-1/2 bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-md">
+            Fire
+          </div>
+
+          <!-- 4. Water Badge -->
+          <div class="absolute top-48 right-[30%] translate-x-1/2 bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-md">
+            Water
+          </div>
+
+          <!-- 5. Earth Badge -->
+          <div class="absolute bottom-10 left-[51%] -translate-x-1/2 bg-black text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-md">
+            Earth
+          </div>
+
+        </div>
+
+
+        <!-- Mid Row: Sumatra (Left) and Sulawesi (Right) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-16 my-4">
+          
+          <!-- Mid Left: SUMATRA -->
+          <div class="flex flex-col items-start">
+            <h4 class="text-base font-bold text-black tracking-tight">Sumatra</h4>
+            <div class="text-xs text-slate-600 font-normal space-y-0.5 mt-1 font-sans">
+              <div>Cindaku</div>
+              <div>Fataele Dance</div>
+              <div>Huda-Huda Mask</div>
+            </div>
+            
+            <div class="flex items-center gap-3 mt-4">
+              <!-- Thumbnail 1: Nias Fataele Warrior -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#991B1B"/>
+                  <polygon points="40,15 25,65 55,65" fill="#FEF08A"/>
+                  <circle cx="40" cy="30" r="10" fill="#111"/>
+                  <line x1="30" y1="65" x2="20" y2="20" stroke="#FFF" stroke-width="3"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Fataele</span>
+              </div>
+              
+              <!-- Thumbnail 2: Huda-Huda Mask -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-amber-100 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#451A03"/>
+                  <!-- Simalungun Huda-Huda Hornbill Mask -->
+                  <polygon points="40,10 25,45 55,45" fill="#F59E0B"/>
+                  <circle cx="34" cy="35" r="4" fill="#FEF3C7"/>
+                  <circle cx="46" cy="35" r="4" fill="#FEF3C7"/>
+                  <path d="M40,45 L40,70 L48,55 Z" fill="#DC2626"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Mask</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mid Right: SULAWESI -->
+          <div class="flex flex-col sm:items-end sm:text-right">
+            <h4 class="text-base font-bold text-black tracking-tight">Sulawesi</h4>
+            <div class="text-xs text-slate-600 font-normal space-y-0.5 mt-1 font-sans">
+              <div>Kalimpau</div>
+              <div>Kabasaran Dance</div>
+              <div>Wolay Mask</div>
+            </div>
+            
+            <div class="flex items-center gap-3 mt-4">
+              <!-- Thumbnail 1: Kabasaran Warrior -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-red-50 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#7F1D1D"/>
+                  <!-- Red headdress & fierce eye -->
+                  <path d="M20,30 Q40,5 60,30" stroke="#DC2626" stroke-width="8" fill="none"/>
+                  <circle cx="40" cy="40" r="14" fill="#1E293B"/>
+                  <circle cx="40" cy="40" r="4" fill="#EF4444"/>
+                  <rect x="25" y="55" width="30" height="20" fill="#DC2626"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Tari</span>
+              </div>
+
+              <!-- Thumbnail 2: Wolay Spirit -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 bg-slate-100 rounded border border-slate-300 overflow-hidden relative group">
+                <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                  <rect width="80" height="80" fill="#0F172A"/>
+                  <circle cx="40" cy="35" r="16" fill="#64748B" opacity="0.6"/>
+                  <circle cx="36" cy="33" r="3" fill="#FFF"/>
+                  <circle cx="44" cy="33" r="3" fill="#FFF"/>
+                  <path d="M25,75 Q40,50 55,75 Z" fill="#334155"/>
+                </svg>
+                <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Wolay</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- Bottom Row: JAVA -->
+        <div class="flex flex-col items-center text-center mt-6 pt-4">
+          <h4 class="text-base font-bold text-black tracking-tight">Java</h4>
+          <div class="text-xs text-slate-600 font-normal space-y-0.5 mt-1 font-sans">
+            <div>Warak Ngendog</div>
+            <div>Samberyawa Dance</div>
+            <div>Tumenggung Mask</div>
+          </div>
+
+          <div class="flex items-center justify-center gap-3 mt-4">
+            <!-- Thumbnail 1: Javanese Wayang Wong Dancer -->
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-amber-50 rounded border border-slate-300 overflow-hidden relative group">
+              <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                <rect width="80" height="80" fill="#78350F"/>
+                <polygon points="40,10 25,30 55,30" fill="#FBBF24"/>
+                <circle cx="40" cy="40" r="14" fill="#FEF3C7"/>
+                <rect x="25" y="55" width="30" height="25" fill="#B45309"/>
+              </svg>
+              <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Dancer</span>
+            </div>
+
+            <!-- Thumbnail 2: Warak Ngendog Mythical Beast -->
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded border border-slate-300 overflow-hidden relative group">
+              <svg viewBox="0 0 80 80" class="w-full h-full object-cover">
+                <rect width="80" height="80" fill="#991B1B"/>
+                <!-- Dragon head of Warak Ngendog -->
+                <polygon points="30,20 60,35 30,50" fill="#F59E0B"/>
+                <circle cx="35" cy="30" r="4" fill="#FEF3C7"/>
+                <circle cx="35" cy="30" r="2" fill="#111"/>
+                <polygon points="50,33 55,42 60,35" fill="#FFF"/>
+                <path d="M20,60 Q40,50 60,65" stroke="#FEF08A" stroke-width="4" fill="none"/>
+              </svg>
+              <span class="absolute bottom-1 right-1 text-[8px] bg-black/60 text-white px-1 rounded font-mono">Warak</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- 5. EDITORIAL REPO DOWNLOAD & CLI INTEGRATION CENTER -->
+  <!-- ========================================== -->
+  <section id="download" class="w-full bg-[#FAFAFA] text-slate-900 py-20 px-6 sm:px-12 lg:px-20 border-b border-slate-300 font-editorial">
+    <div class="max-w-4xl mx-auto">
+      
+      <!-- Section Title -->
+      <div class="text-center mb-12">
+        <span class="text-xs font-mono font-bold text-slate-400 tracking-[0.25em] uppercase block">OFFICIAL DISTRIBUTION PORTAL</span>
+        <h2 class="text-3xl sm:text-4xl font-black text-black tracking-tight mt-1">
+          Unduh Repository & Pasang ke Coding Agent
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 font-sans max-w-xl mx-auto mt-2">
+          Repository <strong>HAHahah (Nusantara Project)</strong> menyediakan layer kepribadian budaya & efisiensi token untuk Claude Code, Antigravity, OpenCode, Cursor, dan Copilot.
+        </p>
+      </div>
+
+      <!-- Main Download Card Container -->
+      <div class="bg-white rounded-2xl border border-slate-300 p-8 sm:p-10 shadow-sm">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
+          
+          <!-- Left: Direct ZIP Release -->
+          <div class="flex flex-col justify-between p-6 rounded-xl bg-slate-50 border border-slate-200">
+            <div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-black text-white font-bold uppercase">PAKET UTAMA</span>
+              <h3 class="text-xl font-bold text-black mt-2 font-editorial">Download Source Archive</h3>
+              <p class="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
+                Unduh seluruh source code TypeScript, 3 profil persona Nusantara (RUSUH, HALAL, JAWA), 82 automated evals, dan CLI tooling dalam format .ZIP siap pakai.
+              </p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-200 flex flex-col gap-2">
+              <a href="https://github.com/ALIVEbyHUMANOISE/hahahah/archive/refs/heads/main.zip" class="w-full py-3 px-4 rounded-lg bg-black hover:bg-slate-800 text-white font-bold text-xs uppercase tracking-wider text-center transition-all flex items-center justify-center gap-2">
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Unduh .ZIP (Main Branch)
+              </a>
+              <div class="text-[11px] font-mono text-slate-500 text-center">
+                Lisensi: MIT &bull; Bebas digunakan & diintegrasikan
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Terminal Git Clone -->
+          <div class="flex flex-col justify-between p-6 rounded-xl bg-slate-50 border border-slate-200">
+            <div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-bold uppercase">GIT COMMAND</span>
+              <h3 class="text-xl font-bold text-black mt-2 font-editorial">Kloning Lewat Git</h3>
+              <p class="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
+                Salin dan jalankan langsung di shell terminal untuk mendapatkan salinan git aktif:
+              </p>
+            </div>
+
+            <div class="mt-4">
+              <div class="bg-black text-amber-300 p-3 rounded-lg font-mono text-xs flex items-center justify-between gap-2 overflow-x-auto">
+                <code class="whitespace-nowrap">git clone https://github.com/ALIVEbyHUMANOISE/hahahah.git</code>
+                <button onclick="copyCmd('git clone https://github.com/ALIVEbyHUMANOISE/hahahah.git')" class="p-1.5 hover:bg-white/10 rounded text-slate-300 shrink-0" title="Salin">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </button>
+              </div>
+
+              <div class="mt-4 flex items-center justify-between text-xs font-mono text-slate-500">
+                <a href="https://github.com/ALIVEbyHUMANOISE/hahahah" target="_blank" rel="noopener noreferrer" class="text-black font-bold hover:underline flex items-center gap-1">
+                  <span>★ Kunjungi GitHub Repo</span> &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 30-Second Quick Start Steps -->
+        <div class="mt-8 pt-6 border-t border-slate-200 font-mono text-xs">
+          <div class="font-bold text-slate-900 mb-3 font-editorial uppercase tracking-wider">
+            Panduan Instalasi Cepat:
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <span class="font-bold text-black block mb-1">1. Install Deps</span>
+              <code class="text-[11px] text-slate-700">npm ci && npm run typecheck</code>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <span class="font-bold text-black block mb-1">2. Pasang Persona</span>
+              <code class="text-[11px] text-slate-700">node src/cli.ts install --profile rusuh-id --target .</code>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <span class="font-bold text-black block mb-1">3. Cek Status</span>
+              <code class="text-[11px] text-slate-700">node src/cli.ts doctor --target .</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- 6. CLEAN EDITORIAL FOOTER -->
+  <!-- ========================================== -->
+  <footer class="w-full bg-white text-slate-500 py-10 px-6 sm:px-16 border-t border-slate-200 text-xs font-editorial">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span class="font-bold text-black uppercase">Stepsio &bull; ALIVE Studios</span>
+        <span class="mx-2">&bull;</span>
+        <span>HAHahah Repository (Nusantara Project)</span>
+      </div>
+      <div class="flex items-center gap-6 font-mono text-[11px]">
+        <a href="https://github.com/ALIVEbyHUMANOISE/hahahah" target="_blank" rel="noopener noreferrer" class="hover:text-black">GitHub</a>
+        <a href="https://github.com/ALIVEbyHUMANOISE/hahahah/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="hover:text-black">License (MIT)</a>
+        <a href="https://github.com/ALIVEbyHUMANOISE/hahahah/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="hover:text-black">Documentation</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-black text-white font-mono font-bold text-xs px-4 py-2.5 rounded-lg shadow-xl transition-all opacity-0 pointer-events-none transform translate-y-4 z-50">
+    Perintah berhasil disalin!
+  </div>
+
+  <script>
+    function copyCmd(cmd) {
+      navigator.clipboard.writeText(cmd).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        }, 2500);
+      });
+    }
+  </script>
+
+</body>
+</html>
