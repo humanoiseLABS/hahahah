@@ -49,18 +49,29 @@ export function opencodeStudyConfig(): string {
   );
 }
 
-function tokensOf(part: Record<string, unknown>): { input: number; output: number } | null {
+// The cache fields are kept under the names Claude Code uses so one prompt-size measure works for
+// both harnesses. Dropping them lost the cached prefix: a warm repeat reported 36 input tokens for
+// the same 6308-token prompt a cold repeat reported as 4453 + 1856.
+function tokensOf(part: Record<string, unknown>): Record<string, number> | null {
   const tokens = part.tokens;
   if (typeof tokens !== 'object' || tokens === null) return null;
   const record = tokens as Record<string, unknown>;
   if (typeof record.input !== 'number' || typeof record.output !== 'number') return null;
-  return { input: record.input, output: record.output };
+  const cache = (
+    typeof record.cache === 'object' && record.cache !== null ? record.cache : {}
+  ) as Record<string, unknown>;
+  return {
+    input_tokens: record.input,
+    output_tokens: record.output,
+    cache_read_input_tokens: typeof cache.read === 'number' ? cache.read : 0,
+    cache_creation_input_tokens: typeof cache.write === 'number' ? cache.write : 0,
+  };
 }
 
 export function parseOpencodeStream(stdout: string): EvalRun {
   const texts: string[] = [];
   let costUsd = 0;
-  let usage: { input_tokens: number; output_tokens: number } | undefined;
+  let usage: Record<string, number> | undefined;
   let turns = 0;
   let error: string | undefined;
 
@@ -80,7 +91,7 @@ export function parseOpencodeStream(stdout: string): EvalRun {
       turns += 1;
       if (typeof part.cost === 'number') costUsd = part.cost;
       const tokens = tokensOf(part);
-      if (tokens) usage = { input_tokens: tokens.input, output_tokens: tokens.output };
+      if (tokens) usage = tokens;
     } else if (event.type === 'error') {
       const detail = event.error as Record<string, unknown> | undefined;
       const data = detail?.data as Record<string, unknown> | undefined;

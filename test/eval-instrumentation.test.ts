@@ -8,6 +8,7 @@ import { join } from 'node:path';
 import {
   baseUrlFromSettings,
   hostOfBaseUrl,
+  promptTokens,
   providerExhausted,
   routeSplitOf,
   runEval,
@@ -402,4 +403,94 @@ test('a quota refusal still aborts at once and is labelled differently', () => {
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }
+});
+
+// --- gap 4: a warm provider cache reports the uncached remainder as if it were the whole prompt ---
+
+// Real numbers from the opencode/beam-free replication on 2026-11-07. The first repeat in a
+// workspace is cold (input 4453, cache read 1856); later repeats of the same prompt are warm
+// (input 36, cache read 6272). Both are the same 6308-token prompt.
+const cached = (input: number, read: number, write = 0): EvalRun => ({
+  output: 'jawaban',
+  costUsd: 0,
+  usage: {
+    input_tokens: input,
+    output_tokens: 20,
+    cache_read_input_tokens: read,
+    cache_creation_input_tokens: write,
+  },
+});
+
+test('routeSplitOf does not read a warm cache as a different route', () => {
+  const baseline = [cached(4453, 1856), cached(36, 6272), cached(36, 6272)];
+  const treatment = [cached(5100, 1856), cached(41, 6912), cached(39, 6912)];
+  const split = routeSplitOf(baseline, treatment);
+  assert.equal(split.deviating, 0, 'one model served all six runs; the cache state is not a route');
+  assert.equal(split.extremeInputTokens, 6956);
+});
+
+test('arm medians report the whole prompt when the cache is warm', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-instr-'));
+  try {
+    let baselineCalls = 0;
+    let treatmentCalls = 0;
+    runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'x-01', prompt: 'jawab' }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 3,
+      runner: (cwd) => {
+        if (isTreatment(cwd)) {
+          treatmentCalls += 1;
+          return treatmentCalls === 1 ? cached(5100, 1856) : cached(41, 6912);
+        }
+        baselineCalls += 1;
+        return baselineCalls === 1 ? cached(4453, 1856) : cached(36, 6272);
+      },
+    });
+    const markdown = readFileSync(join(outDir, 'report.md'), 'utf8');
+    assert.doesNotMatch(
+      markdown,
+      /not all served by one route/,
+      'a warm cache must not publish a route warning',
+    );
+    assert.match(markdown, /in 6308/, `baseline prompt is 6308 tokens, not the 36 uncached ones`);
+    assert.match(markdown, /in 6953/, 'treatment prompt is 6953 tokens');
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('promptTokens counts the whole input side, cached or not', () => {
+  // Hand-derived from the recorded parts: 36 + 6272 = 6308, 4453 + 1856 = 6309, 100 + 500 = 600.
+  assert.equal(promptTokens({ input_tokens: 36, cache_read_input_tokens: 6272 }), 6308);
+  assert.equal(
+    promptTokens({
+      input_tokens: 4453,
+      cache_read_input_tokens: 1856,
+      cache_creation_input_tokens: 0,
+    }),
+    6309,
+  );
+  assert.equal(
+    promptTokens({
+      input_tokens: 100,
+      cache_read_input_tokens: 0,
+      cache_creation_input_tokens: 500,
+    }),
+    600,
+    'a cache write is input the provider processed too',
+  );
+  // Archived reports and the Claude path carry no cache fields when nothing was cached.
+  assert.equal(promptTokens({ input_tokens: 19134 }), 19134);
+});
+
+test('promptTokens stays undefined when the harness reported no input count', () => {
+  // Returning 0 here would put a non-measurement into a median as a tiny prompt.
+  assert.equal(promptTokens({ output_tokens: 20 }), undefined);
+  assert.equal(promptTokens(null), undefined);
+  assert.equal(promptTokens(undefined), undefined);
+  assert.equal(promptTokens('nope'), undefined);
 });

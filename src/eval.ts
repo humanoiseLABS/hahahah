@@ -199,6 +199,20 @@ export function usageNumber(usage: unknown, key: string): number | undefined {
   return typeof value === 'number' ? value : undefined;
 }
 
+// A warm provider cache reports only the uncached remainder in `input_tokens`; the rest of the
+// prompt arrives as a cache read. Measured on opencode/beam-free 2026-11-07: one 6308-token prompt
+// reported input 4453 + read 1856 cold and input 36 + read 6272 warm, so reading `input_tokens`
+// alone makes the same prompt look 175x smaller and a cache hit looks like a different route.
+export function promptTokens(usage: unknown): number | undefined {
+  const input = usageNumber(usage, 'input_tokens');
+  if (input === undefined) return undefined;
+  return (
+    input +
+    (usageNumber(usage, 'cache_read_input_tokens') ?? 0) +
+    (usageNumber(usage, 'cache_creation_input_tokens') ?? 0)
+  );
+}
+
 function statusOf(run: EvalRun): RunStatus {
   if (run.error) return 'error';
   if (!run.checks || run.checks.length === 0) return 'no-checks';
@@ -238,7 +252,7 @@ function buildArm(runs: EvalRun[], checks?: TaskChecks): EvalArm {
       costUsd: median(answered.map((run) => run.costUsd)),
       inputTokens: median(
         answered
-          .map((run) => usageNumber(run.usage, 'input_tokens'))
+          .map((run) => promptTokens(run.usage))
           .filter((value): value is number => value !== undefined),
       ),
       outputTokens: median(
@@ -260,13 +274,13 @@ const ROUTE_RATIO_HI = 1.6;
 
 export function routeSplitOf(baseline: EvalRun[], treatment: EvalRun[]): RouteSplit {
   const answered = (runs: EvalRun[]) =>
-    runs.filter((run) => !run.error && usageNumber(run.usage, 'input_tokens') !== undefined);
+    runs.filter((run) => !run.error && promptTokens(run.usage) !== undefined);
   const both = [...answered(baseline), ...answered(treatment)];
-  const sizes = both.map((run) => usageNumber(run.usage, 'input_tokens') ?? 0);
+  const sizes = both.map((run) => promptTokens(run.usage) ?? 0);
   const center = median(sizes);
   const deviating = (runs: EvalRun[]) =>
     answered(runs).filter((run) => {
-      const size = usageNumber(run.usage, 'input_tokens') ?? 0;
+      const size = promptTokens(run.usage) ?? 0;
       return center > 0 && (size / center < ROUTE_RATIO_LO || size / center > ROUTE_RATIO_HI);
     }).length;
   return {

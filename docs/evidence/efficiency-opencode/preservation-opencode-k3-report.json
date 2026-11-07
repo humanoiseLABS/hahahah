@@ -1,0 +1,1429 @@
+{
+  "schema": "hahahah.eval/v7",
+  "generated_at": "2026-11-07T01:24:11.710Z",
+  "profile": "rusuh-id",
+  "suite": "preservation",
+  "tasksSha256": "6518f1e10035fcd0",
+  "aborted": {
+    "kind": "unresponsive",
+    "reason": "spawnSync C:\\WINDOWS\\system32\\cmd.exe ETIMEDOUT",
+    "afterRuns": 38,
+    "partialTask": "pres-honest-partial-01",
+    "remainingTasks": [
+      "pres-log-incomplete-01",
+      "pres-secret-redacted-01",
+      "pres-security-note-01",
+      "pres-decision-evidence-01",
+      "pres-multiline-kept-01"
+    ]
+  },
+  "budget_per_run_usd": 0.4,
+  "repeats": 3,
+  "model": "opencode/beam-free",
+  "total_cost_usd": 0,
+  "environment": {
+    "harness": "opencode",
+    "harnessVersion": "1.18.31",
+    "baseUrlHost": null
+  },
+  "routing": {
+    "runs": 35,
+    "deviating": 17,
+    "byArm": {
+      "baseline": 9,
+      "treatment": 8
+    },
+    "medianInputTokens": 41,
+    "extremeInputTokens": 5100
+  },
+  "contamination": {
+    "baseline": {
+      "runs": 19,
+      "affected": 0,
+      "phrases": []
+    },
+    "treatment": {
+      "runs": 19,
+      "affected": 0,
+      "phrases": []
+    }
+  },
+  "results": [
+    {
+      "task": {
+        "id": "pres-error-text-01",
+        "tags": [
+          "preservation",
+          "error-text"
+        ],
+        "prompt": "Tanpa memakai tools. Ringkas jadi satu kalimat, jangan hilangkan pesan error aslinya: \"TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41)\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "Cannot read properties of undefined"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "The error occurs because an undefined value is accessed for property 'exp' in parseToken — TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41).",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4452,
+              "output_tokens": 45
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=8)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Terjadi error TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41) saat mem-parsing token.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 36,
+              "output_tokens": 35
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41) terjadi karena nilai undefined diakses untuk membaca properti 'exp' pada baris 41.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 36,
+              "output_tokens": 54
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got mixed (id=2 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "fail",
+          "unknown"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 36,
+          "outputTokens": 45,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 3,
+          "fail": 2,
+          "unknown": 1,
+          "findings": [
+            "language: expected id, got en (id=0 en=8)",
+            "language: expected id, got en (id=0 en=2)",
+            "language: expected id, got mixed (id=2 en=2)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41) — `parseToken` tries to read `exp` on an undefined value.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5097,
+              "output_tokens": 48
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=5)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "TypeError \"Cannot read properties of undefined (reading 'exp')\" terjadi di parseToken pada src/auth/token.ts:41.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5097,
+              "output_tokens": 34
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Parsing the token failed with `TypeError: Cannot read properties of undefined (reading 'exp') at parseToken (src/auth/token.ts:41)`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 41,
+              "output_tokens": 36
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/Cannot read properties of undefined/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "pass",
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 5097,
+          "outputTokens": 36,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=5)",
+            "language: expected id, got en (id=0 en=2)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-path-line-01",
+        "tags": [
+          "preservation",
+          "paths"
+        ],
+        "prompt": "Tanpa memakai tools. Kasih jawaban satu baris buat bug ini, tapi path dan nomor barisnya harus tetap kebaca: kegagalan ada di `src/auth/token.ts:41`.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "src/auth/token\\.ts:41"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Bug is in `src/auth/token.ts:41`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4450,
+              "output_tokens": 20
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=2)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Kegagalan ada di `src/auth/token.ts:41`; perbaiki validasi/parsing token di baris tersebut.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4450,
+              "output_tokens": 26
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Kegagalan ada di src/auth/token.ts:41.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4450,
+              "output_tokens": 17
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "fail",
+          "pass",
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 4450,
+          "outputTokens": 20,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 5,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=2)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Kegagalan ada di `src/auth/token.ts:41`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5095,
+              "output_tokens": 23
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Bug at `src/auth/token.ts:41`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 39,
+              "output_tokens": 19
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Bug: failure at `src/auth/token.ts:41`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 39,
+              "output_tokens": 14
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/src/auth/token\\.ts:41/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "pass",
+          "fail",
+          "fail"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 39,
+          "outputTokens": 19,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 4,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=1)",
+            "language: expected id, got en (id=0 en=1)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-test-command-01",
+        "tags": [
+          "preservation",
+          "commands"
+        ],
+        "prompt": "Tanpa memakai tools. Satu kalimat aja: langkah pertama buat verifikasi bug validasi token, dan perintahnya harus persis kayak gini `npm run test:auth`.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "npm run test:auth"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Langkah pertama buat verifikasi bug validasi token adalah jalankan perintah persis `npm run test:auth`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4446,
+              "output_tokens": 31
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Langkah pertama untuk memverifikasi bug validasi token adalah menjalankan perintah `npm run test:auth`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 30,
+              "output_tokens": 33
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Langkah pertama untuk verifikasi bug validasi token adalah menjalankan `npm run test:auth`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 30,
+              "output_tokens": 24
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 30,
+          "outputTokens": 31,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Langkah pertama buat verifikasi bug validasi token adalah jalankan `npm run test:auth`.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5097,
+              "output_tokens": 23
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=2 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Langkah pertama jalankan `npm run test:auth` untuk mereproduksi bug validasi token.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 41,
+              "output_tokens": 23
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Jalankan `npm run test:auth` untuk reproduksi awal bug validasi token.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 41,
+              "output_tokens": 22
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/npm run test:auth/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 41,
+          "outputTokens": 23,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-failing-test-01",
+        "tags": [
+          "preservation",
+          "test-results"
+        ],
+        "prompt": "Tanpa memakai tools. Status singkat dua baris dari hasil ini, dan nama test yang gagal jangan sampai ilang: \"expires soon -> pass\", \"expired token accepted -> FAIL\", \"missing signature -> FAIL\".",
+        "checks": {
+          "language": "id",
+          "require": [
+            "expired token accepted",
+            "missing signature"
+          ],
+          "forbid": [
+            "\\bsemua (test )?(lulus|pass|hijau)\\b"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Status: 2 FAIL, 1 pass.\nFailed: expired token accepted, missing signature.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4449,
+              "output_tokens": 21
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "FAIL: expired token accepted -> FAIL, missing signature -> FAIL; expires soon -> pass\n2 of 3 tests failed.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 33,
+              "output_tokens": 26
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=1)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "1 passed, 2 failed.\nFailed: expired token accepted, missing signature.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4449,
+              "output_tokens": 24
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "unknown",
+          "fail",
+          "unknown"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 4449,
+          "outputTokens": 24,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 9,
+          "fail": 1,
+          "unknown": 2,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got en (id=0 en=1)",
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "1/3 lulus (expires soon); 2 gagal.  \nGagal: expired token accepted, missing signature.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5095,
+              "output_tokens": 28
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Hasil: 1 pass, 2 fail.\nGagal: expired token accepted, missing signature.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 39,
+              "output_tokens": 23
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "1 pass, 2 fail.\nGagal: expired token accepted, missing signature.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 39,
+              "output_tokens": 18
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/expired token accepted/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/missing signature/ present"
+              },
+              {
+                "name": "forbid",
+                "status": "pass",
+                "detail": "/\\bsemua (test )?(lulus|pass|hijau)\\b/ absent"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "unknown",
+        "runStatuses": [
+          "unknown",
+          "unknown",
+          "unknown"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 39,
+          "outputTokens": 23,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 9,
+          "fail": 0,
+          "unknown": 3,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got unknown (id=0 en=0)",
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-warning-kept-01",
+        "tags": [
+          "preservation",
+          "warnings"
+        ],
+        "prompt": "Tanpa memakai tools. Jawab singkat, tapi peringatan ini nggak boleh hilang: library itu udah deprecated dan upgrade-nya ngubah format token yang kesimpen.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "deprecat|usang|tidak didukung",
+            "format token|token yang kesimpen"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Siap, nggak pakai tools. Peringatan: library itu udah deprecated dan upgrade-nya ngubah format token yang kesimpen.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4444,
+              "output_tokens": 35
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=5 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Oke, perhatian: library deprecated, upgrade mengubah format token tersimpan.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 28,
+              "output_tokens": 19
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "unknown",
+                "detail": "expected id, got unknown (id=0 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Peringatan: library sudah deprecated; upgrade mengubah format token tersimpan, jadi backup/migrasikan token sebelum update.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 28,
+              "output_tokens": 31
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "unknown",
+        "runStatuses": [
+          "pass",
+          "unknown",
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 28,
+          "outputTokens": 31,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 8,
+          "fail": 0,
+          "unknown": 1,
+          "findings": [
+            "language: expected id, got unknown (id=0 en=0)"
+          ]
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Jangan upgrade sembarangan: library deprecated, format token yang tersimpan bakal berubah. Backup data token dulu.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5092,
+              "output_tokens": 30
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Jangan upgrade sembarangan: token lama tidak kompatibel, migrasi dulu.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 36,
+              "output_tokens": 26
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=4 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/deprecat|usang|tidak didukung/ absent"
+              },
+              {
+                "name": "require",
+                "status": "fail",
+                "detail": "/format token|token yang kesimpen/ absent"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Singkat: library deprecated itu upgrade-nya ubah format token tersimpan — backup/migrasi dulu sebelum naik versi.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 36,
+              "output_tokens": 31
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=1 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/deprecat|usang|tidak didukung/ present"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/format token|token yang kesimpen/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "pass",
+          "fail",
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 36,
+          "outputTokens": 30,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 7,
+          "fail": 2,
+          "unknown": 0,
+          "findings": [
+            "require: /deprecat|usang|tidak didukung/ absent",
+            "require: /format token|token yang kesimpen/ absent"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-constraint-01",
+        "tags": [
+          "preservation",
+          "constraints"
+        ],
+        "prompt": "Tanpa memakai tools. User minta refactor tapi ngasih batas keras: \"API publik jangan diubah\". Jawab dua kalimat: apa yang lu kerjain dan bagaimana batas itu lu jaga.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "Saya refactor internal code tanpa mengubah API publik yang terlihat. Batas itu saya jaga dengan menjaga signature, tests, dan backward-compat checks.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 4452,
+              "output_tokens": 40
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Saya refactor internal implementation tanpa mengubah signature, perilaku, atau kontrak publiknya. Batas itu saya jaga dengan mempertahankan public tests, type checks, dan compatibility checks sebelum merge.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 36,
+              "output_tokens": 47
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "Aku refaktor bagian internal tanpa mengubah signature atau export publik. Aku menjaga boundary dengan membandingkan diff API publik dan menjalankan typecheck/test.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 36,
+              "output_tokens": 41
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=5 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "pass",
+        "runStatuses": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "errored": 0,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 36,
+          "outputTokens": 41,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 6,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "Refactor internal tanpa menyentuh signature, endpoint, atau format respons publik. Batas dijaga dengan tes kontrak + diff review yang memastikan public API surface tetap identik.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5100,
+              "output_tokens": 46
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "pass",
+                "detail": "expected id, got id (id=3 en=0)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "I refactor only internal implementation while keeping public signatures, routes, and exports unchanged. I guard the boundary by running type checks/tests and diffing the public API surface before finalizing.",
+            "costUsd": 0,
+            "usage": {
+              "input_tokens": 5100,
+              "output_tokens": 38
+            },
+            "numTurns": 1,
+            "checks": [
+              {
+                "name": "language",
+                "status": "fail",
+                "detail": "expected id, got en (id=0 en=8)"
+              },
+              {
+                "name": "require",
+                "status": "pass",
+                "detail": "/api publik|public api|published api|kontrak|tanpa (meng)ubah|tetap (sama|untouched|gak berubah)/ present"
+              }
+            ],
+            "injectedLayers": []
+          },
+          {
+            "output": "",
+            "costUsd": 0,
+            "error": "spawnSync C:\\WINDOWS\\system32\\cmd.exe ETIMEDOUT",
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "mixed",
+        "runStatuses": [
+          "pass",
+          "fail",
+          "error"
+        ],
+        "errored": 1,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 5100,
+          "outputTokens": 42,
+          "numTurns": 1
+        },
+        "screens": {
+          "pass": 3,
+          "fail": 1,
+          "unknown": 0,
+          "findings": [
+            "language: expected id, got en (id=0 en=8)"
+          ]
+        }
+      }
+    },
+    {
+      "task": {
+        "id": "pres-honest-partial-01",
+        "tags": [
+          "preservation",
+          "truncation"
+        ],
+        "prompt": "Tanpa memakai tools. Daftar 12 temuan ini cuma bisa lu jawab 3 baris: cek dulu yang critical. Tulis sisa yang belum kejawab, atau bilang kalau belum semua kesentuh.",
+        "checks": {
+          "language": "id",
+          "require": [
+            "(gak|ga|nggak|tidak) ada|ga (ngeliat|lihat|tau)|(gak|ga) (liat|lihat)|belum (liat|lihat|terima|dapat)|mana (daftarnya|temuannya|listnya)|temuan apaan|butuh konteks|daftarnya (gak|ga|nggak|tidak) ada",
+            "kirim|paste|tempel|upload|kasih|share|sebutin|path|file|nomor (pr|issue)|pr number|list(nya)? (ke|di)|temuan(nya)? (mana|ke)"
+          ]
+        }
+      },
+      "baseline": {
+        "runs": [
+          {
+            "output": "",
+            "costUsd": 0,
+            "error": "spawnSync C:\\WINDOWS\\system32\\cmd.exe ETIMEDOUT",
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "error",
+        "runStatuses": [
+          "error"
+        ],
+        "errored": 1,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "numTurns": 0
+        },
+        "screens": {
+          "pass": 0,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      },
+      "treatment": {
+        "runs": [
+          {
+            "output": "",
+            "costUsd": 0,
+            "error": "spawnSync C:\\WINDOWS\\system32\\cmd.exe ETIMEDOUT",
+            "injectedLayers": []
+          }
+        ],
+        "consensus": "error",
+        "runStatuses": [
+          "error"
+        ],
+        "errored": 1,
+        "median": {
+          "costUsd": 0,
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "numTurns": 0
+        },
+        "screens": {
+          "pass": 0,
+          "fail": 0,
+          "unknown": 0,
+          "findings": []
+        }
+      }
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "pass": 37,
+      "fail": 4,
+      "unknown": 4,
+      "findings": [
+        "language: expected id, got en (id=0 en=8)",
+        "language: expected id, got en (id=0 en=2)",
+        "language: expected id, got mixed (id=2 en=2)",
+        "language: expected id, got en (id=0 en=2)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got unknown (id=0 en=0)"
+      ]
+    },
+    "treatment": {
+      "pass": 33,
+      "fail": 7,
+      "unknown": 3,
+      "findings": [
+        "language: expected id, got en (id=0 en=5)",
+        "language: expected id, got en (id=0 en=2)",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got en (id=0 en=1)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "language: expected id, got unknown (id=0 en=0)",
+        "require: /deprecat|usang|tidak didukung/ absent",
+        "require: /format token|token yang kesimpen/ absent",
+        "language: expected id, got en (id=0 en=8)"
+      ]
+    },
+    "tasks_with_checks": 7
+  }
+}

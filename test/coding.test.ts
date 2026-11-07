@@ -369,6 +369,29 @@ test('the study grades a real fix as solved with the fixture tests', () => {
   }
 });
 
+test('the coding study counts a cached prompt prefix in its input median', () => {
+  // Same recorded opencode shape as the eval suite: a warm repeat reports the uncached remainder.
+  const { report, outDir } = study(
+    (cwd) => {
+      writeFileSync(join(cwd, 'src', 'a.js'), 'export const value = 2;\n', 'utf8');
+    },
+    {
+      usage: {
+        input_tokens: 36,
+        output_tokens: 15,
+        cache_read_input_tokens: 6272,
+        cache_creation_input_tokens: 0,
+      },
+    },
+  );
+  try {
+    assert.equal(report.results[0]?.baseline.median.inputTokens, 6308);
+    assert.equal(report.results[0]?.treatment.median.inputTokens, 6308);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
 test('only the treatment arm carries the installed profile', () => {
   const { report, stub, outDir } = study((cwd) => {
     writeFileSync(join(cwd, 'src', 'a.js'), 'export const value = 2;\n', 'utf8');

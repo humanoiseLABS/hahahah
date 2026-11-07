@@ -191,3 +191,16 @@ input cost should stay ~+700 tokens (it is a fixed amount of text) on a base pro
 than ~30,900 - so the relative overhead should rise from ~2,3% to ~15%, while substance (+21,9%) and
 the reasoning-dump difference (-51%) may not replicate at all, since both are properties of the kiro
 route's baseline behaviour.
+
+**Update, same day: the replication ran, partially, and the prediction's denominator was wrong.** See
+`docs/evidence/efficiency-opencode/findings.md`. 35 of 72 runs answered before the route wedged again
+(the new unresponsive breaker stopped it at 38 runs / 13 min instead of 3.6 h), covering 6 of 12 tasks.
+The absolute half of the prediction held: +647 input tokens. The relative half did not, because ~4,800
+was the *uncached remainder* of opencode's prompt, not the prompt: the real base is ~6,305 tokens, so
+the relative overhead is +10.25%, not ~15%. Both non-replications were confirmed - 0 reasoning dumps in
+either arm, and substance -2 characters instead of +21.9%. Behaviour went the other way from kiro: the
+treatment scored 33 screen passes against the baseline's 37 and kept 21/23 `require` checks against
+24/24. That campaign also exposed a parser defect worth more than the replication itself: opencode's
+`tokens.cache.read` was being dropped, which made a warm cache look like a 175x smaller prompt and
+published a false "not all served by one route" warning. The kiro numbers above are unaffected - all 72
+runs report zero cache reads and zero cache creations.

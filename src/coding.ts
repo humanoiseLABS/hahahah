@@ -18,7 +18,7 @@ import {
   writeRawStream,
   type StreamSummary,
 } from './diagnose.ts';
-import { median, runClaude, usageNumber, type ClaudeOptions } from './eval.ts';
+import { median, promptTokens, runClaude, usageNumber, type ClaudeOptions } from './eval.ts';
 import { removeWorkspace, scratchRoot } from './workspace.ts';
 
 export interface FixtureFile {
@@ -397,7 +397,7 @@ function summarizeArm(runs: FixtureArmRun[]): ArmSummary {
     solved: runs.filter((arm) => arm.grade === 'solved').length,
     median: {
       costUsd: numbers((run) => run.costUsd),
-      inputTokens: numbers((run) => usageNumber(run.usage, 'input_tokens')),
+      inputTokens: numbers((run) => promptTokens(run.usage)),
       outputTokens: numbers((run) => usageNumber(run.usage, 'output_tokens')),
       numTurns: numbers((run) => run.numTurns),
     },
