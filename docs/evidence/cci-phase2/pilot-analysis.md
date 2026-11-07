@@ -77,6 +77,19 @@ bahasa.
   numerik independen, dan jawaban Inggris dinilai lewat terjemahan penulis layer.
 - Perbedaan antar-model: semua angka berasal dari satu model (`tes`).
 
+## Penutupan fase: apa yang dinilai manusia dan apa yang tidak
+
+Sepuluh skenario sisanya **tidak dinilai manusia**, dan itu keputusan sadar, bukan kelalaian:
+
+- Bukti manusia: **n=5**, satu skenario per kapabilitas (pilot).
+- Bukti layar otomatis: **n=15**, setelah skor ulang dengan ruler v2: baseline 10/15, RUSUH 10/15.
+- Alasan melewati 10 skenario: reviewer-nya adalah penulis layer, jadi menambah skenario menambah
+  cakupan tetapi tidak menambah independensi; dan layar sudah terbukti tidak bisa menggantikan
+  penilaian manusia (9 dari 11 kegagalan di batch kedua adalah artefak alat ukur).
+- Konsekuensi untuk klaim: kalimat yang sah adalah **"pada 5 skenario pilot, reviewer lebih memilih
+  RUSUH di 4 dari 5"**, bukan "RUSUH lebih baik secara umum". Sepuluh skenario lain hanya punya
+  status layar; jangan kutip sebagai bukti pemahaman budaya.
+
 ## Berkas
 
 - `scores-R1.csv` — lembar skor reviewer.
