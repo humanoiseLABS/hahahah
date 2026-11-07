@@ -200,7 +200,7 @@ test('a fold harness puts the voice where the agent will actually read it', () =
       `${spec.adapter} must fold the voice into ${spec.blockPath}`,
     );
     assert.ok(
-      block.content.includes('# RUSUH voice'),
+      block.content.includes('# +62 Mode voice'),
       `${spec.adapter} folded voice must keep its section headings`,
     );
   }

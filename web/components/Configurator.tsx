@@ -26,8 +26,8 @@ export interface AgentOption {
 export const PERSONAS: PersonaOption[] = [
   {
     id: "rusuh-id",
-    name: "RUSUH ID",
-    code: "rusuh",
+    name: "+62 Mode",
+    code: "+62",
     badge: "Bloko Suto",
     tagline: "To-the-point, langsung ke baris bug, zero basa-basi korporat.",
     tone: "Indonesian informal, cepat, langsung ke baris kode yang rusak.",

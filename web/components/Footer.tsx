@@ -5,7 +5,7 @@ import DoodleCrewFooter, { CrewMember } from "@/components/ui/doodle-crew-footer
 const HAHAHAH_CREW: CrewMember[] = [
   {
     kind: "yeti",
-    name: "Bli Rusuh",
+    name: "Si +62",
     letter: 0,
     seat: "front",
     offset: -0.34,
@@ -73,7 +73,7 @@ export default function Footer() {
           {
             title: "Persona Nusantara",
             links: [
-              { label: "RUSUH ID (Bloko Suto)", href: "#integrations" },
+              { label: "+62 Mode (Bloko Suto)", href: "#integrations" },
               { label: "HALAL ID (Amanah)", href: "#integrations" },
               { label: "JAWA ID (Unggah-Ungguh)", href: "#integrations" },
               { label: "Katalog Budaya", href: "https://github.com/humanoiseLABS/hahahah/tree/main/culture" },

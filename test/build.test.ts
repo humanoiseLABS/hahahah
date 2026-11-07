@@ -34,11 +34,11 @@ test('builds a deterministic fake-adapter plan with the persona card', () => {
     assert.ok(a.manifest.files.some((file) => file.path === 'skill-metadata.json'));
 
     const alwaysOn = readFileSync(join(outA, 'always-on.md'), 'utf8');
-    assert.match(alwaysOn, /RUSUH/);
+    assert.match(alwaysOn, /\+62 Mode/);
     assert.doesNotMatch(alwaysOn, /\bADAB\b/);
 
     const spoken = readFileSync(join(outA, 'references/voice.md'), 'utf8');
-    assert.ok(spoken.includes('RUSUH'));
+    assert.ok(spoken.includes('+62 Mode'));
 
     assert.doesNotThrow(() => validate('manifest', a.manifest));
     assert.ok(existsSync(join(outA, 'manifest.json')));
@@ -52,7 +52,7 @@ test('release build refuses pending reviews', () => {
   const out = tempOut();
   try {
     assert.throws(
-      () => build({ root, profileId: 'rusuh-id', adapterId: 'fake', outDir: out, release: true }),
+      () => build({ root, profileId: 'halal-id', adapterId: 'fake', outDir: out, release: true }),
       /review|approved|release/i,
     );
   } finally {

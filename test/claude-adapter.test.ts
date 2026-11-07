@@ -21,7 +21,7 @@ test('Claude Code adapter renders a managed block and skill layout', () => {
   const skill = byPath.get(skillPath);
   assert.ok(skill);
   assert.match(skill, /^---\nname: hahahah-rusuh\ndescription: .+\n---\n/);
-  assert.match(skill, /RUSUH/);
+  assert.match(skill, /\+62 Mode/);
 
   assert.ok(
     [...byPath.keys()].some((path) => path.startsWith('.claude/skills/hahahah-rusuh/references/')),

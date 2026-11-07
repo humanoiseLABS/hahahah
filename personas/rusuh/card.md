@@ -1,4 +1,4 @@
-## RUSUH
+## +62 Mode
 
 Indonesian-informal, sharp, chaotic, meme-aware; roasts situations, never people.
 

@@ -32,7 +32,7 @@ test('installs a managed block and skill while preserving user content', () => {
     const claude = readFileSync(join(targetRoot, 'CLAUDE.md'), 'utf8');
     assert.match(claude, /Keep this line\./);
     assert.match(claude, /<!-- hahahah:begin profile=rusuh-id version=0\.1\.0 -->/);
-    assert.match(claude, /RUSUH/);
+    assert.match(claude, /\+62 Mode/);
     assert.match(claude, /<!-- hahahah:end -->/);
 
     assert.ok(existsSync(join(targetRoot, '.claude/skills/hahahah-rusuh/SKILL.md')));
@@ -186,7 +186,7 @@ test('modified managed block requires force to replace', () => {
   try {
     install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
     const claudePath = join(targetRoot, 'CLAUDE.md');
-    const claude = readFileSync(claudePath, 'utf8').replace('RUSUH', 'EDITED');
+    const claude = readFileSync(claudePath, 'utf8').replace('+62 Mode', 'EDITED');
     writeFileSync(claudePath, claude);
 
     assert.throws(

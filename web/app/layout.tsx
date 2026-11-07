@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | HAHahah Nusantara Edition",
   },
   description:
-    "Lapisan kepribadian budaya developer Nusantara (Rusuh ID, Halal ID, Jawa ID) dan efisiensi token untuk Claude Code, Google Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
+    "Lapisan kepribadian budaya developer Nusantara (+62 Mode, Halal ID, Jawa ID) dan efisiensi token untuk Claude Code, Google Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
   keywords: [
     "HAHahah",
     "hahahah nusantara",
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     "DeepSeek Harness",
     "OpenClaw",
     "Cursor rules Indonesia",
+    "+62 Mode",
     "Rusuh ID",
     "Halal ID",
     "Jawa ID",
@@ -36,13 +37,13 @@ export const metadata: Metadata = {
     siteName: "HAHahah Nusantara Edition",
     title: "HAHahah Nusantara Edition — Personality & Efficiency Layer for Coding Agents",
     description:
-      "Pasang karakter budaya Nusantara (Rusuh ID, Halal ID, Jawa ID) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor. Pangkas basa-basi & hemat token.",
+      "Pasang karakter budaya Nusantara (+62 Mode, Halal ID, Jawa ID) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor. Pangkas basa-basi & hemat token.",
   },
   twitter: {
     card: "summary_large_image",
     title: "HAHahah Nusantara Edition — Personality Layer for Coding Agents",
     description:
-      "Karakter budaya developer Nusantara (Rusuh ID, Halal ID, Jawa ID) untuk Claude Code, Google Antigravity, OpenCode, Qoder, dan Cursor.",
+      "Karakter budaya developer Nusantara (+62 Mode, Halal ID, Jawa ID) untuk Claude Code, Google Antigravity, OpenCode, Qoder, dan Cursor.",
   },
   robots: {
     index: true,

@@ -5,7 +5,7 @@ import DoodleCrewFooter, { CrewMember } from "@/components/ui/doodle-crew-footer
 const HERO_CREW: CrewMember[] = [
   {
     kind: "yeti",
-    name: "Bli Rusuh",
+    name: "Si +62",
     letter: 0,
     seat: "front",
     offset: -0.34,

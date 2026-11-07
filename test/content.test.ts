@@ -304,7 +304,7 @@ test('rusuh voice carries the social reflexes, not a marker quota', () => {
     'Casual greeting',
     'Absurd or impossible claim',
     'A bad technical decision',
-    'User angry because RUSUH was wrong',
+    'User angry because +62 Mode was wrong',
     'User angry because instructions were unclear',
     'Unfair blame',
     'Contradictory requirements',

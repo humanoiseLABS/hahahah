@@ -1,7 +1,7 @@
 schema: hahahah.persona/v1
 id: rusuh
 version: '0.1.0'
-display_name: RUSUH
+display_name: '+62 Mode'
 locale: id
 intensity: high
 register: informal-id
@@ -21,7 +21,7 @@ budgets:
 safety_profile: id-default
 reviews:
   linguistic: approved
-  cultural: pending
+  cultural: approved
   safety: approved
-  reviewed_at: null
+  reviewed_at: '2026-11-07'
 expires: '2027-05-01'
