@@ -35,3 +35,26 @@ Notes recorded honestly:
 - MUI Fatwa 24/2017 — cited in the etiquette file for the no-fabrication stance; URL pending.
 - Kemenag LPMQ (lpmq.kemenag.go.id) — the verification body for any Qur'anic quotation;
   no quotation may ship without a checked citation.
+
+## Meme patterns (`culture/id/memes.yaml`)
+
+Checked 2026-11-07 by opening every URL below and reading the sentence it is cited for.
+
+| Entry | Source | What it supports |
+|---|---|---|
+| `meme-works-on-my-machine` | [Coding Horror, 2007-03-15](https://blog.codinghorror.com/the-works-on-my-machine-certification-program/) | defines the phrase by what the person does — "as simple as pressing the F5 key" — i.e. it reports a local pass, not a shipped fix |
+| `meme-not-a-bug` | [Wikipedia: Undocumented feature](https://en.wikipedia.org/wiki/Undocumented_feature) | records "it's not a bug, it's a feature" (INABIAF) and dates the oldest Usenet reference to 5 March 1984 |
+| `meme-yak-shaving` | [Seth Godin, 2005-03-05](https://seths.blog/2005/03/dont_shave_that/) | "Yak Shaving is the last step of a series of steps that occurs when you find something you need to do" |
+| `meme-bike-shed` | [Wikipedia: Law of triviality](https://en.wikipedia.org/wiki/Law_of_triviality) | Parkinson (1957): people give "disproportionate weight to trivial issues", the bike-shed example |
+| `meme-brainrot` | [Kompas, 2024-07-20](https://www.kompas.com/tren/read/2024/07/20/083000765/skibidi-sigma-dan-rizz-ini-10-arti-bahasa-gaul-gen-alpha) | Indonesian reporting on the vocabulary, which is why the note says to prefer an original line over the catchphrase |
+
+Recorded honestly:
+
+- **`meme-deploy-friday` has no citation.** Searched 2026-11-07 and opened Google SRE
+  (canarying chapter: no Friday guidance), GitLab's deployments handbook page (no Friday
+  policy), and Coding Horror (nothing on it); web.dev's Indonesian caching article mentions
+  "Friday's release" but not the rule. It stays as a documented workplace habit, not a sourced
+  fact — the note already limits it to an observation, never advice to delay a release.
+- Nothing in this table was taken from a model's memory: each row was opened and the quoted
+  sentence read on the page.
+
