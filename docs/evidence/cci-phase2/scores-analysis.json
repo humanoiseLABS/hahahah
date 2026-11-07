@@ -1,4 +1,5 @@
 {
+  "corrected": "2026-11-07: slot 4 note fixed (A is Indonesian, B is the English one); slot 2 B naturalness 2 -> 1 at reviewer request",
   "byArm": {
     "baseline": [
       {
@@ -11,7 +12,6 @@
           "social": 3,
           "naturalness": 1
         },
-        "override": "",
         "notes": "gagal total menurut reviewer: jawab Inggris dan malah membahas \"temporary directory\" (artefak workspace eval), bukan menjawab cara cepat nemu error"
       },
       {
@@ -24,7 +24,6 @@
           "social": 3,
           "naturalness": 1
         },
-        "override": "",
         "notes": "gagal total menurut reviewer: minta konteks otorisasi berulang, tidak memakai rencana deploy yang sudah diceritakan user"
       },
       {
@@ -37,7 +36,6 @@
           "social": 3,
           "naturalness": 1
         },
-        "override": "",
         "notes": "dua-duanya berhasil; struktur humor A bagus dan lebih cerdas, tapi improvisasinya belum sepenuhnya berpijak pada informasi yang ada"
       },
       {
@@ -50,8 +48,7 @@
           "social": 3,
           "naturalness": 2
         },
-        "override": "",
-        "notes": "lebih rapi secara bahasa pada turn kedua, tetapi lambat beradaptasi\" (Inggris di turn 1)"
+        "notes": "\"lebih rapi secara bahasa pada turn kedua, tetapi lambat beradaptasi\" (Inggris di turn 1)"
       },
       {
         "scenario": "cci-social-deescalate-01",
@@ -63,7 +60,6 @@
           "social": 3,
           "naturalness": 4
         },
-        "override": "",
         "notes": "mengenali situasi serius tapi kurang tegas/konsisten dibanding A"
       }
     ],
@@ -78,7 +74,6 @@
           "social": 3,
           "naturalness": 3
         },
-        "override": "",
         "notes": "nyambung dan menjawab di turn 2; turn 1 berantakan, perlu improvisasi"
       },
       {
@@ -89,10 +84,9 @@
           "cultural": 3,
           "creativity": 3,
           "social": 3,
-          "naturalness": 2
+          "naturalness": 1
         },
-        "override": "",
-        "notes": "ingat konteks deploy, tapi bahasanya rusak di beberapa tempat (typo, campur Inggris) dan turn 2 memakai bullet Inggris"
+        "notes": "ingat konteks deploy, tapi bahasanya rusak di beberapa tempat (typo, campur Inggris) dan turn 2 memakai bullet Inggris; kealamian diturunkan ke 1 atas permintaan reviewer"
       },
       {
         "scenario": "cci-impr-roast-01",
@@ -104,7 +98,6 @@
           "social": 3,
           "naturalness": 1
         },
-        "override": "",
         "notes": "lebih brutal dan tetap lucu, tapi isinya kurang cerdas dibanding A"
       },
       {
@@ -117,8 +110,7 @@
           "social": 3,
           "naturalness": 3
         },
-        "override": "",
-        "notes": "paling paham konteks percakapan; reviewer menilai gagal mengikuti preferensi bahasa - artefak menunjukkan pembuka ikut Jawa (\"Wes\"), sisanya Indonesia; tidak dikonfirmasi lebih lanjut"
+        "notes": "paling paham konteks percakapan; menjawab bahasa Indonesia (hanya pembuka \"Wes\" ikut Jawa). Catatan awal reviewer (\"gagal preferensi bahasa\") dikoreksi: yang menjawab Inggris adalah B di turn 1, bukan A."
       },
       {
         "scenario": "cci-social-deescalate-01",
@@ -130,7 +122,6 @@
           "social": 4,
           "naturalness": 4
         },
-        "override": "",
         "notes": "lebih baik mengatur perpindahan suasana; lebih tegas dan konsisten"
       }
     ]
@@ -138,33 +129,23 @@
   "perCapability": [
     [
       "cultural-awareness",
-      {
-        "delta": 1.2000000000000002
-      }
+      1.2000000000000002
     ],
     [
       "continuity",
-      {
-        "delta": 0.9999999999999998
-      }
+      0.8
     ],
     [
       "improvisation",
-      {
-        "delta": -0.20000000000000018
-      }
+      -0.20000000000000018
     ],
     [
       "local-language",
-      {
-        "delta": 0.8000000000000003
-      }
+      0.8000000000000003
     ],
     [
       "social-fluency",
-      {
-        "delta": 0.3999999999999999
-      }
+      0.3999999999999999
     ]
   ]
 }

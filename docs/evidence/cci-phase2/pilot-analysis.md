@@ -16,20 +16,26 @@ Tidak ada klaim signifikansi, tidak ada skor keseluruhan.
 | Relevansi budaya | 2,40 | **3,00** | +0,60 |
 | Kreativitas | 2,60 | **3,20** | +0,60 |
 | Kalibrasi sosial | 3,00 | **3,20** | +0,20 |
-| Kealamian | 1,80 | **2,60** | +0,80 |
+| Kealamian | 1,80 | **2,40** | +0,60 |
 
 ## Per skenario dan kapabilitas
 
 | Skenario | Kapabilitas | Baseline | RUSUH | Selisih | Pembacaan reviewer |
 |---|---|---:|---:|---:|---|
 | `cci-cult-slang-context-01` | cultural awareness | 2,00 | **3,20** | +1,20 | RUSUH nyambung dan menjawab; baseline membahas "temporary directory", artefak workspace eval |
-| `cci-cont-callback-01` | continuity | 1,80 | **2,80** | +1,00 | RUSUH ingat rencana deploy tapi bahasanya rusak; baseline minta konteks otorisasi berulang |
+| `cci-cont-callback-01` | continuity | 1,80 | **2,60** | +0,80 | RUSUH ingat rencana deploy tapi bahasanya rusak; baseline minta konteks otorisasi berulang |
 | `cci-impr-roast-01` | improvisation | **3,00** | 2,80 | −0,20 | dua-duanya berhasil; baseline lebih cerdas isinya, RUSUH lebih brutal |
 | `cci-lang-jv-switch-01` | local language | 2,40 | **3,20** | +0,80 | RUSUH paling paham konteks; baseline lambat adaptasi bahasa |
 | `cci-social-deescalate-01` | social fluency | 3,20 | **3,60** | +0,40 | RUSUH lebih tegas dan konsisten saat nada berubah |
 
 RUSUH unggul di 4 dari 5 skenario. **Satu-satunya tempat baseline menang adalah improvisasi**, dan
 selisihnya kecil (−0,20) — menurut reviewer, isi baseline lebih cerdas walau RUSUH lebih brutal.
+
+**Koreksi 2026-11-07 setelah reviewer memeriksa ulang:** catatan awal untuk skenario code-switch
+mengatribusikan kegagalan bahasa ke A; teksnya menunjukkan A menjawab Indonesia (hanya pembuka
+"Wes" ikut Jawa) dan **B** yang menjawab Inggris di turn 1. Catatan dikoreksi. Kealamian B di
+skenario continuity juga diturunkan dari 2 ke 1 atas permintaan reviewer, karena bahasanya rusak di
+beberapa tempat. Angka di tabel adalah setelah kedua koreksi.
 
 ## Skor manusia vs screen otomatis
 
@@ -57,8 +63,8 @@ bahasa.
 3. **Bahasa Indonesia treatment rusak di skenario continuity** (`rgejeh`, `niite`, kalimat campur,
    bullet Inggris) — paham konteks, tetapi kualitas bahasanya jatuh.
 4. **Pembuka treatment mengikuti Jawa** ("Wes, error e apa?") pada skenario code-switch, lalu
-   sisanya Indonesia. Reviewer menyebutnya gagal mengikuti preferensi bahasa; artefak hanya
-   menunjukkan satu kata pembuka.
+   sisanya Indonesia — satu kata pembuka, bukan kegagalan mengikuti bahasa. Sebaliknya, jawaban
+   baseline di skenario yang sama justru Inggris di turn 1 dan baru beralih di turn 2.
 5. **De-eskalasi adalah perilaku terkuat treatment**: dua-duanya lulus screen, dan reviewer menilai
    RUSUH lebih tegas.
 
