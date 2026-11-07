@@ -21,8 +21,9 @@ Notes recorded honestly:
 - The two KBBI pages render as a "Hasil Pencarian" page for logged-out visitors, but the
   entry and its gloss did resolve in that view. Quote the gloss, not the page title.
 - *MasyaAllah* and *Subhanallah* still have **no verified URL** here. The etiquette file
-  cites "NU Online" by name only. Until the Islamic-content reviewer supplies a citation,
-  those two stay prose-only guidance.
+  cites "NU Online" by name only. **Decided 2026-11-07 (owner): usage cue only, no citation**
+  rather than inventing one; both stay prose-only guidance and are not a release blocker, since
+  the shipped etiquette file is not schema-gated.
 - Whether each expression also needs a capped entry in a culture lexicon file is the
   reviewer's call. The culture schema's `decay_class` vocabulary (`global-meme`,
   `local-slang`, `kbbi-colloquial`, `aging-ironic`, `dated`, `banned`) is built for slang

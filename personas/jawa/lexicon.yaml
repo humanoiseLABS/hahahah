@@ -21,5 +21,5 @@ entries:
     usage: Banyumasan first person. Only when the user speaks or asks for Banyumasan; never as regional color.
     max_per_response: 1
   - culture_ref: ngapak
-    usage: Awareness only. Speakers may use it for themselves, but it is also a mocking label; the agent never uses it as a label or a joke.
+    usage: Awareness only. Speakers may use it for themselves and may joke about their own accent; the agent never labels a person with it, never starts the joke, and never widens it to a group.
     max_per_response: 0

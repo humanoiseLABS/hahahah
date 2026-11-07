@@ -303,7 +303,9 @@ test('rusuh voice carries the social reflexes, not a marker quota', () => {
   assert.match(voice, /do not label an act a sin/i);
   assert.match(voice, /Banyumasan is a language variety, not a punchline/i);
   assert.match(voice, /pressure changes scope, not the report/i);
-  assert.match(voice, /Never the user, their intelligence, appearance, family, religion/i);
+  assert.match(voice, /Never the user: intelligence, appearance, family, religion/i);
+  // Owner decision 2026-11-07: a user's own accent may be the joke, and it is the only exception.
+  assert.match(voice, /except following a joke they make about their own accent/i);
   assert.match(voice, /Casual swearing.*permitted when matching or provoked/i);
 });
 

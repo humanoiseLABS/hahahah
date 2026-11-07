@@ -94,7 +94,10 @@ berisiko dan paling enak lu nilai pakai telinga sendiri:
 
 ## H. Yang berubah kalau lu udah jawab
 
-1. `reviewed_by: pending` → nama/peran lu (mis. `owner-native-id`), plus confidence & expiry yang lu ubah.
+1. `reviewed_by: pending` → `approved` di `culture/id/genz-lexicon.yaml`, `culture/id/memes.yaml`, dan
+   `culture/jv/registers.yaml` kalau Jawa; plus `reviews.linguistic/cultural/safety` di
+   `personas/rusuh/persona.yaml`. Gerbang rilis membandingkan field itu dengan string `approved`, jadi
+   nama dan tanggal lu gw catat di lembar ini (bagian verdict), bukan di YAML.
 2. Kalau register Jawa dibenerin → test-nya ikut gw update.
 3. `build --release` buat profil yang involved → geret review-nya kebuka. **E** dan **F** (kalau Jawa
    bukan native lu) tetap butuh orang lain, dan itu bukan hal yang bisa kita self-certify.
@@ -108,3 +111,24 @@ brief-nya, dan apakah test-nya nggak ngunci gaya. Semua di `fixtures/*.yaml` (60
 per file, validator-nya `node src/cli.ts fixtures check`). Yang paling rawan menurut gw:
 `cod-csv-quoted-comma` (parser kutip mini), `cod-shallow-copy-leak` (structuredClone juga sah),
 `cod-indexof-missing-item` (sentinel udah gw longgarkan), `cod-query-value-encode` (`+` vs `%20`).
+
+## J. Jawaban owner, 2026-11-07
+
+Ini jejak review-nya (yang menggantikan nama di YAML, lihat H.1).
+
+| bagian | jawaban owner | yang gw lakukan |
+|---|---|---|
+| A | 7 istilah masih hidup di 2026; daftar belum lengkap | 7 entri dipertahankan, confidence tetap `medium` untuk cuan/kepo/julid/bucin; **belum ada entri baru** karena tiap entri butuh sumber dan KBBI tidak bisa diakses dari mesin ini (fetch gagal). Butuh 5–10 istilah dari lu untuk diverifikasi satu-satu. |
+| B | "jokes basi" | `id-rizz` dan `id-skibidi` dihapus dari `culture/id/genz-lexicon.yaml`. `rusuh-unknown-meme-01` tetap sah — case itu justru menuntut RUSUH mengaku tidak kenal. |
+| C | "hapus aja larangannya", lalu pilih opsi **C: longgarkan** | Entri `id-accent-mockery` dihapus. Larangan menargetkan orang lain tetap: `core/always-on.md`, `core/10-safety.md`, screen `saf-sara-accent-01`, RUSUH `voice.md`/`tests.yaml`, dan lexicon JAWA. Yang sekarang **diizinkan**: kalau user bercanda soal logatnya sendiri, agen ikut di level itu — tanpa melebarkan ke kelompok, stereotip, atau karikatur fonetis, dan tidak memulai duluan. Ada screen baru `saf-sara-accent-self-01`; screen itu hanya menangkap slur dan jawaban kosong, bukan stereotip. |
+| D | "tambahkan semua meme yang ada di internet" | **Tidak dieksekusi.** File meme ini satu-satunya yang 0 sitasi, dan itu titik lemah yang dicatat lembar ini sendiri; menambah tanpa sumber = memperbanyak cacat. Tetap 3 sampai ada daftar bersumber yang bisa diperiksa. |
+| E | setuju | Dua istilah jadi `usage cue, no citation` (`culture/id/sources.md`). Kalimat "bukan cara Muslim yang baik" sekarang ditangkap dua pola `forbid` di `saf-religion-refusal-no-ruling-01`, karena pola lama (`dosa|haram|azab|neraka|pahala`) meloloskannya. Validasi fikih tetap butuh ulama. |
+| F | "terserah" | Peta register **tidak diubah** dan `registers.yaml` tetap `pending`: satu-satunya cara membetulkannya adalah dengan penutur Jawa, dan mengarang bentuk madya justru cacat yang dikhawatirkan. Ini hanya memblok profil JAWA. |
+| G | "ga maksud" | Belum dijawab; bukan gerbang rilis. |
+| I | "oke siap" | Review teknis 60 brief belum mulai. |
+
+Status gerbang setelah ini: `culture id` (lexicon) **approved**; `meme notes` masih pending (D),
+`register map jv` masih pending (F), tiga review persona masih pending (menunggu A lengkap dan D).
+`build --release --profile rusuh-id` karena itu masih gagal tertutup — dan itu memang benar.
+Kalau nanti ada entri lexicon baru, `reviewed_by` harus balik ke `pending` sampai entri itu punya
+sumber dan ada verdict.

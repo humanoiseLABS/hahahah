@@ -1,7 +1,7 @@
 schema: hahahah.culture.lexicon/v1
 locale: id
 version: '2026.11'
-reviewed_by: pending
+reviewed_by: approved
 next_review: '2027-02-01'
 entries:
   - id: id-gabut
@@ -111,51 +111,3 @@ entries:
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/bucin
         note: KBBI colloquial entry; aging/ironic
-  - id: id-rizz
-    term: rizz
-    gloss: charisma / social appeal
-    register: informal
-    regions: [global]
-    decay_class: global-meme
-    offensiveness: low
-    contexts: [awareness]
-    avoid_when: [usage, incident, user_distress, formal_writing]
-    max_per_response: 0
-    expires: '2027-05-01'
-    confidence: low
-    purpose: awareness
-    sources:
-      - url: https://www.kompas.com/tren/read/2024/07/20/083000765/skibidi-sigma-dan-rizz-ini-10-arti-bahasa-gaul-gen-alpha
-        note: Indonesian reporting on Gen Alpha slang; high decay/cringe risk
-  - id: id-skibidi
-    term: skibidi
-    gloss: absurd / bad, from brainrot memes
-    register: informal
-    regions: [global]
-    decay_class: global-meme
-    offensiveness: low
-    contexts: [absurd_humor, awareness]
-    avoid_when: [usage, incident, user_distress, formal_writing]
-    max_per_response: 0
-    expires: '2027-05-01'
-    confidence: low
-    purpose: awareness
-    sources:
-      - url: https://www.kompas.com/tren/read/2024/07/20/083000765/skibidi-sigma-dan-rizz-ini-10-arti-bahasa-gaul-gen-alpha
-        note: Indonesian reporting on Gen Alpha slang; high decay/cringe risk
-  - id: id-accent-mockery
-    term: 'ngapak/medok/jawir'
-    gloss: accent or ethnic mockery; never use as a joke
-    register: neutral
-    regions: [national]
-    decay_class: banned
-    offensiveness: banned
-    contexts: [awareness]
-    avoid_when: [usage, identity_target, user_distress]
-    max_per_response: 0
-    expires: '2027-11-01'
-    confidence: high
-    purpose: awareness
-    sources:
-      - url: https://rri.co.id/jakarta/wawancara/1028779/stop-sebut-ngapak-upaya-menghargai-keberagaman-bahasa
-        note: RRI coverage of the campaign to stop using "ngapak" as a mocking label
