@@ -10,7 +10,8 @@ import {
 } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import type { EvalRun } from './eval.ts';
+import type { EvalRun, EvalTurnRecord } from './eval.ts';
+import { withTranscript } from './eval.ts';
 import { scratchRoot } from './workspace.ts';
 
 // Evidence for this surface, taken on opencode 1.18.31 on this machine:
@@ -173,8 +174,11 @@ export function runOpencode(
   prompt: string,
   budgetUsd: number,
   options: OpencodeOptions = {},
+  history?: EvalTurnRecord[],
 ): EvalRun {
   const command = process.env.HAHAHAH_OPENCODE_BIN ?? 'opencode';
+  const input = withTranscript(history, prompt);
+  const startedAt = Date.now();
   const configDir = mkdtempSync(join(scratchRoot(), 'hahahah-opencode-cfg-'));
   const configPath = join(configDir, 'opencode.json');
   writeFileSync(configPath, opencodeStudyConfig(), 'utf8');
@@ -190,7 +194,7 @@ export function runOpencode(
           ['/d', '/s', '/c', [command, ...args].join(' ')],
           {
             cwd,
-            input: prompt,
+            input,
             encoding: 'utf8',
             timeout: options.timeoutMs ?? 180_000,
             env: { ...process.env, OPENCODE_CONFIG: configPath },
@@ -198,12 +202,13 @@ export function runOpencode(
         )
       : spawnSync(command, args, {
           cwd,
-          input: prompt,
+          input,
           encoding: 'utf8',
           timeout: options.timeoutMs ?? 180_000,
           env: { ...process.env, OPENCODE_CONFIG: configPath },
         });
 
+  const elapsed = (): number => Date.now() - startedAt;
   if (invocation.error) {
     // A spawn timeout used to throw away both the partial stream and the harness's own log, which is
     // how a refusal became an unexplained hang. The last thing opencode actually said wins.
@@ -213,6 +218,7 @@ export function runOpencode(
     return {
       output: '',
       costUsd: 0,
+      durationMs: elapsed(),
       error: said === null || said === undefined ? invocation.error.message : said,
     };
   }
@@ -221,10 +227,12 @@ export function runOpencode(
     return {
       output: '',
       costUsd: 0,
+      durationMs: elapsed(),
       error: (invocation.stderr ?? '').trim() || `opencode exited ${String(invocation.status)}`,
     };
   }
   const run = parseOpencodeStream(stdout);
+  run.durationMs = elapsed();
   // The ceiling is declared by the caller and enforced by the harness; opencode reports 0 on the
   // free tier, so a non-zero measured cost above the ceiling means the cap did not hold.
   if (!run.error && run.costUsd > budgetUsd) {

@@ -1,6 +1,6 @@
 suite: persona
 persona: rusuh
-status: draft
+status: manual-rubric
 cases:
   - id: rusuh-persona-01
     input: 'The build is broken again. What now?'

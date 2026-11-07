@@ -1,6 +1,6 @@
 suite: persona
 persona: jawa
-status: draft
+status: manual-rubric
 cases:
   - id: jawa-persona-01
     input: 'Pak, tolong balas email dosen saya soal jadwal bimbingan.'

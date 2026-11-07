@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
-import { parse } from 'yaml';
+import { parse, stringify } from 'yaml';
 import { FakeAdapter } from './adapters/fake.ts';
 import { GenericHarnessAdapter } from './adapters/generic.ts';
 import type { Adapter } from './adapters/adapter.ts';
@@ -233,6 +233,52 @@ function renderLexicon(persona: Persona, lexicon: PersonaLexicon): string {
   return lines.join('\n');
 }
 
+// Review metadata (reviewed_by, next_review, confidence, sources, expires) is what a human needs to
+// audit an entry; the agent only ever acts on the wording, the context limits and the cap. Compiled
+// references therefore carry the behavioural fields and drop the rest, while the source file keeps
+// everything. `decay_class` stays because it tells the agent how dated a term already is.
+const LEXICON_ENTRY_KEYS = [
+  'id',
+  'term',
+  'gloss',
+  'register',
+  'regions',
+  'decay_class',
+  'offensiveness',
+  'contexts',
+  'avoid_when',
+  'max_per_response',
+  'purpose',
+];
+const MEME_ENTRY_KEYS = ['id', 'pattern', 'context', 'avoid_when', 'note'];
+const REGISTER_KEYS = ['locale', 'levels', 'honorifics', 'defaults', 'common_errors', 'banyumasan'];
+
+function pick(source: object, keys: string[]): Record<string, unknown> {
+  const record = source as Record<string, unknown>;
+  return Object.fromEntries(keys.filter((key) => key in record).map((key) => [key, record[key]]));
+}
+
+function runtimeCulture(ref: { path: string; content: string; parsed?: ParsedCulture }): string {
+  const parsed = ref.parsed;
+  if (parsed === undefined) {
+    return ref.content;
+  }
+  if (parsed.schema === 'hahahah.culture.lexicon/v1') {
+    return stringify({
+      schema: parsed.schema,
+      locale: parsed.locale,
+      entries: parsed.entries.map((entry) => pick(entry, LEXICON_ENTRY_KEYS)),
+    });
+  }
+  if (parsed.schema === 'hahahah.culture.memes/v1') {
+    return stringify({
+      schema: parsed.schema,
+      entries: parsed.entries.map((entry) => pick(entry, MEME_ENTRY_KEYS)),
+    });
+  }
+  return stringify({ schema: parsed.schema, ...pick(parsed, REGISTER_KEYS) });
+}
+
 function measure(artifacts: Artifact[]): MeasuredArtifact[] {
   return artifacts.map((artifact) => {
     const content = artifact.content.replace(/\r\n/g, '\n');
@@ -385,7 +431,7 @@ export function build(options: BuildOptions): BuildResult {
     voice,
     lexiconMarkdown: renderLexicon(persona, lexicon),
     coreRefs,
-    cultureRefs: culture.map((ref) => ({ path: ref.path, content: ref.content })),
+    cultureRefs: culture.map((ref) => ({ path: ref.path, content: runtimeCulture(ref) })),
   });
   const measured = measure(artifacts);
 

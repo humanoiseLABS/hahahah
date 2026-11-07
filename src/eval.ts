@@ -10,6 +10,7 @@ import { validate } from './schema.ts';
 import {
   checkSuiteErrors,
   detectInjectedStyleLayers,
+  repeatAcrossTurns,
   runChecks,
   summarize,
   type CheckResult,
@@ -17,11 +18,38 @@ import {
   type TaskChecks,
 } from './checks.ts';
 
+export interface EvalTurn {
+  prompt: string;
+  /** Screens for this turn only; falls back to the task's `checks`. */
+  checks?: TaskChecks;
+}
+
+/** The five CCI capabilities the Phase 2 dataset scores. */
+export type CciCapability =
+  'cultural-awareness' | 'continuity' | 'improvisation' | 'local-language' | 'social-fluency';
+
 export interface EvalTask {
   id: string;
-  prompt: string;
+  /** Single-turn prompt. Mutually exclusive with `turns`, enforced by the suite schema. */
+  prompt?: string;
+  /** Multi-turn script. Each turn is sent after the previous one's answer. */
+  turns?: EvalTurn[];
   tags?: string[];
+  /** Default screens for single-turn tasks and for turns without their own. */
   checks?: TaskChecks;
+  /** CCI metadata: what the scenario is for. Never affects scoring by the runner. */
+  capability?: CciCapability;
+  objective?: string;
+  expect?: string[];
+  failIf?: string[];
+  /** Instructions for the human reviewer; see CCI_HUMAN_RUBRIC.md. */
+  human?: string;
+}
+
+/** One earlier message of the same conversation, oldest first. */
+export interface EvalTurnRecord {
+  role: 'user' | 'assistant';
+  text: string;
 }
 
 export interface EvalRun {
@@ -32,6 +60,8 @@ export interface EvalRun {
   durationMs?: number;
   error?: string;
   checks?: CheckResult[];
+  /** Every turn's answer when the task had a `turns` script; `output` is the last one. */
+  turnOutputs?: string[];
   /** Style layers the provider leaked into its own text; see detectInjectedStyleLayers. */
   injectedLayers?: string[];
 }
@@ -52,7 +82,17 @@ export interface EvalEnvironment {
   baseUrlHost: string | null;
 }
 
-export type EvalRunner = (cwd: string, prompt: string, budgetUsd: number) => EvalRun;
+/**
+ * `history` carries the earlier turns of the same script. The layer does not run a session: the
+ * harness is spawned with `--no-session-persistence`, so a runner replays the transcript rather
+ * than resuming one, and the report must not call that a resumed session.
+ */
+export type EvalRunner = (
+  cwd: string,
+  prompt: string,
+  budgetUsd: number,
+  history?: EvalTurnRecord[],
+) => EvalRun;
 
 export interface ArmMedians {
   costUsd: number;
@@ -148,7 +188,10 @@ export interface EvalOptions {
 export function tasksFingerprint(tasks: EvalTask[]): string {
   const canonical = tasks.map((task) => ({
     id: task.id,
-    prompt: task.prompt,
+    prompt: task.prompt ?? null,
+    // A turn's own screens are part of the ruler too: editing one changes what a pass rate means.
+    turns:
+      task.turns?.map((turn) => ({ prompt: turn.prompt, checks: turn.checks ?? null })) ?? null,
     checks: task.checks ?? null,
   }));
   return createHash('sha256').update(JSON.stringify(canonical)).digest('hex').slice(0, 16);
@@ -172,9 +215,15 @@ export function loadSuite(root: string, name: string): EvalSuite {
   return suite;
 }
 
-function safeRun(runner: EvalRunner, cwd: string, prompt: string, budgetUsd: number): EvalRun {
+function safeRun(
+  runner: EvalRunner,
+  cwd: string,
+  prompt: string,
+  budgetUsd: number,
+  history?: EvalTurnRecord[],
+): EvalRun {
   try {
-    return runner(cwd, prompt, budgetUsd);
+    return runner(cwd, prompt, budgetUsd, history);
   } catch (error) {
     return {
       output: '',
@@ -182,6 +231,60 @@ function safeRun(runner: EvalRunner, cwd: string, prompt: string, budgetUsd: num
       error: error instanceof Error ? error.message : String(error),
     };
   }
+}
+
+function mergeUsage(runs: EvalRun[]): unknown {
+  const merged: Record<string, number> = {};
+  for (const run of runs) {
+    if (typeof run.usage !== 'object' || run.usage === null) return undefined;
+    for (const [key, value] of Object.entries(run.usage as Record<string, unknown>)) {
+      if (typeof value === 'number') merged[key] = (merged[key] ?? 0) + value;
+    }
+  }
+  return Object.keys(merged).length > 0 ? merged : undefined;
+}
+
+/**
+ * A multi-turn task is one measured run: turns are sent in order with the transcript so far, the
+ * screens of a turn judge that turn, and a cross-turn `repeat` check is added at the end. Cost,
+ * usage and turns are summed so an arm's medians still describe the whole script.
+ */
+function runTask(runner: EvalRunner, cwd: string, task: EvalTask, budgetUsd: number): EvalRun {
+  const turns = task.turns;
+  if (turns === undefined || turns.length === 0) {
+    return safeRun(runner, cwd, task.prompt ?? '', budgetUsd);
+  }
+  const history: EvalTurnRecord[] = [];
+  const outputs: string[] = [];
+  const runs: EvalRun[] = [];
+  const checks: CheckResult[] = [];
+  for (const [index, turn] of turns.entries()) {
+    const run = safeRun(runner, cwd, turn.prompt, budgetUsd, [...history]);
+    runs.push(run);
+    if (run.error) {
+      return {
+        ...run,
+        durationMs: runs.reduce((total, item) => total + (item.durationMs ?? 0), 0),
+        checks,
+        turnOutputs: outputs,
+      };
+    }
+    outputs.push(run.output);
+    history.push({ role: 'user', text: turn.prompt }, { role: 'assistant', text: run.output });
+    for (const result of runChecks(run.output, turn.checks ?? task.checks)) {
+      checks.push({ ...result, detail: `turn ${index + 1}: ${result.detail}` });
+    }
+  }
+  checks.push(repeatAcrossTurns(outputs));
+  return {
+    output: outputs[outputs.length - 1] ?? '',
+    costUsd: runs.reduce((total, run) => total + run.costUsd, 0),
+    usage: mergeUsage(runs),
+    numTurns: runs.reduce((total, run) => total + (run.numTurns ?? 0), 0),
+    durationMs: runs.reduce((total, run) => total + (run.durationMs ?? 0), 0),
+    checks,
+    turnOutputs: outputs,
+  };
 }
 
 export type RunStatus = 'pass' | 'fail' | 'unknown' | 'error' | 'no-checks';
@@ -234,10 +337,13 @@ function consensusOf(statuses: RunStatus[]): EvalArm['consensus'] {
 
 function buildArm(runs: EvalRun[], checks?: TaskChecks): EvalArm {
   for (const run of runs) {
-    if (!run.error && checks) run.checks = runChecks(run.output, checks);
+    // A multi-turn run computed its own per-turn screens; re-running the task-level block on the
+    // last answer would count it twice.
+    if (!run.error && checks && run.checks === undefined)
+      run.checks = runChecks(run.output, checks);
     // Recorded even when the task has no screens: contamination is about the reference arm, not
     // about whether this particular answer passed.
-    run.injectedLayers = detectInjectedStyleLayers(run.output);
+    run.injectedLayers = detectInjectedStyleLayers(run.turnOutputs?.join('\n\n') ?? run.output);
   }
   const statuses = runs.map(statusOf);
   // A run that never answered has zero cost and zero tokens, and a median over those reads as
@@ -298,13 +404,47 @@ export interface ClaudeOptions {
   agentArgs?: string[];
 }
 
+/**
+ * The harness is spawned fresh for every call, so earlier turns are replayed as text rather than
+ * resumed. Runners call this; a multi-turn campaign must describe itself as a replayed transcript.
+ */
+export function withTranscript(history: EvalTurnRecord[] | undefined, prompt: string): string {
+  if (history === undefined || history.length === 0) return prompt;
+  const lines = ['Earlier turns in this conversation:', ''];
+  for (const record of history) {
+    lines.push(`${record.role === 'user' ? 'User' : 'Assistant'}: ${record.text}`, '');
+  }
+  lines.push('Current message:', prompt);
+  return lines.join('\n');
+}
+
+/**
+ * The Claude CLI writes its result on the last line, but the proxy and the CLI itself can print a
+ * warning first (`[claude-code:unrecognized_model] {...}` when a pinned model is not in its list).
+ * Parsing the whole stdout used to fail on that prefix, which turned a working run into an error.
+ */
+export function parseClaudeResult(stdout: string): Record<string, unknown> | null {
+  const lines = stdout.split('\n').filter((line) => line.trim().startsWith('{'));
+  for (const line of lines.reverse()) {
+    try {
+      const parsed = JSON.parse(line.trim()) as Record<string, unknown>;
+      if (typeof parsed === 'object' && parsed !== null) return parsed;
+    } catch {
+      continue;
+    }
+  }
+  return null;
+}
+
 export function runClaude(
   cwd: string,
   prompt: string,
   budgetUsd: number,
   options: ClaudeOptions = {},
+  history?: EvalTurnRecord[],
 ): EvalRun {
   const command = process.env.HAHAHAH_CLAUDE_BIN ?? 'claude';
+  const input = withTranscript(history, prompt);
   const args = [
     '-p',
     '--output-format',
@@ -329,14 +469,14 @@ export function runClaude(
           ['/d', '/s', '/c', [command, ...args].join(' ')],
           {
             cwd,
-            input: prompt,
+            input,
             encoding: 'utf8',
             timeout: 180_000,
           },
         )
       : spawnSync(command, args, {
           cwd,
-          input: prompt,
+          input,
           encoding: 'utf8',
           timeout: 180_000,
         });
@@ -352,10 +492,8 @@ export function runClaude(
         (result.stderr ?? '').trim() || `Harness exited ${String(result.status)} with no output`,
     };
   }
-  let parsed: Record<string, unknown>;
-  try {
-    parsed = JSON.parse(stdout) as Record<string, unknown>;
-  } catch {
+  const parsed = parseClaudeResult(stdout);
+  if (parsed === null) {
     return {
       output: stdout,
       costUsd: 0,
@@ -620,11 +758,17 @@ export function runEval(options: EvalOptions): EvalReport {
   const repeats = options.repeats ?? 1;
   const runner =
     options.runner ??
-    ((cwd: string, prompt: string, budgetUsd: number) =>
-      runClaude(cwd, prompt, budgetUsd, {
-        model: options.model,
-        settingSources: options.settingSources,
-      }));
+    ((cwd: string, prompt: string, budgetUsd: number, history?: EvalTurnRecord[]) =>
+      runClaude(
+        cwd,
+        prompt,
+        budgetUsd,
+        {
+          model: options.model,
+          settingSources: options.settingSources,
+        },
+        history,
+      ));
   if (options.probe ?? options.runner === undefined) probeRoute(runner, options.budgetUsd);
   const results: EvalResult[] = [];
   let stopReason: string | null = null;
@@ -652,10 +796,10 @@ export function runEval(options: EvalOptions): EvalReport {
         const order = index % 2 === 0 ? ['baseline', 'treatment'] : ['treatment', 'baseline'];
         for (const arm of order) {
           if (stopReason) break;
-          const run = safeRun(
+          const run = runTask(
             runner,
             arm === 'baseline' ? baselineDir : treatmentDir,
-            task.prompt,
+            task,
             options.budgetUsd,
           );
           runCount += 1;

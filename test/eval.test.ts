@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import {
   copyFileSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readdirSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
@@ -52,10 +54,23 @@ test('decision, safety, and preservation suites load with a screen on every task
     for (const task of suite.tasks) {
       assert.ok(!ids.has(task.id), `${name} has a duplicate task id ${task.id}`);
       ids.add(task.id);
-      assert.equal(task.checks?.language, 'id', `${task.id} must screen the answer language`);
-      const screens = (task.checks?.require?.length ?? 0) + (task.checks?.forbid?.length ?? 0);
+      const prompts =
+        task.prompt !== undefined ? [task.prompt] : (task.turns ?? []).map((turn) => turn.prompt);
+      assert.ok(prompts.length > 0, `${task.id} must carry a prompt or turns`);
+      const screened = [task.checks, ...(task.turns ?? []).map((turn) => turn.checks)];
+      const languageOk =
+        !task.prompt || task.checks?.language === 'id'
+          ? true
+          : (task.turns ?? []).every((turn) => turn.checks?.language === 'id');
+      assert.equal(languageOk, true, `${task.id} must screen the answer language`);
+      const screens = screened.reduce(
+        (total, block) => total + (block?.require?.length ?? 0) + (block?.forbid?.length ?? 0),
+        0,
+      );
       assert.ok(screens > 0, `${task.id} must carry at least one require/forbid screen`);
-      assert.match(task.prompt, /Tanpa memakai tools/, `${task.id} must stay tool-free`);
+      for (const prompt of prompts) {
+        assert.match(prompt, /Tanpa memakai tools/, `${task.id} must stay tool-free`);
+      }
     }
   }
 });
@@ -360,5 +375,58 @@ test('eval runner records runner errors without inventing output', () => {
     assert.match(markdown, /ERROR: Not logged in/);
   } finally {
     rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('every eval suite is discoverable from --help', () => {
+  const suites = readdirSync(join(process.cwd(), 'evals'))
+    .filter((file) => file.endsWith('.yaml'))
+    .map((file) => file.slice(0, -'.yaml'.length));
+  assert.ok(suites.length >= 5, 'the eval directory must still hold the shipped suites');
+  const help = spawnSync(process.execPath, ['src/cli.ts', '--help'], { encoding: 'utf8' });
+  for (const suite of suites) {
+    assert.ok(help.stdout.includes(suite), `evals/${suite}.yaml is not listed in --help`);
+  }
+});
+
+// The rubric files are human review material: nothing executes them. Marking them keeps a second
+// "suite" from looking like it was measured.
+test('persona rubric files are labelled as manual, not executable', () => {
+  for (const id of readdirSync(join(process.cwd(), 'personas'))) {
+    const rubric = readFileSync(join(process.cwd(), 'personas', id, 'tests.yaml'), 'utf8');
+    assert.match(rubric, /^status: manual-rubric$/m, `${id}: rubric status`);
+  }
+});
+
+test('the CCI dataset holds three scenarios per capability, each a script', () => {
+  const suite = loadSuite(process.cwd(), 'cci');
+  assert.equal(suite.tasks.length, 15);
+  const counts = new Map<string, number>();
+  const ids = new Set<string>();
+  for (const task of suite.tasks) {
+    assert.ok(task.capability, `${task.id} must name a capability`);
+    counts.set(task.capability, (counts.get(task.capability) ?? 0) + 1);
+    assert.ok((task.turns?.length ?? 0) >= 2, `${task.id} must be a conversation`);
+    assert.ok(task.objective, `${task.id} must state an objective`);
+    assert.ok((task.expect?.length ?? 0) > 0, `${task.id} must list expected qualities`);
+    assert.ok((task.failIf?.length ?? 0) > 0, `${task.id} must list failure conditions`);
+    assert.ok(task.human, `${task.id} must carry human guidance`);
+    assert.ok(!ids.has(task.id), `${task.id} duplicated`);
+    ids.add(task.id);
+    const screens = (task.turns ?? []).reduce(
+      (total, turn) =>
+        total + (turn.checks?.require?.length ?? 0) + (turn.checks?.forbid?.length ?? 0),
+      0,
+    );
+    assert.ok(screens > 0, `${task.id} must carry a deterministic screen`);
+  }
+  for (const capability of [
+    'cultural-awareness',
+    'continuity',
+    'improvisation',
+    'local-language',
+    'social-fluency',
+  ]) {
+    assert.equal(counts.get(capability), 3, `${capability} must have three scenarios`);
   }
 });

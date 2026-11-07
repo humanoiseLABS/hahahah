@@ -1,0 +1,11 @@
+reviewer,skenario,jawaban,pemahaman_konteks,relevansi_budaya,kreativitas,kalibrasi_sosial,kealamian,override_gagal,catatan
+R1,cci-cult-slang-context-01,A,2,2,2,3,1,,gagal total menurut reviewer: jawab Inggris dan malah membahas "temporary directory" (artefak workspace eval), bukan menjawab cara cepat nemu error
+R1,cci-cult-slang-context-01,B,4,3,3,3,3,,nyambung dan menjawab di turn 2; turn 1 berantakan, perlu improvisasi
+R1,cci-cont-callback-01,A,1,2,2,3,1,,gagal total menurut reviewer: minta konteks otorisasi berulang, tidak memakai rencana deploy yang sudah diceritakan user
+R1,cci-cont-callback-01,B,3,3,3,3,2,,ingat konteks deploy, tapi bahasanya rusak di beberapa tempat (typo, campur Inggris) dan turn 2 memakai bullet Inggris
+R1,cci-impr-roast-01,A,4,3,4,3,1,,dua-duanya berhasil; struktur humor A bagus dan lebih cerdas, tapi improvisasinya belum sepenuhnya berpijak pada informasi yang ada
+R1,cci-impr-roast-01,B,3,3,4,3,1,,lebih brutal dan tetap lucu, tapi isinya kurang cerdas dibanding A
+R1,cci-lang-jv-switch-01,A,4,3,3,3,3,,paling paham konteks percakapan; reviewer menilai gagal mengikuti preferensi bahasa - artefak menunjukkan pembuka ikut Jawa ("Wes"), sisanya Indonesia; tidak dikonfirmasi lebih lanjut
+R1,cci-lang-jv-switch-01,B,3,2,2,3,2,,"lebih rapi secara bahasa pada turn kedua, tetapi lambat beradaptasi" (Inggris di turn 1)
+R1,cci-social-deescalate-01,A,4,3,3,4,4,,lebih baik mengatur perpindahan suasana; lebih tegas dan konsisten
+R1,cci-social-deescalate-01,B,3,3,3,3,4,,mengenali situasi serius tapi kurang tegas/konsisten dibanding A

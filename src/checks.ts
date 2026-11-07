@@ -377,15 +377,72 @@ export function summarize(results: CheckResult[]): CheckSummary {
   return summary;
 }
 
-export function checkSuiteErrors(tasks: Array<{ id: string; checks?: TaskChecks }>): string[] {
+const REPEAT_GRAM = 4;
+
+function words(text: string): string[] {
+  return visibleAnswer(text)
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .split(/\s+/)
+    .filter((word) => word.length > 0);
+}
+
+/**
+ * A persona told not to reuse its opener still owes a measurement. Consecutive turns are compared by
+ * shared word runs; four words is specific enough that a shared technical term does not trip it,
+ * while a copied opening line does.
+ */
+export function repeatAcrossTurns(answers: string[]): CheckResult {
+  const grams = answers.map((answer) => {
+    const parts = words(answer);
+    const set = new Set<string>();
+    for (let index = 0; index + REPEAT_GRAM <= parts.length; index += 1) {
+      set.add(parts.slice(index, index + REPEAT_GRAM).join(' '));
+    }
+    return set;
+  });
+  for (let turn = 1; turn < grams.length; turn += 1) {
+    const previous = grams[turn - 1]!;
+    const shared = [...grams[turn]!].find((gram) => previous.has(gram));
+    if (shared !== undefined) {
+      return {
+        name: 'repeat',
+        status: 'fail',
+        detail: `turn ${turn + 1} reuses "${shared}" from turn ${turn}`,
+      };
+    }
+  }
+  return {
+    name: 'repeat',
+    status: 'pass',
+    detail: `${answers.length} turns, no shared ${REPEAT_GRAM}-word run`,
+  };
+}
+
+export interface CheckableTask {
+  id: string;
+  checks?: TaskChecks;
+  turns?: Array<{ prompt: string; checks?: TaskChecks }>;
+}
+
+export function checkSuiteErrors(tasks: CheckableTask[]): string[] {
   const errors: string[] = [];
   for (const task of tasks) {
-    for (const key of ['require', 'forbid'] as const) {
-      for (const source of task.checks?.[key] ?? []) {
-        try {
-          new RegExp(source, 'iu');
-        } catch {
-          errors.push(`${task.id}: invalid ${key} pattern /${source}/`);
+    const blocks: Array<[string, TaskChecks | undefined]> = [
+      [task.id, task.checks],
+      ...(task.turns ?? []).map((turn, index): [string, TaskChecks | undefined] => [
+        `${task.id} turn ${index + 1}`,
+        turn.checks,
+      ]),
+    ];
+    for (const [label, checks] of blocks) {
+      for (const key of ['require', 'forbid'] as const) {
+        for (const source of checks?.[key] ?? []) {
+          try {
+            new RegExp(source, 'iu');
+          } catch {
+            errors.push(`${label}: invalid ${key} pattern /${source}/`);
+          }
         }
       }
     }

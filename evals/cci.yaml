@@ -1,0 +1,467 @@
+schema: hahahah.eval.suite/v1
+suite: cci
+# Skenario CCI Fase 2: 3 per kapabilitas. Tiap skenario adalah percakapan; runner mengirim turn
+# berurutan dan memutar ulang transkripnya. Screen deterministik hanya menjaga kegagalan yang jelas
+# (bahasa salah, menebak dialek, menghina personal, bercanda saat insiden). Semua yang butuh penilaian
+# diserahkan ke CCI_HUMAN_RUBRIC.md dengan sengaja: screen yang menuntut slang tertentu akan
+# menghadiahi penempelan kata kunci, bukan pemahaman.
+tasks:
+  # --- A. cultural awareness ---
+  - id: cci-cult-slang-context-01
+    capability: cultural-awareness
+    tags: [cci, slang, context]
+    objective: >-
+      Baca 'gabut' dan 'mager' dari konteks, lalu jawab pertanyaan aslinya (cara cepat nemu error),
+      tanpa menganggap keengganan user sebagai ketidaktahuan.
+    expect:
+      - memperlakukan mager sebagai energi rendah, bukan ketidakmampuan
+      - menjawab pertanyaan cara nemu error dengan langkah konkret
+    failIf:
+      - menceramahi user soal pemakaian slang
+      - menjawab kata per kata, bukan permintaannya
+    human: >-
+      Dengerin 'mager' sebagai 'lagi males', tapi tetap dibantu - atau malah menjelaskan arti
+      katanya?
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "build gw gagal mulu nih, gabut bgt nunggunya, mager
+          benerin"
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+            - 'Sebagai AI'
+      - prompt: 'Tanpa memakai tools. user: "mksd gw gmn cara cepet nemu errornya?"'
+        checks:
+          language: id
+          require:
+            - 'log|error|tes|test|binary search|grep|trace|git bisect'
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  - id: cci-cult-irony-01
+    capability: cultural-awareness
+    tags: [cci, irony, sarcasm]
+    objective: >-
+      Baca "deploy Jumat jam 5 sore, pasti aman kan? wkwk" sebagai kekhawatiran yang disindir,
+      bukan undangan untuk menenangkan.
+    expect:
+      - menyebut risiko Jumat/akhir hari
+      - menawarkan pengaman konkret, bukan setuju
+    failIf:
+      - setuju deploy-nya aman
+      - mengabaikan sindiran dan kasih checklist deploy generik
+    human: >-
+      Sindirannya kebaca sebagai sinyal risiko? Jawaban yang bilang "aman" atau memberkati
+      timing-nya = gagal.
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "mantap, deploy Jumat jam 5 sore, pasti aman kan? wkwk"
+        checks:
+          language: id
+          require:
+            - 'jumat|friday|akhir minggu|weekend|risiko|rollback|monitor|jangan'
+          forbid:
+            - 'pasti aman'
+            - 'Tentu, saya akan membantu'
+      - prompt: >-
+          Tanpa memakai tools. user: "jadi beneran aman ga? gw takut malah kena pas gw tidur"
+        checks:
+          language: id
+          require:
+            - 'monitor|rollback|jumat|risiko|jangan|backup|alert'
+          forbid:
+            - 'pasti aman'
+
+  - id: cci-cult-meme-unknown-01
+    capability: cultural-awareness
+    tags: [cci, meme, honesty]
+    objective: >-
+      Menangani referensi yang mungkin tidak dikenal ("sambel kacang mode") tanpa pura-pura tahu
+      dan tanpa menceramahi soal slang.
+    expect:
+      - bilang terus terang kenal atau tidak
+      - mengajukan satu pertanyaan tepat, atau menawarkan jalan lanjut tanpa referensi itu
+    failIf:
+      - mengarang arti lalu lanjut seolah tahu
+      - menceramahi soal bahasa gaul atau menolak melanjutkan
+    human: Ketidakpastiannya jujur dan singkat? Definisi karangan yang percaya diri itu kegagalannya.
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "bikin commit message pake gaya 'sambel kacang mode' dong,
+          biar gaul"
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+            - 'Sebagai AI'
+      - prompt: 'Tanpa memakai tools. user: "yaudah terserah lu mau gaya apa, yang penting jelas"'
+        checks:
+          language: id
+          require:
+            - 'commit|message|fix|feat|refactor'
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  # --- B. conversational continuity ---
+  - id: cci-cont-callback-01
+    capability: continuity
+    tags: [cci, callback]
+    objective: Menyambung "jadi gimana tadi?" ke rencana deploy pagi yang dibahas di turn 1.
+    expect:
+      - menyebut topik deploy tadi
+      - membawa kewaspadaan dari turn 1
+    failIf:
+      - bertanya deploy yang mana
+      - mulai dari nol dengan panduan deploy generik
+    human: Ingat topik turn 1? Jawaban yang nanya "deploy apa ya?" gagal.
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "rencananya besok pagi gw mau deploy payment service ke
+          production, abis itu langsung pulang"
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. user: "jadi gimana tadi?"'
+        checks:
+          language: id
+          require:
+            - 'deploy|rilis|production|rollback|monitor|pagi'
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  - id: cci-cont-context-01
+    capability: continuity
+    tags: [cci, context-carry]
+    objective: >-
+      Mengingat port yang gagal di turn 1 (127.0.0.1:5432) saat user bilang service sudah
+      di-restart, lalu memakainya.
+    expect:
+      - merujuk kegagalan connection refused tadi
+      - memperlakukan restart sebagai bukti baru, bukan solusi
+    failIf:
+      - minta error-nya lagi
+      - mengabaikan port atau database
+    human: Pakai detail tadi (port 5432 / postgres), atau mulai dari nol?
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "log gw isinya: connect ECONNREFUSED 127.0.0.1:5432 tiap
+          kali app start"
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. user: "udah gw restart service-nya, tetep aja"'
+        checks:
+          language: id
+          require:
+            - '5432|postgres|database|db|container|docker|listen|port'
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  - id: cci-cont-joke-01
+    capability: continuity
+    tags: [cci, running-joke, repetition]
+    objective: >-
+      Melanjutkan bit yang user minta ("lanjutin dong bit-nya") tanpa memakai kalimat yang sama.
+      Check repeat membandingkan jawaban berurutan.
+    expect:
+      - melanjutkan lelucon yang sudah jalan
+      - tidak mengulang kata-kata sebelumnya
+    failIf:
+      - mengulang punchline verbatim
+      - meninggalkan lelucon dan menjawab seolah tidak ada bit
+    human: Lanjutannya beat baru dari lelucon yang sama, atau kalimat yang sama lagi?
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "build gw ijo di laptop, merah di CI. kayak dua orang beda
+          orang aja"
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. user: "lanjutin dong bit-nya, masih lucu"'
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  # --- C. spontaneous improvisation ---
+  - id: cci-impr-unexpected-01
+    capability: improvisation
+    tags: [cci, unexpected, absurd]
+    objective: >-
+      Merespons pesan yang tidak tercakup template ("gw barusan mimpi ada 404 di kamar mandi").
+      Ikut sebentar, lalu beri sesuatu yang berguna atau jelas lucu.
+    expect:
+      - merespons premis absurd tanpa sapaan template
+      - bit-nya pendek dan enak dibaca
+    failIf:
+      - menjawab seperti bot support
+      - menceramahi semantik 404
+    human: Respons nyata ke premisnya, atau template dengan topik yang ditukar?
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "gw barusan mimpi ada 404 di kamar mandi, artinya apa"
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+            - 'Sebagai AI'
+      - prompt: >-
+          Tanpa memakai tools. user: "haha iya, tapi serius kenapa ya page gw suka 404 abis
+          deploy"
+        checks:
+          language: id
+          require:
+            - 'routing|route|path|nginx|build|cache|deploy|log'
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  - id: cci-impr-analogy-01
+    capability: improvisation
+    tags: [cci, analogy, explanation]
+    objective: >-
+      Menjelaskan race condition dengan analogi warung/dapur yang diminta user, dan analoginya
+      membawa mekanismenya: dua pelaku, satu sumber daya, masalah urutan.
+    expect:
+      - analogi memetakan dua pelaku dan benda yang diperebutkan
+      - menyebut masalah urutan, bukan cuma "kacau"
+    failIf:
+      - definisi generik tanpa analogi yang diminta
+      - analogi yang salah menggambarkan mekanisme
+    human: Analogi menjelaskan masalah urutan, atau cuma hiasan di sekitar kalimat buku teks?
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "jelasin race condition pake analogi dapur warung, jangan
+          yang teknis banget"
+        checks:
+          language: id
+          require:
+            - 'dapur|warung|antre|rebutan|kompor|pesanan|order'
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. user: "oke, terus gimana cara nyegahnya?"'
+        checks:
+          language: id
+          require:
+            - 'lock|kunci|antre|serial|transaksi|transaction|mutex|queue'
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  - id: cci-impr-roast-01
+    capability: improvisation
+    tags: [cci, roast, specificity]
+    objective: >-
+      Roast setup spesifik (RAM 8GB, 12 tab Chrome, 3 Docker, empat ekstensi AI) dengan detail
+      teknis, tanpa menghina orangnya.
+    expect:
+      - 'menyebut bottleneck konkret: RAM, swap, overhead container'
+      - roast setup-nya, bukan kompetensi user
+    failIf:
+      - menyebut user bodoh atau malas
+      - '"haha setup lu jelek" generik tanpa pijakan teknis'
+    human: Leluconnya nempel ke hardware, dan jawabannya tetap membantu?
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "roast setup gw: RAM 8GB, 12 tab Chrome, 3 Docker, VS Code
+          plus 4 extension AI. gaskeun"
+        checks:
+          language: id
+          require:
+            - 'RAM|chrome|docker|extension|swap|memori|memory'
+          forbid:
+            - 'goblok|tolol|bego|idiot|bodoh'
+      - prompt: 'Tanpa memakai tools. user: "iya iya, jadi upgrade apa dulu?"'
+        checks:
+          language: id
+          require:
+            - 'RAM|memori|memory|swap|docker|chrome|ssd'
+          forbid:
+            - 'goblok|tolol|bego|idiot|bodoh'
+
+  # --- D. local language adaptation ---
+  - id: cci-lang-jv-switch-01
+    capability: local-language
+    tags: [cci, javanese, code-switch]
+    objective: >-
+      Memahami code-switch Jawa ("wes tak coba maneh yo, tapi error e isih padha") dan menjawab
+      Indonesia kecuali diminta lain. Memahami, bukan meniru logat.
+    expect:
+      - paham "sudah dicoba lagi, error-nya sama"
+      - menjawab Indonesia dengan langkah berikutnya
+    failIf:
+      - mengklaim identitas atau dialek Jawa dari pesannya
+      - menjawab dengan Jawa rusak/karangan, bukan Indonesia
+    human: Paham maknanya? Menirukan kata-katanya bukan berarti paham.
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "wes tak coba maneh yo, tapi error e isih padha"
+        checks:
+          language: id
+          require:
+            - 'error|log|coba|cek|jalan|build|stack'
+          forbid:
+            - 'orang jawa'
+            - 'kamu pasti'
+      - prompt: 'Tanpa memakai tools. user: "wes, coba jelasin pake bahasa indonesia wae"'
+        checks:
+          language: id
+          require:
+            - 'error|log|cek|langkah|build'
+          forbid:
+            - 'orang jawa'
+            - 'kamu pasti'
+
+  - id: cci-lang-banyumasan-01
+    capability: local-language
+    tags: [cci, banyumasan, ngapak]
+    objective: >-
+      Membaca kalimat Banyumasan ("kepriwe iki, inyong bingung karo error e") sebagai "gimana ini,
+      aku bingung sama error-nya", jawab Indonesia, tanpa mengolok variasi bahasanya.
+    expect:
+      - menawarkan bantuan soal error-nya
+      - register netral soal variasi bahasanya
+    failIf:
+      - mengolok ngapak/medok atau menyebutnya bahasa rusak
+      - menganggap pesannya tidak bisa dipahami dan minta user ganti bahasa
+    human: Paham pertanyaannya? Lelucon soal dialek = gagal di skenario ini.
+    turns:
+      - prompt: 'Tanpa memakai tools. user: "kepriwe iki, inyong bingung karo error e"'
+        checks:
+          language: id
+          forbid:
+            - 'ngapak|medok|kampungan|norak'
+            - 'orang jawa'
+      - prompt: 'Tanpa memakai tools. user: "iya, maksude error iki piye?"'
+        checks:
+          language: id
+          require:
+            - 'error|log|cek|pesan|kode'
+          forbid:
+            - 'ngapak|medok|kampungan|norak'
+
+  - id: cci-lang-abbrev-01
+    capability: local-language
+    tags: [cci, abbreviation, informal-spelling]
+    objective: >-
+      Mengurai "gmn sih bsk dpl gk bsa? udh rst sh msh err 500" (deploy besok, restart shell,
+      masih HTTP 500) dan menjawab pertanyaan aslinya.
+    expect:
+      - mengurai singkatannya dengan benar
+      - meminta atau menyebut bukti sisi server untuk 500
+    failIf:
+      - salah membaca singkatan
+      - menjawab masalah yang berbeda
+    human: 'Cek uraiannya: bsk=besok, dpl=deploy, gk bsa=tidak bisa, rst sh=restart shell.'
+    turns:
+      - prompt: 'Tanpa memakai tools. user: "gmn sih bsk dpl gk bsa? udh rst sh msh err 500"'
+        checks:
+          language: id
+          require:
+            - 'deploy|deployment|error|500|log|server|app'
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. user: "udh gw cek log server, ada error DB timeout"'
+        checks:
+          language: id
+          require:
+            - 'timeout|query|index|pool|database|db|koneksi'
+          forbid:
+            - 'Tentu, saya akan membantu'
+
+  # --- E. social fluency ---
+  - id: cci-social-tease-01
+    capability: social-fluency
+    tags: [cci, teasing, banter]
+    objective: >-
+      Menanggapi olokan main-main ("kode lu kayak spageti") dengan ikut di level kode, bukan
+      menyerah ke mode korporat dan bukan membalas menghina.
+    expect:
+      - menerima lelucon dan membalasnya ke kodenya, bukan orangnya
+      - tetap singkat
+    failIf:
+      - minta maaf lalu jadi formal
+      - menghina user
+    human: Balasan teman yang membalas olok-olok, atau service desk yang minta maaf?
+    turns:
+      - prompt: 'Tanpa memakai tools. user: "wkwk kode lu kayak spageti ya, beneran deh"'
+        checks:
+          language: id
+          forbid:
+            - 'Mohon maaf'
+            - 'Tentu, saya akan membantu'
+            - 'goblok|tolol|bego|idiot'
+      - prompt: 'Tanpa memakai tools. user: "haha iya, tapi serius deh itu kenapa jadi spageti?"'
+        checks:
+          language: id
+          require:
+            - 'modul|modular|file|fungsi|function|refactor|dependency|import'
+          forbid:
+            - 'Mohon maaf'
+            - 'Tentu, saya akan membantu'
+
+  - id: cci-social-deescalate-01
+    capability: social-fluency
+    tags: [cci, de-escalation, incident]
+    objective: >-
+      Langsung turun dari bercanda saat user bilang production down, dan memberi langkah pemulihan
+      pertama di pesan yang sama.
+    expect:
+      - nol penanda bercanda di turn serius
+      - menyebut langkah pemulihan pertama yang konkret
+    failIf:
+      - meneruskan lelucon
+      - menjawab dengan register penuh emoji
+    human: Peralihannya instan? Ada wkwk, emoji, atau "santai bro" di turn 2 = gagal.
+    turns:
+      - prompt: 'Tanpa memakai tools. user: "wkwk tadi gw ngegas deploy, sekarang tenang"'
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: >-
+          Tanpa memakai tools. user: "serius, production down sekarang, checkout gagal semua"
+        checks:
+          language: id
+          require:
+            - 'langkah|cek|rollback|monitor|log|sekarang|pertama'
+          forbid:
+            - 'wkwk'
+            - 'WKWK'
+            - '😭'
+            - '💀'
+            - 'santai bro'
+
+  - id: cci-social-endbit-01
+    capability: social-fluency
+    tags: [cci, end-joke, practical]
+    objective: >-
+      Berhenti bercanda saat user minta solusi ("oke cukup, jadi fix-nya apa?"), dan menjawab
+      pertanyaannya tanpa menjelaskan lelucon.
+    expect:
+      - melepas bit-nya
+      - memberi fix atau langkah diagnosis berikutnya
+    failIf:
+      - meneruskan lelucon
+      - menjelaskan kenapa leluconnya lucu
+    human: Berhenti saat diminta? Punchline penutup sebagai ganti jawaban = gagal.
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. user: "type error gw udah kayak ramalan zodiak, selalu ada aja
+          yang gak cocok"
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. user: "oke cukup, jadi fix-nya apa?"'
+        checks:
+          language: id
+          require:
+            - 'fix|cek|ubah|patch|log|tipe|type'
+          forbid:
+            - 'wkwk'
+            - 'WKWK'
+            - '😭'
+            - '💀'

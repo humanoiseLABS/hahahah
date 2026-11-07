@@ -1,3 +1,4 @@
+import { readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -11,7 +12,14 @@ import {
   type FixtureStudyReport,
   type FixtureStudyResult,
 } from './coding.ts';
-import { loadSuite, runClaude, runEval, type ClaudeOptions, type EvalArm } from './eval.ts';
+import {
+  loadSuite,
+  runClaude,
+  runEval,
+  type ClaudeOptions,
+  type EvalArm,
+  type EvalTurnRecord,
+} from './eval.ts';
 import { doctor, install, uninstall, InstallError } from './install.ts';
 import { runOpencode } from './opencode.ts';
 
@@ -42,11 +50,22 @@ export function runnerFor(
 ) {
   const kind = harnessOf(harness);
   if (kind === 'opencode') {
-    return (cwd: string, prompt: string, budgetUsd: number) =>
-      runOpencode(cwd, prompt, budgetUsd, { model: options.model });
+    return (cwd: string, prompt: string, budgetUsd: number, history?: EvalTurnRecord[]) =>
+      runOpencode(cwd, prompt, budgetUsd, { model: options.model }, history);
   }
-  return (cwd: string, prompt: string, budgetUsd: number) =>
-    runClaude(cwd, prompt, budgetUsd, options);
+  return (cwd: string, prompt: string, budgetUsd: number, history?: EvalTurnRecord[]) =>
+    runClaude(cwd, prompt, budgetUsd, options, history);
+}
+
+function availableSuites(): string[] {
+  try {
+    return readdirSync(join(process.cwd(), 'evals'))
+      .filter((file) => file.endsWith('.yaml'))
+      .map((file) => file.slice(0, -'.yaml'.length))
+      .sort();
+  } catch {
+    return [];
+  }
 }
 
 function printUsage(): void {
@@ -61,7 +80,7 @@ Usage:
   node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--harness claude|opencode] [--arm both|baseline|treatment] [--setting-sources <sources>] [--out <dir>] [--live]
   node src/cli.ts fixtures diagnose --id <fixture> [--arm baseline|treatment] [--budget-usd <n>] [--max-total-usd <n>] [--out <dir>] [--live]
   node src/cli.ts doctor [--target <repo>]
-  node src/cli.ts eval --profile <id> [--suite smoke] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--harness claude|opencode] [--setting-sources <sources>] [--out <dir>] [--strict]
+  node src/cli.ts eval --profile <id> [--suite <name>] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--harness claude|opencode] [--setting-sources <sources>] [--out <dir>] [--strict]
 
 Which --adapter to pass, by the agent you run (install into the project you want it active in):
   Claude Code          --adapter claude-code    writes CLAUDE.md + .claude/skills/
@@ -72,6 +91,7 @@ Which --adapter to pass, by the agent you run (install into the project you want
 Omitting --adapter installs for Claude Code. Uninstall needs only --target; the manifest remembers the rest.
 
 Eval checks are deterministic surface screens, not semantic judges. --strict exits non-zero when a treatment check fails.
+Eval suites (--suite <name>, default smoke): ${availableSuites().join(', ')}. A suite with \`turns\` sends every turn in order and adds a cross-turn \`repeat\` check; the earlier turns are replayed as text, not resumed as a harness session.
 fixtures run grades the agent by executing each fixture's tests. Without --live it only prints the plan and calls no model; with --live it needs --max-total-usd.
 --harness picks the CLI that answers: claude (default) or opencode. opencode reports $0 on a free tier, so --budget-usd is a declared ceiling there, not a measured spend.
 fixtures diagnose streams Claude Code's stream-json and is Claude-only; the opencode equivalent is not built yet.

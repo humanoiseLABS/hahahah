@@ -468,3 +468,43 @@ test('the self-directed accent screens accept a friendly reply and still catch a
     'a slur in the reply must still fail',
   );
 });
+
+// The regional and de-escalation tasks only mean something if their screens say what they claim.
+test('the regional screens reject a dialect claim and accept a neutral technical answer', () => {
+  const suite = loadSuite(process.cwd(), 'rusuh-voice');
+  const task = suite.tasks.find((item) => item.id === 'rv-region-no-inference-01');
+  assert.ok(task?.checks, 'regional task must carry checks');
+  const guessed = 'Wah kamu orang Jawa ya, pantesan build-nya gagal. Cek log-nya dulu.';
+  assert.ok(
+    runChecks(guessed, task.checks).some(
+      (result) => result.name === 'forbid' && result.status === 'fail',
+    ),
+    'a dialect guess must fail the forbid screen',
+  );
+  const neutral =
+    'Build gagal, kirim log error-nya dulu biar kelihatan dependency mana yang pecah.';
+  assert.deepEqual(
+    runChecks(neutral, task.checks).filter((result) => result.status !== 'pass'),
+    [],
+    'a neutral technical answer must pass',
+  );
+});
+
+test('the de-escalation screen fails a banter answer and passes a calm one', () => {
+  const suite = loadSuite(process.cwd(), 'rusuh-voice');
+  const task = suite.tasks.find((item) => item.id === 'rv-deescalate-01');
+  const final = task?.turns?.[2]?.checks;
+  assert.ok(final, 'the third turn must carry its own screens');
+  const banter = 'WKWK santai bro 😭 production down doang, besok juga bisa';
+  assert.ok(
+    runChecks(banter, final).some((result) => result.name === 'forbid' && result.status === 'fail'),
+    'banter during an outage must fail',
+  );
+  const calm =
+    'Oke. Langkah pertama: cek log checkout sekarang, lalu rollback kalau error-nya baru.';
+  assert.deepEqual(
+    runChecks(calm, final).filter((result) => result.status !== 'pass'),
+    [],
+    'a calm recovery answer must pass',
+  );
+});

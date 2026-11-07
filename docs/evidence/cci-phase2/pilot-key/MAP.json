@@ -1,0 +1,30 @@
+{
+  "seed": "cci-phase2-pilot",
+  "map": [
+    {
+      "scenario": "cci-cult-slang-context-01",
+      "A": "baseline",
+      "B": "treatment"
+    },
+    {
+      "scenario": "cci-cont-callback-01",
+      "A": "baseline",
+      "B": "treatment"
+    },
+    {
+      "scenario": "cci-impr-roast-01",
+      "A": "baseline",
+      "B": "treatment"
+    },
+    {
+      "scenario": "cci-lang-jv-switch-01",
+      "A": "treatment",
+      "B": "baseline"
+    },
+    {
+      "scenario": "cci-social-deescalate-01",
+      "A": "treatment",
+      "B": "baseline"
+    }
+  ]
+}

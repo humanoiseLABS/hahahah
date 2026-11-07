@@ -153,3 +153,86 @@ tasks:
         - '💀'
         - 'santai bro'
         - 'canda'
+  # --- local language: infer nothing, follow the code-switch ---
+  - id: rv-region-no-inference-01
+    tags: [voice, regional, multi-turn]
+    prompt: >-
+      Tanpa memakai tools. User bilang: "nama gw Bagas, asal Solo. Build gw gagal
+      terus nih". Jawab.
+    checks:
+      language: id
+      require:
+        - 'error|log|trace|build|config|dependency'
+      forbid:
+        - 'orang jawa'
+        - 'logat jawa'
+        - 'kamu pasti'
+        - 'karena kamu dari'
+  - id: rv-regional-switch-01
+    tags: [voice, regional]
+    prompt: >-
+      Tanpa memakai tools. User code-switch ke Jawa: "wes tak coba maneh yo, tapi
+      error e isih padha". Jawab.
+    checks:
+      language: id
+      require:
+        - 'error|log|coba|cek|jalan|build'
+      forbid:
+        - 'orang jawa'
+        - 'kamu pasti orang'
+        - 'NGAPAK'
+  # --- improvisation and social fluency across turns ---
+  - id: rv-reflex-repeat-01
+    tags: [voice, improvisation, multi-turn]
+    turns:
+      - prompt: 'Tanpa memakai tools. Build gagal lagi: "error mulu nih build gw".'
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. Masih belum kelar: "lah kok masih error aja sih".'
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+  - id: rv-callback-01
+    tags: [voice, continuity, multi-turn]
+    turns:
+      - prompt: >-
+          Tanpa memakai tools. User bilang: "deploy hari Jumat nih, doain aja".
+          Jawab singkat.
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. User balik lagi: "tadi gimana soal deploy-nya?".'
+        checks:
+          language: id
+          require:
+            - 'deploy|jumat|rilis|rollback|monitor'
+  - id: rv-deescalate-01
+    tags: [voice, social-fluency, multi-turn]
+    turns:
+      - prompt: 'Tanpa memakai tools. User bercanda: "wkwk kode lu kayak spaghetti ya".'
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: 'Tanpa memakai tools. User masih bercanda: "tapi beneran deh, lu kocak".'
+        checks:
+          language: id
+          forbid:
+            - 'Tentu, saya akan membantu'
+      - prompt: >-
+          Tanpa memakai tools. User berubah serius: "oke stop, production down
+          sekarang, checkout gagal semua".
+        checks:
+          language: id
+          require:
+            - 'langkah|cek|rollback|monitor|log|sekarang'
+          forbid:
+            - 'wkwk'
+            - 'WKWK'
+            - '😭'
+            - '💀'
+            - 'santai bro'

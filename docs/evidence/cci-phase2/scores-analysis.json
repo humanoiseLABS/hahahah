@@ -1,0 +1,170 @@
+{
+  "byArm": {
+    "baseline": [
+      {
+        "scenario": "cci-cult-slang-context-01",
+        "answer": "A",
+        "scores": {
+          "context": 2,
+          "cultural": 2,
+          "creativity": 2,
+          "social": 3,
+          "naturalness": 1
+        },
+        "override": "",
+        "notes": "gagal total menurut reviewer: jawab Inggris dan malah membahas \"temporary directory\" (artefak workspace eval), bukan menjawab cara cepat nemu error"
+      },
+      {
+        "scenario": "cci-cont-callback-01",
+        "answer": "A",
+        "scores": {
+          "context": 1,
+          "cultural": 2,
+          "creativity": 2,
+          "social": 3,
+          "naturalness": 1
+        },
+        "override": "",
+        "notes": "gagal total menurut reviewer: minta konteks otorisasi berulang, tidak memakai rencana deploy yang sudah diceritakan user"
+      },
+      {
+        "scenario": "cci-impr-roast-01",
+        "answer": "A",
+        "scores": {
+          "context": 4,
+          "cultural": 3,
+          "creativity": 4,
+          "social": 3,
+          "naturalness": 1
+        },
+        "override": "",
+        "notes": "dua-duanya berhasil; struktur humor A bagus dan lebih cerdas, tapi improvisasinya belum sepenuhnya berpijak pada informasi yang ada"
+      },
+      {
+        "scenario": "cci-lang-jv-switch-01",
+        "answer": "B",
+        "scores": {
+          "context": 3,
+          "cultural": 2,
+          "creativity": 2,
+          "social": 3,
+          "naturalness": 2
+        },
+        "override": "",
+        "notes": "lebih rapi secara bahasa pada turn kedua, tetapi lambat beradaptasi\" (Inggris di turn 1)"
+      },
+      {
+        "scenario": "cci-social-deescalate-01",
+        "answer": "B",
+        "scores": {
+          "context": 3,
+          "cultural": 3,
+          "creativity": 3,
+          "social": 3,
+          "naturalness": 4
+        },
+        "override": "",
+        "notes": "mengenali situasi serius tapi kurang tegas/konsisten dibanding A"
+      }
+    ],
+    "treatment": [
+      {
+        "scenario": "cci-cult-slang-context-01",
+        "answer": "B",
+        "scores": {
+          "context": 4,
+          "cultural": 3,
+          "creativity": 3,
+          "social": 3,
+          "naturalness": 3
+        },
+        "override": "",
+        "notes": "nyambung dan menjawab di turn 2; turn 1 berantakan, perlu improvisasi"
+      },
+      {
+        "scenario": "cci-cont-callback-01",
+        "answer": "B",
+        "scores": {
+          "context": 3,
+          "cultural": 3,
+          "creativity": 3,
+          "social": 3,
+          "naturalness": 2
+        },
+        "override": "",
+        "notes": "ingat konteks deploy, tapi bahasanya rusak di beberapa tempat (typo, campur Inggris) dan turn 2 memakai bullet Inggris"
+      },
+      {
+        "scenario": "cci-impr-roast-01",
+        "answer": "B",
+        "scores": {
+          "context": 3,
+          "cultural": 3,
+          "creativity": 4,
+          "social": 3,
+          "naturalness": 1
+        },
+        "override": "",
+        "notes": "lebih brutal dan tetap lucu, tapi isinya kurang cerdas dibanding A"
+      },
+      {
+        "scenario": "cci-lang-jv-switch-01",
+        "answer": "A",
+        "scores": {
+          "context": 4,
+          "cultural": 3,
+          "creativity": 3,
+          "social": 3,
+          "naturalness": 3
+        },
+        "override": "",
+        "notes": "paling paham konteks percakapan; reviewer menilai gagal mengikuti preferensi bahasa - artefak menunjukkan pembuka ikut Jawa (\"Wes\"), sisanya Indonesia; tidak dikonfirmasi lebih lanjut"
+      },
+      {
+        "scenario": "cci-social-deescalate-01",
+        "answer": "A",
+        "scores": {
+          "context": 4,
+          "cultural": 3,
+          "creativity": 3,
+          "social": 4,
+          "naturalness": 4
+        },
+        "override": "",
+        "notes": "lebih baik mengatur perpindahan suasana; lebih tegas dan konsisten"
+      }
+    ]
+  },
+  "perCapability": [
+    [
+      "cultural-awareness",
+      {
+        "delta": 1.2000000000000002
+      }
+    ],
+    [
+      "continuity",
+      {
+        "delta": 0.9999999999999998
+      }
+    ],
+    [
+      "improvisation",
+      {
+        "delta": -0.20000000000000018
+      }
+    ],
+    [
+      "local-language",
+      {
+        "delta": 0.8000000000000003
+      }
+    ],
+    [
+      "social-fluency",
+      {
+        "delta": 0.3999999999999999
+      }
+    ]
+  ]
+}

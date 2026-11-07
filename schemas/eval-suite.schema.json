@@ -5,6 +5,18 @@
   "type": "object",
   "additionalProperties": false,
   "required": ["schema", "suite", "tasks"],
+  "definitions": {
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "language": { "enum": ["id", "en"] },
+        "require": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "forbid": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    }
+  },
   "properties": {
     "schema": { "const": "hahahah.eval.suite/v1" },
     "suite": { "type": "string", "minLength": 1 },
@@ -14,21 +26,39 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "prompt"],
+        "required": ["id"],
+        "anyOf": [{ "required": ["prompt"] }, { "required": ["turns"] }],
         "properties": {
           "id": { "type": "string", "minLength": 1 },
           "prompt": { "type": "string", "minLength": 1 },
-          "tags": { "type": "array", "items": { "type": "string" } },
-          "checks": {
-            "type": "object",
-            "additionalProperties": false,
-            "minProperties": 1,
-            "properties": {
-              "language": { "enum": ["id", "en"] },
-              "require": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-              "forbid": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          "turns": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["prompt"],
+              "properties": {
+                "prompt": { "type": "string", "minLength": 1 },
+                "checks": { "$ref": "#/definitions/checks" }
+              }
             }
-          }
+          },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "checks": { "$ref": "#/definitions/checks" },
+          "capability": {
+            "enum": [
+              "cultural-awareness",
+              "continuity",
+              "improvisation",
+              "local-language",
+              "social-fluency"
+            ]
+          },
+          "objective": { "type": "string", "minLength": 1 },
+          "expect": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "failIf": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "human": { "type": "string", "minLength": 1 }
         }
       }
     }

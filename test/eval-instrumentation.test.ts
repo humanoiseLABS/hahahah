@@ -8,9 +8,11 @@ import { join } from 'node:path';
 import {
   baseUrlFromSettings,
   hostOfBaseUrl,
+  parseClaudeResult,
   promptTokens,
   providerExhausted,
   routeSplitOf,
+  withTranscript,
   runEval,
   tasksFingerprint,
   type EvalRun,
@@ -249,6 +251,30 @@ test('the fingerprint ignores presentation-only fields like tags', () => {
   assert.notEqual(
     tasksFingerprint([{ id: 'a', prompt: 'p' }]),
     tasksFingerprint([{ id: 'b', prompt: 'p' }]),
+  );
+});
+
+test('the fingerprint covers a turn script and its per-turn screens', () => {
+  const base = {
+    id: 'mt',
+    turns: [{ prompt: 'a', checks: { language: 'id' as const } }, { prompt: 'b' }],
+  };
+  assert.equal(
+    tasksFingerprint([base]),
+    tasksFingerprint([{ ...base, tags: ['voice'] }]),
+    'tags are presentation-only',
+  );
+  // Editing a turn's screen changes the ruler, so the two reports must not be compared.
+  assert.notEqual(
+    tasksFingerprint([base]),
+    tasksFingerprint([
+      { id: 'mt', turns: [{ prompt: 'a', checks: { forbid: ['wkwk'] } }, { prompt: 'b' }] },
+    ]),
+  );
+  assert.notEqual(
+    tasksFingerprint([base]),
+    tasksFingerprint([{ id: 'mt', turns: [{ prompt: 'a', checks: { language: 'id' } }] }]),
+    'a removed turn changes the script',
   );
 });
 
@@ -515,4 +541,200 @@ test('providerExhausted recognises the opencode free-tier refusal', () => {
     ),
     true,
   );
+});
+
+// --- multi-turn: continuity is measured, not assumed ---
+
+test('a multi-turn task sends each turn in order with the turns before it', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-turn-'));
+  try {
+    const seen: Array<{ prompt: string; history: string[] }> = [];
+    runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [
+        {
+          id: 'mt-order-01',
+          turns: [{ prompt: 'turn satu' }, { prompt: 'turn dua' }, { prompt: 'turn tiga' }],
+        },
+      ],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 1,
+      runner: (_cwd, prompt, _budget, history) => {
+        seen.push({ prompt, history: (history ?? []).map((turn) => turn.text) });
+        return answered(19134);
+      },
+    });
+    // Two arms, one repeat: three calls each, and history never crosses an arm boundary.
+    assert.deepEqual(
+      seen.map((entry) => entry.prompt),
+      ['turn satu', 'turn dua', 'turn tiga', 'turn satu', 'turn dua', 'turn tiga'],
+    );
+    assert.deepEqual(
+      seen.map((entry) => entry.history.length),
+      [0, 2, 4, 0, 2, 4],
+    );
+    assert.deepEqual(seen[2]?.history, ['turn satu', 'jawaban', 'turn dua', 'jawaban']);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('the repeat check fails when two turns answer with the same line', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-turn-'));
+  try {
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'mt-repeat-01', turns: [{ prompt: 'turn satu' }, { prompt: 'turn dua' }] }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 1,
+      runner: () => ({ output: 'WADUH KENAPA LAGI sini gw cek log-nya', costUsd: 0.01 }),
+    });
+    const checks = report.results[0]?.baseline.runs[0]?.checks ?? [];
+    const repeat = checks.find((check) => check.name === 'repeat');
+    assert.ok(repeat, 'a multi-turn run must carry a repeat check');
+    assert.equal(repeat.status, 'fail');
+    assert.match(repeat.detail, /waduh kenapa lagi/);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('the repeat check passes when the second turn is rephrased', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-turn-'));
+  try {
+    const replies = ['WADUH KENAPA LAGI sini gw cek log-nya', 'Oke, kirim stack trace-nya dulu ya'];
+    let call = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'mt-repeat-02', turns: [{ prompt: 'turn satu' }, { prompt: 'turn dua' }] }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 1,
+      runner: () => ({ output: replies[call++ % 2]!, costUsd: 0.01 }),
+    });
+    const checks = report.results[0]?.baseline.runs[0]?.checks ?? [];
+    assert.equal(checks.find((check) => check.name === 'repeat')?.status, 'pass');
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('per-turn screens judge the turn they belong to', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-turn-'));
+  try {
+    const replies = ['ini jawaban indonesia', 'this is an english answer'];
+    let call = 0;
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [
+        {
+          id: 'mt-screens-01',
+          turns: [{ prompt: 'turn satu' }, { prompt: 'turn dua', checks: { language: 'id' } }],
+        },
+      ],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 1,
+      runner: () => ({ output: replies[call++ % 2]!, costUsd: 0.01 }),
+    });
+    const checks = report.results[0]?.baseline.runs[0]?.checks ?? [];
+    const language = checks.filter((check) => check.name === 'language');
+    // Only the second turn declares a language screen, so exactly one result exists and it fails.
+    assert.equal(language.length, 1);
+    assert.equal(language[0]?.status, 'fail');
+    assert.match(language[0]?.detail ?? '', /turn 2/);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('a multi-turn run reports the sum of its turns', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-turn-'));
+  try {
+    const report = runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'mt-sum-01', turns: [{ prompt: 'satu' }, { prompt: 'dua' }] }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 1,
+      runner: () => ({
+        output: 'jawaban',
+        costUsd: 0.25,
+        usage: { input_tokens: 1000, output_tokens: 10 },
+        numTurns: 1,
+      }),
+    });
+    const run = report.results[0]?.baseline.runs[0];
+    assert.equal(run?.costUsd, 0.5);
+    assert.deepEqual(run?.usage, { input_tokens: 2000, output_tokens: 20 });
+    assert.equal(run?.numTurns, 2);
+    assert.equal((run?.output ?? '').length > 0, true);
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('single-turn tasks keep their prompt and pass no history', () => {
+  const outDir = mkdtempSync(join(tmpdir(), 'hahahah-turn-'));
+  try {
+    const seen: Array<{ prompt: string; history: unknown[] }> = [];
+    runEval({
+      sourceRoot: process.cwd(),
+      profileId: 'rusuh-id',
+      tasks: [{ id: 'st-01', prompt: 'jawab satu kata' }],
+      outDir,
+      budgetUsd: 0.05,
+      repeats: 1,
+      runner: (_cwd, prompt, _budget, history) => {
+        seen.push({ prompt, history: history ?? [] });
+        return answered(19134);
+      },
+    });
+    assert.deepEqual(
+      seen.map((entry) => entry.prompt),
+      ['jawab satu kata', 'jawab satu kata'],
+    );
+    assert.equal(
+      seen.every((entry) => entry.history.length === 0),
+      true,
+    );
+  } finally {
+    rmSync(outDir, { recursive: true, force: true });
+  }
+});
+
+test('the transcript a runner receives carries every earlier turn', () => {
+  const history = [
+    { role: 'user' as const, text: 'halo' },
+    { role: 'assistant' as const, text: 'yow, ada apaan' },
+  ];
+  const rendered = withTranscript(history, 'lanjut');
+  assert.match(rendered, /User: halo/);
+  assert.match(rendered, /Assistant: yow, ada apaan/);
+  assert.match(rendered, /Current message:\nlanjut$/);
+  // A single-turn run must reach the harness byte-for-byte unchanged.
+  assert.equal(withTranscript(undefined, 'jawab'), 'jawab');
+  assert.equal(withTranscript([], 'jawab'), 'jawab');
+});
+
+// --- the Claude CLI can preface its JSON with a warning line ---
+
+test('the Claude result is found after a stray warning line', () => {
+  const stdout = [
+    '[claude-code:unrecognized_model] {"model":"tes","query_source":"sdk"}',
+    '{"type":"result","subtype":"success","is_error":false,"result":"OK","total_cost_usd":0.075,"num_turns":1,"usage":{"input_tokens":28163,"output_tokens":158}}',
+  ].join('\n');
+  const parsed = parseClaudeResult(stdout);
+  assert.ok(parsed, 'the result object must be found after the warning');
+  assert.equal(parsed.result, 'OK');
+  assert.equal(parsed.total_cost_usd, 0.075);
+  assert.equal(parseClaudeResult('[claude-code:unrecognized_model] {"model":"tes"}'), null);
+  assert.equal(parseClaudeResult(''), null);
 });

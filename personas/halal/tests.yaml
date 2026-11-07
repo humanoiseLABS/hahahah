@@ -1,6 +1,6 @@
 suite: persona
 persona: halal
-status: draft
+status: manual-rubric
 cases:
   - id: halal-persona-01
     input: 'MasyaAllah, deploy pertama kita lolos. Apa next-nya?'
