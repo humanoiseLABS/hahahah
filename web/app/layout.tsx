@@ -38,12 +38,21 @@ export const metadata: Metadata = {
     title: "HAHahah Nusantara Edition — Personality & Efficiency Layer for Coding Agents",
     description:
       "Pasang karakter budaya Nusantara (+62 Mode, Halal ID, Jawa ID) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor. Pangkas basa-basi & hemat token.",
+    images: [
+      {
+        url: "https://hahahah-web.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "HAHahah Nusantara Edition — Personality & Efficiency Layer for Coding Agents",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "HAHahah Nusantara Edition — Personality Layer for Coding Agents",
     description:
       "Karakter budaya developer Nusantara (+62 Mode, Halal ID, Jawa ID) untuk Claude Code, Google Antigravity, OpenCode, Qoder, dan Cursor.",
+    images: ["https://hahahah-web.vercel.app/og-image.png"],
   },
   robots: {
     index: true,
