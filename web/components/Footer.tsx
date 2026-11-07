@@ -55,7 +55,7 @@ const HAHAHAH_CREW: CrewMember[] = [
     seat: "top",
     offset: 0.14,
     scale: 0.92,
-    says: "node src/cli.ts doctor — 100% sehat meong!",
+    says: "npx hahahah-ai doctor — 100% sehat meong!",
   },
 ];
 
