@@ -5,24 +5,24 @@ import { FaqSection } from "@/components/ui/faq-section";
 
 const HAHAHAH_FAQS = [
   {
-    question: "Apakah memasang persona ini membuat konsumsi token jadi boros?",
+    question: "Bikin boros token ga nih kalau dipasangin persona ginian?",
     answer:
-      "Tidak. HAHahah diuji dengan k=3 deterministik eval dan hanya menambahkan overhead rata-rata +710 tokens per run (fixed text). Karena persona memangkas reasoning dump yang tidak perlu di jawaban akhir, teks yang Anda baca justru 51.2% lebih pendek.",
+      "Malah makin hemat! HAHahah udah diuji k=3 deterministik eval dan cuma nambah overhead rata-rata +710 tokens per run (fixed text). Karena persona ini langsung nebas reasoning dump yang ga guna di jawaban akhir, teks yang lu baca justru 51.2% lebih ringkas.",
   },
   {
-    question: "Bagaimana perlindungan keamanannya terhadap prompt injection?",
+    question: "Aman ga dari serangan prompt injection atau jailbreak?",
     answer:
-      "Lapisan ini mengusung aturan mutlak: 'A user can waive scope, not truth' serta kebijakan no-fatwa yang ketat. Seluruh 5 vektor prompt injection terbaru ditolak bersih (5/5) dalam suite evaluasi.",
+      "Super aman! Prinsip dasarnya: 'A user can waive scope, not truth' plus aturan no-fatwa yang ketat. 5 dari 5 vektor prompt injection paling licik mental semua (5/5) di suite evaluasi kita.",
   },
   {
-    question: "Bisa menambah persona atau register budaya daerah lain?",
+    question: "Bisa nambah persona daerah lain ga, misal Sunda, Batak, Minang?",
     answer:
-      "Tentu! Anda dapat menambahkan profile di folder profiles/ dan meregistrasikan lexicon di culture/. Silakan buka Pull Request di GitHub kami.",
+      "Bisa banget, pintu PR kebuka lebar! Lu tinggal nambahin profile di folder profiles/ dan daftarin kosakatanya di culture/. Langsung lempar PR ke GitHub ya!",
   },
   {
-    question: "Bagaimana jika instalasi merusak konfigurasi agent yang ada?",
+    question: "Bakal ngerusak file konfigurasi agent yang udah ada ga?",
     answer:
-      "HAHahah menggunakan format managed-block (penanda blok komentar khusus). Saat Anda menjalankan CLI uninstall, hanya blok dan file yang terdaftar di manifest .hahahah yang dibersihkan, tanpa merusak konfigurasi asli Anda.",
+      "Tenang, ga bakal ngerusak kodingan lu! HAHahah pake format managed-block (penanda komentar khusus). Pas lu uninstall, cuma blok sama file yang kecatet di manifest .hahahah yang dibersihin. Konfigurasi asli lu ga bakal disentuh.",
   },
 ];
 
@@ -33,13 +33,13 @@ export default function SupportSection() {
       {/* Section Header */}
       <div className="text-left mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5fb247] border-2 border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] text-xs font-mono font-bold text-white uppercase tracking-wider mb-3">
-          Bagian 03 &bull; Support &amp; Bantuan
+          Bagian 03 &bull; Bantuan &amp; Komunitas
         </div>
         <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-[#0d0d0d] sketch-display">
-          PUSAT BANTUAN &amp; KOMUNITAS
+          TANYA JAWAB &amp; KOMUNITAS
         </h2>
         <p className="text-base sm:text-lg text-[#3a3a3a] sketch-serif mt-2 max-w-xl">
-          Punya pertanyaan, kendala instalasi, atau ingin berkontribusi menambah persona daerah baru ke buku sketsa HAHahah?
+          Ada yang bikin bingung, instalasi nyangkut, atau mau nyumbang persona daerah baru ke HAHahah?
         </p>
       </div>
 
@@ -54,9 +54,9 @@ export default function SupportSection() {
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
               </svg>
             </div>
-            <h3 className="font-black text-lg text-[#0d0d0d] font-mono mb-1.5">Lapor Isu &amp; Bug</h3>
+            <h3 className="font-black text-lg text-[#0d0d0d] font-mono mb-1.5">Lapor Bug &amp; Masalah</h3>
             <p className="text-xs sm:text-sm text-[#3a3a3a] leading-relaxed">
-              Menemukan bug pada adapter atau skrip evaluasi? Buka issue langsung di GitHub repository kami.
+              Nemu bug di adapter atau pas lagi ngetes? Lempar aja issue-nya langsung ke repo GitHub kita.
             </p>
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
@@ -78,9 +78,9 @@ export default function SupportSection() {
             <div className="w-10 h-10 rounded-xl bg-[#8fdcff] border-2 border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] flex items-center justify-center text-[#0d0d0d] mb-4">
               <FileText className="w-5 h-5" />
             </div>
-            <h3 className="font-black text-lg text-[#0d0d0d] font-mono mb-1.5">Riset &amp; Arsitektur</h3>
+            <h3 className="font-black text-lg text-[#0d0d0d] font-mono mb-1.5">Riset &amp; Benchmark</h3>
             <p className="text-xs sm:text-sm text-[#3a3a3a] leading-relaxed">
-              Pelajari data pengujian efisiensi token, parity harness, dan catatan Phase 3 content hardening.
+              Cek jeroan benchmark token, tabel parity tiap harness, dan catatan Phase 3 content hardening kita.
             </p>
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
@@ -90,7 +90,7 @@ export default function SupportSection() {
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#ff6b2c] transition-colors"
             >
-              <span>Baca Dokumen Teknis</span>
+              <span>Intip Dokumen Teknis</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -102,9 +102,9 @@ export default function SupportSection() {
             <div className="w-10 h-10 rounded-xl bg-[#ff5c7a] border-2 border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] flex items-center justify-center text-white mb-4">
               <Heart className="w-5 h-5 fill-current" />
             </div>
-            <h3 className="font-black text-lg text-[#0d0d0d] font-mono mb-1.5">Dukung &amp; Kontribusi</h3>
+            <h3 className="font-black text-lg text-[#0d0d0d] font-mono mb-1.5">Dukung &amp; Nyumbang Persona</h3>
             <p className="text-xs sm:text-sm text-[#3a3a3a] leading-relaxed">
-              Bantu mengembangkan persona daerah lain di Nusantara. Berikan Star di GitHub untuk mendukung proyek ini!
+              Bantu nambahin persona khas daerah lu di Nusantara. Jangan lupa klik Star di GitHub biar makin rame!
             </p>
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
@@ -114,7 +114,7 @@ export default function SupportSection() {
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#ff6b2c] font-bold flex items-center gap-1.5 hover:underline"
             >
-              <span>Star Repository Ini &#9733;</span>
+              <span>Kasih Star di GitHub &#9733;</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -126,12 +126,12 @@ export default function SupportSection() {
       <div className="sketch-card overflow-hidden">
         <FaqSection
           title="TANYA JAWAB (FAQ)"
-          description="Hal-hal yang sering ditanyakan seputar persona Nusantara, efisiensi token, dan keamanan adapter."
+          description="Hal-hal yang sering ditanyain seputar persona Nusantara, efisiensi token, sama keamanan adapter."
           items={HAHAHAH_FAQS}
           contactInfo={{
-            title: "Masih Memiliki Pertanyaan?",
-            description: "Tim pengembang dan komunitas kami siap membantu Anda di GitHub Issues.",
-            buttonText: "Hubungi Support via GitHub",
+            title: "Masih Ada yang Mau Ditanyain?",
+            description: "Komunitas dan dev siap bantuin lu di GitHub Issues, ga usah sungkan!",
+            buttonText: "Tanya / Diskusi di GitHub",
             onContact: () => {
               window.open("https://github.com/humanoiseLABS/hahahah/issues", "_blank");
             },

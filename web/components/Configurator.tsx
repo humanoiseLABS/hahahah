@@ -187,13 +187,13 @@ export default function Configurator({
       {/* Section Header */}
       <div className="mb-10">
         <span className="inline-block px-2.5 py-0.5 rounded-md bg-[#8fdcff] border-[1.5px] border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] text-[11px] font-mono font-bold text-[#0d0d0d] uppercase tracking-wider mb-2.5">
-          01 &bull; Integrasi Bertahap
+          01 &bull; Konfigurasi Santai
         </span>
         <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[#0d0d0d] sketch-display">
           Pilih Persona &amp; Coding Harness
         </h2>
         <p className="text-sm sm:text-base text-[#525252] mt-1.5 max-w-xl">
-          Ikuti 2 langkah berurutan: pilih karakter personalitas terlebih dahulu, lalu pilih coding harness yang dituju.
+          Tinggal 2 step simpel: pilih gaya persona yang lu suka, terus tentuin coding harness yang lu pake.
         </p>
       </div>
 
@@ -244,10 +244,10 @@ export default function Configurator({
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
                 <span className="text-xs font-mono font-bold text-[#0d0d0d] uppercase tracking-wider">
-                  Langkah 1 &bull; Pilih Karakter Personalitas
+                  Step 1 &bull; Pilih Gaya Persona
                 </span>
                 <span className="text-[11px] font-mono text-[#737373]">
-                  Klik untuk lanjut &rarr;
+                  Klik buat lanjut &rarr;
                 </span>
               </div>
 
@@ -318,7 +318,7 @@ export default function Configurator({
 
               <div className="flex items-center justify-between px-1">
                 <span className="text-xs font-mono font-bold text-[#0d0d0d] uppercase tracking-wider">
-                  Langkah 2 &bull; Pilih Coding Harness
+                  Step 2 &bull; Pilih Coding Harness Lu
                 </span>
                 <span className="text-[11px] font-mono text-[#737373]">
                   Atau klik logo di kanan &rarr;
@@ -388,7 +388,7 @@ export default function Configurator({
                     {copied ? (
                       <>
                         <Check className="w-3.5 h-3.5" />
-                        <span>Tersalin</span>
+                        <span>Tersalin!</span>
                       </>
                     ) : (
                       <>
@@ -401,11 +401,11 @@ export default function Configurator({
 
                 <div className="flex items-center justify-between text-[11px] font-mono text-[#525252] px-1">
                   <span>
-                    Konfigurasi: <strong className="text-[#0d0d0d]">{selectedPersona.name}</strong> &times;{" "}
+                    Racikan lu: <strong className="text-[#0d0d0d]">{selectedPersona.name}</strong> &times;{" "}
                     <strong className="text-[#0d0d0d]">{selectedAgent.name}</strong>
                   </span>
                   <a href="#tutorial" className="text-[#ff6b2c] font-bold hover:underline flex items-center gap-1">
-                    <span>Lihat Roadmap di bawah</span>
+                    <span>Lihat cara pasang di bawah</span>
                     <ArrowRight className="w-3 h-3" />
                   </a>
                 </div>
@@ -413,8 +413,8 @@ export default function Configurator({
             ) : (
               <div className="px-4 py-3 rounded-xl border-2 border-dashed border-[#0d0d0d]/25 bg-[#faf7f0]/70 text-center font-mono text-xs text-[#525252]">
                 {!selectedPersona
-                  ? "Langkah 1: Pilih salah satu Personalitas di atas untuk melanjutkan."
-                  : "Langkah 2: Pilih salah satu Coding Harness di daftar atau klik logo di kanan."}
+                  ? "Step 1: Pilih dulu gaya persona di atas ya lur."
+                  : "Step 2: Sekarang pilih coding harness lu di daftar atau klik logonya di kanan."}
               </div>
             )}
           </div>
@@ -435,7 +435,7 @@ export default function Configurator({
               </span>
             ) : (
               <span className="text-xs font-mono text-[#737373]">
-                12 Coding Harness Tersedia (Klik ikon untuk memilih)
+                12 Coding Harness Siap Dipasang (Klik ikon buat milih)
               </span>
             )}
           </div>

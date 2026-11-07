@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | HAHahah Nusantara Edition",
   },
   description:
-    "Lapisan kepribadian budaya developer Nusantara (+62 Mode, Halal ID, Jawa ID) dan efisiensi token untuk Claude Code, Google Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
+    "Karakter budaya developer Nusantara (+62 Mode, Halal ID, Jawa ID) dan efisiensi token buat Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot. Hemat token, anti basa-basi korporat.",
   keywords: [
     "HAHahah",
     "hahahah nusantara",

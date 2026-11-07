@@ -38,58 +38,58 @@ export default function InstallationGuide({
   const steps = [
     {
       num: "01",
-      phase: "Fase 01",
+      phase: "Step 01",
       badge: "Buka Workspace",
       title: "Masuk ke Folder Project",
-      desc: "Buka terminal di direktori project kodingan Anda. Tidak perlu git clone repo HAHahah karena paket resmi sudah tersedia di NPM.",
+      desc: "Buka terminal di folder project kodingan lu. Ga usah repot-repot git clone, paket resminya udah nangkring di NPM.",
       code: "cd /path/ke/project-lu",
-      outcome: "Terminal berada di folder project tujuan",
+      outcome: "Terminal udah standby di folder project tujuan",
       side: "left",
     },
     {
       num: "02",
-      phase: "Fase 02",
+      phase: "Step 02",
       badge: "Simulasi Dry-Run",
-      title: "Cek Rencana & Budget Token (Opsional)",
-      desc: "Lihat daftar file yang akan dibuat serta estimasi pemakaian token tanpa mengubah isi folder project Anda.",
+      title: "Cek Dulu File & Budget Token (Opsional)",
+      desc: "Intip dulu file apa aja yang bakal nambah dan taksiran tokennya tanpa ngutak-ngatik isi project lu.",
       code: `${generatedCommand} --dry-run`,
-      outcome: "Rencana instalasi & budget token terverifikasi aman",
+      outcome: "Rencana pasang & estimasi token udah diverifikasi aman",
       side: "right",
     },
     {
       num: "03",
-      phase: "Fase 03",
+      phase: "Step 03",
       badge: "Injeksi Persona",
       title: `Pasang ${selectedPersona.name} ke ${selectedAgent.name}`,
       desc:
         selectedAgent.id === "antigravity"
-          ? `Pasang secara global ke ~/.gemini agar aktif di semua project Antigravity Anda (atau hilangkan --scope global untuk per-project).`
-          : `Jalankan satu perintah npx di bawah untuk menyuntikkan persona langsung ke project Anda:`,
+          ? `Sikat global ke ~/.gemini biar langsung nempel di semua project Antigravity lu (atau lepas --scope global kalau cuma buat project ini doang).`
+          : `Jalankan satu baris npx ini buat nyuntik persona langsung ke project lu:`,
       code: generatedCommand,
-      outcome: `Managed-block & konfigurasi ${selectedAgent.whatItWrites} terpasang di project tujuan`,
+      outcome: `Managed-block & config ${selectedAgent.whatItWrites} sukses nempel`,
       side: "left",
     },
     {
       num: "04",
-      phase: "Fase 04",
+      phase: "Step 04",
       badge: "Validasi Doctor",
-      title: "Pemeriksaan Integritas",
-      desc: "Jalankan CLI doctor untuk memastikan manifest, hash berkas, dan penempatan file valid.",
+      title: "Cek Kesehatan (Doctor Check)",
+      desc: "Ketik doctor biar yakin manifest, hash berkas, sama posisi filenya udah bener semua tanpa ada yang korup atau nyasar.",
       code:
         selectedAgent.id === "antigravity"
           ? "npx hahahah-ai doctor --target ~/.gemini"
           : "npx hahahah-ai doctor --target .",
-      outcome: "Integritas manifest diverifikasi 100%",
+      outcome: "Semua file & manifest aman 100%, siap tempur",
       side: "right",
     },
     {
       num: "05",
-      phase: "Fase 05",
-      badge: "Siap Digunakan",
-      title: "Mulai Koding Bersama Agent",
-      desc: `Buka ${selectedAgent.name} di project Anda. Agent kini langsung aktif dengan karakter ${selectedPersona.name}!`,
-      code: `# Jalankan agent Anda di folder project:\nclaude  # atau buka di Qoder / Antigravity / OpenCode / Cursor`,
-      outcome: "Persona aktif penuh sejak chat pertama",
+      phase: "Step 05",
+      badge: "Siap Tempur",
+      title: "Gas Koding Bareng Agent Lu!",
+      desc: `Buka ${selectedAgent.name} di project lu. Sekarang agent lu udah ga bakal kaku lagi dan langsung ngobrol pake gaya ${selectedPersona.name}!`,
+      code: `# Jalankan agent lu di folder project:\nclaude  # atau buka di Qoder / Antigravity / OpenCode / Cursor`,
+      outcome: "Persona langsung aktif dari chat pertama, zero basa-basi!",
       side: "left",
     },
   ];
@@ -100,13 +100,13 @@ export default function InstallationGuide({
       {/* Section Header */}
       <div className="text-left mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffd23f] border-2 border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] text-xs font-mono font-bold text-[#0d0d0d] uppercase tracking-wider mb-3">
-          Bagian 02 &bull; Roadmap Instalasi
+          Bagian 02 &bull; Panduan Pasang
         </div>
         <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-[#0d0d0d] sketch-display">
-          ROADMAP: {selectedPersona.name} &times; {selectedAgent.name}
+          CARA PASANG: {selectedPersona.name} &times; {selectedAgent.name}
         </h2>
         <p className="text-base sm:text-lg text-[#3a3a3a] sketch-serif mt-2 max-w-xl">
-          Pilih cara instan (suruh AI pasang otomatis dari ZIP/repo) atau ikuti alur CLI langkah demi langkah di bawah.
+          Mau cara instan? Tinggal copas prompt ke AI lu. Atau kalau lebih suka manual, sikat langkah demi langkah di bawah.
         </p>
       </div>
 
@@ -114,7 +114,7 @@ export default function InstallationGuide({
       <div className="mb-16 p-6 sketch-card bg-[#fff9f2] border-2 border-[#0d0d0d] shadow-[4px_4px_0_#ff6b2c]">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <span className="text-xs font-mono font-black uppercase px-3 py-1 rounded-full bg-[#ffd23f] border-2 border-[#0d0d0d] text-[#0d0d0d]">
-            Opsi Instan &bull; Suruh AI Pasang Otomatis (via NPX / ZIP)
+            Opsi Sat-Set &bull; Suruh AI Pasang Otomatis (via NPX / ZIP)
           </span>
           <a
             href="https://www.npmjs.com/package/hahahah-ai"
@@ -122,11 +122,11 @@ export default function InstallationGuide({
             rel="noopener noreferrer"
             className="text-xs font-mono font-bold underline text-[#0d0d0d] hover:text-[#ff6b2c]"
           >
-            Lihat Paket di NPM &rarr;
+            Cek Paket di NPM &rarr;
           </a>
         </div>
         <p className="text-xs sm:text-sm text-[#3a3a3a] mb-3 leading-relaxed">
-          Malas ketik command manual di terminal? Langsung salin prompt di bawah ini ke chat {selectedAgent.name} Anda:
+          Mager ngetik perintah di terminal? Copas aja prompt sakti ini langsung ke chat {selectedAgent.name} lu:
         </p>
         <div className="bg-[#141414] rounded-xl p-4 border-2 border-[#0d0d0d] font-mono text-xs relative">
           <pre className="text-[#ffd23f] overflow-x-auto whitespace-pre-wrap leading-relaxed pr-20">
@@ -140,7 +140,7 @@ export default function InstallationGuide({
             {copiedPrompt ? (
               <>
                 <Check className="w-3.5 h-3.5" />
-                <span>Tersalin</span>
+                <span>Tersalin!</span>
               </>
             ) : (
               <>
@@ -235,10 +235,10 @@ export default function InstallationGuide({
         <div className="p-6 sketch-card bg-[#fff9f2] flex flex-col justify-between gap-4">
           <div>
             <span className="text-[#0d0d0d] font-black text-sm block mb-1">
-              Cara Update ke Versi Terbaru
+              Mau Update ke Versi Terbaru?
             </span>
             <span className="text-[#525252] text-xs leading-relaxed block">
-              Saat ada rilis pembaruan HAHahah, cukup tarik kode terbaru lalu jalankan perintah update ke project tujuan:
+              Ada update baru? Tinggal gas perintah update ini ke folder project lu:
             </span>
           </div>
           <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">
@@ -249,10 +249,10 @@ export default function InstallationGuide({
         <div className="p-6 sketch-card bg-[#fff9f2] flex flex-col justify-between gap-4">
           <div>
             <span className="text-[#0d0d0d] font-black text-sm block mb-1">
-              Ingin Mencopot Pemasangan?
+              Mau Bersih-Bersih / Uninstall?
             </span>
             <span className="text-[#525252] text-xs leading-relaxed block">
-              Jalankan perintah uninstall. Hanya berkas manifest HAHahah yang dibersihkan, tanpa merusak file lain.
+              Bosen atau mau balikin ke awal? Jalankan uninstall. Cuma file HAHahah yang dicabut, kodingan asli lu dijamin aman tanpa lecet.
             </span>
           </div>
           <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">

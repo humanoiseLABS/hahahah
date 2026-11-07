@@ -65,8 +65,8 @@ export default function Footer() {
       <DoodleCrewFooter
         wordmark="HAHAHAH"
         brand="hahahah"
-        blurb="Lapisan kepribadian budaya developer Nusantara untuk coding agent Anda. Hemat token, bebas basa-basi korporat, dan teruji aman terhadap prompt injection."
-        tagline="Suara lokal Nusantara untuk setiap baris kode yang kamu tulis."
+        blurb="Persona lokal budaya developer Nusantara buat coding agent lu. Irit token, anti basa-basi korporat, dan teruji kebal prompt injection."
+        tagline="Bikin coding agent lu ga kaku lagi pas diajak mikir bareng."
         preset="paper"
         crew={HAHAHAH_CREW}
         columns={[
@@ -121,7 +121,7 @@ export default function Footer() {
             variant: "solid",
           },
         ]}
-        copyright="© 2026 HAHahah Nusantara Edition. Dirancang untuk developer Indonesia."
+        copyright="© 2026 HAHahah Nusantara Edition. Dibikin buat developer Indonesia."
         legal={[
           { label: "README.md", href: "https://github.com/humanoiseLABS/hahahah/blob/main/README.md" },
           { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },

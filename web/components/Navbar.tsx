@@ -67,15 +67,15 @@ export default function Navbar() {
         {/* Navigation Links with Hand-drawn Squiggle */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-[#0d0d0d]/70">
           <a href="#integrations" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
-            <span>Integrasi & Persona</span>
+            <span>Pilih Persona</span>
             <Squiggle />
           </a>
           <a href="#tutorial" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
-            <span>Roadmap Pasang</span>
+            <span>Cara Pasang</span>
             <Squiggle />
           </a>
           <a href="#support" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
-            <span>Support & FAQ</span>
+            <span>Tanya Jawab</span>
             <Squiggle />
           </a>
         </nav>
