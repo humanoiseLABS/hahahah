@@ -1,13 +1,43 @@
 {
-  "name": "hahahah",
+  "name": "hahahah-ai",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
   "description": "HAHahah personality and efficiency layer for existing coding agents",
   "type": "module",
   "bin": {
-    "hahahah": "src/cli.ts"
+    "hahahah": "src/cli.ts",
+    "hahahah-ai": "src/cli.ts"
   },
+  "files": [
+    "src",
+    "profiles",
+    "personas",
+    "culture",
+    "core",
+    "schemas",
+    "evals",
+    "fixtures",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humanoiseLABS/hahahah.git"
+  },
+  "bugs": {
+    "url": "https://github.com/humanoiseLABS/hahahah/issues"
+  },
+  "homepage": "https://github.com/humanoiseLABS/hahahah#readme",
+  "keywords": [
+    "coding-agent",
+    "claude-code",
+    "qoder",
+    "antigravity",
+    "opencode",
+    "indonesia",
+    "rusuh-id",
+    "ai-agent"
+  ],
   "engines": {
     "node": ">=24"
   },

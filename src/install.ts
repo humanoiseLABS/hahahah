@@ -77,7 +77,7 @@ function readManifest(targetRoot: string): InstallManifest | null {
   } catch {
     throw new InstallError(`Unreadable install manifest: ${path}`);
   }
-  validate('install', data, MANIFEST_PATH, process.cwd());
+  validate('install', data, MANIFEST_PATH);
   return data as InstallManifest;
 }
 
@@ -219,7 +219,7 @@ export function install(options: InstallOptions): InstallResult {
     block: { path: blockPath, sha256: blockHash },
     created_claude_md: createdClaudeMd,
   };
-  validate('install', manifest, 'install manifest', process.cwd());
+  validate('install', manifest, 'install manifest', options.sourceRoot);
 
   if (!options.dryRun) {
     for (const artifact of artifactFiles) {

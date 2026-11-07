@@ -182,9 +182,11 @@ function isMainEntry(): boolean {
   return fileURLToPath(import.meta.url) === resolve(invoked);
 }
 
+const packageRoot = resolve(fileURLToPath(import.meta.url), '..', '..');
+
 function getCliVersion(): string {
   try {
-    const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')) as {
+    const pkg = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8')) as {
       version?: string;
     };
     return pkg.version ?? '0.1.0';
@@ -233,7 +235,7 @@ if (isMainEntry()) {
       process.exitCode = command ? 0 : 1;
     } else if (command === 'build' || command === 'measure') {
       const result = build({
-        root: process.cwd(),
+        root: packageRoot,
         profileId: parsed.values.profile,
         adapterId: parsed.values.adapter ?? 'fake',
         outDir: parsed.values.out,
@@ -247,7 +249,7 @@ if (isMainEntry()) {
     } else if (command === 'install') {
       const scope = (parsed.values.scope ?? 'workspace') as 'workspace' | 'global';
       const result = install({
-        sourceRoot: process.cwd(),
+        sourceRoot: packageRoot,
         targetRoot: parsed.values.target,
         profileId: parsed.values.profile,
         adapterId: parsed.values.adapter ?? 'claude-code',
@@ -266,7 +268,7 @@ if (isMainEntry()) {
       }
     } else if (command === 'update') {
       const result = update({
-        sourceRoot: process.cwd(),
+        sourceRoot: packageRoot,
         targetRoot: parsed.values.target,
         dryRun: parsed.values['dry-run'],
         force: parsed.values.force,

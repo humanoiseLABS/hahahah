@@ -1,6 +1,9 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import Ajv, { type ValidateFunction } from 'ajv';
+
+const defaultPackageRoot = resolve(fileURLToPath(import.meta.url), '..', '..');
 
 export type SchemaName =
   | 'profile'
@@ -51,7 +54,7 @@ export function validate(
   name: SchemaName,
   data: unknown,
   source = 'inline',
-  root = process.cwd(),
+  root = defaultPackageRoot,
 ): void {
   const key = `${root}:${name}`;
   let compiled = validators.get(key);
