@@ -173,11 +173,21 @@ Every campaign run then died at the spawn timeout:
   05:04:39, 05:07:39, 05:10:39, 05:13:39, 05:16:39, 05:19:41, 05:22:41, 05:25:41, 05:28:41), with
   workspace pairs appearing at 04:58:02, 05:01:38 and 05:19:41 - one task per 18 minutes.
 - Extrapolated, 72 runs would have taken **3.6 hours and produced an all-error report.**
-- A trivial one-word `opencode run` hung the same 180 s and emitted **0 bytes of stdout**, so this is
-  not prompt-specific, not a permission prompt, and not a quota refusal.
+- A trivial one-word `opencode run` hung the same 180 s and emitted **0 bytes of stdout**, which was
+  read at the time as ruling out a quota refusal. **That inference was wrong** - see the correction
+  below; a refusal opencode never prints looks exactly like this.
 - 12 `opencode.exe` processes were still alive with zero eval processes - orphans from the killed
-  campaign, and the probable cause: a wedged local server that every later `run` queues behind. They
+  campaign, which was read as a wedged local server that every later `run` queues behind. They
   were left running because an interactive session of the owner's cannot be told apart by name.
+
+**Correction, 2026-11-07: there was no wedge.** `~/.local/share/opencode/log/opencode.log` records
+`AI_APICallError: Free usage limit reached` at `21:58:42.830Z` - 4 s into the first campaign run - and
+then every ~180 s: 22:01, 22:04, 22:07, 22:10, 22:13, 22:16, 22:19, 22:22, 22:25, 22:28. Eleven refusals
+for the eleven "timeouts". The one-word diagnostics at 22:30 and 22:33 were refused too, which is what
+overturns the bullet above. opencode logs the refusal in under a second and then does not exit, so the
+runner sees a spawn timeout with no error text and the orphan processes are simply the ones we killed
+the parent of. The 3.6-hour extrapolation stands as a cost, but the cause was the free tier's request
+allowance, not a local server. Full evidence: `docs/evidence/efficiency-opencode/findings.md`.
 
 Two defects this surfaced, both now fixed: the CLI injected its own runner, which silently disabled
 the route probe that was written to protect exactly this case (proved by running a campaign with a
@@ -193,8 +203,9 @@ the reasoning-dump difference (-51%) may not replicate at all, since both are pr
 route's baseline behaviour.
 
 **Update, same day: the replication ran, partially, and the prediction's denominator was wrong.** See
-`docs/evidence/efficiency-opencode/findings.md`. 35 of 72 runs answered before the route wedged again
-(the new unresponsive breaker stopped it at 38 runs / 13 min instead of 3.6 h), covering 6 of 12 tasks.
+`docs/evidence/efficiency-opencode/findings.md`. 35 of 72 runs answered before the free tier started
+refusing (the new unresponsive breaker stopped it at 38 runs / 13 min instead of 3.6 h), covering 6 of
+12 tasks.
 The absolute half of the prediction held: +647 input tokens. The relative half did not, because ~4,800
 was the *uncached remainder* of opencode's prompt, not the prompt: the real base is ~6,305 tokens, so
 the relative overhead is +10.25%, not ~15%. Both non-replications were confirmed - 0 reasoning dumps in
@@ -203,4 +214,6 @@ treatment scored 33 screen passes against the baseline's 37 and kept 21/23 `requ
 24/24. That campaign also exposed a parser defect worth more than the replication itself: opencode's
 `tokens.cache.read` was being dropped, which made a warm cache look like a 175x smaller prompt and
 published a false "not all served by one route" warning. The kiro numbers above are unaffected - all 72
-runs report zero cache reads and zero cache creations.
+runs report zero cache reads and zero cache creations. It also exposed a second labelling defect: the
+abort was recorded as `unresponsive`, but opencode's log shows the free tier refusing in under a second
+and then hanging, so the campaign stopped on a quota wall while the report blamed the route.

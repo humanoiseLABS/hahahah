@@ -1,5 +1,14 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import {
+  closeSync,
+  mkdtempSync,
+  openSync,
+  readFileSync,
+  readSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
+import { homedir } from 'node:os';
 import { join } from 'node:path';
 import type { EvalRun } from './eval.ts';
 import { scratchRoot } from './workspace.ts';
@@ -68,13 +77,16 @@ function tokensOf(part: Record<string, unknown>): Record<string, number> | null 
   };
 }
 
-export function parseOpencodeStream(stdout: string): EvalRun {
-  const texts: string[] = [];
-  let costUsd = 0;
-  let usage: Record<string, number> | undefined;
-  let turns = 0;
-  let error: string | undefined;
+interface StreamScan {
+  texts: string[];
+  costUsd: number;
+  usage?: Record<string, number>;
+  turns: number;
+  error?: string;
+}
 
+function scanStream(stdout: string): StreamScan {
+  const scan: StreamScan = { texts: [], costUsd: 0, turns: 0 };
   for (const line of stdout.split('\n')) {
     const trimmed = line.trim();
     if (!trimmed.startsWith('{')) continue;
@@ -86,25 +98,74 @@ export function parseOpencodeStream(stdout: string): EvalRun {
     }
     const part = (event.part ?? {}) as Record<string, unknown>;
     if (event.type === 'text' && typeof part.text === 'string') {
-      texts.push(part.text);
+      scan.texts.push(part.text);
     } else if (event.type === 'step_finish') {
-      turns += 1;
-      if (typeof part.cost === 'number') costUsd = part.cost;
+      scan.turns += 1;
+      if (typeof part.cost === 'number') scan.costUsd = part.cost;
       const tokens = tokensOf(part);
-      if (tokens) usage = tokens;
+      if (tokens) scan.usage = tokens;
     } else if (event.type === 'error') {
       const detail = event.error as Record<string, unknown> | undefined;
       const data = detail?.data as Record<string, unknown> | undefined;
       const name = typeof detail?.name === 'string' ? detail.name : 'opencode error';
       const message = typeof data?.message === 'string' ? data.message : JSON.stringify(detail);
-      error = `${name}: ${message}`;
+      scan.error = `${name}: ${message}`;
     }
   }
+  return scan;
+}
 
-  const output = texts.join('');
-  if (error) return { output: '', costUsd, error };
-  if (!output) return { output: '', costUsd, error: 'opencode returned no text' };
-  return { output, costUsd, usage, numTurns: turns };
+export function parseOpencodeStream(stdout: string): EvalRun {
+  const scan = scanStream(stdout);
+  const output = scan.texts.join('');
+  if (scan.error) return { output: '', costUsd: scan.costUsd, error: scan.error };
+  if (!output) return { output: '', costUsd: scan.costUsd, error: 'opencode returned no text' };
+  return { output, costUsd: scan.costUsd, usage: scan.usage, numTurns: scan.turns };
+}
+
+/** The log tail is read on failure only, so the cap is about bounding a bad read, not a hot path. */
+const LOG_TAIL_BYTES = 512 * 1024;
+
+export function opencodeLogPath(): string {
+  return join(homedir(), '.local', 'share', 'opencode', 'log', 'opencode.log');
+}
+
+/** What opencode logged for the run started in `directory` - the only place a refusal reaches us. */
+export function loggedErrorForRun(logText: string, directory: string): string | null {
+  const quotedDirectory = `directory="${directory.replace(/\\/g, '\\\\')}"`;
+  const lines = logText.split('\n');
+  const created = lines.find(
+    (line) => line.includes('message=created') && line.includes(quotedDirectory),
+  );
+  const runId = created === undefined ? undefined : / run=(\S+)/.exec(created)?.[1];
+  if (runId === undefined) return null;
+  const errors = lines.filter(
+    (line) => line.includes(` run=${runId} `) && line.includes('message="stream error"'),
+  );
+  // The answer stream, not the title agent retrying the same failure behind it.
+  const answer = errors.find((line) => line.includes('small=false')) ?? errors[0];
+  if (answer === undefined) return null;
+  return /error\.error="(.*)"\s*$/.exec(answer)?.[1] ?? null;
+}
+
+function readLogTail(): string {
+  try {
+    const path = opencodeLogPath();
+    const size = statSync(path).size;
+    if (size <= LOG_TAIL_BYTES) return readFileSync(path, 'utf8');
+    const fd = openSync(path, 'r');
+    try {
+      const buffer = Buffer.alloc(LOG_TAIL_BYTES);
+      readSync(fd, buffer, 0, LOG_TAIL_BYTES, size - LOG_TAIL_BYTES);
+      const text = buffer.toString('utf8');
+      // The window starts mid-line; that first partial line is not a parseable entry.
+      return text.slice(text.indexOf('\n') + 1);
+    } finally {
+      closeSync(fd);
+    }
+  } catch {
+    return '';
+  }
 }
 
 export function runOpencode(
@@ -143,7 +204,18 @@ export function runOpencode(
           env: { ...process.env, OPENCODE_CONFIG: configPath },
         });
 
-  if (invocation.error) return { output: '', costUsd: 0, error: invocation.error.message };
+  if (invocation.error) {
+    // A spawn timeout used to throw away both the partial stream and the harness's own log, which is
+    // how a refusal became an unexplained hang. The last thing opencode actually said wins.
+    const reported = scanStream(invocation.stdout ?? '').error;
+    const logged = loggedErrorForRun(readLogTail(), cwd);
+    const said = reported ?? logged;
+    return {
+      output: '',
+      costUsd: 0,
+      error: said === null || said === undefined ? invocation.error.message : said,
+    };
+  }
   const stdout = (invocation.stdout ?? '').trim();
   if (invocation.status !== 0 && !stdout) {
     return {

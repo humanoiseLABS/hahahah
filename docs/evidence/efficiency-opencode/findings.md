@@ -5,8 +5,9 @@ opencode 1.18.31. Suite fingerprint `6518f1e10035fcd0` — the corrected ruler, 
 ones the clean kiro campaign was re-scored with, not the ones it was originally produced with.
 
 The archived `preservation-opencode-k3-report.json` / `.md` are kept exactly as the runner wrote them,
-including a routing warning that is **false**. It is retracted below rather than edited out, because
-the defect that produced it is the main thing this campaign found.
+including a routing warning that is **false** and an abort cause that is **mislabelled**. Both are
+retracted below rather than edited out, because the defects that produced them are the main things
+this campaign found.
 
 ## What actually ran
 
@@ -19,8 +20,50 @@ the defect that produced it is the main thing this campaign found.
 - Contamination: **0 affected runs in either arm**. The gateway's Caveman and Ponytail layers were off.
 - Abort: `aborted.kind = "unresponsive"`, three consecutive `spawnSync cmd.exe ETIMEDOUT` at the 180 s
   spawn limit. The answered portion took 4 min 18 s (01:10:52Z-01:15:10Z, ~7 s/run); the three timeouts
-  then took 9 min 1 s, and the report was written at 01:24:11Z. Total 13 min 19 s. The same wedge without
-  the breaker was measured at 11 runs / 33 minutes and extrapolated to 3.6 hours for 72 runs.
+  then took 9 min 1 s, and the report was written at 01:24:11Z. Total 13 min 19 s. **That label is
+  wrong** — see the next section: the provider was refusing, and the same failure without the breaker
+  cost 11 runs / 33 minutes on the first attempt.
+
+## The abort cause was a refusal, not a wedged route
+
+The archived report calls the abort `unresponsive`, and both earlier write-ups called the route
+"wedged". **Retracted.** The opencode free tier was refusing every request, and opencode does not exit
+when that happens — it logs the refusal and keeps running until something kills it. Our runner saw a
+180 s spawn timeout instead of an error string, so the quota breaker never fired.
+
+Evidence from `~/.local/share/opencode/log/opencode.log` (read-only, nothing re-sent):
+
+- The refusal is verbatim
+  `AI_APICallError: Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go`,
+  followed ~6 s later by the title agent's `AI_RetryError: Failed after 3 attempts. Last error: Free usage limit reached.`
+- It arrives in **under a second** after the request is sent, on all four refusals of 2026-11-07:
+  `01:15:12.805 → 01:15:13.176`, `01:18:14.298 → 01:18:14.711`, `01:21:14.342 → 01:21:14.755`,
+  and the chase attempt's probe `01:53:35.826 → 01:53:36.384` (2.8 s after that process created its
+  session at `01:53:33.540`). Nothing is logged after the title retry: the process is alive and idle,
+  not busy.
+- **The first attempt was the same refusal**, not a wedged server. The answer-stream refusals start at
+  `2026-11-05T21:58:42.830Z` — 4 s after the 21:58:38 campaign run began — and recur every ~180 s:
+  21:58, 22:01, 22:04, 22:07, 22:10, 22:13, 22:16, 22:19, 22:22, 22:25, 22:28. That is 11 refusals for
+  the 11 "timeouts". The two later minutes (22:30, 22:33) are my own one-word diagnostic calls, which
+  were refused too — that is what disproved the old "not a quota refusal" bullet.
+- The chase attempt (2026-11-07 01:53Z, six remaining tasks, all orphan processes killed first) died at
+  the route probe on the same refusal. **Nothing was measured.** The remaining tasks are blocked by the
+  free tier's allowance, not by anything on this machine.
+
+Three fixes follow, all tested. `providerExhausted` did not recognise this phrasing — opencode says
+"limit reached", not "reached the limit", and names no status code — so `/usage limit reached/i` was
+added, with the verbatim string pinned in a test. Alone that would have been dead code on this harness,
+because the refusal never reaches stdout. So `runOpencode` now reads opencode's own log for the
+workspace it just ran (`loggedErrorForRun`) when the spawn fails, and keeps whatever partial stream it
+got instead of discarding both. The lookup matches the `message=created` line's directory to find the
+run id, then reports that run's answer-stream error. Verified against the real 1,905,608-byte log with
+no request sent: the 01:53 probe workspace `hahahah-eval-probe-VXY4sW` resolves to the verbatim refusal
+from both the whole file and the 512 KiB tail the runner reads, a 2026-11-05 campaign workspace resolves
+to the same refusal (the first attempt's proof), and an unknown workspace resolves to `null`. The
+integration in `runOpencode` itself is not exercised end to end, because the only way to reach it is to
+hit the refused route again. And the report no longer asserts a cause it cannot see: the `unresponsive`
+line now says that the refusal may be hiding in the harness's own log, because this campaign is the
+proof that it can.
 
 ## The instrument lied: a warm cache is not a route change
 
@@ -142,9 +185,12 @@ n=6 tasks, one free model, one harness, k=3 — medians, not confidence interval
 and one errored, so this is a partial replication, not a full one. The two tasks missing from the clean
 kiro campaign (`pres-decision-evidence-01`, `pres-multiline-kept-01`) are missing here too and remain
 unmeasured anywhere. `environment.baseUrlHost` is `null` for opencode because its config is not read —
-a known provenance hole, still open. The route wedged twice on this machine; three orphan
-`opencode.exe` processes were left alive after the abort because an interactive session of the owner's
-cannot be told apart by name.
+a known provenance hole, still open. The free tier refused on both attempts and no further request was
+sent once that was known. Three orphan `opencode.exe` processes were left alive after the first abort
+because an interactive session of the owner's cannot be told apart by name; they were killed by command
+line before the chase attempt, and `tasklist` shows **zero** `opencode.exe` left afterwards. The five
+unmeasured tasks need an allowance this route does not currently have, so the replication stays partial
+until it resets or the route changes.
 
 ## Appendix: the raw rows the medians come from
 

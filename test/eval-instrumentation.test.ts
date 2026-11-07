@@ -352,6 +352,10 @@ test('three unanswered runs in a row abort the campaign', () => {
     assert.deepEqual(report.aborted.remainingTasks, ['a-02', 'a-03']);
     const markdown = readFileSync(join(outDir, 'report.md'), 'utf8');
     assert.match(markdown, /3 consecutive run\(s\) were answered/);
+    // Both opencode campaigns were labelled this way while the provider was actually refusing. The
+    // refusal reached the harness log in 0.4 s and never reached our stdout, so the label cannot claim
+    // to know the cause - it has to send the reader to the log instead of asserting a dead route.
+    assert.match(markdown, /harness's own log/i);
   } finally {
     rmSync(outDir, { recursive: true, force: true });
   }
@@ -493,4 +497,22 @@ test('promptTokens stays undefined when the harness reported no input count', ()
   assert.equal(promptTokens(null), undefined);
   assert.equal(promptTokens(undefined), undefined);
   assert.equal(promptTokens('nope'), undefined);
+});
+
+test('providerExhausted recognises the opencode free-tier refusal', () => {
+  // Verbatim from ~/.local/share/opencode/log/opencode.log on 2026-11-07. opencode logged this 0.4 s
+  // after sending the request and then hung instead of exiting, so the runner saw a 180 s spawn
+  // timeout and the campaign was labelled unresponsive when the provider had actually refused.
+  assert.equal(
+    providerExhausted(
+      'AI_APICallError: Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go',
+    ),
+    true,
+  );
+  assert.equal(
+    providerExhausted(
+      'AI_RetryError: Failed after 3 attempts. Last error: Free usage limit reached.',
+    ),
+    true,
+  );
 });

@@ -447,7 +447,7 @@ function abortedLine(report: EvalReport): string[] {
   const cause =
     abort.kind === 'quota'
       ? `the provider refused further requests (${abort.reason})`
-      : `${UNANSWERED_STREAK} consecutive run(s) were answered with nothing at all (${abort.reason}) - the harness or the route behind it is not answering`;
+      : `${UNANSWERED_STREAK} consecutive run(s) were answered with nothing at all (${abort.reason}) - the harness or the route behind it is not answering. That is what reached this process, not necessarily why: opencode logged its free-tier refusal 0.4 s after sending the request, then hung until the spawn limit, so two campaigns were labelled unresponsive while the provider was refusing. Read the harness's own log before naming the cause.`;
   return [
     `**the campaign was aborted after ${abort.afterRuns} run(s)** by ${cause}. ${missing} ${abort.partialTask} is reported with only the repeats it actually got, so these numbers cover fewer tasks than the suite defines.`,
   ];
@@ -591,6 +591,8 @@ const EXHAUSTION_PATTERNS = [
   /\[402\]|status 402|error code 402/i,
   /\b429\b|too many requests|rate[ -]limit/i,
   /MONTHLY_REQUEST_COUNT|insufficient_quota|exceeded your current quota|reached the limit|quota[ -]?exhausted/i,
+  // opencode's free tier says "limit reached", not "reached the limit", and names no status code.
+  /usage limit reached/i,
 ];
 
 export function providerExhausted(error: string): boolean {
@@ -600,7 +602,9 @@ export function providerExhausted(error: string): boolean {
 export interface EvalAbort {
   // `quota` is a refusal that predicts every later answer, so one occurrence stops the campaign.
   // `unresponsive` needs a streak: a single harness failure can be a bad task, three in a row means
-  // there is nothing on the other end - the opencode route once hung for 180 s per run across 11.
+  // there is nothing on the other end - the opencode route once burned 180 s per run across 11. The
+  // label reports what reached us, not the cause: opencode logged `Free usage limit reached` 0.4 s
+  // after the request and then hung instead of exiting, so a quota refusal looked like a timeout twice.
   kind: 'quota' | 'unresponsive';
   reason: string;
   afterRuns: number;
