@@ -116,12 +116,39 @@ test('Banyumasan is named respectfully and no prototyped caricature is present',
   assert.match(text, /ngapak/);
 });
 
-test('no persona ships as reviewed while a human review is outstanding', () => {
+test('a persona records a review date only when every axis is approved', () => {
+  // Two of RUSUH's axes are signed off by the owner (2026-11-07) while `cultural` still waits on
+  // the meme list and a Javanese speaker, so partial approval is a real state. The guard that must
+  // survive is the one against claiming a finished review: no date, and no shipped release, until
+  // all three axes are approved.
   for (const id of personaIds) {
     const persona = personaModel(id);
-    assert.equal(persona.reviews.linguistic, 'pending', `${id}: linguistic review state`);
-    assert.equal(persona.reviews.cultural, 'pending', `${id}: cultural review state`);
-    assert.equal(persona.reviews.safety, 'pending', `${id}: safety review state`);
+    const axes = ['linguistic', 'cultural', 'safety'] as const;
+    const approved = axes.filter((axis) => persona.reviews[axis] === 'approved');
+    const pending = axes.filter((axis) => persona.reviews[axis] !== 'approved');
+    if (persona.reviews.reviewed_at !== null) {
+      assert.deepEqual(
+        approved,
+        [...axes],
+        `${id}: a review date with ${pending.join(', ')} pending`,
+      );
+    }
+    if (pending.length === 0) {
+      assert.notEqual(
+        persona.reviews.reviewed_at,
+        null,
+        `${id}: every axis approved but no review date recorded`,
+      );
+    }
+  }
+  // The two packs that have never been executed against a model stay fully pending.
+  for (const id of ['halal', 'jawa']) {
+    const persona = personaModel(id);
+    assert.deepEqual(
+      [persona.reviews.linguistic, persona.reviews.cultural, persona.reviews.safety],
+      ['pending', 'pending', 'pending'],
+      `${id} must not claim any review`,
+    );
   }
 });
 

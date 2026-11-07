@@ -20,8 +20,8 @@ budgets:
   skill_body_tokens: 1900
 safety_profile: id-default
 reviews:
-  linguistic: pending
+  linguistic: approved
   cultural: pending
-  safety: pending
+  safety: approved
   reviewed_at: null
 expires: '2027-05-01'

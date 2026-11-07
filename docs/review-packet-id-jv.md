@@ -127,8 +127,9 @@ Ini jejak review-nya (yang menggantikan nama di YAML, lihat H.1).
 | G | "ga maksud" | Belum dijawab; bukan gerbang rilis. |
 | I | "oke siap" | Review teknis 60 brief belum mulai. |
 
-Status gerbang setelah ini: `culture id` (lexicon) **approved**; `meme notes` masih pending (D),
-`register map jv` masih pending (F), tiga review persona masih pending (menunggu A lengkap dan D).
-`build --release --profile rusuh-id` karena itu masih gagal tertutup — dan itu memang benar.
-Kalau nanti ada entri lexicon baru, `reviewed_by` harus balik ke `pending` sampai entri itu punya
-sumber dan ada verdict.
+Status gerbang setelah ini: `culture id` (lexicon) **approved**, `rusuh` **linguistic** dan **safety**
+**approved** (verdict A, B, C, E); `cultural` masih pending (D dan F), `meme notes` masih pending (D),
+`register map jv` masih pending (F). Jadi `build --release --profile rusuh-id` masih gagal tertutup —
+dan itu memang benar. `reviewed_at` sengaja tetap `null` sampai ketiga axis approved. Kalau nanti ada
+entri lexicon baru, `reviewed_by` harus balik ke `pending` sampai entri itu punya sumber dan ada verdict.
+Lisensi repo: **MIT** (owner, 2026-11-07).

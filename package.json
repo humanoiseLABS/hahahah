@@ -2,6 +2,7 @@
   "name": "hahahah",
   "version": "0.1.0-dev.0",
   "private": true,
+  "license": "MIT",
   "description": "HAHahah personality and efficiency layer for existing coding agents",
   "type": "module",
   "engines": {
