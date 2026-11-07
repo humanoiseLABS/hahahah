@@ -133,8 +133,8 @@ export const AGENTS: AgentOption[] = [
   {
     id: "windsurf",
     name: "Windsurf",
-    adapterFlag: "--adapter windsurf",
-    whatItWrites: ".windsurfrules + AGENTS.md",
+    adapterFlag: "--adapter agents-md",
+    whatItWrites: "AGENTS.md + .agents/skills/",
     status: "Supported",
   },
 ];

@@ -16,6 +16,18 @@ export default function InstallationGuide({
   generatedCommand,
 }: InstallationGuideProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+
+  const targetPath =
+    selectedAgent.id === "antigravity" ? "~/.gemini" : "/path/ke/project-lu";
+
+  const aiSelfInstallPrompt = `Tolong baca bagian "🤖 AI Self-Install Instructions" di README.md dalam folder HAHahah ini, lalu pasang profile ${selectedPersona.id} (${selectedPersona.name}) untuk ${selectedAgent.name} ke workspace utama gw (jangan pasang di dalam folder hahahah ini sendiri). Untuk Qoder/Cursor/IDE lain, pastikan isi personas/rusuh/voice.md juga digabung langsung ke AGENTS.md & Global Rules/Memory lu. Kalau sudah beres, langsung balas gw pakai gaya ${selectedPersona.name}!`;
+
+  const copyPrompt = () => {
+    navigator.clipboard.writeText(aiSelfInstallPrompt);
+    setCopiedPrompt(true);
+    setTimeout(() => setCopiedPrompt(false), 2000);
+  };
 
   const copyCode = (code: string, idx: number) => {
     navigator.clipboard.writeText(code);
@@ -29,9 +41,9 @@ export default function InstallationGuide({
       phase: "Fase 01",
       badge: "Clone Workspace",
       title: "Ambil Source Code",
-      desc: "Kloning repository resmi HAHahah dari GitHub dan masuk ke folder proyek.",
+      desc: "Kloning repository resmi HAHahah dari GitHub (atau ekstrak ZIP-nya) dan masuk ke folder HAHahah.",
       code: "git clone https://github.com/humanoiseLABS/hahahah.git\ncd hahahah",
-      outcome: "Repository terkloning di folder lokal",
+      outcome: "Repository siap di folder lokal",
       side: "left",
     },
     {
@@ -49,9 +61,12 @@ export default function InstallationGuide({
       phase: "Fase 03",
       badge: "Injeksi Persona",
       title: `Pasang ${selectedPersona.name} ke ${selectedAgent.name}`,
-      desc: `Jalankan instalasi persona ${selectedPersona.name} khusus untuk adapter ${selectedAgent.name} ke project target Anda.`,
+      desc:
+        selectedAgent.id === "antigravity"
+          ? `Pasang secara global ke ~/.gemini agar aktif di semua project Antigravity Anda (atau ganti --target ke folder project spesifik).`
+          : `Ganti /path/ke/project-lu dengan lokasi folder project kodingan Anda (JANGAN pakai --target . jika masih berada di dalam folder hahahah!).`,
       code: generatedCommand,
-      outcome: `Managed-block & konfigurasi ${selectedAgent.whatItWrites} terpasang`,
+      outcome: `Managed-block & konfigurasi ${selectedAgent.whatItWrites} terpasang di project tujuan`,
       side: "left",
     },
     {
@@ -59,8 +74,8 @@ export default function InstallationGuide({
       phase: "Fase 04",
       badge: "Validasi Doctor",
       title: "Pemeriksaan Integritas",
-      desc: "Jalankan CLI doctor untuk memastikan manifest, hash berkas, dan penempatan file valid.",
-      code: "node src/cli.ts doctor --target .",
+      desc: "Jalankan CLI doctor ke folder project tujuan untuk memastikan manifest, hash berkas, dan penempatan file valid.",
+      code: `node src/cli.ts doctor --target ${targetPath}`,
       outcome: "Integritas manifest diverifikasi 100%",
       side: "right",
     },
@@ -69,9 +84,9 @@ export default function InstallationGuide({
       phase: "Fase 05",
       badge: "Siap Digunakan",
       title: "Mulai Koding Bersama Agent",
-      desc: `Buka ${selectedAgent.name} pada project Anda. Agent kini aktif dengan karakter ${selectedPersona.name} dan efisiensi token.`,
-      code: `# Jalankan agent Anda seperti biasa di folder proyek target:\nclaude  # atau agy / opencode / cursor`,
-      outcome: "Persona aktif & reasoning dump dipangkas",
+      desc: `Buka ${selectedAgent.name} di folder project tujuan Anda. Agent kini langsung aktif dengan karakter ${selectedPersona.name}!`,
+      code: `# Masuk ke folder project Anda lalu jalankan agent:\ncd ${targetPath}\nclaude  # atau buka di Qoder / Antigravity / OpenCode / Cursor`,
+      outcome: "Persona aktif penuh sejak chat pertama",
       side: "left",
     },
   ];
@@ -80,7 +95,7 @@ export default function InstallationGuide({
     <section id="tutorial" className="py-24 px-6 max-w-5xl mx-auto sketch-divider">
       
       {/* Section Header */}
-      <div className="text-left mb-16">
+      <div className="text-left mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffd23f] border-2 border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] text-xs font-mono font-bold text-[#0d0d0d] uppercase tracking-wider mb-3">
           Bagian 02 &bull; Roadmap Instalasi
         </div>
@@ -88,8 +103,48 @@ export default function InstallationGuide({
           ROADMAP: {selectedPersona.name} &times; {selectedAgent.name}
         </h2>
         <p className="text-base sm:text-lg text-[#3a3a3a] sketch-serif mt-2 max-w-xl">
-          Ikuti alur sketsa langkah demi langkah dari persiapan berkas hingga coding agent siap diajak ngobrol di terminal.
+          Pilih cara instan (suruh AI pasang otomatis dari ZIP/repo) atau ikuti alur CLI langkah demi langkah di bawah.
         </p>
+      </div>
+
+      {/* Shortcut: Suruh AI Pasang Sendiri (ZIP / Prompt) */}
+      <div className="mb-16 p-6 sketch-card bg-[#fff9f2] border-2 border-[#0d0d0d] shadow-[4px_4px_0_#ff6b2c]">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <span className="text-xs font-mono font-black uppercase px-3 py-1 rounded-full bg-[#ffd23f] border-2 border-[#0d0d0d] text-[#0d0d0d]">
+            Opsi Instan &bull; Download ZIP &amp; Suruh AI Pasang Sendiri
+          </span>
+          <a
+            href="https://github.com/humanoiseLABS/hahahah/archive/refs/heads/main.zip"
+            className="text-xs font-mono font-bold underline text-[#0d0d0d] hover:text-[#ff6b2c]"
+          >
+            Download ZIP Terbaru &rarr;
+          </a>
+        </div>
+        <p className="text-xs sm:text-sm text-[#3a3a3a] mb-3 leading-relaxed">
+          Malas ketik command manual? Ekstrak ZIP HAHahah (atau buka foldernya di {selectedAgent.name}), lalu salin prompt di bawah ini ke chat AI Anda:
+        </p>
+        <div className="bg-[#141414] rounded-xl p-4 border-2 border-[#0d0d0d] font-mono text-xs relative">
+          <pre className="text-[#ffd23f] overflow-x-auto whitespace-pre-wrap leading-relaxed pr-20">
+            {aiSelfInstallPrompt}
+          </pre>
+          <button
+            type="button"
+            onClick={copyPrompt}
+            className="absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-[#ffd23f] hover:bg-[#ff6b2c] hover:text-white text-[#0d0d0d] font-bold border border-[#0d0d0d] flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            {copiedPrompt ? (
+              <>
+                <Check className="w-3.5 h-3.5" />
+                <span>Tersalin</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3.5 h-3.5" />
+                <span>Salin Prompt</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Alternating (Zig-Zag Kanan-Kiri) Roadmap Container */}
@@ -170,19 +225,35 @@ export default function InstallationGuide({
 
       </div>
 
-      {/* Clean Rollback Note */}
-      <div className="mt-16 p-6 sketch-card bg-[#fff9f2] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs">
-        <div>
-          <span className="text-[#0d0d0d] font-black text-sm block mb-1">
-            Ingin Mencopot Pemasangan?
-          </span>
-          <span className="text-[#525252] text-xs">
-            Jalankan perintah uninstall. Hanya berkas manifest HAHahah yang dibersihkan, tanpa merusak konfigurasi lain.
-          </span>
+      {/* Update & Clean Rollback Notes */}
+      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
+        <div className="p-6 sketch-card bg-[#fff9f2] flex flex-col justify-between gap-4">
+          <div>
+            <span className="text-[#0d0d0d] font-black text-sm block mb-1">
+              Cara Update ke Versi Terbaru
+            </span>
+            <span className="text-[#525252] text-xs leading-relaxed block">
+              Saat ada rilis pembaruan HAHahah, cukup tarik kode terbaru lalu jalankan perintah update ke project tujuan:
+            </span>
+          </div>
+          <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">
+            git pull &amp;&amp; node src/cli.ts update --target {targetPath}
+          </code>
         </div>
-        <code className="bg-[#141414] px-3.5 py-2 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] shrink-0">
-          node src/cli.ts uninstall --target .
-        </code>
+
+        <div className="p-6 sketch-card bg-[#fff9f2] flex flex-col justify-between gap-4">
+          <div>
+            <span className="text-[#0d0d0d] font-black text-sm block mb-1">
+              Ingin Mencopot Pemasangan?
+            </span>
+            <span className="text-[#525252] text-xs leading-relaxed block">
+              Jalankan perintah uninstall. Hanya berkas manifest HAHahah yang dibersihkan, tanpa merusak file lain.
+            </span>
+          </div>
+          <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">
+            node src/cli.ts uninstall --target {targetPath}
+          </code>
+        </div>
       </div>
 
     </section>
