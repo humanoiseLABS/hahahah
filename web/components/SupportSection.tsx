@@ -61,7 +61,7 @@ export default function SupportSection() {
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
             <a
-              href="https://github.com/ALIVEbyHUMANOISE/hahahah/issues"
+              href="https://github.com/humanoiseLABS/hahahah/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#ff6b2c] transition-colors"
@@ -85,7 +85,7 @@ export default function SupportSection() {
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
             <a
-              href="https://github.com/ALIVEbyHUMANOISE/hahahah/tree/main/docs"
+              href="https://github.com/humanoiseLABS/hahahah/tree/main/docs"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#ff6b2c] transition-colors"
@@ -109,7 +109,7 @@ export default function SupportSection() {
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
             <a
-              href="https://github.com/ALIVEbyHUMANOISE/hahahah"
+              href="https://github.com/humanoiseLABS/hahahah"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#ff6b2c] font-bold flex items-center gap-1.5 hover:underline"
@@ -133,7 +133,7 @@ export default function SupportSection() {
             description: "Tim pengembang dan komunitas kami siap membantu Anda di GitHub Issues.",
             buttonText: "Hubungi Support via GitHub",
             onContact: () => {
-              window.open("https://github.com/ALIVEbyHUMANOISE/hahahah/issues", "_blank");
+              window.open("https://github.com/humanoiseLABS/hahahah/issues", "_blank");
             },
           }}
         />

@@ -30,7 +30,7 @@ export default function InstallationGuide({
       badge: "Clone Workspace",
       title: "Ambil Source Code",
       desc: "Kloning repository resmi HAHahah dari GitHub dan masuk ke folder proyek.",
-      code: "git clone https://github.com/ALIVEbyHUMANOISE/hahahah.git\ncd hahahah",
+      code: "git clone https://github.com/humanoiseLABS/hahahah.git\ncd hahahah",
       outcome: "Repository terkloning di folder lokal",
       side: "left",
     },

@@ -76,7 +76,7 @@ export default function Footer() {
               { label: "RUSUH ID (Bloko Suto)", href: "#integrations" },
               { label: "HALAL ID (Amanah)", href: "#integrations" },
               { label: "JAWA ID (Unggah-Ungguh)", href: "#integrations" },
-              { label: "Katalog Budaya", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/tree/main/culture" },
+              { label: "Katalog Budaya", href: "https://github.com/humanoiseLABS/hahahah/tree/main/culture" },
             ],
           },
           {
@@ -92,43 +92,43 @@ export default function Footer() {
             title: "Dokumentasi",
             links: [
               { label: "Cara Pasang", href: "#integrations" },
-              { label: "Riset & Benchmark", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/tree/main/docs" },
-              { label: "Evaluasi Keamanan", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/tree/main/eval" },
+              { label: "Riset & Benchmark", href: "https://github.com/humanoiseLABS/hahahah/tree/main/docs" },
+              { label: "Evaluasi Keamanan", href: "https://github.com/humanoiseLABS/hahahah/tree/main/eval" },
               { label: "Tanya Jawab (FAQ)", href: "#support" },
             ],
           },
           {
             title: "Komunitas",
             links: [
-              { label: "GitHub Repository", href: "https://github.com/ALIVEbyHUMANOISE/hahahah" },
-              { label: "Buka Issue / Bug", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/issues" },
-              { label: "Kirim Pull Request", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/pulls" },
-              { label: "Lisensi MIT", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/blob/main/LICENSE" },
+              { label: "GitHub Repository", href: "https://github.com/humanoiseLABS/hahahah" },
+              { label: "Buka Issue / Bug", href: "https://github.com/humanoiseLABS/hahahah/issues" },
+              { label: "Kirim Pull Request", href: "https://github.com/humanoiseLABS/hahahah/pulls" },
+              { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },
             ],
           },
         ]}
         actions={[
           {
             label: "Download .ZIP",
-            href: "https://github.com/ALIVEbyHUMANOISE/hahahah/archive/refs/heads/main.zip",
+            href: "https://github.com/humanoiseLABS/hahahah/archive/refs/heads/main.zip",
             icon: "sandwich",
             variant: "outline",
           },
           {
             label: "Kasih Star di GitHub",
-            href: "https://github.com/ALIVEbyHUMANOISE/hahahah",
+            href: "https://github.com/humanoiseLABS/hahahah",
             icon: "star",
             variant: "solid",
           },
         ]}
         copyright="© 2026 HAHahah Nusantara Edition. Dirancang untuk developer Indonesia."
         legal={[
-          { label: "README.md", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/blob/main/README.md" },
-          { label: "Lisensi MIT", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/blob/main/LICENSE" },
+          { label: "README.md", href: "https://github.com/humanoiseLABS/hahahah/blob/main/README.md" },
+          { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },
         ]}
         socials={[
-          { label: "GitHub", href: "https://github.com/ALIVEbyHUMANOISE/hahahah" },
-          { label: "Issues", href: "https://github.com/ALIVEbyHUMANOISE/hahahah/issues" },
+          { label: "GitHub", href: "https://github.com/humanoiseLABS/hahahah" },
+          { label: "Issues", href: "https://github.com/humanoiseLABS/hahahah/issues" },
         ]}
       />
     </div>

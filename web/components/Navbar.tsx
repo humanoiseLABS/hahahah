@@ -23,7 +23,7 @@ export default function Navbar() {
   const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("https://api.github.com/repos/ALIVEbyHUMANOISE/hahahah")
+    fetch("https://api.github.com/repos/humanoiseLABS/hahahah")
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.stargazers_count === "number") {
@@ -83,7 +83,7 @@ export default function Navbar() {
         {/* Sketchbook GitHub Star Button */}
         <div className="flex items-center gap-3">
           <a
-            href="https://github.com/ALIVEbyHUMANOISE/hahahah"
+            href="https://github.com/humanoiseLABS/hahahah"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white hover:bg-[#fff9f2] border-2 border-[#0d0d0d] text-xs font-extrabold text-[#0d0d0d] shadow-[0_3px_0_#0d0d0d] hover:-translate-y-0.5 hover:-rotate-1 hover:shadow-[0_5px_0_#0d0d0d] active:translate-y-0.5 active:shadow-[0_1px_0_#0d0d0d] transition-all"

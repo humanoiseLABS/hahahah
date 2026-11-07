@@ -79,13 +79,13 @@ export default function Hero() {
           },
           {
             label: "Download .ZIP",
-            href: "https://github.com/ALIVEbyHUMANOISE/hahahah/archive/refs/heads/main.zip",
+            href: "https://github.com/humanoiseLABS/hahahah/archive/refs/heads/main.zip",
             icon: "sandwich",
             variant: "outline",
           },
           {
             label: "Star di GitHub",
-            href: "https://github.com/ALIVEbyHUMANOISE/hahahah",
+            href: "https://github.com/humanoiseLABS/hahahah",
             icon: "star",
             variant: "outline",
           },
