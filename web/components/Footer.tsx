@@ -65,7 +65,7 @@ export default function Footer() {
       <DoodleCrewFooter
         wordmark="HAHAHAH"
         brand="hahahah"
-        blurb="Persona lokal budaya developer Nusantara buat coding agent lu. Irit token, anti basa-basi korporat, dan teruji kebal prompt injection."
+        blurb="Persona lokal budaya developer Nusantara buat coding agent lu. Zero basa-basi korporat, pangkas reasoning dump, dan teruji kebal prompt injection."
         tagline="Bikin coding agent lu ga kaku lagi pas diajak mikir bareng."
         preset="paper"
         crew={HAHAHAH_CREW}

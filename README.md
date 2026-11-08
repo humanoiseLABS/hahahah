@@ -1,6 +1,6 @@
 # HAHahah
 
-HAHahah is a personality and efficiency layer for existing coding agents. This repository ships **+62 Mode** (`--profile rusuh-id`) as the first reviewed, release-ready persona alongside the Claude Code and opencode adapters, managed-block installer, doctor/uninstall lifecycle, eval runner with deterministic screens, and Phase 3 content hardening. The `HALAL` and `JAWA` personas remain review-pending drafts.
+HAHahah is a personality and zero-fluff developer layer for existing coding agents. It cuts corporate preamble and suppresses leaked reasoning dumps, backed by deterministic evals and transparent benchmarks. This repository ships **+62 Mode** (`--profile rusuh-id`) as the first reviewed, release-ready persona alongside the Claude Code and opencode adapters, managed-block installer, doctor/uninstall lifecycle, eval runner with deterministic screens, and Phase 3 content hardening. The `HALAL` and `JAWA` personas remain review-pending drafts.
 
 Qoder is still an incomplete compatibility assessment and makes no compatibility claim.
 

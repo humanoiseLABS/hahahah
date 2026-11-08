@@ -5,9 +5,9 @@ import { FaqSection } from "@/components/ui/faq-section";
 
 const HAHAHAH_FAQS = [
   {
-    question: "Bikin boros token ga nih kalau dipasangin persona ginian?",
+    question: "Gimana efeknya ke konsumsi token & biaya API?",
     answer:
-      "Malah makin hemat! HAHahah udah diuji k=3 deterministik eval dan cuma nambah overhead rata-rata +710 tokens per run (fixed text). Karena persona ini langsung nebas reasoning dump yang ga guna di jawaban akhir, teks yang lu baca justru 51.2% lebih ringkas.",
+      "Kita blak-blakan ya: layer persona ini nambah overhead ~700 s/d +740 token input per request buat nyuntik aturan persona. Jadi biaya API ga otomatis diskon 50%. Tapi untungnya, persona ini nebas reasoning dump (<thinking>) yang sering bocor ke jawaban akhir pada model tertentu, jadi teks yang lu scroll di layar jauh lebih bersih dan langsung ke baris solusi.",
   },
   {
     question: "Aman ga dari serangan prompt injection atau jailbreak?",
@@ -126,7 +126,7 @@ export default function SupportSection() {
       <div className="sketch-card overflow-hidden">
         <FaqSection
           title="TANYA JAWAB (FAQ)"
-          description="Hal-hal yang sering ditanyain seputar persona Nusantara, efisiensi token, sama keamanan adapter."
+          description="Hal-hal yang sering ditanyain seputar persona Nusantara, fakta token &amp; biaya, sama keamanan adapter."
           items={HAHAHAH_FAQS}
           contactInfo={{
             title: "Masih Ada yang Mau Ditanyain?",
