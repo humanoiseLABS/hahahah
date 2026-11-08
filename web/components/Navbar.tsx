@@ -52,7 +52,7 @@ export default function Navbar() {
       <div className="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
         
         {/* Brand with Yeti Doodle Badge */}
-        <a href="#" className="flex items-center gap-2.5 group">
+        <a href="/" className="flex items-center gap-2.5 group">
           <span
             className="grid place-items-center w-10 h-10 rounded-full border-2 border-[#0d0d0d] bg-white -rotate-6 group-hover:rotate-6 group-hover:scale-105 transition-transform duration-300 shadow-[2px_2px_0_#0d0d0d]"
             aria-hidden="true"
@@ -77,17 +77,21 @@ export default function Navbar() {
         </a>
 
         {/* Navigation Links with Hand-drawn Squiggle */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-[#0d0d0d]/70">
-          <a href="#integrations" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
+        <nav className="hidden md:flex items-center gap-7 text-sm font-bold text-[#0d0d0d]/70">
+          <a href="/#integrations" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
             <span>Pilih Persona</span>
             <Squiggle />
           </a>
-          <a href="#tutorial" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
+          <a href="/#tutorial" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
             <span>Cara Pasang</span>
             <Squiggle />
           </a>
-          <a href="#support" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
+          <a href="/#support" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
             <span>Tanya Jawab</span>
+            <Squiggle />
+          </a>
+          <a href="/poster" className="relative group hover:text-[#0d0d0d] transition-colors py-1 text-[#ff6b2c] font-extrabold">
+            <span>🎨 Poster Maker</span>
             <Squiggle />
           </a>
         </nav>
