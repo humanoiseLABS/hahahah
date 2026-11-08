@@ -20,18 +20,30 @@ function Squiggle() {
 }
 
 export default function Navbar() {
-  const [stars, setStars] = useState<number | null>(null);
+  const [hahahahStars, setHahahahStars] = useState<number | null>(null);
+  const [antiYappingStars, setAntiYappingStars] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("https://api.github.com/repos/humanoiseLABS/hahahah")
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.stargazers_count === "number") {
-          setStars(data.stargazers_count);
+          setHahahahStars(data.stargazers_count);
         }
       })
       .catch(() => {
-        setStars(null);
+        setHahahahStars(null);
+      });
+
+    fetch("https://api.github.com/repos/humanoiseLABS/anti-yapping")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && typeof data.stargazers_count === "number") {
+          setAntiYappingStars(data.stargazers_count);
+        }
+      })
+      .catch(() => {
+        setAntiYappingStars(null);
       });
   }, []);
 
@@ -80,15 +92,21 @@ export default function Navbar() {
           </a>
         </nav>
 
-        {/* Sketchbook GitHub Star Button */}
-        <div className="flex items-center gap-2">
+        {/* Sketchbook GitHub Star Buttons */}
+        <div className="flex items-center gap-2.5">
           <a
             href="https://github.com/humanoiseLABS/anti-yapping"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#8fdcff] hover:bg-[#72cdef] border-2 border-[#0d0d0d] text-xs font-bold text-[#0d0d0d] shadow-[0_2px_0_#0d0d0d] transition-all"
+            className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#8fdcff] hover:bg-[#72cdef] border-2 border-[#0d0d0d] text-xs font-extrabold text-[#0d0d0d] shadow-[0_2px_0_#0d0d0d] hover:-translate-y-0.5 transition-all"
           >
-            <span>⚡ Anti-Yapping</span>
+            <svg className="w-4 h-4 fill-[#0d0d0d]" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            <span>Anti-Yapping</span>
+            <span className="inline-flex items-center gap-1 pl-1.5 border-l border-[#0d0d0d]/30 text-[#0d0d0d]">
+              ★ <span>{antiYappingStars !== null ? antiYappingStars : ""}</span>
+            </span>
           </a>
           <a
             href="https://github.com/humanoiseLABS/hahahah"
@@ -96,12 +114,12 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#fff9f2] border-2 border-[#0d0d0d] text-xs font-extrabold text-[#0d0d0d] shadow-[0_2px_0_#0d0d0d] hover:-translate-y-0.5 transition-all"
           >
-            <svg className="w-4 h-4 fill-[#0d0d0d]" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 fill-[#0d0d0d]" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
             </svg>
             <span>+62 Mode</span>
             <span className="inline-flex items-center gap-1 pl-1.5 border-l border-[#0d0d0d]/30 text-[#0d0d0d]">
-              ★ <span>{stars !== null ? stars : ""}</span>
+              ★ <span>{hahahahStars !== null ? hahahahStars : ""}</span>
             </span>
           </a>
         </div>

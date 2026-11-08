@@ -78,19 +78,38 @@ export default function Hero() {
             variant: "solid",
           },
           {
-            label: "Repo Anti-Yapping",
+            label: "Bongkar Racikan Anti-Yapping ↗",
             href: "https://github.com/humanoiseLABS/anti-yapping",
-            icon: "sandwich",
+            icon: "flame",
             variant: "outline",
           },
           {
-            label: "Repo +62 Mode",
+            label: "Intip Dapur +62 & Kasih Star ↗",
             href: "https://github.com/humanoiseLABS/hahahah",
             icon: "star",
             variant: "outline",
           },
         ]}
       />
+
+      {/* GitHub Lab Exploration Teaser */}
+      <div className="max-w-[1280px] mx-auto px-6 -mt-3 pb-2 flex justify-center relative z-10">
+        <a
+          href="https://github.com/humanoiseLABS"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex flex-wrap items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-[#fffdf9] hover:bg-[#ffd23f]/25 border-2 border-dashed border-[#0d0d0d]/35 hover:border-[#0d0d0d] text-xs font-bold text-[#0d0d0d]/80 hover:text-[#0d0d0d] transition-all"
+        >
+          <span className="inline-block w-2 h-2 rounded-full bg-[#16a34a] animate-pulse" />
+          <span>Penasaran cara kerjanya? Eksplor lab</span>
+          <span className="font-extrabold text-[#0d0d0d] underline decoration-[#ff6b2c] decoration-2 underline-offset-2">
+            @humanoiseLABS di GitHub
+          </span>
+          <span className="text-[#0d0d0d]/65 group-hover:text-[#0d0d0d] transition-colors">
+            — bedah source code, fork racikan prompt, & kasih ★!
+          </span>
+        </a>
+      </div>
     </section>
   );
 }

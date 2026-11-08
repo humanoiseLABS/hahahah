@@ -1204,7 +1204,15 @@ export default function DoodleCrewFooter({
                 const cls = "dcf-btn dcf-pop " + (a.variant === "outline" ? "is-outline" : "is-solid")
                 const st = { "--d": tl.action(k) + "ms" } as React.CSSProperties
                 return a.href ? (
-                  <a key={a.label} className={cls} style={st} href={a.href} onClick={a.onClick}>
+                  <a
+                    key={a.label}
+                    className={cls}
+                    style={st}
+                    href={a.href}
+                    target={a.href.startsWith("http") ? "_blank" : undefined}
+                    rel={a.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    onClick={a.onClick}
+                  >
                     {inner}
                   </a>
                 ) : (
