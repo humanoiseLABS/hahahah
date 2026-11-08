@@ -122,7 +122,7 @@ test('the profile schema enum, the registry and the profiles agree on the adapte
   const registered = adapterIds().sort().join(',');
   assert.equal(allowed, registered, 'profile.schema.json enum vs build.ts registry');
 
-  for (const file of ['rusuh-id', 'halal-id', 'jawa-id']) {
+  for (const file of ['rusuh-id']) {
     const text = readFileSync(join(root, 'profiles', `${file}.yaml`), 'utf8');
     for (const id of adapterIds()) {
       if (id === 'fake') continue;

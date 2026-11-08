@@ -114,11 +114,7 @@ test('uninstall removes managed content and preserves user files', () => {
 });
 
 test('every MVP profile installs and uninstalls through the same path', () => {
-  const cases: Array<[string, string]> = [
-    ['rusuh-id', 'rusuh'],
-    ['halal-id', 'halal'],
-    ['jawa-id', 'jawa'],
-  ];
+  const cases: Array<[string, string]> = [['rusuh-id', 'rusuh']];
   for (const [profileId, persona] of cases) {
     const targetRoot = tempProject();
     try {

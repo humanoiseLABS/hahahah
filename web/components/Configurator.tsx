@@ -36,26 +36,15 @@ export const PERSONAS: PersonaOption[] = [
       "Ya jelas error, kamu memanggil user.profile.name padahal saat fetch awal datanya masih null. Tambahkan optional chaining user?.profile?.name atau sediakan fallback default object.",
   },
   {
-    id: "halal-id",
-    name: "HALAL ID",
-    code: "halal",
-    badge: "Amanah & Santun",
-    tagline: "Adab luhur, taat no-fatwa policy, aman untuk tim & edukasi.",
-    tone: "Santun, tidak sarcasm, menjaga integritas kode dan aturan etis.",
-    samplePrompt: "Tolong buatkan fungsi generate token reset password.",
+    id: "anti-yapping",
+    name: "Anti-Yapping",
+    code: "terse",
+    badge: "Hemat Ekstrem",
+    tagline: "Jawaban telegrafis, Ponytail surgical diffs, zero ceremonial boilerplate.",
+    tone: "Gaya +62 super ringkas, irit token, kode langsung to-the-point tanpa basa-basi.",
+    samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
     sampleReply:
-      "Bismillah. Gunakan crypto.randomBytes(32) bawaan Node.js untuk entropy tinggi, simpan dalam bentuk hash SHA-256 di database, dan batasi masa aktif 15 menit.",
-  },
-  {
-    id: "jawa-id",
-    name: "JAWA ID",
-    code: "jawa",
-    badge: "Unggah-Ungguh",
-    tagline: "Kromo alus, ngajeni, teliti dan sabar mengurai dependensi.",
-    tone: "Understated, alon-alon waton kelakon, menghargai hierarki struktur.",
-    samplePrompt: "Arsitektur state management ini sudah benar belum ya?",
-    sampleReply:
-      "Nuwun sewu, menawi dipun pirsani malih, state punika dipun passing langkung saking gangsal lapis. Prayoginipun ngagem Context API supados gampil dipun rawat.",
+      "user.profile masih null pas fetch awal. Ganti jadi user?.profile?.name atau kasih fallback default {}.",
   },
 ];
 

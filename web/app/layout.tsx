@@ -8,10 +8,11 @@ export const metadata: Metadata = {
     template: "%s | HAHahah Nusantara Edition",
   },
   description:
-    "Karakter budaya developer Nusantara (+62 Mode, Halal ID, Jawa ID) buat Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot. Pangkas basa-basi korporat & tekan kebocoran reasoning dump ke layar.",
+    "Karakter budaya developer Nusantara (+62 Mode, Anti-Yapping) buat Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot. Pangkas basa-basi korporat & tekan kebocoran reasoning dump ke layar.",
   keywords: [
     "HAHahah",
     "hahahah nusantara",
+    "anti-yapping",
     "humanoiseLABS",
     "coding agent persona",
     "Claude Code Indonesia",
@@ -24,8 +25,7 @@ export const metadata: Metadata = {
     "Cursor rules Indonesia",
     "+62 Mode",
     "Rusuh ID",
-    "Halal ID",
-    "Jawa ID",
+    "Anti-Yapping Mode",
     "developer persona",
   ],
   authors: [{ name: "humanoiseLABS", url: "https://github.com/humanoiseLABS/hahahah" }],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "HAHahah Nusantara Edition",
     title: "HAHahah Nusantara Edition — Personality & Zero-Fluff Layer for Coding Agents",
     description:
-      "Pasang karakter budaya Nusantara (+62 Mode, Halal ID, Jawa ID) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor. Langsung ke baris bug, zero basa-basi korporat.",
+      "Pasang karakter budaya Nusantara (+62 Mode, Anti-Yapping) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor. Langsung ke baris bug, zero basa-basi korporat.",
     images: [
       {
         url: "https://hahahah-web.vercel.app/og-image.png",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "HAHahah Nusantara Edition — Personality Layer for Coding Agents",
     description:
-      "Karakter budaya developer Nusantara (+62 Mode, Halal ID, Jawa ID) untuk Claude Code, Google Antigravity, OpenCode, Qoder, dan Cursor. To-the-point & zero basa-basi.",
+      "Karakter budaya developer Nusantara (+62 Mode, Anti-Yapping) untuk Claude Code, Google Antigravity, OpenCode, Qoder, dan Cursor. To-the-point & zero basa-basi.",
     images: ["https://hahahah-web.vercel.app/og-image.png"],
   },
   robots: {

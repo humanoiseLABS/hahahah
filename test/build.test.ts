@@ -50,13 +50,31 @@ test('builds a deterministic fake-adapter plan with the persona card', () => {
 
 test('release build refuses pending reviews', () => {
   const out = tempOut();
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'hahahah-pending-'));
   try {
+    for (const dir of ['core', 'culture', 'personas', 'profiles', 'schemas']) {
+      cpSync(join(root, dir), join(fixtureRoot, dir), { recursive: true });
+    }
+    cpSync(join(root, 'package.json'), join(fixtureRoot, 'package.json'));
+    const personaPath = join(fixtureRoot, 'personas/rusuh/persona.yaml');
+    writeFileSync(
+      personaPath,
+      readFileSync(personaPath, 'utf8').replace(/safety: approved/g, 'safety: pending'),
+    );
     assert.throws(
-      () => build({ root, profileId: 'halal-id', adapterId: 'fake', outDir: out, release: true }),
+      () =>
+        build({
+          root: fixtureRoot,
+          profileId: 'rusuh-id',
+          adapterId: 'fake',
+          outDir: out,
+          release: true,
+        }),
       /review|approved|release/i,
     );
   } finally {
     rmSync(out, { recursive: true, force: true });
+    rmSync(fixtureRoot, { recursive: true, force: true });
   }
 });
 
@@ -151,7 +169,7 @@ test('measure-only build does not write artifacts', () => {
 });
 
 test('every MVP profile builds within budget on both adapters', () => {
-  for (const profileId of ['rusuh-id', 'halal-id', 'jawa-id']) {
+  for (const profileId of ['rusuh-id']) {
     for (const adapterId of ['fake', 'claude-code']) {
       const result = build({ root, profileId, adapterId, write: false });
       for (const [name, report] of Object.entries(result.manifest.budgets)) {

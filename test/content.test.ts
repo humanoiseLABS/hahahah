@@ -26,7 +26,7 @@ function personaModel(id: string): PersonaModel {
 }
 
 test('every profile, persona, lexicon, and culture file validates', () => {
-  assert.ok(personaIds.length >= 2, 'Phase 3 expects more than one persona pack');
+  assert.ok(personaIds.length >= 1, 'expects at least one persona pack');
   for (const profile of profileIds) {
     assert.doesNotThrow(
       () => validate('profile', yaml(`profiles/${profile}.yaml`), 'profile', root),
@@ -108,14 +108,6 @@ test('culture entries are sourced and respect awareness-only entries', () => {
   }
 });
 
-test('Banyumasan is named respectfully and no prototyped caricature is present', () => {
-  const text = read('culture/jv/banyumasan.md');
-  assert.match(text, /Banyumasan/);
-  assert.match(text, /mocking label/);
-  assert.match(text, /Never/);
-  assert.match(text, /ngapak/);
-});
-
 test('a persona records a review date only when every axis is approved', () => {
   // Two of RUSUH's axes are signed off by the owner (2026-11-07) while `cultural` still waits on
   // the meme list and a Javanese speaker, so partial approval is a real state. The guard that must
@@ -141,15 +133,6 @@ test('a persona records a review date only when every axis is approved', () => {
       );
     }
   }
-  // The two packs that have never been executed against a model stay fully pending.
-  for (const id of ['halal', 'jawa']) {
-    const persona = personaModel(id);
-    assert.deepEqual(
-      [persona.reviews.linguistic, persona.reviews.cultural, persona.reviews.safety],
-      ['pending', 'pending', 'pending'],
-      `${id} must not claim any review`,
-    );
-  }
 });
 
 test('every persona carries machine-readable examples and test cases', () => {
@@ -171,34 +154,6 @@ test('every persona carries machine-readable examples and test cases', () => {
   }
 });
 
-test('the Javanese register map validates and stays honest about review state', () => {
-  const registers = yaml('culture/jv/registers.yaml') as unknown as {
-    reviewed_by: string;
-    banyumasan: { preferred_name: string };
-    sources: string[];
-  };
-  assert.doesNotThrow(() => validate('registers', registers, 'registers', root));
-  assert.equal(registers.banyumasan.preferred_name, 'Banyumasan');
-  assert.equal(registers.reviewed_by, 'pending', 'the register map must not claim approval');
-  for (const source of registers.sources) assert.match(source, /^https?:\/\//);
-});
-
-test('the JAWA voice carries every register form from the reviewed map', () => {
-  const registers = yaml('culture/jv/registers.yaml') as unknown as {
-    levels: Record<
-      string,
-      { pronouns: { i: string; you: string }; markers: Record<string, string> }
-    >;
-  };
-  const voice = read('personas/jawa/voice.md');
-  for (const [level, spec] of Object.entries(registers.levels)) {
-    assert.ok(voice.includes(level), `voice is missing the ${level} level`);
-    for (const form of [spec.pronouns.i, spec.pronouns.you, ...Object.values(spec.markers)]) {
-      assert.ok(voice.includes(form), `voice is missing the ${level} form ${form}`);
-    }
-  }
-});
-
 const coreDocs = [
   'core/always-on.md',
   'core/00-identity.md',
@@ -216,7 +171,7 @@ function filesIn(dir: string): string[] {
 const personaFiles = personaIds.flatMap((id) =>
   ['card.md', 'voice.md', 'persona.yaml', 'lexicon.yaml'].map((file) => `personas/${id}/${file}`),
 );
-const cultureFiles = [...filesIn('culture/id'), ...filesIn('culture/jv')];
+const cultureFiles = filesIn('culture/id');
 
 test('no source document uses the retired project name', () => {
   const files = [

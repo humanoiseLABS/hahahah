@@ -23,21 +23,21 @@ const HAHAHAH_CREW: CrewMember[] = [
   },
   {
     kind: "mushroom",
-    name: "Pakde Jawa",
+    name: "Anti-Yapping",
     letter: 2,
     seat: "behind",
     offset: 0.08,
     scale: 0.96,
-    says: "Alon-alon waton kelakon, struktur rapi.",
+    says: "Ponytail surgical diffs: to the point & hemat token!",
   },
   {
     kind: "kid",
-    name: "Santri Dev",
+    name: "Surgical Diff",
     letter: 3,
     seat: "top",
     offset: 0,
     scale: 0.96,
-    says: "Bismillah, amanah & taat no-fatwa policy.",
+    says: "Zero ceremonial boilerplate, anti-yapping full!",
   },
   {
     kind: "ghost",
@@ -71,11 +71,10 @@ export default function Footer() {
         crew={HAHAHAH_CREW}
         columns={[
           {
-            title: "Persona Nusantara",
+            title: "Persona & Mode",
             links: [
               { label: "+62 Mode (Bloko Suto)", href: "#integrations" },
-              { label: "HALAL ID (Amanah)", href: "#integrations" },
-              { label: "JAWA ID (Unggah-Ungguh)", href: "#integrations" },
+              { label: "Anti-Yapping (Hemat Ekstrem)", href: "https://github.com/humanoiseLABS/anti-yapping" },
               { label: "Katalog Budaya", href: "https://github.com/humanoiseLABS/hahahah/tree/main/culture" },
             ],
           },
