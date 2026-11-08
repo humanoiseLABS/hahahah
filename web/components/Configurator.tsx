@@ -388,15 +388,30 @@ export default function Configurator({
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#525252] px-1">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-mono text-[#525252] px-1 gap-2">
                   <span>
                     Racikan lu: <strong className="text-[#0d0d0d]">{selectedPersona.name}</strong> &times;{" "}
                     <strong className="text-[#0d0d0d]">{selectedAgent.name}</strong>
                   </span>
-                  <a href="#tutorial" className="text-[#ff6b2c] font-bold hover:underline flex items-center gap-1">
-                    <span>Lihat cara pasang di bawah</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href={
+                        selectedPersona.id === "anti-yapping"
+                          ? "https://github.com/humanoiseLABS/anti-yapping"
+                          : "https://github.com/humanoiseLABS/hahahah"
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#0d0d0d] font-bold hover:text-[#ff6b2c] underline flex items-center gap-1"
+                    >
+                      <span>Repo ({selectedPersona.id === "anti-yapping" ? "anti-yapping" : "hahahah"})</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </a>
+                    <a href="#tutorial" className="text-[#ff6b2c] font-bold hover:underline flex items-center gap-1">
+                      <span>Cara pasang</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </a>
+                  </div>
                 </div>
               </div>
             ) : (

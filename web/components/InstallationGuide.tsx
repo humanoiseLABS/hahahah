@@ -18,10 +18,13 @@ export default function InstallationGuide({
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
 
-  const targetPath =
-    selectedAgent.id === "antigravity" ? "~/.gemini" : "/path/ke/project-lu";
+  const isAntiYapping = selectedPersona.id === "anti-yapping";
+  const packageName = isAntiYapping ? "anti-yapping" : "hahahah-ai";
+  const repoUrl = isAntiYapping
+    ? "https://github.com/humanoiseLABS/anti-yapping"
+    : "https://github.com/humanoiseLABS/hahahah";
 
-  const aiSelfInstallPrompt = `Tolong jalankan \`${generatedCommand}\` di terminal untuk memasang profile ${selectedPersona.id} (${selectedPersona.name}) untuk ${selectedAgent.name} ke workspace utama gw (atau ikuti bagian "🤖 AI Self-Install Instructions" di README.md jika dari folder/ZIP HAHahah). Untuk Qoder/Cursor/IDE lain, pastikan aturan suara persona juga digabung langsung ke AGENTS.md & Global Rules/Memory lu. Kalau sudah beres, langsung balas gw pakai gaya ${selectedPersona.name}!`;
+  const aiSelfInstallPrompt = `Tolong jalankan \`${generatedCommand}\` di terminal untuk memasang ${selectedPersona.name} untuk ${selectedAgent.name} ke workspace utama gw (dokumentasi resmi: ${repoUrl}). Untuk Qoder/Cursor/IDE lain, pastikan aturan suara persona juga digabung langsung ke AGENTS.md & Global Rules/Memory lu. Kalau sudah beres, langsung balas gw pakai gaya ${selectedPersona.name}!`;
 
   const copyPrompt = () => {
     navigator.clipboard.writeText(aiSelfInstallPrompt);
@@ -41,7 +44,7 @@ export default function InstallationGuide({
       phase: "Step 01",
       badge: "Buka Workspace",
       title: "Masuk ke Folder Project",
-      desc: "Buka terminal di folder project kodingan lu. Ga usah repot-repot git clone, paket resminya udah nangkring di NPM.",
+      desc: `Buka terminal di folder project kodingan lu. Ga usah repot-repot git clone, paket resminya (${packageName}) udah nangkring di NPM.`,
       code: "cd /path/ke/project-lu",
       outcome: "Terminal udah standby di folder project tujuan",
       side: "left",
@@ -77,8 +80,8 @@ export default function InstallationGuide({
       desc: "Ketik doctor biar yakin manifest, hash berkas, sama posisi filenya udah bener semua tanpa ada yang korup atau nyasar.",
       code:
         selectedAgent.id === "antigravity"
-          ? "npx hahahah-ai doctor --target ~/.gemini"
-          : "npx hahahah-ai doctor --target .",
+          ? `npx ${packageName} doctor --target ~/.gemini`
+          : `npx ${packageName} doctor --target .`,
       outcome: "Semua file & manifest aman 100%, siap tempur",
       side: "right",
     },

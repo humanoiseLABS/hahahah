@@ -72,19 +72,19 @@ export default function Hero() {
         crew={HERO_CREW}
         actions={[
           {
-            label: "Pilih Persona & Harness",
+            label: "Pilih Mode & Harness",
             href: "#integrations",
             icon: "bolt",
             variant: "solid",
           },
           {
-            label: "Download .ZIP",
-            href: "https://github.com/humanoiseLABS/hahahah/archive/refs/heads/main.zip",
+            label: "Repo Anti-Yapping",
+            href: "https://github.com/humanoiseLABS/anti-yapping",
             icon: "sandwich",
             variant: "outline",
           },
           {
-            label: "Star di GitHub",
+            label: "Repo +62 Mode",
             href: "https://github.com/humanoiseLABS/hahahah",
             icon: "star",
             variant: "outline",
