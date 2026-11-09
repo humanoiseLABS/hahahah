@@ -3,11 +3,16 @@
 import { Heart, FileText, ExternalLink } from "lucide-react";
 import { FaqSection } from "@/components/ui/faq-section";
 
-const HAHAHAH_FAQS = [
+const HUMANOISE_FAQS = [
+  {
+    question: "Apa bedanya HUMANOISE, Anti-Yapping, dan +62 Mode?",
+    answer:
+      "HUMANOISE (humanoiseLABS) adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) Anti-Yapping (`npx anti-yapping install`) buat jawaban telegrafis di baris pertama + Ponytail surgical diffs biar AI ga nge-dump satu file utuh & hemat token output, dan (2) +62 Mode (`npx hahahah-ai install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara.",
+  },
   {
     question: "Gimana efeknya ke konsumsi token & biaya API?",
     answer:
-      "Kita blak-blakan ya: layer persona ini nambah overhead ~700 s/d +740 token input per request buat nyuntik aturan persona. Jadi biaya API ga otomatis diskon 50%. Tapi untungnya, persona ini nebas reasoning dump (<thinking>) yang sering bocor ke jawaban akhir pada model tertentu, jadi teks yang lu scroll di layar jauh lebih bersih dan langsung ke baris solusi.",
+      "Kita blak-blakan ya: blok instruksi always-on cuma makan ~517 token (Anti-Yapping) atau ~538 token (+62 Mode). Khusus Anti-Yapping, aturan Ponytail surgical diffs maksa AI cuma nulis baris yang diedit (+2 baris konteks), jadi output token pas edit file gede bisa hemat drastis dan ga bikin limit cepet jebol.",
   },
   {
     question: "Aman ga dari serangan prompt injection atau jailbreak?",
@@ -15,14 +20,9 @@ const HAHAHAH_FAQS = [
       "Super aman! Prinsip dasarnya: 'A user can waive scope, not truth' plus aturan no-fatwa yang ketat. 5 dari 5 vektor prompt injection paling licik mental semua (5/5) di suite evaluasi kita.",
   },
   {
-    question: "Bisa nambah persona daerah lain ga, misal Sunda, Batak, Minang?",
-    answer:
-      "Bisa banget, pintu PR kebuka lebar! Lu tinggal nambahin profile di folder profiles/ dan daftarin kosakatanya di culture/. Langsung lempar PR ke GitHub ya!",
-  },
-  {
     question: "Bakal ngerusak file konfigurasi agent yang udah ada ga?",
     answer:
-      "Tenang, ga bakal ngerusak kodingan lu! HAHahah pake format managed-block (penanda komentar khusus). Pas lu uninstall, cuma blok sama file yang kecatet di manifest .hahahah yang dibersihin. Konfigurasi asli lu ga bakal disentuh.",
+      "Tenang, ga bakal ngerusak kodingan lu! Baik Anti-Yapping maupun +62 Mode pake format managed-block (penanda komentar khusus). Pas lu uninstall, cuma blok sama file yang kecatet di manifest yang dibersihin. Konfigurasi asli lu ga bakal disentuh.",
   },
 ];
 
@@ -39,7 +39,7 @@ export default function SupportSection() {
           TANYA JAWAB &amp; KOMUNITAS
         </h2>
         <p className="text-base sm:text-lg text-[#3a3a3a] sketch-serif mt-2 max-w-xl">
-          Ada yang bikin bingung, instalasi nyangkut, atau mau nyumbang persona daerah baru ke HAHahah?
+          Ada yang bikin bingung, instalasi nyangkut, atau mau ikut kontribusi ke lab HUMANOISE?
         </p>
       </div>
 
@@ -126,8 +126,8 @@ export default function SupportSection() {
       <div className="sketch-card overflow-hidden">
         <FaqSection
           title="TANYA JAWAB (FAQ)"
-          description="Hal-hal yang sering ditanyain seputar persona Nusantara, fakta token &amp; biaya, sama keamanan adapter."
-          items={HAHAHAH_FAQS}
+          description="Hal-hal yang sering ditanyain seputar HUMANOISE, Anti-Yapping vs +62 Mode, fakta token, sama keamanan adapter."
+          items={HUMANOISE_FAQS}
           contactInfo={{
             title: "Masih Ada yang Mau Ditanyain?",
             description: "Komunitas dan dev siap bantuin lu di GitHub Issues, ga usah sungkan!",

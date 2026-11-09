@@ -9,3 +9,5 @@ npm-debug.log*
 .env
 .env.*
 /anti-yapping/
+/posters/
+/scripts/

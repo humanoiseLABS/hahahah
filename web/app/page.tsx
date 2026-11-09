@@ -26,10 +26,10 @@ export default function Home() {
             ? `npx anti-yapping install --adapter antigravity --target ~/.gemini --scope global`
             : `npx anti-yapping install ${selectedAgent.adapterFlag} --target .`
         : selectedAgent.id === "claude-code"
-          ? `npx hahahah-ai install --profile ${selectedPersona.id} --target .`
+          ? `npx hahahah-ai install --target .`
           : selectedAgent.id === "antigravity"
-            ? `npx hahahah-ai install --profile ${selectedPersona.id} --adapter antigravity --target ~/.gemini --scope global`
-            : `npx hahahah-ai install --profile ${selectedPersona.id} ${selectedAgent.adapterFlag} --target .`
+            ? `npx hahahah-ai install --adapter antigravity --target ~/.gemini --scope global`
+            : `npx hahahah-ai install ${selectedAgent.adapterFlag} --target .`
       : "";
 
   const copyCommand = () => {

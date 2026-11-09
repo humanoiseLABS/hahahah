@@ -4,16 +4,17 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://hahahah-web.vercel.app"),
   title: {
-    default: "HAHahah Nusantara Edition — Personality & Zero-Fluff Layer for Coding Agents",
-    template: "%s | HAHahah Nusantara Edition",
+    default: "HUMANOISE — Anti-Yapping & +62 Mode untuk AI Coding Agents",
+    template: "%s | HUMANOISE Labs",
   },
   description:
-    "Karakter budaya developer Nusantara (+62 Mode, Anti-Yapping) buat Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot. Pangkas basa-basi korporat & tekan kebocoran reasoning dump ke layar.",
+    "Dua senjata AI coding agent dari HUMANOISE Labs: Anti-Yapping (surgical diffs & hemat token 80%) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi). Mendukung Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
   keywords: [
-    "HAHahah",
-    "hahahah nusantara",
-    "anti-yapping",
+    "HUMANOISE",
     "humanoiseLABS",
+    "anti-yapping",
+    "+62 Mode",
+    "hahahah-ai",
     "coding agent persona",
     "Claude Code Indonesia",
     "Google Antigravity",
@@ -23,35 +24,33 @@ export const metadata: Metadata = {
     "DeepSeek Harness",
     "OpenClaw",
     "Cursor rules Indonesia",
-    "+62 Mode",
-    "Rusuh ID",
     "Anti-Yapping Mode",
     "developer persona",
   ],
-  authors: [{ name: "humanoiseLABS", url: "https://github.com/humanoiseLABS/hahahah" }],
+  authors: [{ name: "humanoiseLABS", url: "https://github.com/humanoiseLABS" }],
   creator: "humanoiseLABS",
   openGraph: {
     type: "website",
     locale: "id_ID",
     url: "https://hahahah-web.vercel.app",
-    siteName: "HAHahah Nusantara Edition",
-    title: "HAHahah Nusantara Edition — Personality & Zero-Fluff Layer for Coding Agents",
+    siteName: "HUMANOISE Labs",
+    title: "HUMANOISE — Anti-Yapping & +62 Mode untuk AI Coding Agents",
     description:
-      "Pasang karakter budaya Nusantara (+62 Mode, Anti-Yapping) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor. Langsung ke baris bug, zero basa-basi korporat.",
+      "Pasang Anti-Yapping (surgical diffs & hemat token) atau +62 Mode (partner ngoding lokal blak-blakan) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor.",
     images: [
       {
         url: "https://hahahah-web.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "HAHahah Nusantara Edition — Personality & Zero-Fluff Layer for Coding Agents",
+        alt: "HUMANOISE — Anti-Yapping & +62 Mode untuk AI Coding Agents",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HAHahah Nusantara Edition — Personality Layer for Coding Agents",
+    title: "HUMANOISE — Anti-Yapping & +62 Mode untuk AI Coding Agents",
     description:
-      "Karakter budaya developer Nusantara (+62 Mode, Anti-Yapping) untuk Claude Code, Google Antigravity, OpenCode, Qoder, dan Cursor. To-the-point & zero basa-basi.",
+      "Dua senjata AI coding agent dari HUMANOISE Labs: Anti-Yapping (surgical diffs) & +62 Mode (partner ngoding lokal Nusantara).",
     images: ["https://hahahah-web.vercel.app/og-image.png"],
   },
   robots: {

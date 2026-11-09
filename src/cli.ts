@@ -195,6 +195,14 @@ function getCliVersion(): string {
   }
 }
 
+function normalizeProfileId(value: string | undefined): string {
+  const raw = (value ?? 'rusuh-id').trim().toLowerCase();
+  if (raw === '+62' || raw === 'plus62' || raw === '62' || raw === 'rusuh') {
+    return 'rusuh-id';
+  }
+  return value ?? 'rusuh-id';
+}
+
 if (isMainEntry()) {
   const version = getCliVersion();
   const updateCheck = checkRemoteUpdate(version);
@@ -229,6 +237,7 @@ if (isMainEntry()) {
       },
     });
 
+    const profileId = normalizeProfileId(parsed.values.profile);
     const command = parsed.positionals[0];
     if (!command || parsed.values.help) {
       printUsage();
@@ -236,7 +245,7 @@ if (isMainEntry()) {
     } else if (command === 'build' || command === 'measure') {
       const result = build({
         root: packageRoot,
-        profileId: parsed.values.profile,
+        profileId,
         adapterId: parsed.values.adapter ?? 'fake',
         outDir: parsed.values.out,
         release: parsed.values.release,
@@ -251,7 +260,7 @@ if (isMainEntry()) {
       const result = install({
         sourceRoot: packageRoot,
         targetRoot: parsed.values.target,
-        profileId: parsed.values.profile,
+        profileId,
         adapterId: parsed.values.adapter ?? 'claude-code',
         scope,
         dryRun: parsed.values['dry-run'],

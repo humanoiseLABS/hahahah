@@ -2,7 +2,7 @@
 
 import DoodleCrewFooter, { CrewMember } from "@/components/ui/doodle-crew-footer";
 
-const HAHAHAH_CREW: CrewMember[] = [
+const HUMANOISE_CREW: CrewMember[] = [
   {
     kind: "yeti",
     name: "Si +62",
@@ -24,7 +24,7 @@ const HAHAHAH_CREW: CrewMember[] = [
   {
     kind: "mushroom",
     name: "Anti-Yapping",
-    letter: 2,
+    letter: 3,
     seat: "behind",
     offset: 0.08,
     scale: 0.96,
@@ -33,7 +33,7 @@ const HAHAHAH_CREW: CrewMember[] = [
   {
     kind: "kid",
     name: "Surgical Diff",
-    letter: 3,
+    letter: 4,
     seat: "top",
     offset: 0,
     scale: 0.96,
@@ -42,7 +42,7 @@ const HAHAHAH_CREW: CrewMember[] = [
   {
     kind: "ghost",
     name: "Guardrail",
-    letter: 5,
+    letter: 6,
     seat: "behind",
     offset: 0,
     scale: 0.94,
@@ -51,11 +51,11 @@ const HAHAHAH_CREW: CrewMember[] = [
   {
     kind: "cat",
     name: "Kucing CLI",
-    letter: 6,
+    letter: 8,
     seat: "top",
     offset: 0.14,
     scale: 0.92,
-    says: "npx hahahah-ai doctor — 100% sehat meong!",
+    says: "npx anti-yapping doctor — 100% sehat meong!",
   },
 ];
 
@@ -63,19 +63,19 @@ export default function Footer() {
   return (
     <div className="w-full sketch-divider">
       <DoodleCrewFooter
-        wordmark="HAHAHAH"
-        brand="hahahah"
-        blurb="Persona lokal budaya developer Nusantara buat coding agent lu. Zero basa-basi korporat, pangkas reasoning dump, dan teruji kebal prompt injection."
-        tagline="Bikin coding agent lu ga kaku lagi pas diajak mikir bareng."
+        wordmark="HUMANOISE"
+        brand="humanoise"
+        blurb="Lab eksperimen instruksi & guardrails untuk AI coding agent: Anti-Yapping (surgical diffs & hemat token ekstrem) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi)."
+        tagline="Bikin coding agent lu berhenti yapping dan langsung ke inti kode."
         preset="paper"
-        crew={HAHAHAH_CREW}
+        crew={HUMANOISE_CREW}
         columns={[
           {
-            title: "Persona & Mode",
+            title: "Mode & Produk",
             links: [
-              { label: "+62 Mode (Bloko Suto)", href: "#integrations" },
-              { label: "Anti-Yapping (Hemat Ekstrem)", href: "https://github.com/humanoiseLABS/anti-yapping" },
-              { label: "Katalog Budaya", href: "https://github.com/humanoiseLABS/hahahah/tree/main/culture" },
+              { label: "Anti-Yapping (Surgical Diffs)", href: "https://github.com/humanoiseLABS/anti-yapping" },
+              { label: "+62 Mode (Bloko Suto)", href: "https://github.com/humanoiseLABS/hahahah" },
+              { label: "Pilih Mode & Harness", href: "#integrations" },
             ],
           },
           {
@@ -99,7 +99,7 @@ export default function Footer() {
           {
             title: "Komunitas",
             links: [
-              { label: "GitHub Repository", href: "https://github.com/humanoiseLABS/hahahah" },
+              { label: "GitHub @humanoiseLABS", href: "https://github.com/humanoiseLABS" },
               { label: "Buka Issue / Bug", href: "https://github.com/humanoiseLABS/hahahah/issues" },
               { label: "Kirim Pull Request", href: "https://github.com/humanoiseLABS/hahahah/pulls" },
               { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },
@@ -108,26 +108,26 @@ export default function Footer() {
         ]}
         actions={[
           {
-            label: "Download .ZIP",
-            href: "https://github.com/humanoiseLABS/hahahah/archive/refs/heads/main.zip",
-            icon: "sandwich",
+            label: "Repo Anti-Yapping",
+            href: "https://github.com/humanoiseLABS/anti-yapping",
+            icon: "flame",
             variant: "outline",
           },
           {
-            label: "Kasih Star di GitHub",
+            label: "Repo +62 Mode",
             href: "https://github.com/humanoiseLABS/hahahah",
             icon: "star",
             variant: "solid",
           },
         ]}
-        copyright="© 2026 HAHahah Nusantara Edition. Dibikin buat developer Indonesia."
+        copyright="© 2026 HUMANOISE Labs. Dibikin buat developer Indonesia."
         legal={[
-          { label: "README.md", href: "https://github.com/humanoiseLABS/hahahah/blob/main/README.md" },
+          { label: "humanoiseLABS", href: "https://github.com/humanoiseLABS" },
           { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },
         ]}
         socials={[
-          { label: "GitHub", href: "https://github.com/humanoiseLABS/hahahah" },
-          { label: "Issues", href: "https://github.com/humanoiseLABS/hahahah/issues" },
+          { label: "Anti-Yapping", href: "https://github.com/humanoiseLABS/anti-yapping" },
+          { label: "+62 Mode", href: "https://github.com/humanoiseLABS/hahahah" },
         ]}
       />
     </div>

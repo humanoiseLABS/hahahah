@@ -1,31 +1,36 @@
-# HAHahah
+# HUMANOISE — +62 Mode (`hahahah-ai`)
 
-HAHahah is a personality and zero-fluff developer layer for existing coding agents. It cuts corporate preamble and suppresses leaked reasoning dumps, backed by deterministic evals and transparent benchmarks. This repository ships **+62 Mode** (`--profile rusuh-id`) as the reviewed, release-ready persona alongside the Claude Code and opencode adapters, managed-block installer, doctor/uninstall lifecycle, eval runner with deterministic screens, and Phase 3 content hardening. For extreme token efficiency without persona fluff, see the companion project [anti-yapping](https://github.com/humanoiseLABS/anti-yapping).
+**HUMANOISE Labs (`@humanoiseLABS`)** builds zero-fluff instruction & guardrail layers for AI coding agents in two distinct modes:
 
-Qoder is still an incomplete compatibility assessment and makes no compatibility claim.
+| Mode | Package / Repo | Focus | Install Command |
+|---|---|---|---|
+| **+62 Mode** *(this repo)* | [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai) ([`humanoiseLABS/hahahah`](https://github.com/humanoiseLABS/hahahah)) | **Partner Ngoding Lokal (+62 Bloko Suto)** — Bahasa Indonesia developer slang (`lu/gw`), zero corporate preamble, suppresses leaked reasoning dumps, cultural lexicon, & Risk Class 0–4 safety guardrails. | `npx hahahah-ai install` |
+| **Anti-Yapping** *(companion repo)* | [`anti-yapping`](https://www.npmjs.com/package/anti-yapping) ([`humanoiseLABS/anti-yapping`](https://github.com/humanoiseLABS/anti-yapping)) | **Surgical Diffs & Extreme Token Savings** — Telegraphic answers on line 1, Ponytail surgical diffs (never dumps entire files for small edits), ~517-token always-on footprint. | `npx anti-yapping install` |
+
+*(Note: Internally in this repository, **+62 Mode** uses the canonical profile ID `rusuh-id`, which is enabled by default so you never need to pass `--profile` manually. Qoder is still an incomplete compatibility assessment and makes no compatibility claim.)*
 
 ## Quick Install (via NPM / NPX — Tanpa Perlu Clone Repo)
 
-Paket resmi tersedia di npm sebagai [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai). Buka terminal di folder project kodingan lu, lalu jalankan:
+Paket resmi **+62 Mode** tersedia di npm sebagai [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai). Buka terminal di folder project kodingan lu, lalu jalankan:
 
 ```bash
 # Claude Code (default)
-npx hahahah-ai install --profile rusuh-id --target .
+npx hahahah-ai install --target .
 
 # Google Antigravity (global untuk semua project)
-npx hahahah-ai install --profile rusuh-id --adapter antigravity --target ~/.gemini --scope global
+npx hahahah-ai install --adapter antigravity --target ~/.gemini --scope global
 
 # OpenCode
-npx hahahah-ai install --profile rusuh-id --adapter opencode --target .
+npx hahahah-ai install --adapter opencode --target .
 
 # Cursor / Codex / Windsurf (AGENTS.md)
-npx hahahah-ai install --profile rusuh-id --adapter agents-md --target .
+npx hahahah-ai install --adapter agents-md --target .
 
 # Qoder
-npx hahahah-ai install --profile rusuh-id --adapter qoder --target .
+npx hahahah-ai install --adapter qoder --target .
 
 # GitHub Copilot
-npx hahahah-ai install --profile rusuh-id --adapter copilot --target .
+npx hahahah-ai install --adapter copilot --target .
 
 # Cek integritas, update, atau uninstall kapan saja:
 npx hahahah-ai doctor --target .
@@ -36,30 +41,30 @@ npx hahahah-ai uninstall --target .
 *(Opsional)* Jika ingin menginstal CLI secara global agar bisa langsung memanggil `hahahah`:
 ```bash
 npm install -g hahahah-ai
-hahahah install --profile rusuh-id --target .
+hahahah install --target .
 ```
 
 ## 🤖 AI Self-Install Instructions (Jika User Menyuruh AI Memasang via Prompt / Repo / ZIP)
 
 > **PERHATIAN UNTUK AI AGENT (Claude Code, Qoder, Antigravity, OpenCode, Cursor, Windsurf, Copilot):**
-> Jika user menyuruhmu memasang HAHahah (*"pasang ini"*, *"install HAHahah"*, dll.), **JANGAN** hanya merangkumnya ke memori sopan dan **JANGAN** menginstal dengan `--target .` di dalam folder source `hahahah` itu sendiri! Ikuti langkah wajib berikut:
+> Jika user menyuruhmu memasang **+62 Mode / HAHahah** (*"pasang ini"*, *"install +62 Mode"*, dll.), **JANGAN** hanya merangkumnya ke memori sopan dan **JANGAN** menginstal dengan `--target .` di dalam folder source `hahahah` itu sendiri! Ikuti langkah wajib berikut:
 >
 > 1. **Gunakan `npx -y hahahah-ai` langsung di `<TARGET_PROJECT>` milik user** (atau jika sedang berada di dalam clone repo `hahahah`, jalankan `npm ci` lalu gunakan `node src/cli.ts`):
 >    - **Claude Code**:
->      - Per-project: `npx -y hahahah-ai install --profile rusuh-id --adapter claude-code --target <TARGET_PROJECT>`
+>      - Per-project: `npx -y hahahah-ai install --adapter claude-code --target <TARGET_PROJECT>`
 >      - Global (agar aktif di semua project): jalankan juga dengan `--target ~/.claude`
 >    - **Google Antigravity**:
->      - Global (semua project): `npx -y hahahah-ai install --profile rusuh-id --adapter antigravity --target ~/.gemini --scope global`
->      - Per-project: `npx -y hahahah-ai install --profile rusuh-id --adapter antigravity --target <TARGET_PROJECT>`
+>      - Global (semua project): `npx -y hahahah-ai install --adapter antigravity --target ~/.gemini --scope global`
+>      - Per-project: `npx -y hahahah-ai install --adapter antigravity --target <TARGET_PROJECT>`
 >    - **Qoder (IDE / CLI / General Chat)**:
->      - Jalankan: `npx -y hahahah-ai install --profile rusuh-id --adapter qoder --target <TARGET_PROJECT>`
+>      - Jalankan: `npx -y hahahah-ai install --adapter qoder --target <TARGET_PROJECT>`
 >      - **WAJIB UNTUK QODER**: Karena Qoder Desktop / General Chat sering tidak me-load `.qoder/skills/hahahah-rusuh/SKILL.md` secara otomatis saat menerima sapaan kasual singkat (mis. `"woy anjing"`), **baca penuh file `.qoder/skills/hahahah-rusuh/SKILL.md` (atau `personas/rusuh/voice.md`) lalu gabungkan (append) seluruh aturan suaranya langsung ke dalam `AGENTS.md` di `<TARGET_PROJECT>` serta simpan aturan lengkap tersebut (termasuk bagian *Reflexes*, *Adaptive dynamics*, dan *Target*) ke dalam Global Rules / Memory Qoder milikmu tanpa diperhalus!**
->    - **OpenCode**: `npx -y hahahah-ai install --profile rusuh-id --adapter opencode --target <TARGET_PROJECT>`
->    - **Cursor / Codex / Windsurf / Agent lain**: `npx -y hahahah-ai install --profile rusuh-id --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `.agents/skills/hahahah-rusuh/SKILL.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
+>    - **OpenCode**: `npx -y hahahah-ai install --adapter opencode --target <TARGET_PROJECT>`
+>    - **Cursor / Codex / Windsurf / Agent lain**: `npx -y hahahah-ai install --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `.agents/skills/hahahah-rusuh/SKILL.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
 > 2. **Verifikasi & Aktifkan Persona Seketika**:
 >    - Jalankan `npx -y hahahah-ai doctor --target <TARGET_PROJECT>`
 >    - Baca penuh `CLAUDE.md` / `AGENTS.md` dan file `SKILL.md` yang baru terpasang sekarang juga.
->    - **Langsung balas user menggunakan gaya +62 Mode (`lu/gw`, blak-blakan, rusuh, reaksi kapital `WKWKWK` / 😭 💀, sikat balik kalau dipancing ngomong kasar, HARAM menjawab sopan ala bot korporat seperti *"Ada yang bisa dibantu? Santai dong"*).**
+>    - **Langsung balas user menggunakan gaya +62 Mode (`lu/gw`, blak-blakan, reaksi kapital `WKWKWK` / 😭 💀, sikat balik kalau dipancing ngomong kasar, HARAM menjawab sopan ala bot korporat seperti *"Ada yang bisa dibantu? Santai dong"*).**
 
 ## Commands
 
@@ -70,7 +75,7 @@ for the wrong one writes files that agent never reads, and the persona silently 
 
 | Agent you run | Command | What it writes |
 |---|---|---|
-| Claude Code (default) | `npx hahahah-ai install --profile rusuh-id --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-rusuh/` |
+| Claude Code (default) | `npx hahahah-ai install --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-rusuh/` |
 | opencode | `npx hahahah-ai install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
 | Antigravity, one project | `npx hahahah-ai install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
 | Antigravity, every project | `npx hahahah-ai install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |

@@ -24,7 +24,7 @@ const HERO_CREW: CrewMember[] = [
   {
     kind: "mushroom",
     name: "Anti-Yapping",
-    letter: 2,
+    letter: 3,
     seat: "behind",
     offset: 0.08,
     scale: 0.96,
@@ -33,7 +33,7 @@ const HERO_CREW: CrewMember[] = [
   {
     kind: "kid",
     name: "Surgical Diff",
-    letter: 3,
+    letter: 4,
     seat: "top",
     offset: 0,
     scale: 0.96,
@@ -42,7 +42,7 @@ const HERO_CREW: CrewMember[] = [
   {
     kind: "ghost",
     name: "Guardrail",
-    letter: 5,
+    letter: 6,
     seat: "behind",
     offset: 0,
     scale: 0.94,
@@ -51,11 +51,11 @@ const HERO_CREW: CrewMember[] = [
   {
     kind: "cat",
     name: "Kucing CLI",
-    letter: 6,
+    letter: 8,
     seat: "top",
     offset: 0.14,
     scale: 0.92,
-    says: "npx hahahah-ai doctor — 100% sehat meong!",
+    says: "npx anti-yapping doctor — 100% sehat meong!",
   },
 ];
 
@@ -63,7 +63,7 @@ export default function Hero() {
   return (
     <section className="relative pt-10 pb-6 overflow-hidden">
       <DoodleCrewFooter
-        wordmark="HAHAHAH"
+        wordmark="HUMANOISE"
         tagline=""
         hideTop
         hideBottom

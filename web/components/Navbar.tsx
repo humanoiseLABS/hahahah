@@ -69,7 +69,7 @@ export default function Navbar() {
             </svg>
           </span>
           <span className="font-extrabold tracking-tight text-xl text-[#0d0d0d]">
-            hahahah
+            humanoise
           </span>
           <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ffd23f] text-[#0d0d0d] border-2 border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] -rotate-2">
             v3.0
@@ -79,7 +79,7 @@ export default function Navbar() {
         {/* Navigation Links with Hand-drawn Squiggle */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-[#0d0d0d]/70">
           <a href="#integrations" className="relative group hover:text-[#0d0d0d] transition-colors py-1">
-            <span>Pilih Persona</span>
+            <span>Pilih Mode</span>
             <Squiggle />
           </a>
           <a href="#tutorial" className="relative group hover:text-[#0d0d0d] transition-colors py-1">

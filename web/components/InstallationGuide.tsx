@@ -120,12 +120,12 @@ export default function InstallationGuide({
             Opsi Sat-Set &bull; Suruh AI Pasang Otomatis (via NPX / ZIP)
           </span>
           <a
-            href="https://www.npmjs.com/package/hahahah-ai"
+            href={`https://www.npmjs.com/package/${packageName}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs font-mono font-bold underline text-[#0d0d0d] hover:text-[#ff6b2c]"
           >
-            Cek Paket di NPM &rarr;
+            Cek Paket ({packageName}) di NPM &rarr;
           </a>
         </div>
         <p className="text-xs sm:text-sm text-[#3a3a3a] mb-3 leading-relaxed">
@@ -245,7 +245,7 @@ export default function InstallationGuide({
             </span>
           </div>
           <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">
-            npx hahahah-ai update --target .
+            npx {packageName} update --target .
           </code>
         </div>
 
@@ -255,11 +255,11 @@ export default function InstallationGuide({
               Mau Bersih-Bersih / Uninstall?
             </span>
             <span className="text-[#525252] text-xs leading-relaxed block">
-              Bosen atau mau balikin ke awal? Jalankan uninstall. Cuma file HAHahah yang dicabut, kodingan asli lu dijamin aman tanpa lecet.
+              Bosen atau mau balikin ke awal? Jalankan uninstall. Cuma blok &amp; file {selectedPersona.name} yang dicabut, kodingan asli lu dijamin aman tanpa lecet.
             </span>
           </div>
           <code className="bg-[#141414] px-3.5 py-2.5 rounded-lg text-[#ffd23f] border-2 border-[#0d0d0d] block overflow-x-auto">
-            npx hahahah-ai uninstall --target .
+            npx {packageName} uninstall --target .
           </code>
         </div>
       </div>

@@ -25,26 +25,26 @@ export interface AgentOption {
 
 export const PERSONAS: PersonaOption[] = [
   {
-    id: "rusuh-id",
-    name: "+62 Mode",
-    code: "+62",
-    badge: "Bloko Suto",
-    tagline: "To-the-point, langsung ke baris bug, zero basa-basi korporat.",
-    tone: "Indonesian informal, cepat, langsung ke baris kode yang rusak.",
-    samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
-    sampleReply:
-      "Ya jelas error, kamu memanggil user.profile.name padahal saat fetch awal datanya masih null. Tambahkan optional chaining user?.profile?.name atau sediakan fallback default object.",
-  },
-  {
     id: "anti-yapping",
     name: "Anti-Yapping",
-    code: "terse",
-    badge: "Hemat Ekstrem",
-    tagline: "Jawaban telegrafis, Ponytail surgical diffs, zero ceremonial boilerplate.",
-    tone: "Gaya +62 super ringkas, irit token, kode langsung to-the-point tanpa basa-basi.",
+    code: "anti-yap",
+    badge: "Surgical Diffs • Hemat Token",
+    tagline: "Jawaban telegrafis di baris 1, Ponytail surgical diffs (anti dump 1 file utuh), hemat token output hingga 80%.",
+    tone: "Gaya +62 super ringkas, irit token, hanya kirim baris kode yang berubah.",
     samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
     sampleReply:
       "user.profile masih null pas fetch awal. Ganti jadi user?.profile?.name atau kasih fallback default {}.",
+  },
+  {
+    id: "rusuh-id",
+    name: "+62 Mode",
+    code: "+62",
+    badge: "Bloko Suto • Partner Lokal",
+    tagline: "Gaya rekan satu tim lokal +62 yang blak-blakan, langsung ke baris bug, lengkap dengan kamus budaya & safety guardrails.",
+    tone: "Indonesian informal, cepat, langsung ke baris kode yang rusak tanpa basa-basi korporat.",
+    samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
+    sampleReply:
+      "Ya jelas error, kamu memanggil user.profile.name padahal saat fetch awal datanya masih null. Tambahkan optional chaining user?.profile?.name atau sediakan fallback default object.",
   },
 ];
 
@@ -179,10 +179,10 @@ export default function Configurator({
           01 &bull; Konfigurasi Santai
         </span>
         <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[#0d0d0d] sketch-display">
-          Pilih Persona &amp; Coding Harness
+          Pilih Mode &amp; Coding Harness
         </h2>
         <p className="text-sm sm:text-base text-[#525252] mt-1.5 max-w-xl">
-          Tinggal 2 step simpel: pilih gaya persona yang lu suka, terus tentuin coding harness yang lu pake.
+          Tinggal 2 step simpel: pilih mode HUMANOISE yang lu butuhin (<strong>Anti-Yapping</strong> atau <strong>+62 Mode</strong>), terus tentuin coding harness yang lu pake.
         </p>
       </div>
 
@@ -202,7 +202,7 @@ export default function Configurator({
                   : "bg-transparent text-[#525252] hover:text-[#0d0d0d] font-bold"
               }`}
             >
-              <span className="truncate">1. Pilih Persona</span>
+              <span className="truncate">1. Pilih Mode</span>
               {selectedPersona && (
                 <span className="ml-1.5 px-1.5 py-0.5 rounded bg-[#0d0d0d] text-[#ffd23f] text-[10px] font-bold shrink-0">
                   {selectedPersona.code.toUpperCase()}
@@ -228,12 +228,12 @@ export default function Configurator({
             </button>
           </div>
 
-          {/* FASE 1: Pilih Personalitas (Disusun ke Bawah) */}
+          {/* FASE 1: Pilih Mode (Disusun ke Bawah) */}
           {activeStep === 1 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
                 <span className="text-xs font-mono font-bold text-[#0d0d0d] uppercase tracking-wider">
-                  Step 1 &bull; Pilih Gaya Persona
+                  Step 1 &bull; Pilih Mode HUMANOISE
                 </span>
                 <span className="text-[11px] font-mono text-[#737373]">
                   Klik buat lanjut &rarr;
