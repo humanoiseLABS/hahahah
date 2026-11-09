@@ -7,12 +7,12 @@ const HUMANOISE_FAQS = [
   {
     question: "Apa bedanya HUMANOISE, Anti-Yapping, dan +62 Mode?",
     answer:
-      "HUMANOISE (humanoiseLABS) adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) Anti-Yapping (`npx anti-yapping install`) buat jawaban telegrafis di baris pertama + Ponytail surgical diffs biar AI ga nge-dump satu file utuh & hemat token output, dan (2) +62 Mode (`npx hahahah-ai install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara.",
+      "HUMANOISE (humanoiseLABS) adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) Anti-Yapping (`npx anti-yapping install`) buat jawaban telegrafis di baris pertama + surgical diffs biar AI ga nge-dump satu file utuh & hemat token output, dan (2) +62 Mode (`npx hahahah-ai install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara.",
   },
   {
     question: "Gimana efeknya ke konsumsi token & biaya API?",
     answer:
-      "Kita blak-blakan ya: blok instruksi always-on cuma makan ~517 token (Anti-Yapping) atau ~538 token (+62 Mode). Khusus Anti-Yapping, aturan Ponytail surgical diffs maksa AI cuma nulis baris yang diedit (+2 baris konteks), jadi output token pas edit file gede bisa hemat drastis dan ga bikin limit cepet jebol.",
+      "Kita blak-blakan ya: blok instruksi always-on cuma makan ~517 token (Anti-Yapping) atau ~538 token (+62 Mode). Khusus Anti-Yapping, aturan surgical diffs maksa AI cuma nulis baris yang diedit (+2 baris konteks), jadi output token pas edit file gede bisa hemat drastis dan ga bikin limit cepet jebol.",
   },
   {
     question: "Aman ga dari serangan prompt injection atau jailbreak?",

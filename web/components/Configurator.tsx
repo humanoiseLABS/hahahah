@@ -29,7 +29,7 @@ export const PERSONAS: PersonaOption[] = [
     name: "Anti-Yapping",
     code: "anti-yap",
     badge: "Surgical Diffs • Hemat Token",
-    tagline: "Jawaban telegrafis di baris 1, Ponytail surgical diffs (anti dump 1 file utuh), hemat token output hingga 80%.",
+    tagline: "Jawaban telegrafis di baris 1, surgical diffs (anti dump 1 file utuh), hemat token output hingga 80%.",
     tone: "Flat & telegrafis: tanpa sapaan, tanpa emoji, hanya kirim baris kode yang berubah.",
     samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
     sampleReply:

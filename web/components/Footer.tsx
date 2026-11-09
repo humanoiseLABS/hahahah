@@ -28,7 +28,7 @@ const HUMANOISE_CREW: CrewMember[] = [
     seat: "front",
     offset: 0.14,
     scale: 0.95,
-    says: "Ponytail surgical diffs: to the point & hemat token!",
+    says: "Surgical diffs: to the point & hemat token!",
   },
   {
     kind: "kid",

@@ -5,7 +5,7 @@
 | Mode | Package / Repo | Focus | Install Command |
 |---|---|---|---|
 | **+62 Mode** *(this repo)* | [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai) ([`humanoiseLABS/hahahah`](https://github.com/humanoiseLABS/hahahah)) | **Partner Ngoding Lokal (+62 Bloko Suto)** — Bahasa Indonesia developer slang (`lu/gw`), zero corporate preamble, suppresses leaked reasoning dumps, cultural lexicon, & Risk Class 0–4 safety guardrails. | `npx hahahah-ai install` |
-| **Anti-Yapping** *(companion repo)* | [`anti-yapping`](https://www.npmjs.com/package/anti-yapping) ([`humanoiseLABS/anti-yapping`](https://github.com/humanoiseLABS/anti-yapping)) | **Surgical Diffs & Extreme Token Savings** — Telegraphic answers on line 1, Ponytail surgical diffs (never dumps entire files for small edits), ~517-token always-on footprint. | `npx anti-yapping install` |
+| **Anti-Yapping** *(companion repo)* | [`anti-yapping`](https://www.npmjs.com/package/anti-yapping) ([`humanoiseLABS/anti-yapping`](https://github.com/humanoiseLABS/anti-yapping)) | **Surgical Diffs & Extreme Token Savings** — Telegraphic answers on line 1, surgical diffs (never dumps entire files for small edits), ~517-token always-on footprint. | `npx anti-yapping install` |
 
 *(Note: Internally in this repository, **+62 Mode** uses the canonical profile ID `rusuh-id`, which is enabled by default so you never need to pass `--profile` manually. Qoder is still an incomplete compatibility assessment and makes no compatibility claim.)*
 
