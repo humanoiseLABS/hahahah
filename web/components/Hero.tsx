@@ -8,8 +8,8 @@ const HERO_CREW: CrewMember[] = [
     name: "Si +62",
     letter: 0,
     seat: "front",
-    offset: -0.34,
-    scale: 1.05,
+    offset: -0.32,
+    scale: 1.02,
     says: "Langsung ke baris bug-nya, jangan basa-basi!",
   },
   {
@@ -17,23 +17,23 @@ const HERO_CREW: CrewMember[] = [
     name: "Si Cepat",
     letter: 1,
     seat: "top",
-    offset: -0.02,
-    scale: 0.9,
+    offset: -0.31,
+    scale: 0.92,
     says: "-51.2% teks di layar, hemat scroll!",
   },
   {
     kind: "mushroom",
     name: "Anti-Yapping",
-    letter: 3,
-    seat: "behind",
-    offset: 0.08,
-    scale: 0.96,
+    letter: 2,
+    seat: "front",
+    offset: 0.14,
+    scale: 0.95,
     says: "Ponytail surgical diffs: to the point & hemat token!",
   },
   {
     kind: "kid",
     name: "Surgical Diff",
-    letter: 4,
+    letter: 5,
     seat: "top",
     offset: 0,
     scale: 0.96,
@@ -42,7 +42,7 @@ const HERO_CREW: CrewMember[] = [
   {
     kind: "ghost",
     name: "Guardrail",
-    letter: 6,
+    letter: 7,
     seat: "behind",
     offset: 0,
     scale: 0.94,
@@ -52,16 +52,17 @@ const HERO_CREW: CrewMember[] = [
     kind: "cat",
     name: "Kucing CLI",
     letter: 8,
-    seat: "top",
-    offset: 0.14,
-    scale: 0.92,
+    seat: "front",
+    offset: 0.42,
+    flip: true,
+    scale: 0.96,
     says: "npx anti-yapping doctor — 100% sehat meong!",
   },
 ];
 
 export default function Hero() {
   return (
-    <section className="relative pt-10 pb-6 overflow-hidden">
+    <section className="relative pt-12 pb-20 sm:pb-28 overflow-hidden">
       <DoodleCrewFooter
         wordmark="HUMANOISE"
         tagline=""
@@ -69,6 +70,7 @@ export default function Hero() {
         hideBottom
         height="auto"
         preset="paper"
+        doodleCount={8}
         crew={HERO_CREW}
         actions={[
           {
@@ -93,7 +95,7 @@ export default function Hero() {
       />
 
       {/* GitHub Lab Exploration Teaser */}
-      <div className="max-w-[1280px] mx-auto px-6 -mt-3 pb-2 flex justify-center relative z-10">
+      <div className="max-w-[1280px] mx-auto px-6 mt-2 pb-4 flex justify-center relative z-10">
         <a
           href="https://github.com/humanoiseLABS"
           target="_blank"

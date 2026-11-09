@@ -1318,7 +1318,7 @@ const CSS =
   ".dcf-bubble.is-left{transform:translate(-88%,-100%) rotate(2deg);transform-origin:88% 100%}" +
   ".dcf-bubble.is-left::after{left:88%}" +
   // doodles
-  ".dcf-doodles{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}" +
+  ".dcf-doodles{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 88%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 88%,transparent 100%)}" +
   ".dcf-doodle{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;will-change:transform;touch-action:manipulation}" +
   ".dcf-doodle-in{display:block;width:100%;height:100%}" +
   ".dcf[data-interactive='0'] .dcf-doodle{pointer-events:none}" +

@@ -171,7 +171,7 @@ export default function Configurator({
   };
 
   return (
-    <section id="integrations" className="py-20 px-6 max-w-5xl mx-auto sketch-divider">
+    <section id="integrations" className="pt-24 pb-24 sm:pt-32 sm:pb-28 mt-6 px-6 max-w-5xl mx-auto sketch-divider">
       
       {/* Section Header */}
       <div className="mb-10">
