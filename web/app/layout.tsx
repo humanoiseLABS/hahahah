@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | HUMANOISE Labs",
   },
   description:
-    "Dua senjata AI coding agent dari HUMANOISE Labs: Anti-Yapping (surgical diffs & hemat token 80%) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi). Mendukung Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
+    "Dua senjata AI coding agent dari HUMANOISE Labs: Anti-Yapping (surgical diffs & hemat output token hingga 80%) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi). Mendukung Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
   keywords: [
     "HUMANOISE",
     "humanoiseLABS",
