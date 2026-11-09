@@ -5,3 +5,6 @@ out/
 *.tsbuildinfo
 next-env.d.ts
 deploy-payload.json
+
+.vercel
+.env*
