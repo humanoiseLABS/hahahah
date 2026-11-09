@@ -26,7 +26,8 @@ npx hahahah-ai install --adapter opencode --target .
 # Cursor / Codex / Windsurf (AGENTS.md)
 npx hahahah-ai install --adapter agents-md --target .
 
-# Qoder
+# Qoder (global untuk semua project & sesi lama/baru, atau per-project)
+npx hahahah-ai install --adapter qoder --scope global
 npx hahahah-ai install --adapter qoder --target .
 
 # GitHub Copilot

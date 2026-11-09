@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { readFileSync, readdirSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -88,8 +89,9 @@ Usage:
 Which --adapter to pass, by the agent you run (install into the project you want it active in):
   Claude Code          --adapter claude-code    writes CLAUDE.md + .claude/skills/
   opencode             --adapter opencode       writes AGENTS.md + .claude/skills/ (opencode reads that tree)
-  Antigravity          --adapter antigravity    writes AGENTS.md + .agents/rules/*.md; add --scope global with --target ~/.gemini for every project
-  Cursor / Codex / Qoder CLI / anything reading AGENTS.md
+  Antigravity          --adapter antigravity    writes AGENTS.md + .agents/rules/*.md; add --scope global (defaults to ~/.gemini) for every project
+  Qoder                --adapter qoder          writes AGENTS.md + .qoder/skills/; add --scope global (defaults to ~/.qoder) for every project & session
+  Cursor / Codex / anything reading AGENTS.md
                        --adapter agents-md      writes AGENTS.md + .agents/skills/
 Omitting --adapter installs for Claude Code. Uninstall needs only --target; the manifest remembers the rest.
 
@@ -257,11 +259,23 @@ if (isMainEntry()) {
       }
     } else if (command === 'install') {
       const scope = (parsed.values.scope ?? 'workspace') as 'workspace' | 'global';
+      const adapterId = parsed.values.adapter ?? 'claude-code';
+      const hasExplicitTarget = process.argv.some(
+        (arg) => arg === '--target' || arg.startsWith('--target='),
+      );
+      const defaultGlobalTarget =
+        adapterId === 'qoder'
+          ? join(homedir(), '.qoder')
+          : adapterId === 'antigravity'
+            ? join(homedir(), '.gemini')
+            : parsed.values.target;
+      const targetRoot =
+        scope === 'global' && !hasExplicitTarget ? defaultGlobalTarget : parsed.values.target;
       const result = install({
         sourceRoot: packageRoot,
-        targetRoot: parsed.values.target,
+        targetRoot,
         profileId,
-        adapterId: parsed.values.adapter ?? 'claude-code',
+        adapterId,
         scope,
         dryRun: parsed.values['dry-run'],
         force: parsed.values.force,

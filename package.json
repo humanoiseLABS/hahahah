@@ -1,8 +1,8 @@
 {
   "name": "hahahah-ai",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "MIT",
-  "description": "HAHahah personality and efficiency layer for existing coding agents",
+  "description": "HUMANOISE +62 Mode: Indonesian developer persona and guardrail layer for AI coding agents",
   "type": "module",
   "bin": {
     "hahahah": "dist/cli.js",

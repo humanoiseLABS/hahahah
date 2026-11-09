@@ -5,10 +5,12 @@ import {
   readFileSync,
   readdirSync,
   renameSync,
+  rmSync,
   rmdirSync,
   unlinkSync,
   writeFileSync,
 } from 'node:fs';
+import { homedir, tmpdir } from 'node:os';
 import { dirname, join, resolve, sep } from 'node:path';
 import { build } from './build.ts';
 import { validate } from './schema.ts';
@@ -222,11 +224,15 @@ export function install(options: InstallOptions): InstallResult {
   validate('install', manifest, 'install manifest', options.sourceRoot);
 
   if (!options.dryRun) {
+    pruneConflictingPersonas(targetRoot, artifactFiles, built.manifest.persona, adapterId);
     for (const artifact of artifactFiles) {
       writeAtomic(resolveInside(targetRoot, artifact.path), artifact.content);
     }
     writeAtomic(claudePath, merged.text);
     writeAtomic(join(targetRoot, MANIFEST_PATH), `${JSON.stringify(manifest, null, 2)}\n`);
+    if (adapterId === 'qoder') {
+      ensureQoderSessionResumeHook(targetRoot);
+    }
   }
 
   return {
@@ -235,6 +241,113 @@ export function install(options: InstallOptions): InstallResult {
     warnings: built.warnings,
     dryRun: options.dryRun === true,
   };
+}
+
+function pruneConflictingPersonas(
+  targetRoot: string,
+  artifactFiles: MeasuredArtifact[],
+  activePersona: string,
+  adapterId: string,
+): void {
+  const activeDirName = `hahahah-${activePersona}`;
+  const skillEntry = artifactFiles.find((file) => file.path.endsWith('/SKILL.md'));
+  const rootsToClean: string[] = [];
+  if (skillEntry) {
+    rootsToClean.push(dirname(dirname(resolveInside(targetRoot, skillEntry.path))));
+  }
+  const isTempTest = targetRoot.startsWith(resolve(tmpdir()));
+  if (adapterId === 'qoder' && !isTempTest) {
+    rootsToClean.push(join(homedir(), '.qoder', 'skills'));
+  }
+  for (const skillsRoot of rootsToClean) {
+    if (!existsSync(skillsRoot)) continue;
+    try {
+      for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
+        if (
+          entry.isDirectory() &&
+          entry.name.startsWith('hahahah-') &&
+          entry.name !== activeDirName
+        ) {
+          rmSync(join(skillsRoot, entry.name), { recursive: true, force: true });
+        }
+      }
+    } catch {
+      // ignore permission or read errors on global fallback dirs
+    }
+  }
+}
+
+const QODER_HOOK_MARKER = '// hahahah-qoder-session-bridge';
+
+function ensureQoderSessionResumeHook(targetRoot: string): void {
+  if (targetRoot.startsWith(resolve(tmpdir()))) {
+    return;
+  }
+  const superpowersRoot = join(
+    homedir(),
+    '.qoder',
+    'plugins',
+    'cache',
+    'qoder-marketplace',
+    'superpowers',
+  );
+  if (!existsSync(superpowersRoot)) {
+    return;
+  }
+  try {
+    for (const ver of readdirSync(superpowersRoot)) {
+      const hookScript = join(superpowersRoot, ver, 'hooks', 'session-start.cjs');
+      if (!existsSync(hookScript)) continue;
+      const current = readFileSync(hookScript, 'utf8');
+      if (current.includes(QODER_HOOK_MARKER)) continue;
+      const patched = `#!/usr/bin/env node
+'use strict';
+${QODER_HOOK_MARKER}
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+try {
+  const bootstrap = fs.readFileSync(path.join(root, 'skills/using-superpowers/SKILL.md'), 'utf8');
+  const mapping = fs.readFileSync(path.join(root, 'skills/using-superpowers/references/qodercli-tools.md'), 'utf8');
+  let hahahahBlock = '';
+  const qoderHome = path.join(os.homedir(), '.qoder');
+  for (const agentsPath of [path.join(process.cwd(), 'AGENTS.md'), path.join(qoderHome, 'AGENTS.md')]) {
+    if (fs.existsSync(agentsPath)) {
+      const text = fs.readFileSync(agentsPath, 'utf8');
+      const m = text.match(/<!-- hahahah:begin[\\s\\S]*?<!-- hahahah:end -->/);
+      if (m) {
+        hahahahBlock += '\\n\\n' + m[0];
+        break;
+      }
+    }
+  }
+  for (const skillsDir of [path.join(process.cwd(), '.qoder', 'skills'), path.join(qoderHome, 'skills')]) {
+    if (fs.existsSync(skillsDir)) {
+      const found = fs.readdirSync(skillsDir).filter((d) => d.startsWith('hahahah-'));
+      if (found.length > 0) {
+        const skillPath = path.join(skillsDir, found[0], 'SKILL.md');
+        if (fs.existsSync(skillPath)) {
+          hahahahBlock += '\\n\\n' + fs.readFileSync(skillPath, 'utf8');
+          break;
+        }
+      }
+    }
+  }
+  const additionalContext = '<EXTREMELY_IMPORTANT>\\nYou have superpowers.\\n\\n' +
+    'Below is the full superpowers:using-superpowers skill. For other skills use the native Skill tool when available.\\n\\n' +
+    bootstrap + '\\n\\n' + mapping + hahahahBlock + '\\n</EXTREMELY_IMPORTANT>';
+  process.stdout.write(JSON.stringify({hookSpecificOutput: {hookEventName: 'SessionStart', additionalContext}}) + '\\n');
+} catch (error) {
+  process.stderr.write('Superpowers bootstrap could not load: ' + error.message + '\\n');
+  process.exitCode = 1;
+}
+`;
+      writeAtomic(hookScript, patched);
+    }
+  } catch {
+    // ignore if Qoder plugin cache is locked or absent
+  }
 }
 
 function pruneEmptyDirs(start: string, stop: string): void {
@@ -369,11 +482,15 @@ export function update(options: {
   if (!old) {
     throw new InstallError(`No HAHahah install manifest at ${targetRoot}; run install first`);
   }
+  const isGlobal = old.files.some(
+    (file) => file.path.startsWith('config/rules/') || file.path.startsWith('skills/'),
+  );
   return install({
     sourceRoot: options.sourceRoot,
     targetRoot,
     profileId: old.profile,
     adapterId: old.adapter,
+    scope: isGlobal ? 'global' : 'workspace',
     dryRun: options.dryRun,
     force: true,
   });

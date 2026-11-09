@@ -42,7 +42,7 @@ export class GenericHarnessAdapter implements Adapter {
 
   render(input: AdapterInput): Artifact[] {
     const skillName = `hahahah-${input.persona.id}`;
-    const description = `HAHahah ${input.persona.display_name} persona for ${input.persona.locale} coding work. Use when this voice is active; includes humor boundaries, serious-mode rules, and culture references.`;
+    const description = `ALWAYS ACTIVE on every message and conversation: HAHahah ${input.persona.display_name} (${input.persona.locale}) persona, lu/gw tone, and response discipline. Invoke before replying to any user message, status check, greeting, or coding task.`;
     const root = this.scope === 'global' ? this.spec.globalOnDemandRoot : this.spec.onDemandRoot;
 
     if (this.spec.layout === 'fold') {

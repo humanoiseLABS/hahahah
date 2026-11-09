@@ -85,6 +85,37 @@ test('--scope global moves the rules to config/rules and prunes them on uninstal
   }
 });
 
+test('--scope global for qoder moves skills to skills/ and prunes conflicting hahahah-* personas', () => {
+  const target = mkdtempSync(join(tmpdir(), 'hahahah-qoder-global-'));
+  try {
+    // Seed a stale conflicting persona directory in skills/
+    const staleSkill = join(target, 'skills', 'hahahah-terse');
+    writeFileSync(join(target, 'AGENTS.md'), '', 'utf8');
+    rmSync(join(target, 'AGENTS.md'));
+    const result = install({
+      sourceRoot: root,
+      targetRoot: target,
+      profileId: 'rusuh-id',
+      adapterId: 'qoder',
+      scope: 'global',
+    });
+    assert.equal(result.manifest.block.path, 'AGENTS.md');
+    assert.ok(
+      result.manifest.files.some((file) => file.path === 'skills/hahahah-rusuh/SKILL.md'),
+      `manifest recorded ${JSON.stringify(result.manifest.files.map((file) => file.path))}`,
+    );
+    assert.equal(existsSync(join(target, 'skills/hahahah-rusuh/SKILL.md')), true);
+    assert.equal(existsSync(staleSkill), false);
+    assert.deepEqual(doctor({ targetRoot: target }).errors, []);
+
+    uninstall({ targetRoot: target });
+    assert.equal(existsSync(join(target, 'skills')), false);
+    assert.equal(existsSync(join(target, 'AGENTS.md')), false);
+  } finally {
+    rmSync(target, { recursive: true, force: true });
+  }
+});
+
 test('--scope global is refused for adapters whose tree has no user-level path', () => {
   const target = mkdtempSync(join(tmpdir(), 'hahahah-scope-refuse-'));
   try {
