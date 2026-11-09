@@ -44,7 +44,7 @@ export const PERSONAS: PersonaOption[] = [
     tone: "Indonesian informal, cepat, langsung ke baris kode yang rusak tanpa basa-basi korporat.",
     samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
     sampleReply:
-      "Ya jelas error, kamu memanggil user.profile.name padahal saat fetch awal datanya masih null. Tambahkan optional chaining user?.profile?.name atau sediakan fallback default object.",
+      "Ya jelas error anjir 😭 lu manggil user.profile.name padahal pas fetch awal datanya masih null. Kasih optional chaining user?.profile?.name atau sediakan fallback default {}.",
   },
 ];
 
