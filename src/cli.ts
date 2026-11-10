@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, realpathSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -175,7 +175,13 @@ function formatReport(result: ReturnType<typeof build>): string {
 function isMainEntry(): boolean {
   const invoked = process.argv[1];
   if (!invoked) return false;
-  return fileURLToPath(import.meta.url) === resolve(invoked);
+  try {
+    const metaPath = realpathSync(fileURLToPath(import.meta.url)).toLowerCase();
+    const invokedPath = realpathSync(resolve(invoked)).toLowerCase();
+    return metaPath === invokedPath;
+  } catch {
+    return fileURLToPath(import.meta.url).toLowerCase() === resolve(invoked).toLowerCase();
+  }
 }
 
 const packageRoot = resolve(fileURLToPath(import.meta.url), '..', '..');
