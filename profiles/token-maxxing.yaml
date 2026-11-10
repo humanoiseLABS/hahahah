@@ -1,0 +1,20 @@
+schema: hahahah.profile/v1
+id: token-maxxing
+persona: terse
+locale: id
+intensity: high
+core: '>=0.1.0 <0.2.0'
+budget_profile: default-id
+adapters:
+  - fake
+  - claude-code
+  - opencode
+  - agents-md
+  - antigravity
+  - qoder
+  - copilot
+budgets:
+  always_on_tokens: 580
+  skill_metadata_tokens: 90
+  skill_body_tokens: 1200
+  reference_tokens_max: 2500

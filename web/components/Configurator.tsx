@@ -25,11 +25,11 @@ export interface AgentOption {
 
 export const PERSONAS: PersonaOption[] = [
   {
-    id: "anti-yapping",
-    name: "Anti-Yapping",
-    code: "anti-yap",
-    badge: "Smart Surgical • 3D Second Brain",
-    tagline: "Jawaban telegrafis baris 1, Smart Surgical diffs AST, 3D Second Brain live visualizer, dan pangkas context token hingga 80%.",
+    id: "token-maxxing",
+    name: "Token-Maxxing",
+    code: "tmx",
+    badge: "Second Brain • Smart Surgical • 3D HUD",
+    tagline: "Stop yapping, start token-maxxing. Second Brain memory, Smart Surgical diffs, live 3D neural visualizer, dan pangkas token hingga 80%.",
     tone: "Flat & telegrafis: tanpa basa-basi, surgical diffs presisi AST, dan live 3D neural telemetry.",
     samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
     sampleReply:
@@ -182,7 +182,7 @@ export default function Configurator({
           Pilih Mode &amp; Coding Harness
         </h2>
         <p className="text-sm sm:text-base text-[#525252] mt-1.5 max-w-xl">
-          Tinggal 2 step simpel: pilih mode HUMANOISE yang lu butuhin (<strong>Anti-Yapping</strong> atau <strong>+62 Mode</strong>), terus tentuin coding harness yang lu pake.
+          Tinggal 2 step simpel: pilih mode HUMANOISE yang lu butuhin (<strong>Token-Maxxing</strong> atau <strong>+62 Mode</strong>), terus tentuin coding harness yang lu pake.
         </p>
       </div>
 
@@ -396,15 +396,15 @@ export default function Configurator({
                   <div className="flex items-center gap-3">
                     <a
                       href={
-                        selectedPersona.id === "anti-yapping"
-                          ? "https://github.com/humanoiseLABS/anti-yapping"
+                        selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping"
+                          ? "https://github.com/humanoiseLABS/token-maxxing"
                           : "https://github.com/humanoiseLABS/hahahah"
                       }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#0d0d0d] font-bold hover:text-[#ff6b2c] underline flex items-center gap-1"
                     >
-                      <span>Repo ({selectedPersona.id === "anti-yapping" ? "anti-yapping" : "hahahah"})</span>
+                      <span>Repo ({selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping" ? "token-maxxing" : "hahahah"})</span>
                       <ArrowRight className="w-3 h-3" />
                     </a>
                     <a href="#tutorial" className="text-[#ff6b2c] font-bold hover:underline flex items-center gap-1">

@@ -23,12 +23,12 @@ const HUMANOISE_CREW: CrewMember[] = [
   },
   {
     kind: "mushroom",
-    name: "Anti-Yapping",
+    name: "Token-Maxxing",
     letter: 2,
     seat: "front",
     offset: 0.14,
     scale: 0.95,
-    says: "Surgical diffs: to the point & hemat token!",
+    says: "Stop yapping, start token-maxxing! Hemat 80% token!",
   },
   {
     kind: "kid",
@@ -37,7 +37,7 @@ const HUMANOISE_CREW: CrewMember[] = [
     seat: "top",
     offset: 0,
     scale: 0.96,
-    says: "Zero ceremonial boilerplate, anti-yapping full!",
+    says: "Second Brain + Surgical Diff: zero token waste!",
   },
   {
     kind: "ghost",
@@ -56,7 +56,7 @@ const HUMANOISE_CREW: CrewMember[] = [
     offset: 0.42,
     flip: true,
     scale: 0.96,
-    says: "npx anti-yapping doctor — 100% sehat meong!",
+    says: "npx token-maxxing doctor — 100% sehat meong!",
   },
 ];
 
@@ -66,15 +66,15 @@ export default function Footer() {
       <DoodleCrewFooter
         wordmark="HUMANOISE"
         brand="humanoise"
-        blurb="Lab eksperimen instruksi & guardrails untuk AI coding agent: Anti-Yapping (surgical diffs & hemat token ekstrem) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi)."
-        tagline="Bikin coding agent lu berhenti yapping dan langsung ke inti kode."
+        blurb="Lab eksperimen instruksi & guardrails untuk AI coding agent: Token-Maxxing (Second Brain, surgical diffs & hemat token ekstrem) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi)."
+        tagline="Stop yapping, start token-maxxing. Min-max your AI coding context."
         preset="paper"
         crew={HUMANOISE_CREW}
         columns={[
           {
             title: "Mode & Produk",
             links: [
-              { label: "Anti-Yapping (Surgical Diffs)", href: "https://github.com/humanoiseLABS/anti-yapping" },
+              { label: "Token-Maxxing (Second Brain)", href: "https://github.com/humanoiseLABS/token-maxxing" },
               { label: "+62 Mode (Bloko Suto)", href: "https://github.com/humanoiseLABS/hahahah" },
               { label: "Pilih Mode & Harness", href: "#integrations" },
             ],
@@ -109,8 +109,8 @@ export default function Footer() {
         ]}
         actions={[
           {
-            label: "Repo Anti-Yapping",
-            href: "https://github.com/humanoiseLABS/anti-yapping",
+            label: "Repo Token-Maxxing",
+            href: "https://github.com/humanoiseLABS/token-maxxing",
             icon: "flame",
             variant: "outline",
           },
@@ -127,7 +127,7 @@ export default function Footer() {
           { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },
         ]}
         socials={[
-          { label: "Anti-Yapping", href: "https://github.com/humanoiseLABS/anti-yapping" },
+          { label: "Token-Maxxing", href: "https://github.com/humanoiseLABS/token-maxxing" },
           { label: "+62 Mode", href: "https://github.com/humanoiseLABS/hahahah" },
         ]}
       />

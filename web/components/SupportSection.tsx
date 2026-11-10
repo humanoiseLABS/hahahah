@@ -5,14 +5,14 @@ import { FaqSection } from "@/components/ui/faq-section";
 
 const HUMANOISE_FAQS = [
   {
-    question: "Apa bedanya HUMANOISE, Anti-Yapping, dan +62 Mode?",
+    question: "Apa bedanya HUMANOISE, Token-Maxxing, dan +62 Mode?",
     answer:
-      "HUMANOISE (humanoiseLABS) adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) Anti-Yapping (`npx anti-yapping install`) buat jawaban telegrafis di baris pertama + surgical diffs biar AI ga nge-dump satu file utuh & hemat token output, dan (2) +62 Mode (`npx hahahah-ai install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara.",
+      "HUMANOISE (humanoiseLABS) adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) Token-Maxxing (`npx token-maxxing install` atau `tmx`) buat Second Brain memory, jawaban telegrafis baris pertama, 3D live visualizer, dan surgical diffs biar AI hemat token hingga 80%, dan (2) +62 Mode (`npx hahahah-ai install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara.",
   },
   {
     question: "Gimana efeknya ke konsumsi token & biaya API?",
     answer:
-      "Kita blak-blakan ya: blok instruksi always-on cuma makan ~532 token (Anti-Yapping) atau ~538 token (+62 Mode). Khusus Anti-Yapping, ada dual token saver: (1) aturan surgical diffs memangkas output token hingga 80% (cuma nulis baris yang diedit), dan (2) aturan surgical inspection + generator .agentignore otomatis memblokir file raksasa (build artifacts, keystores, lockfiles) agar context window tidak cepat penuh (hemat input token hingga 50-70%).",
+      "Kita blak-blakan ya: blok instruksi always-on cuma makan ~532 token (Token-Maxxing) atau ~538 token (+62 Mode). Khusus Token-Maxxing, ada triple token saver: (1) Second Brain memory graph memangkas input token 60-80%, (2) aturan surgical diffs memangkas output token hingga 80% (cuma nulis baris yang diedit), dan (3) generator .agentignore otomatis memblokir file raksasa (build artifacts, keystores, lockfiles) agar context window tidak cepat penuh.",
   },
   {
     question: "Aman ga dari serangan prompt injection atau jailbreak?",
@@ -22,7 +22,7 @@ const HUMANOISE_FAQS = [
   {
     question: "Bakal ngerusak file konfigurasi agent yang udah ada ga?",
     answer:
-      "Tenang, ga bakal ngerusak kodingan lu! Baik Anti-Yapping maupun +62 Mode pake format managed-block (penanda komentar khusus). Pas lu uninstall, cuma blok sama file yang kecatet di manifest yang dibersihin. Konfigurasi asli lu ga bakal disentuh.",
+      "Tenang, ga bakal ngerusak kodingan lu! Baik Token-Maxxing maupun +62 Mode pake format managed-block (penanda komentar khusus). Pas lu uninstall, cuma blok sama file yang kecatet di manifest yang dibersihin. Konfigurasi asli lu ga bakal disentuh.",
   },
 ];
 
@@ -126,7 +126,7 @@ export default function SupportSection() {
       <div className="sketch-card overflow-hidden">
         <FaqSection
           title="TANYA JAWAB (FAQ)"
-          description="Hal-hal yang sering ditanyain seputar HUMANOISE, Anti-Yapping vs +62 Mode, fakta token, sama keamanan adapter."
+          description="Hal-hal yang sering ditanyain seputar HUMANOISE, Token-Maxxing vs +62 Mode, fakta token, sama keamanan adapter."
           items={HUMANOISE_FAQS}
           contactInfo={{
             title: "Masih Ada yang Mau Ditanyain?",

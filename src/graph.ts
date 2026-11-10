@@ -288,7 +288,7 @@ Use this file to persist 1–3 lines of architectural state or pending tasks acr
 Link code nodes using \`[[path/to/file#symbol]]\` or \`file:line\`.
 
 ## Current State
-- Status: Initialized by \`anti-yapping graph\`.
+- Status: Initialized by \`token-maxxing graph\` (or \`tmx graph\`).
 - Next step: Update this bullet after completing major audits or multi-file fixes.
 `;
 
@@ -377,7 +377,7 @@ function renderInteractiveGraphHtml(
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${projectName} — Anti-Yapping Knowledge Graph (3D Neural Sphere)</title>
+<title>${projectName} — Token-Maxxing Knowledge Graph (3D Neural Sphere)</title>
 <style>
   :root {
     --bg: #000000;
@@ -701,7 +701,7 @@ function renderInteractiveGraphHtml(
 
   <div class="term-console">
     <div class="term-header">
-      <span class="term-title">── Neural Graph (Anti-Yapping Second Brain) ────────────────────────</span>
+      <span class="term-title">── Neural Graph (Token-Maxxing Second Brain) ────────────────────────</span>
       <div class="term-meta">
         <span id="telemetry-status" class="live-pill">[TELEMETRY: ● SECOND BRAIN ACTIVE]</span>
         <span id="tok-speed" style="color:#e2e8f0">[154 tok/s]</span>
@@ -711,7 +711,7 @@ function renderInteractiveGraphHtml(
     <div class="term-body">
       <div class="term-log-wrap">
         <div class="term-log" id="term-log">
-          <div class="term-welcome">> Anti-Yapping Second Brain v0.2.16 (Neural Core Active)</div>
+          <div class="term-welcome">> Token-Maxxing Second Brain v0.3.0 (Neural Core Active)</div>
         </div>
         <div class="term-input-bar">
           <span class="prompt-sym">></span>
@@ -1250,7 +1250,7 @@ function renderInteractiveGraphHtml(
     applyLaserTheme(currentThemeKey);
     selectNode(selectedNode, 'INIT');
 
-    // Real-Time SSE Connection to Local Anti-Yapping Telemetry Daemon (port 4949 or same origin)
+    // Real-Time SSE Connection to Local Token-Maxxing Telemetry Daemon (port 4949 or same origin)
     function connectLiveTelemetry() {
       const endpoints = [];
       if (location.protocol.startsWith('http')) {

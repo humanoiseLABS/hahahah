@@ -74,17 +74,17 @@ function availableSuites(): string[] {
 }
 
 function printUsage(): void {
-  console.log(`Anti-Yapping (+62 Terse & Surgical Diffs)
+  console.log(`token-maxxing (alias: tmx, anti-yapping) — Second Brain & Surgical Diffs
 
 Usage:
-  npx anti-yapping install [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
-  npx anti-yapping graph [--target <repo>] [--view] [--live]
-  npx anti-yapping ignore [--target <repo>] [--adapter <name>]
-  npx anti-yapping update [--target <repo>] [--dry-run] [--force]
-  npx anti-yapping uninstall [--target <repo>] [--dry-run] [--force]
-  npx anti-yapping doctor [--target <repo>]
-  npx anti-yapping measure [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity]
-  npx anti-yapping build [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
+  npx token-maxxing install [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
+  npx token-maxxing graph [--target <repo>] [--view] [--live]
+  npx token-maxxing ignore [--target <repo>] [--adapter <name>]
+  npx token-maxxing update [--target <repo>] [--dry-run] [--force]
+  npx token-maxxing uninstall [--target <repo>] [--dry-run] [--force]
+  npx token-maxxing doctor [--target <repo>]
+  npx token-maxxing measure [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity]
+  npx token-maxxing build [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
 
 Which --adapter to pass, by the agent you run (install into the project you want it active in):
   Claude Code          --adapter claude-code    writes CLAUDE.md + .claude/skills/
@@ -205,7 +205,7 @@ if (isMainEntry()) {
       allowPositionals: true,
       strict: true,
       options: {
-        profile: { type: 'string', default: 'anti-yapping' },
+        profile: { type: 'string', default: 'token-maxxing' },
         adapter: { type: 'string' },
         target: { type: 'string', default: process.cwd() },
         out: { type: 'string' },

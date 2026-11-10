@@ -23,12 +23,12 @@ const HERO_CREW: CrewMember[] = [
   },
   {
     kind: "mushroom",
-    name: "Anti-Yapping",
+    name: "Token-Maxxing",
     letter: 2,
     seat: "front",
     offset: 0.14,
     scale: 0.95,
-    says: "Surgical diffs: to the point & hemat token!",
+    says: "Stop yapping, start token-maxxing! Hemat 80% token!",
   },
   {
     kind: "kid",
@@ -37,7 +37,7 @@ const HERO_CREW: CrewMember[] = [
     seat: "top",
     offset: 0,
     scale: 0.96,
-    says: "Zero ceremonial boilerplate, anti-yapping full!",
+    says: "Second Brain + Surgical Diff: zero token waste!",
   },
   {
     kind: "ghost",
@@ -56,7 +56,7 @@ const HERO_CREW: CrewMember[] = [
     offset: 0.42,
     flip: true,
     scale: 0.96,
-    says: "npx anti-yapping doctor — 100% sehat meong!",
+    says: "npx token-maxxing doctor — 100% sehat meong!",
   },
 ];
 
@@ -80,8 +80,8 @@ export default function Hero() {
             variant: "solid",
           },
           {
-            label: "Bongkar Racikan Anti-Yapping ↗",
-            href: "https://github.com/humanoiseLABS/anti-yapping",
+            label: "Bongkar Racikan Token-Maxxing ↗",
+            href: "https://github.com/humanoiseLABS/token-maxxing",
             icon: "flame",
             variant: "outline",
           },

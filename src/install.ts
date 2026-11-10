@@ -22,7 +22,7 @@ const BLOCK_PATH = 'CLAUDE.md';
 const BLOCK_BEGIN = /<!-- hahahah:begin [^\n]*-->/;
 const BLOCK_END = /<!-- hahahah:end -->/;
 
-export const RECOMMENDED_AGENT_IGNORE = `# anti-yapping: input token saver (safe build & asset ignores)
+export const RECOMMENDED_AGENT_IGNORE = `# token-maxxing: input token saver (safe build & asset ignores)
 node_modules/
 dist/
 build/
@@ -46,7 +46,7 @@ export function setupAgentIgnore(targetRoot: string, adapterId?: string): { crea
     const filePath = join(targetRoot, filename);
     if (existsSync(filePath)) {
       const existing = readFileSync(filePath, 'utf8');
-      if (!existing.includes('anti-yapping: input token saver')) {
+      if (!existing.includes('token-maxxing: input token saver') && !existing.includes('anti-yapping: input token saver')) {
         writeFileSync(filePath, `${existing.trimEnd()}\n\n${RECOMMENDED_AGENT_IGNORE}`, 'utf8');
         anyCreated = true;
       }
