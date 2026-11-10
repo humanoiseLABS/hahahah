@@ -1,4 +1,13 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, watch, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  watch,
+  writeFileSync,
+} from 'node:fs';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { basename, extname, join, posix, relative, resolve, sep } from 'node:path';
 
@@ -37,6 +46,7 @@ const IGNORED_DIRS = new Set([
   '.kotlin',
   '.idea',
   '.hahahah',
+  '.plus62',
   '.claude',
   '.agents',
   '.qoder',
@@ -134,7 +144,11 @@ function collectSourceFiles(rootDir: string): string[] {
   return results.sort();
 }
 
-function extractNode(rootDir: string, filePath: string, allRelativePaths: Set<string>): GraphFileNode {
+function extractNode(
+  rootDir: string,
+  filePath: string,
+  allRelativePaths: Set<string>,
+): GraphFileNode {
   const relPath = toPosix(relative(rootDir, filePath));
   const ext = extname(filePath).toLowerCase();
   const raw = readFileSync(filePath, 'utf8');
@@ -164,7 +178,11 @@ function extractNode(rootDir: string, filePath: string, allRelativePaths: Set<st
         posix.join(joined, 'index.tsx'),
         posix.join(joined, 'index.js'),
       );
-    } else if (!clean.startsWith('http://') && !clean.startsWith('https://') && !clean.startsWith('//')) {
+    } else if (
+      !clean.startsWith('http://') &&
+      !clean.startsWith('https://') &&
+      !clean.startsWith('//')
+    ) {
       const stripped = clean.replace(/^\//, '');
       candidates.push(stripped, posix.normalize(posix.join(dirPosix, stripped)));
     }
@@ -200,12 +218,16 @@ function extractNode(rootDir: string, filePath: string, allRelativePaths: Set<st
     if (symbols.length >= MAX_SYMBOLS_PER_FILE) continue;
 
     if (ext === '.sql') {
-      const tableMatch = line.match(/^\s*create\s+table\s+(?:if\s+not\s+exists\s+)?(?:[\w]+\.)?["`]?([a-zA-Z0-9_]+)["`]?/i);
+      const tableMatch = line.match(
+        /^\s*create\s+table\s+(?:if\s+not\s+exists\s+)?(?:[\w]+\.)?["`]?([a-zA-Z0-9_]+)["`]?/i,
+      );
       if (tableMatch?.[1]) {
         symbols.push({ kind: 'table', name: tableMatch[1], line: lineNum });
         continue;
       }
-      const viewMatch = line.match(/^\s*create\s+(?:or\s+replace\s+)?view\s+(?:[\w]+\.)?["`]?([a-zA-Z0-9_]+)["`]?/i);
+      const viewMatch = line.match(
+        /^\s*create\s+(?:or\s+replace\s+)?view\s+(?:[\w]+\.)?["`]?([a-zA-Z0-9_]+)["`]?/i,
+      );
       if (viewMatch?.[1]) {
         symbols.push({ kind: 'view', name: viewMatch[1], line: lineNum });
         continue;
@@ -216,7 +238,9 @@ function extractNode(rootDir: string, filePath: string, allRelativePaths: Set<st
         continue;
       }
     } else if (ext === '.py') {
-      const pyMatch = line.match(/^(?:async\s+)?def\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(|^class\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+      const pyMatch = line.match(
+        /^(?:async\s+)?def\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(|^class\s+([a-zA-Z_][a-zA-Z0-9_]*)/,
+      );
       if (pyMatch) {
         symbols.push({
           kind: pyMatch[1] ? 'fn' : 'class',
@@ -245,7 +269,9 @@ function extractNode(rootDir: string, filePath: string, allRelativePaths: Set<st
         symbols.push({ kind: 'fn', name: goMatch[1], line: lineNum });
       }
     } else if (ext === '.rs') {
-      const rsMatch = line.match(/^\s*pub\s+(?:async\s+)?fn\s+([a-zA-Z_][a-zA-Z0-9_]*)|^\s*pub\s+struct\s+([a-zA-Z_][a-zA-Z0-9_]*)/);
+      const rsMatch = line.match(
+        /^\s*pub\s+(?:async\s+)?fn\s+([a-zA-Z_][a-zA-Z0-9_]*)|^\s*pub\s+struct\s+([a-zA-Z_][a-zA-Z0-9_]*)/,
+      );
       if (rsMatch) {
         symbols.push({
           kind: rsMatch[1] ? 'fn' : 'class',
@@ -292,12 +318,16 @@ Link code nodes using \`[[path/to/file#symbol]]\` or \`file:line\`.
 - Next step: Update this bullet after completing major audits or multi-file fixes.
 `;
 
-function classifyNodeCategory(filePath: string): 'memory' | 'entrypoint' | 'sql' | 'test' | 'module' {
+function classifyNodeCategory(
+  filePath: string,
+): 'memory' | 'entrypoint' | 'sql' | 'test' | 'module' {
   if (filePath.endsWith('memory.md') || filePath.endsWith('INDEX.md')) return 'memory';
   if (filePath.endsWith('.sql')) return 'sql';
-  if (filePath.includes('test/') || filePath.includes('.test.') || filePath.includes('.spec.')) return 'test';
+  if (filePath.includes('test/') || filePath.includes('.test.') || filePath.includes('.spec.'))
+    return 'test';
   const base = posix.basename(filePath);
-  if (/^(index|app|main|mainactivity|server|cli)\./i.test(base) || filePath.endsWith('.html')) return 'entrypoint';
+  if (/^(index|app|main|mainactivity|server|cli)\./i.test(base) || filePath.endsWith('.html'))
+    return 'entrypoint';
   return 'module';
 }
 
@@ -1942,7 +1972,10 @@ function renderInteractiveGraphHtml(
 </html>`;
 }
 
-export function startLiveGraphServer(targetRoot: string, port = 4949): { url: string; close: () => void } {
+export function startLiveGraphServer(
+  targetRoot: string,
+  port = 4949,
+): { url: string; close: () => void } {
   const rootDir = resolve(targetRoot);
   const clients = new Set<ServerResponse>();
   const tokenCache = new Map<string, number>();
@@ -2059,7 +2092,9 @@ export function startLiveGraphServer(targetRoot: string, port = 4949): { url: st
   return {
     url: `http://127.0.0.1:${port}`,
     close: () => {
-      try { server.close(); } catch {}
+      try {
+        server.close();
+      } catch {}
     },
   };
 }
@@ -2077,7 +2112,8 @@ export function buildCodeGraph(targetRoot: string): GraphBuildResult {
   const scoredNodes = nodes
     .map((node) => {
       let score = node.symbols.length * 2 + node.links.length * 3;
-      if (/^(index|app|main|server|cli|schema|supabase)/i.test(posix.basename(node.path))) score += 10;
+      if (/^(index|app|main|server|cli|schema|supabase)/i.test(posix.basename(node.path)))
+        score += 10;
       if (node.path.endsWith('.sql') || node.path.endsWith('.html')) score += 6;
       if (!node.path.includes('test/') && !node.path.includes('.test.')) score += 4;
       return { node, score };
@@ -2123,7 +2159,12 @@ export function buildCodeGraph(targetRoot: string): GraphBuildResult {
   const currentMemory = readFileSync(memoryPath, 'utf8');
   const estTokens = Math.max(50, Math.round(indexContent.length / 3.8));
   const projectName = basename(rootDir) || 'Project';
-  const htmlContent = renderInteractiveGraphHtml(projectName, scoredNodes, currentMemory, estTokens);
+  const htmlContent = renderInteractiveGraphHtml(
+    projectName,
+    scoredNodes,
+    currentMemory,
+    estTokens,
+  );
   writeFileSync(htmlPath, htmlContent, 'utf8');
 
   return {

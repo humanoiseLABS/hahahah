@@ -25,18 +25,18 @@ test('installs a managed block and skill while preserving user content', () => {
   const targetRoot = tempProject();
   try {
     writeFileSync(join(targetRoot, 'CLAUDE.md'), originalClaude);
-    const result = install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    const result = install({ sourceRoot, targetRoot, profileId: 'plus62' });
     assert.equal(result.manifest.schema, 'hahahah.install/v1');
     assert.equal(result.manifest.adapter, 'claude-code');
 
     const claude = readFileSync(join(targetRoot, 'CLAUDE.md'), 'utf8');
     assert.match(claude, /Keep this line\./);
-    assert.match(claude, /<!-- hahahah:begin profile=rusuh-id version=0\.1\.0 -->/);
+    assert.match(claude, /<!-- hahahah:begin profile=plus62 version=0\.1\.0 -->/);
     assert.match(claude, /\+62 Mode/);
     assert.match(claude, /<!-- hahahah:end -->/);
 
-    assert.ok(existsSync(join(targetRoot, '.claude/skills/hahahah-rusuh/SKILL.md')));
-    assert.ok(existsSync(join(targetRoot, '.hahahah/manifest.json')));
+    assert.ok(existsSync(join(targetRoot, '.claude/skills/hahahah-plus62/SKILL.md')));
+    assert.ok(existsSync(join(targetRoot, '.plus62/manifest.json')));
     assert.equal(doctor({ targetRoot }).ok, true);
   } finally {
     rmSync(targetRoot, { recursive: true, force: true });
@@ -46,7 +46,7 @@ test('installs a managed block and skill while preserving user content', () => {
 test('dry-run plans without writing', () => {
   const targetRoot = tempProject();
   try {
-    install({ sourceRoot, targetRoot, profileId: 'rusuh-id', dryRun: true });
+    install({ sourceRoot, targetRoot, profileId: 'plus62', dryRun: true });
     assert.deepEqual(readdirSync(targetRoot), []);
   } finally {
     rmSync(targetRoot, { recursive: true, force: true });
@@ -56,12 +56,12 @@ test('dry-run plans without writing', () => {
 test('reinstall keeps generated files stable and doctor detects corruption', () => {
   const targetRoot = tempProject();
   try {
-    const first = install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    const first = install({ sourceRoot, targetRoot, profileId: 'plus62' });
     const claudeFirst = readFileSync(join(targetRoot, 'CLAUDE.md'), 'utf8');
-    const skillPath = join(targetRoot, '.claude/skills/hahahah-rusuh/SKILL.md');
+    const skillPath = join(targetRoot, '.claude/skills/hahahah-plus62/SKILL.md');
     const skillFirst = readFileSync(skillPath, 'utf8');
 
-    const second = install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    const second = install({ sourceRoot, targetRoot, profileId: 'plus62' });
     assert.equal(readFileSync(join(targetRoot, 'CLAUDE.md'), 'utf8'), claudeFirst);
     assert.equal(readFileSync(skillPath, 'utf8'), skillFirst);
     assert.deepEqual(
@@ -82,11 +82,11 @@ test('update refreshes managed block and files using the existing manifest', () 
   const targetRoot = tempProject();
   try {
     writeFileSync(join(targetRoot, 'CLAUDE.md'), originalClaude);
-    install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    install({ sourceRoot, targetRoot, profileId: 'plus62' });
     assert.equal(doctor({ targetRoot }).ok, true);
 
     const updateResult = update({ sourceRoot, targetRoot });
-    assert.equal(updateResult.manifest.profile, 'rusuh-id');
+    assert.equal(updateResult.manifest.profile, 'plus62');
     assert.equal(updateResult.manifest.adapter, 'claude-code');
     assert.equal(doctor({ targetRoot }).ok, true);
   } finally {
@@ -98,8 +98,8 @@ test('uninstall removes managed content and preserves user files', () => {
   const targetRoot = tempProject();
   try {
     writeFileSync(join(targetRoot, 'CLAUDE.md'), originalClaude);
-    install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
-    const skillPath = join(targetRoot, '.claude/skills/hahahah-rusuh/SKILL.md');
+    install({ sourceRoot, targetRoot, profileId: 'plus62' });
+    const skillPath = join(targetRoot, '.claude/skills/hahahah-plus62/SKILL.md');
     assert.ok(existsSync(skillPath));
 
     uninstall({ targetRoot });
@@ -107,14 +107,14 @@ test('uninstall removes managed content and preserves user files', () => {
     const claude = readFileSync(join(targetRoot, 'CLAUDE.md'), 'utf8');
     assert.equal(claude, originalClaude);
     assert.equal(existsSync(skillPath), false);
-    assert.equal(existsSync(join(targetRoot, '.hahahah/manifest.json')), false);
+    assert.equal(existsSync(join(targetRoot, '.plus62/manifest.json')), false);
   } finally {
     rmSync(targetRoot, { recursive: true, force: true });
   }
 });
 
 test('every MVP profile installs and uninstalls through the same path', () => {
-  const cases: Array<[string, string]> = [['rusuh-id', 'rusuh']];
+  const cases: Array<[string, string]> = [['plus62', 'plus62']];
   for (const [profileId, persona] of cases) {
     const targetRoot = tempProject();
     try {
@@ -145,8 +145,8 @@ test('every MVP profile installs and uninstalls through the same path', () => {
 test('uninstall leaves no empty managed directories behind', () => {
   const targetRoot = tempProject();
   try {
-    install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
-    assert.ok(existsSync(join(targetRoot, '.claude/skills/hahahah-rusuh/SKILL.md')));
+    install({ sourceRoot, targetRoot, profileId: 'plus62' });
+    assert.ok(existsSync(join(targetRoot, '.claude/skills/hahahah-plus62/SKILL.md')));
 
     uninstall({ targetRoot });
 
@@ -171,7 +171,7 @@ test('uninstall keeps a pre-existing .claude that holds user files', () => {
   try {
     mkdirSync(join(targetRoot, '.claude'), { recursive: true });
     writeFileSync(join(targetRoot, '.claude/settings.local.json'), '{"keep":true}\n');
-    install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    install({ sourceRoot, targetRoot, profileId: 'plus62' });
     uninstall({ targetRoot });
     assert.equal(existsSync(join(targetRoot, '.claude/settings.local.json')), true);
     assert.equal(existsSync(join(targetRoot, '.claude/skills')), false);
@@ -184,7 +184,7 @@ test('uninstall keeps a pre-existing .claude that holds user files', () => {
 test('uninstall removes a CLAUDE.md it created when nothing else remains', () => {
   const targetRoot = tempProject();
   try {
-    install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    install({ sourceRoot, targetRoot, profileId: 'plus62' });
     assert.ok(existsSync(join(targetRoot, 'CLAUDE.md')));
     uninstall({ targetRoot });
     assert.equal(existsSync(join(targetRoot, 'CLAUDE.md')), false);
@@ -196,17 +196,17 @@ test('uninstall removes a CLAUDE.md it created when nothing else remains', () =>
 test('modified managed block requires force to replace', () => {
   const targetRoot = tempProject();
   try {
-    install({ sourceRoot, targetRoot, profileId: 'rusuh-id' });
+    install({ sourceRoot, targetRoot, profileId: 'plus62' });
     const claudePath = join(targetRoot, 'CLAUDE.md');
     const claude = readFileSync(claudePath, 'utf8').replace('+62 Mode', 'EDITED');
     writeFileSync(claudePath, claude);
 
     assert.throws(
-      () => install({ sourceRoot, targetRoot, profileId: 'rusuh-id' }),
+      () => install({ sourceRoot, targetRoot, profileId: 'plus62' }),
       /force|modified/i,
     );
     assert.doesNotThrow(() =>
-      install({ sourceRoot, targetRoot, profileId: 'rusuh-id', force: true }),
+      install({ sourceRoot, targetRoot, profileId: 'plus62', force: true }),
     );
   } finally {
     rmSync(targetRoot, { recursive: true, force: true });
@@ -216,11 +216,11 @@ test('modified managed block requires force to replace', () => {
 test('refuses to overwrite an unmanaged skill file', () => {
   const targetRoot = tempProject();
   try {
-    const skillDir = join(targetRoot, '.claude/skills/hahahah-rusuh');
+    const skillDir = join(targetRoot, '.claude/skills/hahahah-plus62');
     mkdirSync(skillDir, { recursive: true });
     writeFileSync(join(skillDir, 'SKILL.md'), 'user file\n');
     assert.throws(
-      () => install({ sourceRoot, targetRoot, profileId: 'rusuh-id' }),
+      () => install({ sourceRoot, targetRoot, profileId: 'plus62' }),
       /force|unmanaged|exists/i,
     );
   } finally {

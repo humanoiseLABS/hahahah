@@ -11,7 +11,7 @@ const root = process.cwd();
 function artifacts() {
   return build({
     root,
-    profileId: 'rusuh-id',
+    profileId: 'plus62',
     adapterId: 'opencode',
     write: false,
   }).artifacts;
@@ -26,18 +26,18 @@ test('the opencode adapter puts the always-on block in AGENTS.md, not CLAUDE.md'
     false,
     'an opencode install must not create a Claude-specific file',
   );
-  assert.match(block?.content ?? '', /<!-- hahahah:begin profile=rusuh-id/);
+  assert.match(block?.content ?? '', /<!-- hahahah:begin profile=plus62/);
   assert.match(block?.content ?? '', /<!-- hahahah:end -->/);
 });
 
 test('the opencode skill tree matches what opencode was observed loading', () => {
   // Measured on opencode 1.18.31: `opencode debug skill` lists
-  // .claude/skills/hahahah-rusuh/SKILL.md with our description, so this layout is the one that
+  // .claude/skills/hahahah-plus62/SKILL.md with our description, so this layout is the one that
   // works without inventing a second copy under .opencode/.
   const paths = artifacts().map((artifact) => artifact.path);
-  assert.ok(paths.includes('.claude/skills/hahahah-rusuh/SKILL.md'));
-  assert.ok(paths.includes('.claude/skills/hahahah-rusuh/references/core/10-safety.md'));
-  assert.ok(paths.includes('.claude/skills/hahahah-rusuh/references/lexicon.md'));
+  assert.ok(paths.includes('.claude/skills/hahahah-plus62/SKILL.md'));
+  assert.ok(paths.includes('.claude/skills/hahahah-plus62/references/core/10-safety.md'));
+  assert.ok(paths.includes('.claude/skills/hahahah-plus62/references/lexicon.md'));
 });
 
 test('install and uninstall round-trip through the opencode adapter', () => {
@@ -47,7 +47,7 @@ test('install and uninstall round-trip through the opencode adapter', () => {
     const result = install({
       sourceRoot: root,
       targetRoot: target,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: 'opencode',
     });
     assert.equal(result.manifest.adapter, 'opencode');
@@ -55,7 +55,7 @@ test('install and uninstall round-trip through the opencode adapter', () => {
     const agents = readFileSync(join(target, 'AGENTS.md'), 'utf8');
     assert.match(agents, /# Proyek gue/, 'the user file is kept, not replaced');
     assert.match(agents, /hahahah:begin/);
-    assert.equal(existsSync(join(target, '.claude/skills/hahahah-rusuh/SKILL.md')), true);
+    assert.equal(existsSync(join(target, '.claude/skills/hahahah-plus62/SKILL.md')), true);
 
     assert.deepEqual(doctor({ targetRoot: target }).errors, []);
 
@@ -64,7 +64,7 @@ test('install and uninstall round-trip through the opencode adapter', () => {
     assert.equal(after.includes('hahahah:begin'), false);
     assert.match(after, /Jangan sentuh bagian ini\./);
     assert.equal(existsSync(join(target, '.claude/skills')), false);
-    assert.equal(existsSync(join(target, '.hahahah/manifest.json')), false);
+    assert.equal(existsSync(join(target, '.plus62/manifest.json')), false);
   } finally {
     rmSync(target, { recursive: true, force: true });
   }
@@ -72,7 +72,7 @@ test('install and uninstall round-trip through the opencode adapter', () => {
 
 test('an unknown adapter is still refused for profiles that do not declare it', () => {
   assert.throws(
-    () => build({ root, profileId: 'rusuh-id', adapterId: 'not-a-harness', write: false }),
+    () => build({ root, profileId: 'plus62', adapterId: 'not-a-harness', write: false }),
     /does not declare adapter|not implemented/,
   );
 });

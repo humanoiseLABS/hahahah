@@ -2,22 +2,22 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hahahah-web.vercel.app"),
+  metadataBase: new URL("https://plus62.vercel.app"),
   title: {
-    default: "HUMANOISE — Token-Maxxing & +62 Mode untuk AI Coding Agents",
-    template: "%s | HUMANOISE Labs",
+    default: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
+    template: "%s | HumanoiseLABS",
   },
   description:
-    "Dua senjata AI coding agent dari HUMANOISE Labs: Token-Maxxing (Second Brain, surgical diffs & hemat token hingga 80%) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi). Mendukung Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
+    "Dua senjata AI coding agent dari HumanoiseLABS: +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi) dan Token-Maxxing (Second Brain, surgical diffs & hemat token hingga 80%). Mendukung Claude Code, Antigravity, OpenCode, Qoder, Codex, Cursor, dan Copilot.",
   keywords: [
     "HUMANOISE",
-    "humanoiseLABS",
+    "HumanoiseLABS",
     "token-maxxing",
     "tmx",
     "anti-yapping",
     "Second Brain",
     "+62 Mode",
-    "hahahah-ai",
+    "plus62",
     "coding agent persona",
     "Claude Code Indonesia",
     "Google Antigravity",
@@ -29,31 +29,32 @@ export const metadata: Metadata = {
     "Cursor rules Indonesia",
     "developer persona",
   ],
-  authors: [{ name: "humanoiseLABS", url: "https://github.com/humanoiseLABS" }],
-  creator: "humanoiseLABS",
+  authors: [{ name: "HumanoiseLABS", url: "https://github.com/humanoiseLABS" }],
+  creator: "HumanoiseLABS",
+  publisher: "HumanoiseLABS",
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://hahahah-web.vercel.app",
-    siteName: "HUMANOISE Labs",
-    title: "HUMANOISE — Token-Maxxing & +62 Mode untuk AI Coding Agents",
+    url: "https://plus62.vercel.app",
+    siteName: "HumanoiseLABS",
+    title: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
     description:
-      "Pasang Token-Maxxing (Second Brain & surgical diffs) atau +62 Mode (partner ngoding lokal blak-blakan) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor.",
+      "Pasang +62 Mode (partner ngoding lokal blak-blakan) atau Token-Maxxing (Second Brain & surgical diffs) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor.",
     images: [
       {
-        url: "https://hahahah-web.vercel.app/og-image.png",
+        url: "https://plus62.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "HUMANOISE — Token-Maxxing & +62 Mode untuk AI Coding Agents",
+        alt: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HUMANOISE — Token-Maxxing & +62 Mode untuk AI Coding Agents",
+    title: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
     description:
-      "Dua senjata AI coding agent dari HUMANOISE Labs: Token-Maxxing (Second Brain & surgical diffs) & +62 Mode (partner ngoding lokal Nusantara).",
-    images: ["https://hahahah-web.vercel.app/og-image.png"],
+      "Dua senjata AI coding agent dari HumanoiseLABS: +62 Mode (partner ngoding lokal Nusantara) & Token-Maxxing (Second Brain & surgical diffs).",
+    images: ["https://plus62.vercel.app/og-image.png"],
   },
   robots: {
     index: true,
@@ -67,7 +68,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://hahahah-web.vercel.app",
+    canonical: "https://plus62.vercel.app",
   },
 };
 

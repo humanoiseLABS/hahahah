@@ -143,7 +143,10 @@ const idAnswer = 'Nggak bisa. Gue cek dulu log-nya, karena error muncul setelah 
 const enAnswer = 'Not possible. I will check the logs because the error appeared after the deploy.';
 
 function isTreatment(cwd: string): boolean {
-  return existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md'));
+  return (
+    existsSync(join(cwd, '.claude/skills/hahahah-plus62/SKILL.md')) ||
+    existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md'))
+  );
 }
 
 test('the eval runner installs the harness-matched adapter tree when told which harness answers', () => {
@@ -154,7 +157,7 @@ test('the eval runner installs the harness-matched adapter tree when told which 
   try {
     const report = runEval({
       sourceRoot: process.cwd(),
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: 'opencode',
       tasks: [{ id: 'adapter-opencode-01', prompt: 'Reply once.' }],
       outDir,
@@ -163,7 +166,7 @@ test('the eval runner installs the harness-matched adapter tree when told which 
         seen.push({
           agents: existsSync(join(cwd, 'AGENTS.md')),
           claude: existsSync(join(cwd, 'CLAUDE.md')),
-          skill: existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md')),
+          skill: isTreatment(cwd),
         });
         return { output: 'ok', costUsd: 0.01 };
       },

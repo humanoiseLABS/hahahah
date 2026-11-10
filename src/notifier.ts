@@ -24,9 +24,9 @@ export function formatUpdateNotice(current: string, latest: string): string {
   return [
     '',
     '┌────────────────────────────────────────────────────────┐',
-    `│  Pembaruan token-maxxing tersedia: v${current} → v${latest}`.padEnd(57) + '│',
+    `│  Pembaruan +62 Mode tersedia: v${current} → v${latest}`.padEnd(57) + '│',
     '│  Jalankan perintah berikut untuk memperbarui:          │',
-    '│  $ npx token-maxxing update (atau tmx update)          │',
+    '│  $ npx plus62 update (atau 62-mode update)             │',
     '└────────────────────────────────────────────────────────┘',
     '',
   ].join('\n');
@@ -38,7 +38,7 @@ export async function checkRemoteUpdate(currentVersion: string): Promise<string 
   }
   try {
     const res = await fetch(
-      'https://raw.githubusercontent.com/humanoiseLABS/token-maxxing/main/package.json',
+      'https://raw.githubusercontent.com/humanoiseLABS/plus62/main/package.json',
       {
         signal: AbortSignal.timeout(1500),
       },

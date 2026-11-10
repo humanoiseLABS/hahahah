@@ -65,8 +65,8 @@ export default function Footer() {
     <div className="w-full sketch-divider">
       <DoodleCrewFooter
         wordmark="HUMANOISE"
-        brand="humanoise"
-        blurb="Lab eksperimen instruksi & guardrails untuk AI coding agent: Token-Maxxing (Second Brain, surgical diffs & hemat token ekstrem) dan +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi)."
+        brand="HumanoiseLABS"
+        blurb="Lab eksperimen instruksi & guardrails untuk AI coding agent dari HumanoiseLABS: +62 Mode (partner ngoding lokal yang blak-blakan & anti-basa-basi) dan Token-Maxxing (Second Brain, surgical diffs & hemat token ekstrem)."
         tagline="Stop yapping, start token-maxxing. Min-max your AI coding context."
         preset="paper"
         crew={HUMANOISE_CREW}
@@ -75,7 +75,7 @@ export default function Footer() {
             title: "Mode & Produk",
             links: [
               { label: "Token-Maxxing (Second Brain)", href: "https://github.com/humanoiseLABS/token-maxxing" },
-              { label: "+62 Mode (Bloko Suto)", href: "https://github.com/humanoiseLABS/hahahah" },
+              { label: "+62 Mode (Bloko Suto)", href: "https://github.com/humanoiseLABS/plus62" },
               { label: "Pilih Mode & Harness", href: "#integrations" },
             ],
           },
@@ -92,8 +92,8 @@ export default function Footer() {
             title: "Dokumentasi",
             links: [
               { label: "Cara Pasang", href: "#integrations" },
-              { label: "Riset & Benchmark", href: "https://github.com/humanoiseLABS/hahahah/tree/main/docs" },
-              { label: "Evaluasi Keamanan", href: "https://github.com/humanoiseLABS/hahahah/tree/main/eval" },
+              { label: "Riset & Benchmark", href: "https://github.com/humanoiseLABS/plus62/tree/main/docs" },
+              { label: "Evaluasi Keamanan", href: "https://github.com/humanoiseLABS/plus62/tree/main/eval" },
               { label: "Tanya Jawab (FAQ)", href: "#support" },
             ],
           },
@@ -101,9 +101,9 @@ export default function Footer() {
             title: "Komunitas",
             links: [
               { label: "GitHub @humanoiseLABS", href: "https://github.com/humanoiseLABS" },
-              { label: "Buka Issue / Bug", href: "https://github.com/humanoiseLABS/hahahah/issues" },
-              { label: "Kirim Pull Request", href: "https://github.com/humanoiseLABS/hahahah/pulls" },
-              { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },
+              { label: "Buka Issue / Bug", href: "https://github.com/humanoiseLABS/plus62/issues" },
+              { label: "Kirim Pull Request", href: "https://github.com/humanoiseLABS/plus62/pulls" },
+              { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/plus62/blob/main/LICENSE" },
             ],
           },
         ]}
@@ -116,19 +116,19 @@ export default function Footer() {
           },
           {
             label: "Repo +62 Mode",
-            href: "https://github.com/humanoiseLABS/hahahah",
+            href: "https://github.com/humanoiseLABS/plus62",
             icon: "star",
             variant: "solid",
           },
         ]}
-        copyright="© 2026 HUMANOISE Labs. Dibikin buat developer Indonesia."
+        copyright="© 2026 HumanoiseLABS. Dibikin buat developer Indonesia."
         legal={[
-          { label: "humanoiseLABS", href: "https://github.com/humanoiseLABS" },
-          { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/hahahah/blob/main/LICENSE" },
+          { label: "HumanoiseLABS", href: "https://github.com/humanoiseLABS" },
+          { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/plus62/blob/main/LICENSE" },
         ]}
         socials={[
           { label: "Token-Maxxing", href: "https://github.com/humanoiseLABS/token-maxxing" },
-          { label: "+62 Mode", href: "https://github.com/humanoiseLABS/hahahah" },
+          { label: "+62 Mode", href: "https://github.com/humanoiseLABS/plus62" },
         ]}
       />
     </div>

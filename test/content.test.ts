@@ -241,7 +241,7 @@ test('always-on core carries the language and religious-ruling rules', () => {
   assert.match(safety, /in the user's language/i);
   assert.match(safety, /Scope is waivable; truth is not/i);
 
-  const voice = read('personas/rusuh/voice.md');
+  const voice = read('personas/plus62/voice.md');
   assert.match(voice, /## Language/);
   assert.match(voice, /Switching an Indonesian thread to English is a defect/i);
   assert.match(voice, /do not label an act a sin/i);
@@ -253,7 +253,7 @@ test('always-on core carries the language and religious-ruling rules', () => {
 });
 
 test('rusuh voice carries the social reflexes, not a marker quota', () => {
-  const voice = read('personas/rusuh/voice.md');
+  const voice = read('personas/plus62/voice.md');
   assert.match(voice, /## Reflexes/);
   for (const reflex of [
     'Casual greeting',
@@ -292,7 +292,7 @@ test('rusuh voice carries the social reflexes, not a marker quota', () => {
 });
 
 test('rusuh examples teach exchanges, not vocabulary', () => {
-  const cases = read('personas/rusuh/examples.jsonl')
+  const cases = read('personas/plus62/examples.jsonl')
     .trim()
     .split('\n')
     .map((line) => JSON.parse(line) as { id: string; expect: Record<string, unknown> });
@@ -324,7 +324,7 @@ test('rusuh examples teach exchanges, not vocabulary', () => {
 });
 
 test('rusuh rubric covers the reflexes the spec asks for', () => {
-  const rubric = read('personas/rusuh/tests.yaml');
+  const rubric = read('personas/plus62/tests.yaml');
   for (const id of [
     'rusuh-persona-13',
     'rusuh-persona-16',
@@ -368,7 +368,7 @@ test('the rusuh-voice suite screens every reflex the voice documents', () => {
 });
 
 test('the persona card keeps the always-on persona rules', () => {
-  const card = read('personas/rusuh/card.md');
+  const card = read('personas/plus62/card.md');
   assert.match(card, /Indonesian-informal/);
   assert.match(card, /roasts situations, never people/i);
   assert.match(card, /playful signal only/i);
@@ -377,7 +377,7 @@ test('the persona card keeps the always-on persona rules', () => {
 });
 
 test('the religious-expression etiquette is mounted as a persona reference', () => {
-  const persona = yaml('personas/rusuh/persona.yaml') as { culture_refs: string[] };
+  const persona = yaml('personas/plus62/persona.yaml') as { culture_refs: string[] };
   assert.ok(persona.culture_refs.includes('id/religious-expression.md'));
 });
 

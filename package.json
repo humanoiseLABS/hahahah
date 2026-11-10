@@ -1,12 +1,14 @@
 {
-  "name": "hahahah-ai",
+  "name": "plus62",
   "version": "0.1.6",
   "license": "MIT",
   "description": "HUMANOISE +62 Mode: Indonesian developer persona and guardrail layer for AI coding agents",
   "type": "module",
   "bin": {
-    "hahahah": "dist/cli.js",
-    "hahahah-ai": "dist/cli.js"
+    "plus62": "dist/cli.js",
+    "62-mode": "dist/cli.js",
+    "hahahah-ai": "dist/cli.js",
+    "hahahah": "dist/cli.js"
   },
   "files": [
     "dist",
@@ -22,12 +24,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/humanoiseLABS/hahahah.git"
+    "url": "git+https://github.com/humanoiseLABS/plus62.git"
   },
   "bugs": {
-    "url": "https://github.com/humanoiseLABS/hahahah/issues"
+    "url": "https://github.com/humanoiseLABS/plus62/issues"
   },
-  "homepage": "https://github.com/humanoiseLABS/hahahah#readme",
+  "homepage": "https://github.com/humanoiseLABS/plus62#readme",
   "keywords": [
     "coding-agent",
     "claude-code",
@@ -35,6 +37,8 @@
     "antigravity",
     "opencode",
     "indonesia",
+    "plus62",
+    "62-mode",
     "rusuh-id",
     "ai-agent"
   ],
@@ -48,8 +52,8 @@
     "test": "node --test",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"schemas/**/*.json\" \"profiles/**/*.yaml\" \"personas/**/*.yaml\" \"culture/**/*.yaml\" \"evals/**/*.yaml\" \".github/**/*.yml\" package.json tsconfig.json",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"schemas/**/*.json\" \"profiles/**/*.yaml\" \"personas/**/*.yaml\" \"culture/**/*.yaml\" \"evals/**/*.yaml\" \".github/**/*.yml\" package.json tsconfig.json",
-    "build": "node src/cli.ts build --profile rusuh-id --adapter fake",
-    "measure": "node src/cli.ts measure --profile rusuh-id",
+    "build": "node src/cli.ts build --profile plus62 --adapter fake",
+    "measure": "node src/cli.ts measure --profile plus62",
     "check": "npm run typecheck && npm run format:check && npm test"
   },
   "dependencies": {

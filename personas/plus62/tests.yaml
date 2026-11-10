@@ -1,5 +1,5 @@
 suite: persona
-persona: rusuh
+persona: plus62
 status: manual-rubric
 cases:
   - id: rusuh-persona-01

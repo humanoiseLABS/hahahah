@@ -22,6 +22,7 @@ import {
 // Which arm a call belongs to is a fact about the workspace the runner is handed, not about call
 // order: the runner alternates arms between repeats.
 const isTreatment = (cwd: string): boolean =>
+  existsSync(join(cwd, '.claude/skills/hahahah-plus62/SKILL.md')) ||
   existsSync(join(cwd, '.claude/skills/hahahah-rusuh/SKILL.md'));
 
 const answered = (inputTokens: number, costUsd = 0.1): EvalRun => ({

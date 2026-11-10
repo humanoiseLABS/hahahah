@@ -56,7 +56,7 @@ test('release build refuses pending reviews', () => {
       cpSync(join(root, dir), join(fixtureRoot, dir), { recursive: true });
     }
     cpSync(join(root, 'package.json'), join(fixtureRoot, 'package.json'));
-    const personaPath = join(fixtureRoot, 'personas/rusuh/persona.yaml');
+    const personaPath = join(fixtureRoot, 'personas/plus62/persona.yaml');
     writeFileSync(
       personaPath,
       readFileSync(personaPath, 'utf8').replace(/safety: approved/g, 'safety: pending'),
@@ -99,7 +99,7 @@ test('release build succeeds once all reviews are approved', () => {
       cpSync(join(root, dir), join(fixtureRoot, dir), { recursive: true });
     }
     cpSync(join(root, 'package.json'), join(fixtureRoot, 'package.json'));
-    const personaPath = join(fixtureRoot, 'personas/rusuh/persona.yaml');
+    const personaPath = join(fixtureRoot, 'personas/plus62/persona.yaml');
     writeFileSync(
       personaPath,
       readFileSync(personaPath, 'utf8')
@@ -169,7 +169,7 @@ test('measure-only build does not write artifacts', () => {
 });
 
 test('every MVP profile builds within budget on both adapters', () => {
-  for (const profileId of ['rusuh-id']) {
+  for (const profileId of ['plus62', 'rusuh-id']) {
     for (const adapterId of ['fake', 'claude-code']) {
       const result = build({ root, profileId, adapterId, write: false });
       for (const [name, report] of Object.entries(result.manifest.budgets)) {

@@ -87,7 +87,7 @@ export default function Hero() {
           },
           {
             label: "Intip Dapur +62 & Kasih Star ↗",
-            href: "https://github.com/humanoiseLABS/hahahah",
+            href: "https://github.com/humanoiseLABS/plus62",
             icon: "star",
             variant: "outline",
           },

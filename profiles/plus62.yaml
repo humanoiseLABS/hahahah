@@ -1,6 +1,6 @@
 schema: hahahah.profile/v1
-id: token-maxxing
-persona: terse
+id: plus62
+persona: plus62
 locale: id
 intensity: high
 core: '>=0.1.0 <0.2.0'
@@ -14,7 +14,7 @@ adapters:
   - qoder
   - copilot
 budgets:
-  always_on_tokens: 580
+  always_on_tokens: 595
   skill_metadata_tokens: 90
-  skill_body_tokens: 1200
-  reference_tokens_max: 2500
+  skill_body_tokens: 1980
+  reference_tokens_max: 4950

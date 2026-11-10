@@ -25,6 +25,17 @@ export interface AgentOption {
 
 export const PERSONAS: PersonaOption[] = [
   {
+    id: "plus62",
+    name: "+62 Mode",
+    code: "+62",
+    badge: "Bloko Suto • Partner Lokal",
+    tagline: "Gaya rekan satu tim lokal +62 yang blak-blakan, langsung ke baris bug, lengkap dengan kamus budaya & safety guardrails.",
+    tone: "Indonesian informal, cepat, langsung ke baris kode yang rusak tanpa basa-basi korporat.",
+    samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
+    sampleReply:
+      "Ya jelas error anjir 😭 lu manggil user.profile.name padahal pas fetch awal datanya masih null. Kasih optional chaining user?.profile?.name atau sediakan fallback default {}.",
+  },
+  {
     id: "token-maxxing",
     name: "Token-Maxxing",
     code: "tmx",
@@ -34,17 +45,6 @@ export const PERSONAS: PersonaOption[] = [
     samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
     sampleReply:
       "user.profile masih null pas fetch awal. Ganti jadi user?.profile?.name atau kasih fallback default {}.",
-  },
-  {
-    id: "rusuh-id",
-    name: "+62 Mode",
-    code: "+62",
-    badge: "Bloko Suto • Partner Lokal",
-    tagline: "Gaya rekan satu tim lokal +62 yang blak-blakan, langsung ke baris bug, lengkap dengan kamus budaya & safety guardrails.",
-    tone: "Indonesian informal, cepat, langsung ke baris kode yang rusak tanpa basa-basi korporat.",
-    samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
-    sampleReply:
-      "Ya jelas error anjir 😭 lu manggil user.profile.name padahal pas fetch awal datanya masih null. Kasih optional chaining user?.profile?.name atau sediakan fallback default {}.",
   },
 ];
 
@@ -182,7 +182,7 @@ export default function Configurator({
           Pilih Mode &amp; Coding Harness
         </h2>
         <p className="text-sm sm:text-base text-[#525252] mt-1.5 max-w-xl">
-          Tinggal 2 step simpel: pilih mode HUMANOISE yang lu butuhin (<strong>Token-Maxxing</strong> atau <strong>+62 Mode</strong>), terus tentuin coding harness yang lu pake.
+          Tinggal 2 step simpel: pilih mode HumanoiseLABS yang lu butuhin (<strong>+62 Mode</strong> atau <strong>Token-Maxxing</strong>), terus tentuin coding harness yang lu pake.
         </p>
       </div>
 
@@ -233,7 +233,7 @@ export default function Configurator({
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
                 <span className="text-xs font-mono font-bold text-[#0d0d0d] uppercase tracking-wider">
-                  Step 1 &bull; Pilih Mode HUMANOISE
+                  Step 1 &bull; Pilih Mode HumanoiseLABS
                 </span>
                 <span className="text-[11px] font-mono text-[#737373]">
                   Klik buat lanjut &rarr;
@@ -398,13 +398,13 @@ export default function Configurator({
                       href={
                         selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping"
                           ? "https://github.com/humanoiseLABS/token-maxxing"
-                          : "https://github.com/humanoiseLABS/hahahah"
+                          : "https://github.com/humanoiseLABS/plus62"
                       }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[#0d0d0d] font-bold hover:text-[#ff6b2c] underline flex items-center gap-1"
                     >
-                      <span>Repo ({selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping" ? "token-maxxing" : "hahahah"})</span>
+                      <span>Repo ({selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping" ? "token-maxxing" : "plus62"})</span>
                       <ArrowRight className="w-3 h-3" />
                     </a>
                     <a href="#tutorial" className="text-[#ff6b2c] font-bold hover:underline flex items-center gap-1">

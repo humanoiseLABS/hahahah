@@ -11,7 +11,7 @@ const root = process.cwd();
 function artifacts() {
   return build({
     root,
-    profileId: 'rusuh-id',
+    profileId: 'plus62',
     adapterId: 'agents-md',
     write: false,
   }).artifacts;
@@ -26,19 +26,19 @@ test('the agents-md adapter writes AGENTS.md and the vendor-neutral .agents skil
     false,
     'a portable install must not create a Claude-specific file',
   );
-  assert.match(block?.content ?? '', /<!-- hahahah:begin profile=rusuh-id/);
+  assert.match(block?.content ?? '', /<!-- hahahah:begin profile=plus62/);
   assert.match(block?.content ?? '', /<!-- hahahah:end -->/);
 
   const paths = list.map((artifact) => artifact.path);
-  assert.ok(paths.includes('.agents/skills/hahahah-rusuh/SKILL.md'));
-  assert.ok(paths.includes('.agents/skills/hahahah-rusuh/references/core/10-safety.md'));
-  assert.ok(paths.includes('.agents/skills/hahahah-rusuh/references/lexicon.md'));
+  assert.ok(paths.includes('.agents/skills/hahahah-plus62/SKILL.md'));
+  assert.ok(paths.includes('.agents/skills/hahahah-plus62/references/core/10-safety.md'));
+  assert.ok(paths.includes('.agents/skills/hahahah-plus62/references/lexicon.md'));
 });
 
 test('the agents-md skill body carries the persona voice and the reference pointer', () => {
   const skill = artifacts().find((artifact) => artifact.path.endsWith('SKILL.md'));
   assert.ok(skill);
-  assert.match(skill.content, /^---\nname: hahahah-rusuh\ndescription: .+\n---\n/);
+  assert.match(skill.content, /^---\nname: hahahah-plus62\ndescription: .+\n---\n/);
   assert.match(skill.content, /## Adaptive dynamics/);
   assert.match(skill.content, /references\/core\/\*\.md/);
 });
@@ -50,7 +50,7 @@ test('install and uninstall round-trip through the agents-md adapter', () => {
     const result = install({
       sourceRoot: root,
       targetRoot: target,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: 'agents-md',
     });
     assert.equal(result.manifest.adapter, 'agents-md');
@@ -58,7 +58,7 @@ test('install and uninstall round-trip through the agents-md adapter', () => {
     const agents = readFileSync(join(target, 'AGENTS.md'), 'utf8');
     assert.match(agents, /# Proyek gue/, 'the user file is kept, not replaced');
     assert.match(agents, /hahahah:begin/);
-    assert.equal(existsSync(join(target, '.agents/skills/hahahah-rusuh/SKILL.md')), true);
+    assert.equal(existsSync(join(target, '.agents/skills/hahahah-plus62/SKILL.md')), true);
     assert.equal(existsSync(join(target, '.claude')), false, 'no Claude tree should appear');
 
     assert.deepEqual(doctor({ targetRoot: target }).errors, []);
@@ -68,7 +68,7 @@ test('install and uninstall round-trip through the agents-md adapter', () => {
     assert.equal(after.includes('hahahah:begin'), false);
     assert.match(after, /Jangan sentuh bagian ini\./);
     assert.equal(existsSync(join(target, '.agents')), false);
-    assert.equal(existsSync(join(target, '.hahahah/manifest.json')), false);
+    assert.equal(existsSync(join(target, '.plus62/manifest.json')), false);
   } finally {
     rmSync(target, { recursive: true, force: true });
   }

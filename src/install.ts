@@ -17,12 +17,13 @@ import { buildCodeGraph, removeCodeGraph } from './graph.ts';
 import { validate } from './schema.ts';
 import type { InstallManifest, MeasuredArtifact } from './types.ts';
 
-const MANIFEST_PATH = '.hahahah/manifest.json';
+const MANIFEST_PATH = '.plus62/manifest.json';
+const LEGACY_MANIFEST_PATH = '.hahahah/manifest.json';
 const BLOCK_PATH = 'CLAUDE.md';
-const BLOCK_BEGIN = /<!-- hahahah:begin [^\n]*-->/;
-const BLOCK_END = /<!-- hahahah:end -->/;
+const BLOCK_BEGIN = /<!-- (?:plus62|hahahah):begin [^\n]*-->/;
+const BLOCK_END = /<!-- (?:plus62|hahahah):end -->/;
 
-export const RECOMMENDED_AGENT_IGNORE = `# token-maxxing: input token saver (safe build & asset ignores)
+export const RECOMMENDED_AGENT_IGNORE = `# plus62: input token saver (safe build & asset ignores)
 node_modules/
 dist/
 build/
@@ -38,15 +39,19 @@ coverage/
 *.log
 `;
 
-export function setupAgentIgnore(targetRoot: string, adapterId?: string): { created: boolean; path: string } {
-  const filenames = adapterId === 'claude-code' ? ['.claudeignore', '.agentignore'] : ['.agentignore'];
-  const primaryPath = join(targetRoot, filenames[0]);
+export function setupAgentIgnore(
+  targetRoot: string,
+  adapterId?: string,
+): { created: boolean; path: string } {
+  const filenames =
+    adapterId === 'claude-code' ? ['.claudeignore', '.agentignore'] : ['.agentignore'];
+  const primaryPath = join(targetRoot, filenames[0]!);
   let anyCreated = false;
   for (const filename of filenames) {
     const filePath = join(targetRoot, filename);
     if (existsSync(filePath)) {
       const existing = readFileSync(filePath, 'utf8');
-      if (!existing.includes('token-maxxing: input token saver') && !existing.includes('anti-yapping: input token saver')) {
+      if (!existing.includes('input token saver')) {
         writeFileSync(filePath, `${existing.trimEnd()}\n\n${RECOMMENDED_AGENT_IGNORE}`, 'utf8');
         anyCreated = true;
       }
@@ -56,6 +61,30 @@ export function setupAgentIgnore(targetRoot: string, adapterId?: string): { crea
     }
   }
   return { created: anyCreated, path: primaryPath };
+}
+
+export function cleanAgentIgnore(targetRoot: string): void {
+  for (const filename of ['.claudeignore', '.agentignore']) {
+    const filePath = join(targetRoot, filename);
+    if (!existsSync(filePath)) continue;
+    try {
+      const content = readFileSync(filePath, 'utf8');
+      const stripped = content
+        .replace(RECOMMENDED_AGENT_IGNORE, '')
+        .replace(
+          /# (?:plus62|token-maxxing|anti-yapping): input token saver[\s\S]*?(?=(?:\n\n)|$)/g,
+          '',
+        )
+        .trim();
+      if (stripped === '') {
+        unlinkSync(filePath);
+      } else {
+        writeFileSync(filePath, `${stripped}\n`, 'utf8');
+      }
+    } catch {
+      // ignore
+    }
+  }
 }
 
 export interface InstallOptions {
@@ -106,9 +135,14 @@ function resolveInside(base: string, child: string): string {
 }
 
 function readManifest(targetRoot: string): InstallManifest | null {
-  const path = join(targetRoot, MANIFEST_PATH);
+  let path = join(targetRoot, MANIFEST_PATH);
   if (!existsSync(path)) {
-    return null;
+    const legacyPath = join(targetRoot, LEGACY_MANIFEST_PATH);
+    if (existsSync(legacyPath)) {
+      path = legacyPath;
+    } else {
+      return null;
+    }
   }
   let data: unknown;
   try {
@@ -304,7 +338,11 @@ function pruneConflictingPersonas(
     if (!existsSync(skillsRoot)) continue;
     try {
       for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
-        if (entry.isDirectory() && entry.name.startsWith('hahahah-') && entry.name !== activeDirName) {
+        if (
+          entry.isDirectory() &&
+          entry.name.startsWith('hahahah-') &&
+          entry.name !== activeDirName
+        ) {
           rmSync(join(skillsRoot, entry.name), { recursive: true, force: true });
         }
       }
@@ -447,8 +485,19 @@ export function uninstall(options: {
       }
     }
     removeCodeGraph(targetRoot);
-    unlinkSync(join(targetRoot, MANIFEST_PATH));
-    pruneEmptyDirs(dirname(join(targetRoot, MANIFEST_PATH)), targetRoot);
+    cleanAgentIgnore(targetRoot);
+    for (const manifestPath of [MANIFEST_PATH, LEGACY_MANIFEST_PATH]) {
+      const p = join(targetRoot, manifestPath);
+      if (existsSync(p)) {
+        unlinkSync(p);
+      }
+    }
+    for (const dirName of ['.plus62', '.hahahah']) {
+      const dirPath = join(targetRoot, dirName);
+      if (existsSync(dirPath)) {
+        pruneEmptyDirs(dirPath, targetRoot);
+      }
+    }
   }
 
   return old;

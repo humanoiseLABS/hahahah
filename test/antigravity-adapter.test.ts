@@ -11,7 +11,7 @@ const root = process.cwd();
 function artifacts() {
   return build({
     root,
-    profileId: 'rusuh-id',
+    profileId: 'plus62',
     adapterId: 'antigravity',
     write: false,
   }).artifacts;
@@ -21,7 +21,7 @@ test('the antigravity adapter writes AGENTS.md plus .agents/rules, never a skill
   const list = artifacts();
   const block = list.find((artifact) => artifact.kind === 'always_on');
   assert.equal(block?.path, 'AGENTS.md');
-  assert.match(block?.content ?? '', /<!-- hahahah:begin profile=rusuh-id/);
+  assert.match(block?.content ?? '', /<!-- hahahah:begin profile=plus62/);
 
   const paths = list.map((artifact) => artifact.path);
   assert.equal(
@@ -29,9 +29,9 @@ test('the antigravity adapter writes AGENTS.md plus .agents/rules, never a skill
     false,
     'Antigravity does not read a skill tree; nothing may be written there',
   );
-  assert.ok(paths.includes('.agents/rules/hahahah-rusuh-voice.md'));
-  assert.ok(paths.includes('.agents/rules/hahahah-rusuh-lexicon.md'));
-  assert.ok(paths.includes('.agents/rules/hahahah-rusuh-core-10-safety.md'));
+  assert.ok(paths.includes('.agents/rules/hahahah-plus62-voice.md'));
+  assert.ok(paths.includes('.agents/rules/hahahah-plus62-lexicon.md'));
+  assert.ok(paths.includes('.agents/rules/hahahah-plus62-core-10-safety.md'));
 });
 
 test('the voice rule is always_on and carries the adaptive engine', () => {
@@ -58,19 +58,19 @@ test('--scope global moves the rules to config/rules and prunes them on uninstal
     const result = install({
       sourceRoot: root,
       targetRoot: target,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: 'antigravity',
       scope: 'global',
     });
     // With ~/.gemini as the target, the user-level rule path is config/rules/, not .agents/rules/.
     assert.equal(result.manifest.block.path, 'AGENTS.md');
     assert.ok(
-      result.manifest.files.some((file) => file.path === 'config/rules/hahahah-rusuh-voice.md'),
+      result.manifest.files.some((file) => file.path === 'config/rules/hahahah-plus62-voice.md'),
       `manifest recorded ${JSON.stringify(result.manifest.files.map((file) => file.path))}`,
     );
-    assert.equal(existsSync(join(target, 'config/rules/hahahah-rusuh-voice.md')), true);
+    assert.equal(existsSync(join(target, 'config/rules/hahahah-plus62-voice.md')), true);
     assert.equal(
-      existsSync(join(target, '.agents/rules/hahahah-rusuh-voice.md')),
+      existsSync(join(target, '.agents/rules/hahahah-plus62-voice.md')),
       false,
       'a global install must not also leave the workspace path behind',
     );
@@ -95,16 +95,16 @@ test('--scope global for qoder moves skills to skills/ and prunes conflicting ha
     const result = install({
       sourceRoot: root,
       targetRoot: target,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: 'qoder',
       scope: 'global',
     });
     assert.equal(result.manifest.block.path, 'AGENTS.md');
     assert.ok(
-      result.manifest.files.some((file) => file.path === 'skills/hahahah-rusuh/SKILL.md'),
+      result.manifest.files.some((file) => file.path === 'skills/hahahah-plus62/SKILL.md'),
       `manifest recorded ${JSON.stringify(result.manifest.files.map((file) => file.path))}`,
     );
-    assert.equal(existsSync(join(target, 'skills/hahahah-rusuh/SKILL.md')), true);
+    assert.equal(existsSync(join(target, 'skills/hahahah-plus62/SKILL.md')), true);
     assert.equal(existsSync(staleSkill), false);
     assert.deepEqual(doctor({ targetRoot: target }).errors, []);
 
@@ -124,7 +124,7 @@ test('--scope global is refused for adapters whose tree has no user-level path',
         install({
           sourceRoot: root,
           targetRoot: target,
-          profileId: 'rusuh-id',
+          profileId: 'plus62',
           adapterId: 'claude-code',
           scope: 'global',
         }),
@@ -142,11 +142,11 @@ test('the default scope still writes the workspace rules path', () => {
     const result = install({
       sourceRoot: root,
       targetRoot: target,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: 'antigravity',
     });
     assert.ok(
-      result.manifest.files.some((file) => file.path === '.agents/rules/hahahah-rusuh-voice.md'),
+      result.manifest.files.some((file) => file.path === '.agents/rules/hahahah-plus62-voice.md'),
     );
   } finally {
     rmSync(target, { recursive: true, force: true });
@@ -160,7 +160,7 @@ test('install and uninstall round-trip through the antigravity adapter', () => {
     const result = install({
       sourceRoot: root,
       targetRoot: target,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: 'antigravity',
     });
     assert.equal(result.manifest.adapter, 'antigravity');
@@ -168,7 +168,7 @@ test('install and uninstall round-trip through the antigravity adapter', () => {
     const agents = readFileSync(join(target, 'AGENTS.md'), 'utf8');
     assert.match(agents, /# Proyek gue/, 'the user file is kept, not replaced');
     assert.match(agents, /hahahah:begin/);
-    assert.equal(existsSync(join(target, '.agents/rules/hahahah-rusuh-voice.md')), true);
+    assert.equal(existsSync(join(target, '.agents/rules/hahahah-plus62-voice.md')), true);
 
     assert.deepEqual(doctor({ targetRoot: target }).errors, []);
 
@@ -177,7 +177,7 @@ test('install and uninstall round-trip through the antigravity adapter', () => {
     assert.equal(after.includes('hahahah:begin'), false);
     assert.match(after, /Jangan sentuh bagian ini\./);
     assert.equal(existsSync(join(target, '.agents')), false);
-    assert.equal(existsSync(join(target, '.hahahah/manifest.json')), false);
+    assert.equal(existsSync(join(target, '.plus62/manifest.json')), false);
   } finally {
     rmSync(target, { recursive: true, force: true });
   }

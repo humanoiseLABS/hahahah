@@ -111,17 +111,36 @@ function readNonEmpty(path: string, label: string): string {
   return value;
 }
 
+const PROFILE_ALIASES: Record<string, string> = {
+  'rusuh-id': 'plus62',
+  rusuh: 'plus62',
+};
+
+const PERSONA_ALIASES: Record<string, string> = {
+  rusuh: 'plus62',
+};
+
 function loadProfile(root: string, id: string): Profile {
-  const path = join(root, 'profiles', `${id}.yaml`);
+  let targetId = id;
+  let path = join(root, 'profiles', `${targetId}.yaml`);
+  if (!existsSync(path) && PROFILE_ALIASES[id]) {
+    targetId = PROFILE_ALIASES[id]!;
+    path = join(root, 'profiles', `${targetId}.yaml`);
+  }
   const data = readYaml(path);
-  validate('profile', data, `profiles/${id}.yaml`, root);
+  validate('profile', data, `profiles/${targetId}.yaml`, root);
   return data as Profile;
 }
 
 function loadPersona(root: string, id: string): Persona {
-  const path = join(root, 'personas', id, 'persona.yaml');
+  let targetId = id;
+  let path = join(root, 'personas', targetId, 'persona.yaml');
+  if (!existsSync(path) && PERSONA_ALIASES[id]) {
+    targetId = PERSONA_ALIASES[id]!;
+    path = join(root, 'personas', targetId, 'persona.yaml');
+  }
   const data = readYaml(path);
-  validate('persona', data, `personas/${id}/persona.yaml`, root);
+  validate('persona', data, `personas/${targetId}/persona.yaml`, root);
   return data as Persona;
 }
 
@@ -528,7 +547,7 @@ export function build(options: BuildOptions): BuildResult {
 
   validate('manifest', manifest, 'generated manifest', root);
 
-  const outDir = options.outDir ?? join(root, '.hahahah', 'build', adapter.id);
+  const outDir = options.outDir ?? join(root, '.plus62', 'build', adapter.id);
   if (options.write !== false) {
     if (existsSync(outDir) && !existsSync(join(outDir, 'manifest.json'))) {
       let entries: string[] = [];

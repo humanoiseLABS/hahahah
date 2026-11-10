@@ -5,9 +5,9 @@ import { FaqSection } from "@/components/ui/faq-section";
 
 const HUMANOISE_FAQS = [
   {
-    question: "Apa bedanya HUMANOISE, Token-Maxxing, dan +62 Mode?",
+    question: "Apa bedanya HumanoiseLABS, +62 Mode, dan Token-Maxxing?",
     answer:
-      "HUMANOISE (humanoiseLABS) adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) Token-Maxxing (`npx token-maxxing install` atau `tmx`) buat Second Brain memory, jawaban telegrafis baris pertama, 3D live visualizer, dan surgical diffs biar AI hemat token hingga 80%, dan (2) +62 Mode (`npx hahahah-ai install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara.",
+      "HumanoiseLABS adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) +62 Mode (`npx plus62 install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara, dan (2) Token-Maxxing (`npx token-maxxing install` atau `tmx`) buat Second Brain memory, jawaban telegrafis baris pertama, 3D live visualizer, dan surgical diffs biar AI hemat token hingga 80%.",
   },
   {
     question: "Gimana efeknya ke konsumsi token & biaya API?",
@@ -39,7 +39,7 @@ export default function SupportSection() {
           TANYA JAWAB &amp; KOMUNITAS
         </h2>
         <p className="text-base sm:text-lg text-[#3a3a3a] sketch-serif mt-2 max-w-xl">
-          Ada yang bikin bingung, instalasi nyangkut, atau mau ikut kontribusi ke lab HUMANOISE?
+          Ada yang bikin bingung, instalasi nyangkut, atau mau ikut kontribusi ke lab HumanoiseLABS?
         </p>
       </div>
 
@@ -61,7 +61,7 @@ export default function SupportSection() {
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
             <a
-              href="https://github.com/humanoiseLABS/hahahah/issues"
+              href="https://github.com/humanoiseLABS/plus62/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#ff6b2c] transition-colors"
@@ -85,7 +85,7 @@ export default function SupportSection() {
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
             <a
-              href="https://github.com/humanoiseLABS/hahahah/tree/main/docs"
+              href="https://github.com/humanoiseLABS/plus62/tree/main/docs"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#ff6b2c] transition-colors"
@@ -109,7 +109,7 @@ export default function SupportSection() {
           </div>
           <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
             <a
-              href="https://github.com/humanoiseLABS/hahahah"
+              href="https://github.com/humanoiseLABS/plus62"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#ff6b2c] font-bold flex items-center gap-1.5 hover:underline"
@@ -126,14 +126,14 @@ export default function SupportSection() {
       <div className="sketch-card overflow-hidden">
         <FaqSection
           title="TANYA JAWAB (FAQ)"
-          description="Hal-hal yang sering ditanyain seputar HUMANOISE, Token-Maxxing vs +62 Mode, fakta token, sama keamanan adapter."
+          description="Hal-hal yang sering ditanyain seputar HumanoiseLABS, +62 Mode vs Token-Maxxing, fakta token, sama keamanan adapter."
           items={HUMANOISE_FAQS}
           contactInfo={{
             title: "Masih Ada yang Mau Ditanyain?",
             description: "Komunitas dan dev siap bantuin lu di GitHub Issues, ga usah sungkan!",
             buttonText: "Tanya / Diskusi di GitHub",
             onContact: () => {
-              window.open("https://github.com/humanoiseLABS/hahahah/issues", "_blank");
+              window.open("https://github.com/humanoiseLABS/plus62/issues", "_blank");
             },
           }}
         />

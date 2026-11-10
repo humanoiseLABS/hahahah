@@ -31,7 +31,7 @@ const HARNESS_SPECS: HarnessSpec[] = [
     layout: 'skill-tree',
     blockPath: 'CLAUDE.md',
     onDemandRoot: '.claude/skills',
-    entryFile: '.claude/skills/hahahah-rusuh/SKILL.md',
+    entryFile: '.claude/skills/hahahah-plus62/SKILL.md',
     frontmatter: 'name:',
     status: 'verified on this machine',
     source: 'https://code.claude.com/docs/en/skills',
@@ -41,7 +41,7 @@ const HARNESS_SPECS: HarnessSpec[] = [
     layout: 'skill-tree',
     blockPath: 'AGENTS.md',
     onDemandRoot: '.claude/skills',
-    entryFile: '.claude/skills/hahahah-rusuh/SKILL.md',
+    entryFile: '.claude/skills/hahahah-plus62/SKILL.md',
     frontmatter: 'name:',
     status: 'verified on this machine',
     source: 'opencode 1.18.31 `debug skill` listed the installed skill locally',
@@ -51,7 +51,7 @@ const HARNESS_SPECS: HarnessSpec[] = [
     layout: 'skill-tree',
     blockPath: 'AGENTS.md',
     onDemandRoot: '.agents/skills',
-    entryFile: '.agents/skills/hahahah-rusuh/SKILL.md',
+    entryFile: '.agents/skills/hahahah-plus62/SKILL.md',
     frontmatter: 'name:',
     status: 'documented, not verified',
     source: 'https://agentskills.io/specification',
@@ -61,7 +61,7 @@ const HARNESS_SPECS: HarnessSpec[] = [
     layout: 'rules-dir',
     blockPath: 'AGENTS.md',
     onDemandRoot: '.agents/rules',
-    entryFile: '.agents/rules/hahahah-rusuh-voice.md',
+    entryFile: '.agents/rules/hahahah-plus62-voice.md',
     frontmatter: 'trigger:',
     status: 'documented, not verified',
     source: 'https://antigravity.google/docs/rules/',
@@ -71,7 +71,7 @@ const HARNESS_SPECS: HarnessSpec[] = [
     layout: 'skill-tree',
     blockPath: 'AGENTS.md',
     onDemandRoot: '.qoder/skills',
-    entryFile: '.qoder/skills/hahahah-rusuh/SKILL.md',
+    entryFile: '.qoder/skills/hahahah-plus62/SKILL.md',
     frontmatter: 'name:',
     status: 'documented, not verified',
     source: 'https://docs.qoder.com/cli/Skills',
@@ -122,7 +122,7 @@ test('the profile schema enum, the registry and the profiles agree on the adapte
   const registered = adapterIds().sort().join(',');
   assert.equal(allowed, registered, 'profile.schema.json enum vs build.ts registry');
 
-  for (const file of ['rusuh-id']) {
+  for (const file of ['plus62']) {
     const text = readFileSync(join(root, 'profiles', `${file}.yaml`), 'utf8');
     for (const id of adapterIds()) {
       if (id === 'fake') continue;
@@ -138,7 +138,7 @@ test('each adapter renders exactly one always-on block, and an entry file only w
   for (const spec of HARNESS_SPECS) {
     const artifacts = build({
       root,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: spec.adapter,
       write: false,
     }).artifacts;
@@ -165,7 +165,7 @@ test('emitted on-demand files carry the frontmatter the vendor requires', () => 
     if (!spec.entryFile || !spec.frontmatter) continue;
     const artifacts = build({
       root,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: spec.adapter,
       write: false,
     }).artifacts;
@@ -181,7 +181,7 @@ test('emitted on-demand files carry the frontmatter the vendor requires', () => 
 test('a fold harness puts the voice where the agent will actually read it', () => {
   // Copilot documents no on-demand layer, so anything left out of the single instructions file is
   // lost. This is the whole reason the fold layout exists.
-  const voice = readFileSync(join(root, 'personas/rusuh/voice.md'), 'utf8').trim();
+  const voice = readFileSync(join(root, 'personas/plus62/voice.md'), 'utf8').trim();
   const marker = voice
     .split('\n')
     .find((line) => line.startsWith('- **Casual greeting.'))
@@ -191,7 +191,7 @@ test('a fold harness puts the voice where the agent will actually read it', () =
   for (const spec of HARNESS_SPECS.filter((row) => row.layout === 'fold')) {
     const block = build({
       root,
-      profileId: 'rusuh-id',
+      profileId: 'plus62',
       adapterId: spec.adapter,
       write: false,
     }).artifacts.find((artifact) => artifact.kind === 'always_on')!;
@@ -208,7 +208,7 @@ test('a fold harness puts the voice where the agent will actually read it', () =
 
 test('a fold harness stays inside its own always-on ceiling and says so', () => {
   for (const spec of HARNESS_SPECS.filter((row) => row.layout === 'fold')) {
-    const result = build({ root, profileId: 'rusuh-id', adapterId: spec.adapter, write: false });
+    const result = build({ root, profileId: 'plus62', adapterId: spec.adapter, write: false });
     const alwaysOn = result.manifest.budgets.always_on;
     // The global 600-token cap is for a card-only block. A folded block is legitimately bigger,
     // so the harness row must carry its own ceiling instead of silently passing the global one.
@@ -238,7 +238,7 @@ test('every harness round-trips: install, report healthy, uninstall, leave nothi
       install({
         sourceRoot: root,
         targetRoot: target,
-        profileId: 'rusuh-id',
+        profileId: 'plus62',
         adapterId: spec.adapter,
       });
       assert.match(
@@ -261,7 +261,7 @@ test('every harness round-trips: install, report healthy, uninstall, leave nothi
         assert.equal(existsSync(join(target, top)), false, `${spec.adapter}: ${top}/ not pruned`);
       }
       assert.equal(
-        existsSync(join(target, '.hahahah/manifest.json')),
+        existsSync(join(target, '.plus62/manifest.json')),
         false,
         `${spec.adapter}: manifest left behind`,
       );

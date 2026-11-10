@@ -17,5 +17,5 @@ test('isNewerVersion correctly compares semantic versions', () => {
 test('formatUpdateNotice includes versions and update command', () => {
   const notice = formatUpdateNotice('0.1.0', '0.1.1');
   assert.match(notice, /v0\.1\.0 → v0\.1\.1/);
-  assert.match(notice, /node src\/cli\.ts update/);
+  assert.match(notice, /npx plus62 update/);
 });

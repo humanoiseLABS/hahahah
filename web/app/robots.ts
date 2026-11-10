@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://hahahah-web.vercel.app/sitemap.xml",
-    host: "https://hahahah-web.vercel.app",
+    sitemap: "https://plus62.vercel.app/sitemap.xml",
+    host: "https://plus62.vercel.app",
   };
 }

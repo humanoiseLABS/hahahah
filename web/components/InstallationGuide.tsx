@@ -19,10 +19,10 @@ export default function InstallationGuide({
   const [copiedPrompt, setCopiedPrompt] = useState(false);
 
   const isTokenMaxxing = selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping";
-  const packageName = isTokenMaxxing ? "token-maxxing" : "hahahah-ai";
+  const packageName = isTokenMaxxing ? "token-maxxing" : "plus62";
   const repoUrl = isTokenMaxxing
     ? "https://github.com/humanoiseLABS/token-maxxing"
-    : "https://github.com/humanoiseLABS/hahahah";
+    : "https://github.com/humanoiseLABS/plus62";
 
   const aiSelfInstallPrompt = `Tolong jalankan \`${generatedCommand}\` di terminal untuk memasang ${selectedPersona.name} untuk ${selectedAgent.name} ke workspace utama gw (dokumentasi resmi: ${repoUrl}). Untuk Qoder/Cursor/IDE lain, pastikan aturan suara persona juga digabung langsung ke AGENTS.md & Global Rules/Memory lu. Kalau sudah beres, langsung balas gw pakai gaya ${selectedPersona.name}!`;
 

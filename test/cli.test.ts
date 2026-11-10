@@ -56,12 +56,12 @@ test('install, doctor, and uninstall work through the CLI', () => {
   try {
     const installResult = spawnSync(
       process.execPath,
-      ['src/cli.ts', 'install', '--profile', 'rusuh-id', '--target', target],
+      ['src/cli.ts', 'install', '--profile', 'plus62', '--target', target],
       { cwd: root, encoding: 'utf8' },
     );
     assert.equal(installResult.status, 0, installResult.stderr);
     assert.ok(existsSync(join(target, 'CLAUDE.md')));
-    assert.ok(existsSync(join(target, '.claude/skills/hahahah-rusuh/SKILL.md')));
+    assert.ok(existsSync(join(target, '.claude/skills/hahahah-plus62/SKILL.md')));
 
     const doctorResult = spawnSync(process.execPath, ['src/cli.ts', 'doctor', '--target', target], {
       cwd: root,
@@ -74,7 +74,7 @@ test('install, doctor, and uninstall work through the CLI', () => {
       encoding: 'utf8',
     });
     assert.equal(updateResult.status, 0, updateResult.stderr);
-    assert.match(updateResult.stdout, /Updated rusuh-id/);
+    assert.match(updateResult.stdout, /Updated plus62/);
 
     const uninstallResult = spawnSync(
       process.execPath,
@@ -83,7 +83,7 @@ test('install, doctor, and uninstall work through the CLI', () => {
     );
     assert.equal(uninstallResult.status, 0, uninstallResult.stderr);
     assert.equal(existsSync(join(target, 'CLAUDE.md')), false);
-    assert.equal(existsSync(join(target, '.hahahah/manifest.json')), false);
+    assert.equal(existsSync(join(target, '.plus62/manifest.json')), false);
   } finally {
     rmSync(target, { recursive: true, force: true });
   }

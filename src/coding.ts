@@ -253,7 +253,13 @@ export function checkAll(root: string, dir = 'fixtures'): FixtureCheck[] {
 const TEST_FILE = /\.test\.(cjs|js|mjs)$/;
 // Paths this tool owns inside a graded workspace: the installed profile and the module
 // manifest that pins ESM loading. They must not read as "files the agent created".
-const RUNNER_OWNED = new Set(['CLAUDE.md', 'package.json']);
+const RUNNER_OWNED = new Set([
+  'CLAUDE.md',
+  'AGENTS.md',
+  'package.json',
+  '.claudeignore',
+  '.agentignore',
+]);
 
 export interface AgentRun {
   output: string;

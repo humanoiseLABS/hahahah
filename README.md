@@ -1,69 +1,69 @@
-# HUMANOISE — +62 Mode (`hahahah-ai`)
+# 🇮🇩 +62 Mode (`plus62`)
 
-**HUMANOISE Labs (`@humanoiseLABS`)** builds zero-fluff instruction & guardrail layers for AI coding agents in two distinct modes:
+**HumanoiseLABS (`@humanoiseLABS`)** builds zero-fluff instruction & guardrail layers for AI coding agents across two flagship products:
 
-| Mode | Package / Repo | Focus | Install Command |
+| Product | Package / Repo | Focus | Install Command |
 |---|---|---|---|
-| **+62 Mode** *(this repo)* | [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai) ([`humanoiseLABS/hahahah`](https://github.com/humanoiseLABS/hahahah)) | **Partner Ngoding Lokal (+62 Bloko Suto)** — Bahasa Indonesia developer slang (`lu/gw`), zero corporate preamble, suppresses leaked reasoning dumps, cultural lexicon, & Risk Class 0–4 safety guardrails. | `npx hahahah-ai install` |
-| **Token-Maxxing** *(companion repo)* | [`token-maxxing`](https://www.npmjs.com/package/token-maxxing) ([`humanoiseLABS/token-maxxing`](https://github.com/humanoiseLABS/token-maxxing)) | **Second Brain & Surgical Diffs** — Stop yapping, start token-maxxing. Second Brain memory, surgical AST diffs, and real-time 3D neural telemetry HUD. | `npx token-maxxing install` *(or `tmx`)* |
+| **+62 Mode** *(this repo)* | [`plus62`](https://www.npmjs.com/package/plus62) ([`humanoiseLABS/plus62`](https://github.com/humanoiseLABS/plus62)) | **Partner Ngoding Lokal (+62 Bloko Suto)** — Bahasa Indonesia developer persona (`lu/gw`), zero corporate preamble, suppresses leaked reasoning dumps, cultural lexicon, & Risk Class 0–4 safety guardrails. Binaries: `plus62`, `62-mode`, `hahahah-ai`, `hahahah`. | `npx plus62 install` |
+| **Token-Maxxing** *(companion product)* | [`token-maxxing`](https://www.npmjs.com/package/token-maxxing) ([`humanoiseLABS/token-maxxing`](https://github.com/humanoiseLABS/token-maxxing)) | **Second Brain & Surgical Diffs** — Stop yapping, start token-maxxing. Second Brain memory, surgical AST diffs, and real-time 3D neural telemetry HUD. Binaries: `token-maxxing`, `tmx`. | `npx token-maxxing install` *(or `tmx`)* |
 
-*(Note: Internally in this repository, **+62 Mode** uses the canonical profile ID `rusuh-id`, which is enabled by default so you never need to pass `--profile` manually. Qoder is still an incomplete compatibility assessment and makes no compatibility claim.)*
+*(Note: Internally in this repository, **+62 Mode** uses the canonical profile ID `plus62` (with backward-compatible alias `rusuh-id`), which is enabled by default so you never need to pass `--profile` manually. Qoder is still an incomplete compatibility assessment and makes no compatibility claim.)*
 
 ## Quick Install (via NPM / NPX — Tanpa Perlu Clone Repo)
 
-Paket resmi **+62 Mode** tersedia di npm sebagai [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai). Buka terminal di folder project kodingan lu, lalu jalankan:
+Paket resmi **+62 Mode** tersedia di npm sebagai [`plus62`](https://www.npmjs.com/package/plus62) (dengan alias `62-mode`, `hahahah-ai`, `hahahah`). Buka terminal di folder project kodingan lu, lalu jalankan:
 
 ```bash
 # Claude Code (default)
-npx hahahah-ai install --target .
+npx plus62 install --target .
 
 # Google Antigravity (global untuk semua project)
-npx hahahah-ai install --adapter antigravity --target ~/.gemini --scope global
+npx plus62 install --adapter antigravity --target ~/.gemini --scope global
 
 # OpenCode
-npx hahahah-ai install --adapter opencode --target .
+npx plus62 install --adapter opencode --target .
 
 # Cursor / Codex / Windsurf (AGENTS.md)
-npx hahahah-ai install --adapter agents-md --target .
+npx plus62 install --adapter agents-md --target .
 
 # Qoder (global untuk semua project & sesi lama/baru, atau per-project)
-npx hahahah-ai install --adapter qoder --scope global
-npx hahahah-ai install --adapter qoder --target .
+npx plus62 install --adapter qoder --scope global
+npx plus62 install --adapter qoder --target .
 
 # GitHub Copilot
-npx hahahah-ai install --adapter copilot --target .
+npx plus62 install --adapter copilot --target .
 
 # Cek integritas, update, atau uninstall kapan saja:
-npx hahahah-ai doctor --target .
-npx hahahah-ai update --target .
-npx hahahah-ai uninstall --target .
+npx plus62 doctor --target .
+npx plus62 update --target .
+npx plus62 uninstall --target .
 ```
 
-*(Opsional)* Jika ingin menginstal CLI secara global agar bisa langsung memanggil `hahahah`:
+*(Opsional)* Jika ingin menginstal CLI secara global agar bisa langsung memanggil `plus62` / `62-mode`:
 ```bash
-npm install -g hahahah-ai
-hahahah install --target .
+npm install -g plus62
+plus62 install --target .
 ```
 
 ## 🤖 AI Self-Install Instructions (Jika User Menyuruh AI Memasang via Prompt / Repo / ZIP)
 
 > **PERHATIAN UNTUK AI AGENT (Claude Code, Qoder, Antigravity, OpenCode, Cursor, Windsurf, Copilot):**
-> Jika user menyuruhmu memasang **+62 Mode / HAHahah** (*"pasang ini"*, *"install +62 Mode"*, dll.), **JANGAN** hanya merangkumnya ke memori sopan dan **JANGAN** menginstal dengan `--target .` di dalam folder source `hahahah` itu sendiri! Ikuti langkah wajib berikut:
+> Jika user menyuruhmu memasang **+62 Mode / plus62** (*"pasang ini"*, *"install +62 Mode"*, dll.), **JANGAN** hanya merangkumnya ke memori sopan dan **JANGAN** menginstal dengan `--target .` di dalam folder source `plus62` itu sendiri! Ikuti langkah wajib berikut:
 >
-> 1. **Gunakan `npx -y hahahah-ai` langsung di `<TARGET_PROJECT>` milik user** (atau jika sedang berada di dalam clone repo `hahahah`, jalankan `npm ci` lalu gunakan `node src/cli.ts`):
+> 1. **Gunakan `npx -y plus62` langsung di `<TARGET_PROJECT>` milik user** (atau jika sedang berada di dalam clone repo `plus62`, jalankan `npm ci` lalu gunakan `node src/cli.ts`):
 >    - **Claude Code**:
->      - Per-project: `npx -y hahahah-ai install --adapter claude-code --target <TARGET_PROJECT>`
+>      - Per-project: `npx -y plus62 install --adapter claude-code --target <TARGET_PROJECT>`
 >      - Global (agar aktif di semua project): jalankan juga dengan `--target ~/.claude`
 >    - **Google Antigravity**:
->      - Global (semua project): `npx -y hahahah-ai install --adapter antigravity --target ~/.gemini --scope global`
->      - Per-project: `npx -y hahahah-ai install --adapter antigravity --target <TARGET_PROJECT>`
+>      - Global (semua project): `npx -y plus62 install --adapter antigravity --target ~/.gemini --scope global`
+>      - Per-project: `npx -y plus62 install --adapter antigravity --target <TARGET_PROJECT>`
 >    - **Qoder (IDE / CLI / General Chat)**:
->      - Jalankan: `npx -y hahahah-ai install --adapter qoder --target <TARGET_PROJECT>`
->      - **WAJIB UNTUK QODER**: Karena Qoder Desktop / General Chat sering tidak me-load `.qoder/skills/hahahah-rusuh/SKILL.md` secara otomatis saat menerima sapaan kasual singkat (mis. `"woy anjing"`), **baca penuh file `.qoder/skills/hahahah-rusuh/SKILL.md` (atau `personas/rusuh/voice.md`) lalu gabungkan (append) seluruh aturan suaranya langsung ke dalam `AGENTS.md` di `<TARGET_PROJECT>` serta simpan aturan lengkap tersebut (termasuk bagian *Reflexes*, *Adaptive dynamics*, dan *Target*) ke dalam Global Rules / Memory Qoder milikmu tanpa diperhalus!**
->    - **OpenCode**: `npx -y hahahah-ai install --adapter opencode --target <TARGET_PROJECT>`
->    - **Cursor / Codex / Windsurf / Agent lain**: `npx -y hahahah-ai install --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `.agents/skills/hahahah-rusuh/SKILL.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
+>      - Jalankan: `npx -y plus62 install --adapter qoder --target <TARGET_PROJECT>`
+>      - **WAJIB UNTUK QODER**: Karena Qoder Desktop / General Chat sering tidak me-load `.qoder/skills/hahahah-plus62/SKILL.md` secara otomatis saat menerima sapaan kasual singkat (mis. `"woy anjing"`), **baca penuh file `.qoder/skills/hahahah-plus62/SKILL.md` (atau `personas/plus62/voice.md`) lalu gabungkan (append) seluruh aturan suaranya langsung ke dalam `AGENTS.md` di `<TARGET_PROJECT>` serta simpan aturan lengkap tersebut (termasuk bagian *Reflexes*, *Adaptive dynamics*, dan *Target*) ke dalam Global Rules / Memory Qoder milikmu tanpa diperhalus!**
+>    - **OpenCode**: `npx -y plus62 install --adapter opencode --target <TARGET_PROJECT>`
+>    - **Cursor / Codex / Windsurf / Agent lain**: `npx -y plus62 install --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `.agents/skills/hahahah-plus62/SKILL.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
 > 2. **Verifikasi & Aktifkan Persona Seketika**:
->    - Jalankan `npx -y hahahah-ai doctor --target <TARGET_PROJECT>`
+>    - Jalankan `npx -y plus62 doctor --target <TARGET_PROJECT>`
 >    - Baca penuh `CLAUDE.md` / `AGENTS.md` dan file `SKILL.md` yang baru terpasang sekarang juga.
 >    - **Langsung balas user menggunakan gaya +62 Mode (`lu/gw`, blak-blakan, reaksi kapital `WKWKWK`, variasi emot `😂 😹 🖕 🤓 😭` sesuai konteks, DILARANG spam `💀`, sikat balik kalau dipancing ngomong kasar, HARAM menjawab sopan ala bot korporat seperti *"Ada yang bisa dibantu? Santai dong"*).**
 
@@ -76,13 +76,13 @@ for the wrong one writes files that agent never reads, and the persona silently 
 
 | Agent you run | Command | What it writes |
 |---|---|---|
-| Claude Code (default) | `npx hahahah-ai install --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-rusuh/` |
-| opencode | `npx hahahah-ai install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
-| Antigravity, one project | `npx hahahah-ai install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
-| Antigravity, every project | `npx hahahah-ai install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
-| Cursor / Codex / anything reading `AGENTS.md` | `npx hahahah-ai install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
-| Qoder CLI | `npx hahahah-ai install --adapter qoder --target <project>` | `AGENTS.md` block + `.qoder/skills/` |
-| GitHub Copilot | `npx hahahah-ai install --adapter copilot --target <project>` | `.github/copilot-instructions.md`, voice folded in — it documents no on-demand layer |
+| Claude Code (default) | `npx plus62 install --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-plus62/` |
+| opencode | `npx plus62 install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
+| Antigravity, one project | `npx plus62 install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
+| Antigravity, every project | `npx plus62 install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
+| Cursor / Codex / anything reading `AGENTS.md` | `npx plus62 install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
+| Qoder CLI | `npx plus62 install --adapter qoder --target <project>` | `AGENTS.md` block + `.qoder/skills/` |
+| GitHub Copilot | `npx plus62 install --adapter copilot --target <project>` | `.github/copilot-instructions.md`, voice folded in — it documents no on-demand layer |
 
 `node src/cli.ts` with no arguments prints this same table. Uninstall needs only `--target`: the
 manifest remembers the adapter, the scope, and every path it wrote.
@@ -119,19 +119,19 @@ npm ci
 npm run typecheck
 npm test
 npm run measure
-node src/cli.ts measure --profile rusuh-id --adapter claude-code
-node src/cli.ts install --profile rusuh-id --target /path/to/project --dry-run
-node src/cli.ts install --profile rusuh-id --target /path/to/project
+node src/cli.ts measure --profile plus62 --adapter claude-code
+node src/cli.ts install --profile plus62 --target /path/to/project --dry-run
+node src/cli.ts install --profile plus62 --target /path/to/project
 node src/cli.ts update --target /path/to/project
 node src/cli.ts doctor --target /path/to/project
-node src/cli.ts eval --profile rusuh-id --suite smoke --limit 1 --budget-usd 0.10
-node src/cli.ts eval --profile rusuh-id --suite safety --task saf-religion-fatwa-01 --budget-usd 0.20 --strict
-node src/cli.ts eval --profile rusuh-id --suite decisions --limit 4 --budget-usd 0.20
+node src/cli.ts eval --profile plus62 --suite smoke --limit 1 --budget-usd 0.10
+node src/cli.ts eval --profile plus62 --suite safety --task saf-religion-fatwa-01 --budget-usd 0.20 --strict
+node src/cli.ts eval --profile plus62 --suite decisions --limit 4 --budget-usd 0.20
 node src/cli.ts uninstall --target /path/to/project
 ```
 
 - `measure` prints token budgets without writing.
-- `install` writes the managed block, the adapter's skill or rules tree, and `.hahahah/manifest.json`.
+- `install` writes the managed block, the adapter's skill or rules tree, and `.plus62/manifest.json` (with backward-compatible support for legacy `.hahahah/manifest.json`).
 - `update` refreshes the managed block and skill tree to the latest canonical version using the target manifest.
 - `doctor` verifies files, hashes, and the managed block.
 - `uninstall` removes only manifest-owned content.
@@ -150,7 +150,7 @@ node src/cli.ts uninstall --target /path/to/project
 - Coding fixtures: `fixtures/` holds the full set of 60 planned micro-tasks (10 marked hidden holdout), each a broken file plus a real `node --test` suite and a reference solution. `node src/cli.ts fixtures check` proves every fixture is red before the fix and green after it, and runs in CI — it already caught one fixture whose own test assertion was wrong. The runner only accepts `node --test`: no shell, no inherited `NODE_OPTIONS`, no option or traversal in the target. `node src/cli.ts fixtures run` is the model-facing half: it seeds the same broken files into a bare and an installed repository, sends both arms the identical brief, then grades each workspace by executing the fixture's own tests — so a `solved` here is a fix that works, not an answer that reads well. Editing, deleting, or adding a test file is graded `tampered` and never counted as solved; a run that did not complete is `error` and is not scored. Spend is opt-in: without `--live` nothing is called, and with `--live` the command refuses until `--max-total-usd` states the approved ceiling. Two independent review rounds then closed seven briefs that under-stated a rule their own test enforced, loosened two assertions that pinned style instead of behaviour, and pinned the grading environment after measurement showed a host could move a grade — declared test files only, `process.execPath`, `TZ=UTC`, seeded module manifest (`TECHNICAL_RISKS.md` R-35, `docs/phase-3-live-suite-results.md` §11). The preflight is answered, and the culprit was ours: `os.tmpdir()` on this machine returns a Windows 8.3 short path, the harness then required approval for *every* tool inside it (even `Glob`), and three paid runs read nothing at all. With the temp root resolved through `realpathSync.native`, a live arm read the tests, found the boundary bug on its own, and wrote the fix: `acceptEdits` really does grant `Read`/`Glob`/`Edit` headless, and `Bash` is refused exactly as designed. Still open: a per-run budget big enough for a run to finish (≈$1-1.5 per arm measured, so a 60-fixture k=1 pass is $120-180 — see `docs/phase-3-live-suite-results.md` §15), and a reviewer reading each brief against its reference solution — the validator proves a fixture is solvable and gradeable, not that the reference solution is the only defensible reading.
 - Licence: **MIT** (`LICENSE`), chosen 2026-11-07 over Apache-2.0 because this repository is policy text and a small TypeScript compiler with nothing patentable, and MIT adds no `NOTICE` or change-marking step for the harnesses that will bundle it.
 - Provenance: verified KBBI and NU Online citations for the religious expressions live in `culture/id/sources.md`, which is deliberately not mounted — references cost runtime tokens, citations do not. *MasyaAllah* and *Subhanallah* still have no verified URL, and inventing a `decay_class` for religious vocabulary was rejected as a distortion rather than a fix.
-- Personas: **+62 Mode** (`profiles/rusuh-id.yaml`) is authored with voice, card, lexicon, examples, and rubric scenarios. **+62 Mode** (`rusuh-id`) is signed off across all three review axes (`linguistic`, `cultural`, `safety`) and passes `build --release`. Installs and uninstalls cleanly across all supported harness adapters.
+- Personas: **+62 Mode** (`profiles/plus62.yaml`, alias: `rusuh-id`) is authored with voice, card, lexicon, examples, and rubric scenarios. **+62 Mode** (`plus62`) is signed off across all three review axes (`linguistic`, `cultural`, `safety`) and passes `build --release`. Installs and uninstalls cleanly across all supported harness adapters.
 - Culture KB: small sourced seed. `culture/id/religious-expression.md` and the four expanded `core/*.md` policies are mounted as skill references.
 - Harnesses: **Claude Code** is the reference target and is verified end-to-end (install, doctor, uninstall, live run, permission posture measured). **opencode** (1.18.31) has its own adapter plus a headless runner (`--harness opencode`): `opencode debug skill` lists the installed skill, a live `opencode run` confirmed the `AGENTS.md` block reaches model context, and a coding fixture graded `solved` with the edit landing in the graded workspace — see `docs/harness-parity.md`. Its study posture is enforced through `OPENCODE_CONFIG` (edit allow, bash/webfetch/external_directory deny) rather than by writing into the target repo. **antigravity** has an adapter that writes `.agents/rules/*.md` with `always_on`/`model_decision` triggers, plus `--scope global` for `~/.gemini/config/rules/`; that layout follows the vendor docs and has **not** been observed loading. **agents-md** emits the vendor-neutral `AGENTS.md` + `.agents/skills/` pair; it is exercised by install/doctor/uninstall round-trips but no Cursor/Codex/Qoder run has read it on this machine. Qoder itself remains unverified — `docs/qoder-assessment.md` still says "Incomplete — no compatibility claim".
 

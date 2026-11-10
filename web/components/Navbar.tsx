@@ -20,19 +20,19 @@ function Squiggle() {
 }
 
 export default function Navbar() {
-  const [hahahahStars, setHahahahStars] = useState<number | null>(null);
+  const [plus62Stars, setPlus62Stars] = useState<number | null>(null);
   const [tokenMaxxingStars, setTokenMaxxingStars] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("https://api.github.com/repos/humanoiseLABS/hahahah")
+    fetch("https://api.github.com/repos/humanoiseLABS/plus62")
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.stargazers_count === "number") {
-          setHahahahStars(data.stargazers_count);
+          setPlus62Stars(data.stargazers_count);
         }
       })
       .catch(() => {
-        setHahahahStars(null);
+        setPlus62Stars(null);
       });
 
     fetch("https://api.github.com/repos/humanoiseLABS/token-maxxing")
@@ -69,7 +69,7 @@ export default function Navbar() {
             </svg>
           </span>
           <span className="font-extrabold tracking-tight text-xl text-[#0d0d0d]">
-            humanoise
+            HumanoiseLABS
           </span>
           <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ffd23f] text-[#0d0d0d] border-2 border-[#0d0d0d] shadow-[2px_2px_0_#0d0d0d] -rotate-2">
             v3.0
@@ -109,7 +109,7 @@ export default function Navbar() {
             </span>
           </a>
           <a
-            href="https://github.com/humanoiseLABS/hahahah"
+            href="https://github.com/humanoiseLABS/plus62"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#fff9f2] border-2 border-[#0d0d0d] text-xs font-extrabold text-[#0d0d0d] shadow-[0_2px_0_#0d0d0d] hover:-translate-y-0.5 transition-all"
@@ -119,7 +119,7 @@ export default function Navbar() {
             </svg>
             <span>+62 Mode</span>
             <span className="inline-flex items-center gap-1 pl-1.5 border-l border-[#0d0d0d]/30 text-[#0d0d0d]">
-              ★ <span>{hahahahStars !== null ? hahahahStars : ""}</span>
+              ★ <span>{plus62Stars !== null ? plus62Stars : ""}</span>
             </span>
           </a>
         </div>

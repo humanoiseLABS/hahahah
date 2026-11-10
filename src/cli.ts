@@ -74,17 +74,21 @@ function availableSuites(): string[] {
 }
 
 function printUsage(): void {
-  console.log(`token-maxxing (alias: tmx, anti-yapping) — Second Brain & Surgical Diffs
+  console.log(`+62 Mode (plus62, alias: 62-mode, hahahah-ai) — Indonesian Developer Persona & Guardrails
 
 Usage:
-  npx token-maxxing install [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
-  npx token-maxxing graph [--target <repo>] [--view] [--live]
-  npx token-maxxing ignore [--target <repo>] [--adapter <name>]
-  npx token-maxxing update [--target <repo>] [--dry-run] [--force]
-  npx token-maxxing uninstall [--target <repo>] [--dry-run] [--force]
-  npx token-maxxing doctor [--target <repo>]
-  npx token-maxxing measure [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity]
-  npx token-maxxing build [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
+  npx plus62 install [--profile <id>] [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
+  npx plus62 graph [--target <repo>] [--view] [--live]
+  npx plus62 ignore [--target <repo>] [--adapter <name>]
+  npx plus62 update [--target <repo>] [--dry-run] [--force]
+  npx plus62 uninstall [--target <repo>] [--dry-run] [--force]
+  npx plus62 doctor [--target <repo>]
+  npx plus62 measure [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity]
+  npx plus62 build [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
+  node src/cli.ts fixtures check [--dir fixtures]
+  node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--harness claude|opencode] [--arm both|baseline|treatment] [--setting-sources <sources>] [--out <dir>] [--live]
+  node src/cli.ts fixtures diagnose --id <fixture> [--arm baseline|treatment] [--budget-usd <n>] [--max-total-usd <n>] [--out <dir>] [--live]
+  node src/cli.ts eval --profile <id> [--suite <name>] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--harness claude|opencode] [--setting-sources <sources>] [--out <dir>] [--strict]
 
 Which --adapter to pass, by the agent you run (install into the project you want it active in):
   Claude Code          --adapter claude-code    writes CLAUDE.md + .claude/skills/
@@ -94,6 +98,12 @@ Which --adapter to pass, by the agent you run (install into the project you want
   Cursor / Codex / anything reading AGENTS.md
                        --adapter agents-md      writes AGENTS.md + .agents/skills/
 Omitting --adapter installs for Claude Code. Uninstall needs only --target; the manifest remembers the rest.
+
+Eval checks are deterministic surface screens, not semantic judges. --strict exits non-zero when a treatment check fails.
+Eval suites (--suite <name>, default smoke): ${availableSuites().join(', ')}. A suite with \`turns\` sends every turn in order and adds a cross-turn \`repeat\` check; the earlier turns are replayed as text, not resumed as a harness session.
+fixtures run grades the agent by executing each fixture's tests. Without --live it only prints the plan and calls no model; with --live it needs --max-total-usd.
+--harness picks the CLI that answers: claude (default) or opencode. opencode reports $0 on a free tier, so --budget-usd is a declared ceiling there, not a measured spend.
+fixtures diagnose streams Claude Code's stream-json and is Claude-only; the opencode equivalent is not built yet.
 `);
 }
 
@@ -205,7 +215,7 @@ if (isMainEntry()) {
       allowPositionals: true,
       strict: true,
       options: {
-        profile: { type: 'string', default: 'token-maxxing' },
+        profile: { type: 'string', default: 'plus62' },
         adapter: { type: 'string' },
         target: { type: 'string', default: process.cwd() },
         out: { type: 'string' },
@@ -235,7 +245,7 @@ if (isMainEntry()) {
     const command = parsed.positionals[0];
     if (!command || parsed.values.help) {
       printUsage();
-      process.exitCode = command ? 0 : 1;
+      process.exitCode = command || parsed.values.help ? 0 : 1;
     } else if (command === 'build' || command === 'measure') {
       const result = build({
         root: packageRoot,
@@ -294,7 +304,10 @@ if (isMainEntry()) {
         console.log(`live:   ${live.url} (streaming real-time file & token telemetry via SSE)`);
         if (parsed.values.view) {
           if (process.platform === 'win32') {
-            spawn('cmd', ['/c', 'start', '', live.url], { detached: true, stdio: 'ignore' }).unref();
+            spawn('cmd', ['/c', 'start', '', live.url], {
+              detached: true,
+              stdio: 'ignore',
+            }).unref();
           } else if (process.platform === 'darwin') {
             spawn('open', [live.url], { detached: true, stdio: 'ignore' }).unref();
           } else {
@@ -303,7 +316,10 @@ if (isMainEntry()) {
         }
       } else if (parsed.values.view) {
         if (process.platform === 'win32') {
-          spawn('cmd', ['/c', 'start', '', graphResult.htmlPath], { detached: true, stdio: 'ignore' }).unref();
+          spawn('cmd', ['/c', 'start', '', graphResult.htmlPath], {
+            detached: true,
+            stdio: 'ignore',
+          }).unref();
         } else if (process.platform === 'darwin') {
           spawn('open', [graphResult.htmlPath], { detached: true, stdio: 'ignore' }).unref();
         } else {
@@ -313,8 +329,12 @@ if (isMainEntry()) {
     } else if (command === 'ignore') {
       const adapterId = parsed.values.adapter ?? 'claude-code';
       const result = setupAgentIgnore(parsed.values.target, adapterId);
-      console.log(`Input Token Saver: ${result.created ? 'Wrote' : 'Already configured'} ${result.path}`);
-      console.log('Protected context from: node_modules, build artifacts, keystores, binaries & logs.');
+      console.log(
+        `Input Token Saver: ${result.created ? 'Wrote' : 'Already configured'} ${result.path}`,
+      );
+      console.log(
+        'Protected context from: node_modules, build artifacts, keystores, binaries & logs.',
+      );
     } else if (command === 'update') {
       const result = update({
         sourceRoot: packageRoot,
@@ -445,7 +465,7 @@ if (isMainEntry()) {
                     // stay denied, so the grade comes from the tests this tool runs afterwards.
                     agentArgs: ['--permission-mode', 'acceptEdits', '--permission-prompts', 'none'],
                   }),
-            outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'coding'),
+            outDir: parsed.values.out ?? join(process.cwd(), '.plus62', 'coding'),
           });
           printStudy(report);
         }
@@ -495,7 +515,7 @@ if (isMainEntry()) {
             budgetUsd: budget,
             model: parsed.values.model,
             settingSources: parsed.values['setting-sources'],
-            outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'diagnostic'),
+            outDir: parsed.values.out ?? join(process.cwd(), '.plus62', 'diagnostic'),
           });
           const { summary, graded } = result;
           const tools = Object.entries(summary.tools)
@@ -568,7 +588,7 @@ if (isMainEntry()) {
         // The runner is injected here so the harness can be chosen, which would otherwise disable
         // the auto-probe. A real campaign always talks to a real gateway, so it must always probe.
         probe: true,
-        outDir: parsed.values.out ?? join(process.cwd(), '.hahahah', 'eval'),
+        outDir: parsed.values.out ?? join(process.cwd(), '.plus62', 'eval'),
       });
       const runs = report.results.reduce(
         (total, result) => total + result.baseline.runs.length + result.treatment.runs.length,
