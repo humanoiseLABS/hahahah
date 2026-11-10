@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { spawn } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -22,7 +23,8 @@ import {
   type EvalArm,
   type EvalTurnRecord,
 } from './eval.ts';
-import { doctor, install, uninstall, update, InstallError } from './install.ts';
+import { buildCodeGraph, startLiveGraphServer } from './graph.ts';
+import { doctor, install, uninstall, update, setupAgentIgnore, InstallError } from './install.ts';
 import { checkRemoteUpdate, formatUpdateNotice } from './notifier.ts';
 import { runOpencode } from './opencode.ts';
 
@@ -72,19 +74,17 @@ function availableSuites(): string[] {
 }
 
 function printUsage(): void {
-  console.log(`HAHahah Phase 3
+  console.log(`Anti-Yapping (+62 Terse & Surgical Diffs)
 
 Usage:
-  node src/cli.ts build --profile <id> [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
-  node src/cli.ts measure --profile <id> [--adapter fake|claude-code|opencode|agents-md|antigravity]
-  node src/cli.ts install --profile <id> [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
-  node src/cli.ts update [--target <repo>] [--dry-run] [--force]
-  node src/cli.ts uninstall [--target <repo>] [--dry-run] [--force]
-  node src/cli.ts fixtures check [--dir fixtures]
-  node src/cli.ts fixtures run [--profile <id>] [--id <fixture>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--max-total-usd <n>] [--model <name>] [--harness claude|opencode] [--arm both|baseline|treatment] [--setting-sources <sources>] [--out <dir>] [--live]
-  node src/cli.ts fixtures diagnose --id <fixture> [--arm baseline|treatment] [--budget-usd <n>] [--max-total-usd <n>] [--out <dir>] [--live]
-  node src/cli.ts doctor [--target <repo>]
-  node src/cli.ts eval --profile <id> [--suite <name>] [--task <id>]... [--limit <n>] [--repeats <n>] [--budget-usd <n>] [--model <name>] [--harness claude|opencode] [--setting-sources <sources>] [--out <dir>] [--strict]
+  npx anti-yapping install [--target <repo>] [--adapter <name>] [--scope workspace|global] [--dry-run] [--force]
+  npx anti-yapping graph [--target <repo>] [--view] [--live]
+  npx anti-yapping ignore [--target <repo>] [--adapter <name>]
+  npx anti-yapping update [--target <repo>] [--dry-run] [--force]
+  npx anti-yapping uninstall [--target <repo>] [--dry-run] [--force]
+  npx anti-yapping doctor [--target <repo>]
+  npx anti-yapping measure [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity]
+  npx anti-yapping build [--profile <id>] [--adapter fake|claude-code|opencode|agents-md|antigravity] [--out <dir>] [--release]
 
 Which --adapter to pass, by the agent you run (install into the project you want it active in):
   Claude Code          --adapter claude-code    writes CLAUDE.md + .claude/skills/
@@ -94,12 +94,6 @@ Which --adapter to pass, by the agent you run (install into the project you want
   Cursor / Codex / anything reading AGENTS.md
                        --adapter agents-md      writes AGENTS.md + .agents/skills/
 Omitting --adapter installs for Claude Code. Uninstall needs only --target; the manifest remembers the rest.
-
-Eval checks are deterministic surface screens, not semantic judges. --strict exits non-zero when a treatment check fails.
-Eval suites (--suite <name>, default smoke): ${availableSuites().join(', ')}. A suite with \`turns\` sends every turn in order and adds a cross-turn \`repeat\` check; the earlier turns are replayed as text, not resumed as a harness session.
-fixtures run grades the agent by executing each fixture's tests. Without --live it only prints the plan and calls no model; with --live it needs --max-total-usd.
---harness picks the CLI that answers: claude (default) or opencode. opencode reports $0 on a free tier, so --budget-usd is a declared ceiling there, not a measured spend.
-fixtures diagnose streams Claude Code's stream-json and is Claude-only; the opencode equivalent is not built yet.
 `);
 }
 
@@ -197,14 +191,6 @@ function getCliVersion(): string {
   }
 }
 
-function normalizeProfileId(value: string | undefined): string {
-  const raw = (value ?? 'rusuh-id').trim().toLowerCase();
-  if (raw === '+62' || raw === 'plus62' || raw === '62' || raw === 'rusuh') {
-    return 'rusuh-id';
-  }
-  return value ?? 'rusuh-id';
-}
-
 if (isMainEntry()) {
   const version = getCliVersion();
   const updateCheck = checkRemoteUpdate(version);
@@ -213,7 +199,7 @@ if (isMainEntry()) {
       allowPositionals: true,
       strict: true,
       options: {
-        profile: { type: 'string', default: 'rusuh-id' },
+        profile: { type: 'string', default: 'anti-yapping' },
         adapter: { type: 'string' },
         target: { type: 'string', default: process.cwd() },
         out: { type: 'string' },
@@ -234,12 +220,12 @@ if (isMainEntry()) {
         force: { type: 'boolean', default: false },
         strict: { type: 'boolean', default: false },
         live: { type: 'boolean', default: false },
+        view: { type: 'boolean', default: false },
         dir: { type: 'string' },
         help: { type: 'boolean', short: 'h', default: false },
       },
     });
 
-    const profileId = normalizeProfileId(parsed.values.profile);
     const command = parsed.positionals[0];
     if (!command || parsed.values.help) {
       printUsage();
@@ -247,7 +233,7 @@ if (isMainEntry()) {
     } else if (command === 'build' || command === 'measure') {
       const result = build({
         root: packageRoot,
-        profileId,
+        profileId: parsed.values.profile,
         adapterId: parsed.values.adapter ?? 'fake',
         outDir: parsed.values.out,
         release: parsed.values.release,
@@ -274,7 +260,7 @@ if (isMainEntry()) {
       const result = install({
         sourceRoot: packageRoot,
         targetRoot,
-        profileId,
+        profileId: parsed.values.profile,
         adapterId,
         scope,
         dryRun: parsed.values['dry-run'],
@@ -289,6 +275,40 @@ if (isMainEntry()) {
       for (const warning of result.warnings) {
         console.log(`warning: ${warning}`);
       }
+    } else if (command === 'graph') {
+      const graphResult = buildCodeGraph(parsed.values.target);
+      console.log(
+        `Obsidian Code Graph: mapped ${graphResult.nodesEmitted}/${graphResult.filesScanned} file(s), ${graphResult.edgesCount} edge(s)`,
+      );
+      console.log(`index:  ${graphResult.indexPath}`);
+      console.log(`memory: ${graphResult.memoryPath}`);
+      console.log(`visual: ${graphResult.htmlPath}`);
+      if (parsed.values.live) {
+        const live = startLiveGraphServer(parsed.values.target, 4949);
+        console.log(`live:   ${live.url} (streaming real-time file & token telemetry via SSE)`);
+        if (parsed.values.view) {
+          if (process.platform === 'win32') {
+            spawn('cmd', ['/c', 'start', '', live.url], { detached: true, stdio: 'ignore' }).unref();
+          } else if (process.platform === 'darwin') {
+            spawn('open', [live.url], { detached: true, stdio: 'ignore' }).unref();
+          } else {
+            spawn('xdg-open', [live.url], { detached: true, stdio: 'ignore' }).unref();
+          }
+        }
+      } else if (parsed.values.view) {
+        if (process.platform === 'win32') {
+          spawn('cmd', ['/c', 'start', '', graphResult.htmlPath], { detached: true, stdio: 'ignore' }).unref();
+        } else if (process.platform === 'darwin') {
+          spawn('open', [graphResult.htmlPath], { detached: true, stdio: 'ignore' }).unref();
+        } else {
+          spawn('xdg-open', [graphResult.htmlPath], { detached: true, stdio: 'ignore' }).unref();
+        }
+      }
+    } else if (command === 'ignore') {
+      const adapterId = parsed.values.adapter ?? 'claude-code';
+      const result = setupAgentIgnore(parsed.values.target, adapterId);
+      console.log(`Input Token Saver: ${result.created ? 'Wrote' : 'Already configured'} ${result.path}`);
+      console.log('Protected context from: node_modules, build artifacts, keystores, binaries & logs.');
     } else if (command === 'update') {
       const result = update({
         sourceRoot: packageRoot,
