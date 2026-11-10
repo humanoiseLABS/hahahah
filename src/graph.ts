@@ -804,6 +804,21 @@ function renderInteractiveGraphHtml(
       }
     }
 
+    const ambientStars = Array.from({ length: 75 }, () => {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = u * 2.0 * Math.PI;
+      const phi = Math.acos(2.0 * v - 1.0);
+      const r = 1.15 + Math.random() * 0.85;
+      return {
+        sx: r * Math.sin(phi) * Math.cos(theta),
+        sy: r * Math.sin(phi) * Math.sin(theta),
+        sz: r * Math.cos(phi),
+        size: 0.8 + Math.random() * 1.4,
+        alpha: 0.15 + Math.random() * 0.45
+      };
+    });
+
     const nodes = allVertices;
     const realNodes = nodes.filter(n => !n.isAux);
     const nodeById = new Map(nodes.map(n => [n.id, n]));
