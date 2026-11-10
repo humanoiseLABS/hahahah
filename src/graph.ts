@@ -753,44 +753,61 @@ function renderInteractiveGraphHtml(
     let sphereRadius = Math.min(width, height) * 0.39;
 
     const N_REAL = data.nodes.length;
-    const TARGET_VERTICES = Math.max(135, N_REAL);
+    const N_SURFACE = Math.max(108, N_REAL + 36);
+    const N_CORE = 42;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
+    // Separate memory.md (innermost neural nucleus) and normal files
+    const memoryNode = data.nodes.find(n => n.category === 'memory');
+    const normalFiles = data.nodes.filter(n => n !== memoryNode);
+
+    // Stride-distribute normal real files evenly across the entire surface shell (360° global coverage!)
+    const realSlotMap = new Map();
+    const surfaceStride = normalFiles.length > 0 ? N_SURFACE / normalFiles.length : 1;
+    normalFiles.forEach((file, idx) => {
+      const slot = Math.min(N_SURFACE - 1, Math.floor(idx * surfaceStride));
+      realSlotMap.set(slot, file);
+    });
+
     const allVertices = [];
-    for (let i = 0; i < TARGET_VERTICES; i++) {
-      const y3 = TARGET_VERTICES <= 1 ? 0 : 1 - (i / (TARGET_VERTICES - 1)) * 2;
+
+    // 1. Surface Shell (Outer Cortex, 360° global coverage)
+    for (let i = 0; i < N_SURFACE; i++) {
+      const y3 = 1 - (i / (N_SURFACE - 1)) * 2;
       const rSlice = Math.sqrt(Math.max(0, 1 - y3 * y3));
       const theta = goldenAngle * i;
       const sx = Math.cos(theta) * rSlice;
       const sz = Math.sin(theta) * rSlice;
 
-      const angle2d = (i / TARGET_VERTICES) * Math.PI * 2;
+      const angle2d = (i / N_SURFACE) * Math.PI * 2;
       const rad2d = 120 + (i % 3) * 60;
 
-      if (i < N_REAL) {
-        const realNode = data.nodes[i];
+      const realFile = realSlotMap.get(i);
+      if (realFile) {
         allVertices.push({
-          ...realNode,
+          ...realFile,
           isAux: false,
+          isCore: false,
           idx: i,
-          estTokens: Math.max(12, Math.round(realNode.lines * 7.5)),
+          estTokens: Math.max(12, Math.round(realFile.lines * 7.5)),
           sx, sy: y3, sz,
-          x: width / 2 + Math.cos(angle2d) * (realNode.category === 'memory' ? 0 : rad2d),
-          y: height / 2 + Math.sin(angle2d) * (realNode.category === 'memory' ? 0 : rad2d),
+          x: width / 2 + Math.cos(angle2d) * rad2d,
+          y: height / 2 + Math.sin(angle2d) * rad2d,
           vx: 0, vy: 0,
           projX: 0, projY: 0, projZ: 0, projScale: 1,
           flashTimer: 0,
-          r: realNode.category === 'memory' ? 5.2 : Math.max(2.6, Math.min(4.5, 2.6 + Math.sqrt(realNode.symbols.length + realNode.links.length) * 0.6))
+          r: Math.max(2.8, Math.min(4.8, 2.6 + Math.sqrt(realFile.symbols.length + realFile.links.length) * 0.6))
         });
       } else {
         allVertices.push({
-          id: '__aux_' + i,
+          id: '__surf_aux_' + i,
           label: '',
           category: 'relay',
           lines: 0,
           links: [],
           symbols: [],
           isAux: true,
+          isCore: false,
           idx: i,
           estTokens: 0,
           sx, sy: y3, sz,
@@ -802,6 +819,55 @@ function renderInteractiveGraphHtml(
           r: 1.2
         });
       }
+    }
+
+    // 2. Volumetric Interior Core (Fills the hollow inside!)
+    // Place memory.md as the glowing central nucleus at r = 0.22
+    if (memoryNode) {
+      allVertices.push({
+        ...memoryNode,
+        isAux: false,
+        isCore: true,
+        idx: allVertices.length,
+        estTokens: Math.max(12, Math.round(memoryNode.lines * 7.5)),
+        sx: 0.05, sy: -0.04, sz: 0.18,
+        x: width / 2, y: height / 2,
+        vx: 0, vy: 0,
+        projX: 0, projY: 0, projZ: 0, projScale: 1,
+        flashTimer: 0,
+        r: 5.5
+      });
+    }
+
+    // Add internal core volumetric synaptic relays (r = 0.32 to 0.68)
+    for (let c = 0; c < N_CORE; c++) {
+      const y3 = 1 - (c / (N_CORE - 1)) * 2;
+      const rSlice = Math.sqrt(Math.max(0, 1 - y3 * y3));
+      const theta = goldenAngle * (c + 17);
+      const coreR = 0.35 + ((c % 4) / 4) * 0.32;
+      const sx = Math.cos(theta) * rSlice * coreR;
+      const sy = y3 * coreR;
+      const sz = Math.sin(theta) * rSlice * coreR;
+
+      allVertices.push({
+        id: '__core_' + c,
+        label: '',
+        category: 'core_relay',
+        lines: 0,
+        links: [],
+        symbols: [],
+        isAux: true,
+        isCore: true,
+        idx: allVertices.length,
+        estTokens: 0,
+        sx, sy, sz,
+        x: width / 2 + (Math.random() - 0.5) * 80,
+        y: height / 2 + (Math.random() - 0.5) * 80,
+        vx: 0, vy: 0,
+        projX: 0, projY: 0, projZ: 0, projScale: 1,
+        flashTimer: 0,
+        r: 1.4
+      });
     }
 
     const ambientStars = Array.from({ length: 75 }, () => {
@@ -838,6 +904,7 @@ function renderInteractiveGraphHtml(
       adj.get(b.id).add(a.id);
     }
 
+    // 1. Real code dependency edges
     for (const n of realNodes) {
       for (const targetId of n.links) {
         const target = nodeById.get(targetId);
@@ -848,27 +915,66 @@ function renderInteractiveGraphHtml(
       }
     }
 
-    const codeEdgesCount = edges.length;
+    // 2. Connect memory.md nucleus to core nodes and surface hubs
+    if (memoryNode) {
+      const coreNodes = nodes.filter(n => n.isCore && n.id !== memoryNode.id);
+      for (let i = 0; i < Math.min(6, coreNodes.length); i++) {
+        addEdge(memoryNode, coreNodes[i], 'memory');
+      }
+      for (let i = 0; i < Math.min(4, realNodes.length); i++) {
+        if (realNodes[i].id !== memoryNode.id) addEdge(memoryNode, realNodes[i], 'memory');
+      }
+    }
 
-    // Triangulated Geodesic Wireframe connecting 4 nearest neighbors
-    const kNeighbors = 4;
-    for (let i = 0; i < TARGET_VERTICES; i++) {
-      const a = nodes[i];
+    // 3. Surface Shell Geodesic Mesh (connect 4 nearest surface neighbors)
+    const surfaceNodes = nodes.filter(n => !n.isCore);
+    for (let i = 0; i < surfaceNodes.length; i++) {
+      const a = surfaceNodes[i];
       const dists = [];
-      for (let j = 0; j < TARGET_VERTICES; j++) {
+      for (let j = 0; j < surfaceNodes.length; j++) {
         if (i === j) continue;
-        const b = nodes[j];
+        const b = surfaceNodes[j];
         const d = Math.hypot(a.sx - b.sx, a.sy - b.sy, a.sz - b.sz);
         dists.push({ b, d });
       }
       dists.sort((u, v) => u.d - v.d);
-      for (let m = 0; m < Math.min(kNeighbors, dists.length); m++) {
+      for (let m = 0; m < Math.min(4, dists.length); m++) {
         addEdge(a, dists[m].b, 'mesh');
       }
-      if (i % 3 === 0 && dists.length > 7) {
-        addEdge(a, dists[6].b, 'chord');
+    }
+
+    // 4. Interior Core Wireframe Mesh (connect 3 nearest core neighbors)
+    const coreRelays = nodes.filter(n => n.isCore);
+    for (let i = 0; i < coreRelays.length; i++) {
+      const a = coreRelays[i];
+      const dists = [];
+      for (let j = 0; j < coreRelays.length; j++) {
+        if (i === j) continue;
+        const b = coreRelays[j];
+        const d = Math.hypot(a.sx - b.sx, a.sy - b.sy, a.sz - b.sz);
+        dists.push({ b, d });
+      }
+      dists.sort((u, v) => u.d - v.d);
+      for (let m = 0; m < Math.min(3, dists.length); m++) {
+        addEdge(a, dists[m].b, 'core_mesh');
       }
     }
+
+    // 5. Radial Bridges: Connect Core Nodes to Surface Nodes (Trans-Sphere Chords)
+    for (let c = 0; c < coreRelays.length; c++) {
+      const coreNode = coreRelays[c];
+      const dists = [];
+      for (let s = 0; s < surfaceNodes.length; s++) {
+        const surfNode = surfaceNodes[s];
+        const d = Math.hypot(coreNode.sx - surfNode.sx, coreNode.sy - surfNode.sy, coreNode.sz - surfNode.sz);
+        dists.push({ surfNode, d });
+      }
+      dists.sort((u, v) => u.d - v.d);
+      if (dists[0]) addEdge(coreNode, dists[0].surfNode, 'chord');
+      if (dists[dists.length - 1] && c % 2 === 0) addEdge(coreNode, dists[dists.length - 1].surfNode, 'chord');
+    }
+
+    const codeEdgesCount = edges.length;
 
     document.getElementById('stats-label').textContent =
       \`// [\${realNodes.length} nodes · \${codeEdgesCount} links · ~\${data.indexTokensEst} idx_tok]\`;
@@ -941,11 +1047,14 @@ function renderInteractiveGraphHtml(
       for (let step = 0; step < hops; step++) {
         const neighbors = [...(adj.get(curr.id) || [])]
           .map(id => nodeById.get(id))
-          .filter(n => n && !visited.has(n.id) && !n.isAux);
+          .filter(n => n && !visited.has(n.id));
         if (neighbors.length === 0) break;
 
-        const codeLinked = neighbors.filter(nb => curr.links.includes(nb.id) || nb.links.includes(curr.id));
-        const pickPool = codeLinked.length > 0 ? codeLinked : neighbors;
+        const codeLinked = neighbors.filter(nb => !nb.isAux && (curr.links?.includes(nb.id) || nb.links?.includes(curr.id)));
+        const coreLinked = neighbors.filter(nb => nb.isCore);
+        const pickPool = codeLinked.length > 0
+          ? codeLinked
+          : (coreLinked.length > 0 && Math.random() > 0.35 ? coreLinked : neighbors);
         const next = pickPool[Math.floor(Math.random() * pickPool.length)];
 
         visited.add(next.id);
@@ -959,8 +1068,9 @@ function renderInteractiveGraphHtml(
         if (target) igniteSynapseBeam(startNode, target, 0.048);
       }
 
-      const routeNames = path.map(p => p.label).join(' ➔ ');
-      const symPreview = startNode.symbols.length > 0
+      const routeMilestones = path.filter(p => !p.isAux || p.category === 'memory');
+      const routeNames = (routeMilestones.length > 0 ? routeMilestones : path.slice(0, 3)).map(p => p.label || 'core').join(' ➔ ');
+      const symPreview = startNode.symbols && startNode.symbols.length > 0
         ? \` (\${startNode.symbols.map(s => s.name + ':' + s.line).slice(0, 2).join(', ')})\`
         : '';
       appendTerminalLog(sourceLabel, \`\${routeNames}\${symPreview}\`, \`~\${startNode.estTokens} tok\`);
@@ -971,7 +1081,12 @@ function renderInteractiveGraphHtml(
       if (!is3D || !isBrutal) return;
       burstCounter++;
 
-      const source = realNodes[Math.floor(Math.random() * realNodes.length)];
+      // Distribute storm bursts across entire surface shell + central neural core
+      const coreRelays = nodes.filter(n => n.isCore);
+      const pickFromCore = coreRelays.length > 0 && Math.random() < 0.35;
+      const source = pickFromCore
+        ? (memoryNode && Math.random() < 0.45 ? memoryNode : coreRelays[Math.floor(Math.random() * coreRelays.length)])
+        : realNodes[Math.floor(Math.random() * realNodes.length)];
       if (!source) return;
 
       const neighbors = [...(adj.get(source.id) || [])].map(id => nodeById.get(id)).filter(Boolean);
@@ -983,11 +1098,11 @@ function renderInteractiveGraphHtml(
         igniteSynapseBeam(source, target, 0.04 + Math.random() * 0.032);
 
         const subNeighbors = [...(adj.get(target.id) || [])].map(id => nodeById.get(id)).filter(n => n && n !== source);
-        if (subNeighbors.length > 0 && Math.random() > 0.3) {
+        if (subNeighbors.length > 0 && Math.random() > 0.25) {
           const subTarget = subNeighbors[Math.floor(Math.random() * subNeighbors.length)];
           setTimeout(() => {
             igniteSynapseBeam(target, subTarget, 0.048 + Math.random() * 0.03);
-          }, 70);
+          }, 65);
         }
       }
 
@@ -995,9 +1110,10 @@ function renderInteractiveGraphHtml(
       document.getElementById('tok-speed').textContent = \`[\${tokRate} tok/s]\`;
 
       if (burstCounter % 7 === 0 && Date.now() - lastLiveEventTs > 2500) {
-        const activeSym = source.symbols[0]?.name ? \`::\${source.symbols[0].name}\` : '';
-        const targetSample = neighbors[0]?.label || 'geodesic';
-        appendTerminalLog('SYNAPSE', \`\${source.label}\${activeSym} ➔ \${targetSample} (\${forks} branches)\`, \`(\${tokRate} tok/s)\`);
+        const activeSym = source.symbols && source.symbols[0]?.name ? \`::\${source.symbols[0].name}\` : '';
+        const srcLabel = source.label || (source.isCore ? 'neural.core' : 'geodesic');
+        const targetSample = neighbors[0]?.label || (neighbors[0]?.isCore ? 'neural.core' : 'geodesic');
+        appendTerminalLog('SYNAPSE', \`\${srcLabel}\${activeSym} ➔ \${targetSample} (\${forks} branches)\`, \`(\${tokRate} tok/s)\`);
       }
     }
 
@@ -1381,11 +1497,24 @@ function renderInteractiveGraphHtml(
       ctx.fillStyle = coreGrad;
       ctx.fillRect(0, 0, width, height);
 
+      // Pass 0: Volumetric Core Neural Nebula (fills the hollow interior with an ethereal ambient brain glow)
+      const innerCoreGrad = ctx.createRadialGradient(centerX, centerY, 2, centerX, centerY, R * 0.6);
+      innerCoreGrad.addColorStop(0, THEME.soft);
+      innerCoreGrad.addColorStop(0.4, 'rgba(14, 165, 233, 0.09)');
+      innerCoreGrad.addColorStop(0.75, 'rgba(99, 102, 241, 0.04)');
+      innerCoreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.save();
+      ctx.fillStyle = innerCoreGrad;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, R * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
       const sortedEdges = [...edges].sort(
         (a, b) => (b.source.projZ + b.target.projZ) - (a.source.projZ + a.target.projZ)
       );
 
-      // Pass 1: Crisp Silver-White Geodesic Wireframe Mesh
+      // Pass 1: Crisp Wireframe Mesh (Surface shell + internal core lattice + trans-sphere chords)
       ctx.save();
       for (const e of sortedEdges) {
         const k = e.source.id + '->' + e.target.id;
@@ -1397,13 +1526,24 @@ function renderInteractiveGraphHtml(
         if (isLaser) continue;
 
         const avgZ = (e.source.projZ + e.target.projZ) / (2 * R);
-        const depthAlpha = Math.max(0.06, Math.min(0.36, 0.23 - avgZ * 0.15));
+        const depthAlpha = Math.max(0.06, Math.min(0.38, 0.23 - avgZ * 0.15));
 
         ctx.beginPath();
         ctx.moveTo(e.source.projX, e.source.projY);
         ctx.lineTo(e.target.projX, e.target.projY);
-        ctx.strokeStyle = \`rgba(226, 232, 240, \${depthAlpha.toFixed(3)})\`;
-        ctx.lineWidth = e.kind === 'code' ? 1.15 : 0.75;
+        if (e.kind === 'chord') {
+          // Trans-sphere chord piercing through internal core
+          ctx.strokeStyle = \`rgba(56, 189, 248, \${(depthAlpha * 0.82).toFixed(3)})\`;
+          ctx.lineWidth = 0.7;
+        } else if (e.kind === 'core_mesh') {
+          // Internal neural core wireframe
+          ctx.strokeStyle = \`rgba(168, 85, 247, \${(depthAlpha * 0.78).toFixed(3)})\`;
+          ctx.lineWidth = 0.7;
+        } else {
+          // Outer surface geodesic wireframe
+          ctx.strokeStyle = \`rgba(226, 232, 240, \${depthAlpha.toFixed(3)})\`;
+          ctx.lineWidth = e.kind === 'code' ? 1.15 : 0.75;
+        }
         ctx.stroke();
       }
       ctx.restore();
@@ -1524,8 +1664,13 @@ function renderInteractiveGraphHtml(
 
         if (n.isAux) {
           ctx.beginPath();
-          ctx.arc(n.projX, n.projY, 1.2 * n.projScale, 0, Math.PI * 2);
-          ctx.fillStyle = \`rgba(226, 232, 240, \${(0.42 - normZ * 0.22).toFixed(2)})\`;
+          const auxR = (n.isCore ? 1.45 : 1.15) * n.projScale;
+          ctx.arc(n.projX, n.projY, auxR, 0, Math.PI * 2);
+          if (n.isCore) {
+            ctx.fillStyle = \`rgba(147, 197, 253, \${Math.max(0.18, Math.min(0.68, 0.48 - normZ * 0.25)).toFixed(2)})\`;
+          } else {
+            ctx.fillStyle = \`rgba(226, 232, 240, \${Math.max(0.1, Math.min(0.42, 0.36 - normZ * 0.22)).toFixed(2)})\`;
+          }
           ctx.fill();
         } else {
           ctx.beginPath();
@@ -1536,12 +1681,24 @@ function renderInteractiveGraphHtml(
             ctx.fillStyle = '#ffffff';
           } else if (n.category === 'memory') {
             ctx.shadowColor = '#10b981';
-            ctx.shadowBlur = 10;
-            ctx.fillStyle = '#10b981';
+            ctx.shadowBlur = 18;
+            ctx.fillStyle = '#34d399';
           } else {
             ctx.fillStyle = '#f8fafc';
           }
           ctx.fill();
+
+          // Inner neural core heartbeat: pulsing emerald halo ring for memory.md
+          if (n.category === 'memory') {
+            ctx.save();
+            ctx.beginPath();
+            const haloR = r + 4.5 + Math.sin(globalTime * 4.2) * 2;
+            ctx.arc(n.projX, n.projY, haloR, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(52, 211, 153, 0.48)';
+            ctx.lineWidth = 1.3;
+            ctx.stroke();
+            ctx.restore();
+          }
 
           // NO permanent labels on unhovered nodes! Tactical HUD box ONLY on select or hover!
           if (isSel || n === hoveredNode) {
