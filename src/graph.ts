@@ -519,28 +519,32 @@ function renderInteractiveGraphHtml(
   .term-log {
     padding: 8px 14px;
     overflow-y: auto;
+    overflow-x: hidden;
     font-size: 11.5px;
-    line-height: 1.6;
     color: #f1f5f9;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+    display: block;
   }
   .term-welcome {
     color: #64748b;
     font-size: 11px;
-    margin-bottom: 4px;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 6px;
     padding-bottom: 4px;
     border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .log-line {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .log-line {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
     font-size: 11.5px;
     letter-spacing: 0.01em;
   }
@@ -548,15 +552,23 @@ function renderInteractiveGraphHtml(
     color: #94a3b8;
     margin-right: 8px;
     font-weight: 500;
+    flex-shrink: 0;
   }
   .tag-pill {
-    display: inline-block;
-    padding: 1px 6px;
-    font-size: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 15px;
+    line-height: 15px;
+    padding: 0 6px;
+    font-size: 9.5px;
     font-weight: 700;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     margin-right: 8px;
     border-radius: 2px;
+    flex-shrink: 0;
+    min-width: 58px;
+    text-align: center;
   }
   .tag-live_fs, .tag-live_sse {
     background: rgba(16, 185, 129, 0.18);
@@ -568,7 +580,7 @@ function renderInteractiveGraphHtml(
     color: var(--accent);
     border: 1px solid rgba(0, 168, 255, 0.35);
   }
-  .tag-trace, .tag-select, .tag-burst, .tag-jump {
+  .tag-trace, .tag-select, .tag-burst, .tag-jump, .tag-click {
     background: rgba(168, 85, 247, 0.18);
     color: #c084fc;
     border: 1px solid rgba(168, 85, 247, 0.35);
@@ -585,11 +597,16 @@ function renderInteractiveGraphHtml(
   }
   .log-line .msg {
     color: #f1f5f9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 0 1 auto;
   }
   .log-line .tok {
     color: #38bdf8;
-    margin-left: 6px;
+    margin-left: 8px;
     font-weight: 600;
+    flex-shrink: 0;
   }
   .term-inspector {
     padding: 8px 14px;
@@ -955,7 +972,7 @@ function renderInteractiveGraphHtml(
       const tokRate = Math.floor(115 + Math.random() * 48);
       document.getElementById('tok-speed').textContent = \`[\${tokRate} tok/s]\`;
 
-      if (!isLiveConnected && burstCounter % 7 === 0) {
+      if (burstCounter % 8 === 0 && Date.now() - lastLiveEventTs > 2500) {
         const activeSym = source.symbols[0]?.name ? \`::\${source.symbols[0].name}\` : '';
         const targetSample = neighbors[0]?.label || 'geodesic';
         appendTerminalLog('SYNAPSE', \`\${source.label}\${activeSym} ➔ \${targetSample} (\${forks} branches)\`, \`(\${tokRate} tok/s)\`);
@@ -999,6 +1016,7 @@ function renderInteractiveGraphHtml(
       }
     }
 
+    let lastLiveEventTs = 0;
     applyLaserTheme(currentThemeKey);
     selectNode(selectedNode, 'INIT');
 
@@ -1026,7 +1044,8 @@ function renderInteractiveGraphHtml(
           es.onmessage = (ev) => {
             try {
               const msg = JSON.parse(ev.data);
-              if (msg.type === 'file_event') {
+              if (msg.type === 'file_event' && msg.path) {
+                lastLiveEventTs = Date.now();
                 const target =
                   nodeById.get(msg.path) ||
                   nodes.find(n => n.id.endsWith(msg.basename) || msg.path.endsWith(n.id));
@@ -1037,7 +1056,13 @@ function renderInteractiveGraphHtml(
                   target.estTokens = msg.tokens || target.estTokens;
                   selectNode(target, 'LIVE_FS');
                 } else {
-                  appendTerminalLog('LIVE_FS', \`\${msg.event.toUpperCase()} \${msg.path}\`, \`\${msg.tokens} tok (Δ\${sign})\`);
+                  appendTerminalLog('LIVE_FS', \`\${msg.event.toUpperCase()} \${msg.path} (\${msg.lines}L)\`, \`~\${msg.tokens} tok (Δ\${sign})\`);
+                  // Also fire a visual burst on the closest hub node so 3D sphere reacts to every source edit
+                  const fallbackNode = nodes[Math.floor(Math.random() * nodes.length)];
+                  if (fallbackNode) {
+                    const nbs = [...(adj.get(fallbackNode.id) || [])].map(id => nodeById.get(id)).filter(Boolean);
+                    for (const nb of nbs.slice(0, 3)) igniteSynapseBeam(fallbackNode, nb, 0.06);
+                  }
                 }
               }
             } catch {}
@@ -1578,13 +1603,43 @@ export function startLiveGraphServer(targetRoot: string, port = 4949): { url: st
     res.end(html);
   });
 
+  const lastEmitTime = new Map<string, number>();
+
   try {
     const watcher = watch(rootDir, { recursive: true }, (eventType, filename) => {
       if (!filename) return;
       const rel = toPosix(String(filename));
-      if (rel.includes('node_modules/') || rel.includes('.git/') || rel.endsWith('graph.html')) return;
-      const firstSeg = rel.split('/')[0] ?? '';
-      if (IGNORED_DIRS.has(firstSeg) && !rel.endsWith('memory.md')) return;
+      if (rel.endsWith('graph.html') || rel.endsWith('INDEX.md')) return;
+      const segments = rel.split('/');
+      if (
+        segments.some(
+          (seg) =>
+            IGNORED_DIRS.has(seg) ||
+            seg.startsWith('pythoncore-') ||
+            seg === 'intermediates' ||
+            seg === 'outputs' ||
+            seg === 'generated',
+        ) &&
+        !rel.endsWith('memory.md')
+      ) {
+        return;
+      }
+
+      const ext = extname(rel).toLowerCase();
+      const isTextSource =
+        SOURCE_EXTENSIONS.has(ext) ||
+        ext === '.md' ||
+        ext === '.json' ||
+        ext === '.yaml' ||
+        ext === '.yml' ||
+        ext === '.xml' ||
+        ext === '.gradle' ||
+        ext === '.toml';
+      if (!isTextSource) return;
+
+      const now = Date.now();
+      if (now - (lastEmitTime.get(rel) ?? 0) < 220) return;
+      lastEmitTime.set(rel, now);
 
       const full = join(rootDir, filename);
       if (!existsSync(full)) return;
@@ -1606,7 +1661,7 @@ export function startLiveGraphServer(targetRoot: string, port = 4949): { url: st
           lines,
           tokens,
           deltaTokens,
-          ts: Date.now(),
+          ts: now,
         });
         for (const client of clients) {
           client.write(`data: ${payload}\n\n`);
