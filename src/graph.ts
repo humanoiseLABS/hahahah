@@ -1627,7 +1627,7 @@ export function startLiveGraphServer(targetRoot: string, port = 4949): { url: st
 
       const ext = extname(rel).toLowerCase();
       const isTextSource =
-        SOURCE_EXTENSIONS.has(ext) ||
+        CODE_EXTENSIONS.has(ext) ||
         ext === '.md' ||
         ext === '.json' ||
         ext === '.yaml' ||
