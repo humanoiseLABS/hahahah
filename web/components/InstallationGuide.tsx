@@ -95,6 +95,16 @@ export default function InstallationGuide({
       outcome: "Persona langsung aktif dari chat pertama, zero basa-basi!",
       side: "left",
     },
+    {
+      num: "06",
+      phase: "Step 06",
+      badge: "3D Second Brain",
+      title: "Pantau Sistem Saraf AI Secara Live (Opsional)",
+      desc: `Pantau second brain AI, state memory.md, dan token throughput secara 3D realtime di browser saat agen ngoding:`,
+      code: `npx ${packageName} graph --live`,
+      outcome: "3D Neural Sphere live aktif di http://127.0.0.1:4949",
+      side: "right",
+    },
   ];
 
   return (

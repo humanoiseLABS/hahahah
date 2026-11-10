@@ -28,9 +28,9 @@ export const PERSONAS: PersonaOption[] = [
     id: "anti-yapping",
     name: "Anti-Yapping",
     code: "anti-yap",
-    badge: "Surgical Diffs • Dual Token Saver",
-    tagline: "Jawaban telegrafis di baris 1, surgical diffs & input token saver, hemat output hingga 80% dan pangkas context bloat.",
-    tone: "Flat & telegrafis: tanpa sapaan, tanpa emoji, hanya kirim baris kode yang berubah.",
+    badge: "Smart Surgical • 3D Second Brain",
+    tagline: "Jawaban telegrafis baris 1, Smart Surgical diffs AST, 3D Second Brain live visualizer, dan pangkas context token hingga 80%.",
+    tone: "Flat & telegrafis: tanpa basa-basi, surgical diffs presisi AST, dan live 3D neural telemetry.",
     samplePrompt: "Kode ini kok error 'Cannot read properties of undefined' ya?",
     sampleReply:
       "user.profile masih null pas fetch awal. Ganti jadi user?.profile?.name atau kasih fallback default {}.",
