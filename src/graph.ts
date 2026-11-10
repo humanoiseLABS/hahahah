@@ -607,9 +607,10 @@ function renderInteractiveGraphHtml(
       <span style="color:var(--muted)" id="stats-label"></span>
     </div>
     <input type="text" id="search" class="search-input" placeholder="Search node / symbol..." />
+    <button class="btn active-mode" id="brutal-btn">⚡ Brutal Storm: ON</button>
     <button class="btn active-mode" id="mode-btn">🌐 3D Neural Sphere</button>
-    <button class="btn" id="overdrive-btn">⚡ Synapse Overdrive: OFF</button>
-    <button class="btn" id="pulse-btn">🎯 Fire Pathway</button>
+    <button class="btn" id="overdrive-btn">🔥 Overdrive: OFF</button>
+    <button class="btn" id="pulse-btn">🎯 Fire Burst</button>
     <button class="btn" id="reset-btn">Center</button>
   </div>
 
@@ -653,7 +654,7 @@ function renderInteractiveGraphHtml(
       entrypoint: '#f97316',
       sql: '#06b6d4',
       test: '#a855f7',
-      module: '#e2e8f0'
+      module: '#f8fafc'
     };
 
     const canvas = document.getElementById('graph');
@@ -665,28 +666,28 @@ function renderInteractiveGraphHtml(
     ctx.scale(devicePixelRatio, devicePixelRatio);
 
     let is3D = true;
+    let isBrutal = true;
     let overdrive = false;
     let autoSpin = true;
 
-    // 3D rotation angles & momentum
+    // Multi-axis 3D rotation angles & momentum
     let rotY = 0.4;
     let rotX = 0.22;
-    let velY = 0.0032;
-    let velX = 0.0006;
-    let sphereRadius = Math.min(width - 360, height) * 0.34;
+    let rotZ = 0.0;
+    let velY = 0.009;
+    let velX = 0.002;
+    let sphereRadius = Math.min(width - 360, height) * 0.35;
 
     const N = data.nodes.length;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
     const nodes = data.nodes.map((n, i) => {
-      // Fibonacci sphere distribution for 3D
       const y3 = N <= 1 ? 0 : 1 - (i / (N - 1)) * 2;
       const rSlice = Math.sqrt(Math.max(0, 1 - y3 * y3));
       const theta = goldenAngle * i;
       const sx = Math.cos(theta) * rSlice;
       const sz = Math.sin(theta) * rSlice;
 
-      // 2D fallback initial layout
       const angle2d = (i / N) * Math.PI * 2;
       const rad2d = n.category === 'memory' ? 0 : 120 + (i % 3) * 70;
 
@@ -698,7 +699,24 @@ function renderInteractiveGraphHtml(
         y: height / 2 + Math.sin(angle2d) * rad2d,
         vx: 0, vy: 0,
         projX: 0, projY: 0, projZ: 0, projScale: 1,
+        flashTimer: 0,
         r: n.category === 'memory' ? 7.5 : Math.max(4.2, Math.min(7.5, 4 + Math.sqrt(n.symbols.length + n.links.length)))
+      };
+    });
+
+    // 80 Ambient floating 3D dust particles for cyber chamber depth
+    const ambientStars = Array.from({ length: 80 }, () => {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = u * 2.0 * Math.PI;
+      const phi = Math.acos(2.0 * v - 1.0);
+      const r = 1.1 + Math.random() * 0.85;
+      return {
+        sx: r * Math.sin(phi) * Math.cos(theta),
+        sy: r * Math.sin(phi) * Math.sin(theta),
+        sz: r * Math.cos(phi),
+        size: 0.9 + Math.random() * 1.6,
+        alpha: 0.2 + Math.random() * 0.5
       };
     });
 
@@ -714,12 +732,11 @@ function renderInteractiveGraphHtml(
       const k2 = b.id + '->' + a.id;
       if (edgeKeySet.has(k1) || edgeKeySet.has(k2)) return;
       edgeKeySet.add(k1);
-      edges.push({ source: a, target: b, kind });
+      edges.push({ source: a, target: b, kind, seed: Math.random() * 100 });
       adj.get(a.id).add(b.id);
       adj.get(b.id).add(a.id);
     }
 
-    // 1. Real code dependency & memory edges
     for (const n of nodes) {
       for (const targetId of n.links) {
         const target = nodeById.get(targetId);
@@ -732,7 +749,7 @@ function renderInteractiveGraphHtml(
 
     const codeEdgesCount = edges.length;
 
-    // 2. Geodesic 3D Lattice Mesh (connect each node to its k nearest neighbors on the sphere surface)
+    // Geodesic 3D Lattice Mesh
     const kNeighbors = Math.min(5, Math.max(3, Math.floor(N / 7)));
     for (let i = 0; i < N; i++) {
       const a = nodes[i];
@@ -747,7 +764,6 @@ function renderInteractiveGraphHtml(
       for (let m = 0; m < Math.min(kNeighbors, dists.length); m++) {
         addEdge(a, dists[m].b, 'mesh');
       }
-      // Add 1 cross-sphere chord for internal brain depth
       if (dists.length > kNeighbors + 4 && i % 2 === 0) {
         addEdge(a, dists[Math.min(dists.length - 1, kNeighbors + 5)].b, 'chord');
       }
@@ -763,50 +779,59 @@ function renderInteractiveGraphHtml(
     let isDragging = false, lastMouseX = 0, lastMouseY = 0;
     let searchQuery = '';
 
-    // Active Laser Pathway Trace (like the red/pink laser path in the TikTok video)
-    let activePathNodes = new Set();
-    let activePathEdges = new Set();
+    // Active Laser Pathway & Synapse Storm State
+    let activeLaserEdges = new Map(); // key -> { from, to, ttl, maxTtl }
     let pulses = [];
+    let shockwaves = [];
+    let lastStormBurst = 0;
+    let burstCounter = 0;
+
+    function igniteSynapseBeam(fromNode, toNode, pulseSpeed = 0.042) {
+      if (!fromNode || !toNode) return;
+      const k1 = fromNode.id + '->' + toNode.id;
+      const k2 = toNode.id + '->' + fromNode.id;
+      const ttl = isBrutal ? 55 : 35;
+      activeLaserEdges.set(k1, { from: fromNode, to: toNode, ttl, maxTtl: ttl });
+      activeLaserEdges.set(k2, { from: toNode, to: fromNode, ttl, maxTtl: ttl });
+      pulses.push({
+        from: fromNode,
+        to: toNode,
+        t: 0,
+        speed: pulseSpeed * (isBrutal ? 1.4 : 1.0),
+        color: '#ff176b'
+      });
+      fromNode.flashTimer = 1.0;
+    }
 
     function buildLaserPathway(startNode) {
-      activePathNodes.clear();
-      activePathEdges.clear();
-      pulses = [];
       if (!startNode) return;
+      activeLaserEdges.clear();
+      pulses = [];
 
-      const path = [startNode];
-      activePathNodes.add(startNode.id);
-
-      // Walk 4 to 6 hops preferring code/chord links, then mesh neighbors
       let curr = startNode;
       const hops = Math.min(6, Math.max(3, Math.floor(N / 5)));
+      const visited = new Set([curr.id]);
+      const path = [curr];
+
       for (let step = 0; step < hops; step++) {
         const neighbors = [...(adj.get(curr.id) || [])]
           .map(id => nodeById.get(id))
-          .filter(n => n && !activePathNodes.has(n.id));
+          .filter(n => n && !visited.has(n.id));
         if (neighbors.length === 0) break;
 
-        // Prioritize direct code links first
         const codeLinked = neighbors.filter(nb => curr.links.includes(nb.id) || nb.links.includes(curr.id));
         const pickPool = codeLinked.length > 0 ? codeLinked : neighbors;
         const next = pickPool[Math.floor(Math.random() * pickPool.length)];
-        activePathNodes.add(next.id);
-        activePathEdges.add(curr.id + '->' + next.id);
-        activePathEdges.add(next.id + '->' + curr.id);
-        pulses.push({ from: curr, to: next, t: Math.random(), speed: 0.016 + Math.random() * 0.012 });
+
+        visited.add(next.id);
         path.push(next);
+        igniteSynapseBeam(curr, next, 0.035 + Math.random() * 0.025);
         curr = next;
       }
 
-      // Also light up direct code imports of selectedNode
       for (const linkId of startNode.links) {
         const target = nodeById.get(linkId);
-        if (target) {
-          activePathNodes.add(target.id);
-          activePathEdges.add(startNode.id + '->' + target.id);
-          activePathEdges.add(target.id + '->' + startNode.id);
-          pulses.push({ from: startNode, to: target, t: 0, speed: 0.022 });
-        }
+        if (target) igniteSynapseBeam(startNode, target, 0.045);
       }
 
       const routeNames = path.map(p => p.label).join(' ➔ ');
@@ -814,9 +839,45 @@ function renderInteractiveGraphHtml(
         ? \` [\${startNode.symbols.map(s => s.name + ':' + s.line).slice(0, 3).join(', ')}]\`
         : '';
       document.getElementById('term-stream').textContent =
-        \`>> TRACE: \${routeNames}\${symPreview}\`;
+        \`>> SYNAPSE BURST: \${routeNames}\${symPreview}\`;
       document.getElementById('trace-counter').textContent =
-        \`\${activePathNodes.size} NODES ACTIVATED • ZERO-FLUFF ROUTING\`;
+        \`\${visited.size} NODES ACTIVATED • BRUTAL SYNAPSE STORM\`;
+    }
+
+    function triggerAutoStormBurst() {
+      if (!is3D || !isBrutal) return;
+      burstCounter++;
+
+      // Pick an active anchor (selectedNode, memory, or random high-degree node)
+      const hubCandidates = [selectedNode, nodes[0], nodes[Math.floor(Math.random() * nodes.length)]];
+      const source = hubCandidates[Math.floor(Math.random() * hubCandidates.length)];
+      if (!source) return;
+
+      const neighbors = [...(adj.get(source.id) || [])].map(id => nodeById.get(id)).filter(Boolean);
+      if (neighbors.length === 0) return;
+
+      // Spawn 2 to 4 rapid simultaneous electric discharges
+      const forks = Math.min(neighbors.length, Math.floor(2 + Math.random() * 3));
+      for (let f = 0; f < forks; f++) {
+        const target = neighbors[Math.floor(Math.random() * neighbors.length)];
+        igniteSynapseBeam(source, target, 0.038 + Math.random() * 0.03);
+
+        // Secondary chain reaction from target to another neighbor
+        const subNeighbors = [...(adj.get(target.id) || [])].map(id => nodeById.get(id)).filter(n => n && n !== source);
+        if (subNeighbors.length > 0 && Math.random() > 0.35) {
+          const subTarget = subNeighbors[Math.floor(Math.random() * subNeighbors.length)];
+          setTimeout(() => {
+            igniteSynapseBeam(target, subTarget, 0.045 + Math.random() * 0.03);
+          }, 80);
+        }
+      }
+
+      if (burstCounter % 3 === 0) {
+        const activeSym = source.symbols[0]?.name ? \` [\${source.symbols[0].name}]\` : '';
+        const tokRate = Math.floor(118 + Math.random() * 34);
+        document.getElementById('term-stream').textContent =
+          \`>> ACTIVE FIRING: \${source.label}\${activeSym} ➔ \${forks} targets [\${tokRate} tok/s]\`;
+      }
     }
 
     function selectNode(node) {
@@ -889,10 +950,9 @@ function renderInteractiveGraphHtml(
 
     function getHitNode(clientX, clientY) {
       if (is3D) {
-        // Check front-most projected nodes first
         const sorted = [...nodes].sort((a, b) => a.projZ - b.projZ);
         for (const n of sorted) {
-          const hitR = n.r * n.projScale + 7;
+          const hitR = n.r * n.projScale + 8;
           if (Math.hypot(clientX - n.projX, clientY - n.projY) <= hitR) {
             return n;
           }
@@ -928,10 +988,10 @@ function renderInteractiveGraphHtml(
         lastMouseY = e.clientY;
 
         if (is3D) {
-          rotY += dx * 0.0065;
-          rotX = Math.max(-1.45, Math.min(1.45, rotX + dy * 0.0065));
-          velY = dx * 0.0008;
-          velX = dy * 0.0008;
+          rotY += dx * 0.007;
+          rotX = Math.max(-1.45, Math.min(1.45, rotX + dy * 0.007));
+          velY = dx * 0.0012;
+          velX = dy * 0.0012;
         } else if (draggedNode) {
           draggedNode.x = (e.clientX - width / 2 - panX) / zoom + width / 2;
           draggedNode.y = (e.clientY - height / 2 - panY) / zoom + height / 2;
@@ -967,6 +1027,12 @@ function renderInteractiveGraphHtml(
       }
     });
 
+    document.getElementById('brutal-btn').addEventListener('click', (e) => {
+      isBrutal = !isBrutal;
+      e.target.textContent = isBrutal ? '⚡ Brutal Storm: ON' : '⚡ Brutal Storm: OFF';
+      e.target.classList.toggle('active-mode', isBrutal);
+    });
+
     document.getElementById('mode-btn').addEventListener('click', (e) => {
       is3D = !is3D;
       e.target.textContent = is3D ? '🌐 3D Neural Sphere' : '🗺️ 2D Force Planar';
@@ -975,11 +1041,11 @@ function renderInteractiveGraphHtml(
 
     document.getElementById('overdrive-btn').addEventListener('click', (e) => {
       overdrive = !overdrive;
-      e.target.textContent = overdrive ? '⚡ Synapse Overdrive: ON' : '⚡ Synapse Overdrive: OFF';
+      e.target.textContent = overdrive ? '🔥 Overdrive: ON' : '🔥 Overdrive: OFF';
       e.target.classList.toggle('active-mode', overdrive);
       if (overdrive) {
         document.getElementById('term-stream').textContent =
-          '>> FULL NEURAL OVERDRIVE: All geodesic memory & symbol channels illuminated.';
+          '>> FULL NEURAL OVERDRIVE: All geodesic channels illuminated at maximum voltage.';
       } else {
         buildLaserPathway(selectedNode);
       }
@@ -992,8 +1058,8 @@ function renderInteractiveGraphHtml(
 
     document.getElementById('reset-btn').addEventListener('click', () => {
       panX = 0; panY = 0; zoom = 1;
-      rotX = 0.22; rotY = 0.4;
-      velY = 0.0032; velX = 0.0005;
+      rotX = 0.22; rotY = 0.4; rotZ = 0;
+      velY = 0.009; velX = 0.002;
     });
 
     window.addEventListener('resize', () => {
@@ -1002,7 +1068,7 @@ function renderInteractiveGraphHtml(
       canvas.width = width * devicePixelRatio;
       canvas.height = height * devicePixelRatio;
       ctx.scale(devicePixelRatio, devicePixelRatio);
-      sphereRadius = Math.min(width - 360, height) * 0.34;
+      sphereRadius = Math.min(width - 360, height) * 0.35;
     });
 
     function matchesSearch(n) {
@@ -1053,30 +1119,79 @@ function renderInteractiveGraphHtml(
       }
     }
 
+    let globalTime = 0;
+
     function draw3DSphere() {
+      globalTime += 0.016;
+
+      // Compound Gyroscopic Multi-Axis Rotation (Brutal Tumbling!)
       if (!isDragging && autoSpin) {
+        const baseSpeed = isBrutal ? 0.0085 : 0.0035;
         rotY += velY;
-        rotX = Math.max(-1.2, Math.min(1.2, rotX + velX));
-        velY = velY * 0.985 + 0.0032 * 0.015;
-        velX = velX * 0.96;
+        velY = velY * 0.982 + baseSpeed * 0.018;
+
+        // Dynamic 3D Wobble & Pitch/Roll waves
+        const targetPitch = Math.sin(globalTime * 0.85) * (isBrutal ? 0.42 : 0.2);
+        rotX = rotX * 0.96 + targetPitch * 0.04;
+        rotZ = Math.cos(globalTime * 0.65) * (isBrutal ? 0.22 : 0.08);
+      }
+
+      // Continuous Synapse Storm bursts (fires new sparks every ~180ms)
+      if (isBrutal && Date.now() - lastStormBurst > 180) {
+        triggerAutoStormBurst();
+        lastStormBurst = Date.now();
+      }
+
+      // Age and prune decaying active laser beams
+      for (const [k, beam] of activeLaserEdges.entries()) {
+        beam.ttl--;
+        if (beam.ttl <= 0) activeLaserEdges.delete(k);
       }
 
       const centerX = (width - 340) / 2 + panX * 0.3;
       const centerY = height / 2 - 12 + panY * 0.3;
-      const R = sphereRadius * zoom;
+
+      // Breathing Sphere Radius
+      const breathe = 1 + Math.sin(globalTime * 3.2) * (isBrutal ? 0.04 : 0.018);
+      const R = sphereRadius * zoom * breathe;
       const fov = 620;
 
       const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
       const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+      const cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
 
+      // Project ambient stars in 3D parallax
+      ctx.save();
+      for (const st of ambientStars) {
+        const x1 = st.sx * cosY - st.sz * sinY;
+        const z1 = st.sx * sinY + st.sz * cosY;
+        const y2 = st.sy * cosX - z1 * sinX;
+        const z2 = st.sy * sinX + z1 * cosX;
+        const worldX = (x1 * cosZ - y2 * sinZ) * R * 1.35;
+        const worldY = (x1 * sinZ + y2 * cosZ) * R * 1.35;
+        const worldZ = z2 * R * 1.35;
+        const scale = fov / Math.max(100, fov + worldZ);
+        const px = centerX + worldX * scale;
+        const py = centerY + worldY * scale;
+
+        ctx.beginPath();
+        ctx.arc(px, py, st.size * scale, 0, Math.PI * 2);
+        ctx.fillStyle = \`rgba(226, 232, 240, \${(st.alpha * (0.6 - worldZ / (2 * R))).toFixed(3)})\`;
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // Project main nodes
       for (const n of nodes) {
         const x1 = n.sx * cosY - n.sz * sinY;
         const z1 = n.sx * sinY + n.sz * cosY;
         const y2 = n.sy * cosX - z1 * sinX;
         const z2 = n.sy * sinX + z1 * cosX;
+        const x3 = x1 * cosZ - y2 * sinZ;
+        const y3 = x1 * sinZ + y2 * cosZ;
 
-        const worldX = x1 * R;
-        const worldY = y2 * R;
+        const worldX = x3 * R;
+        const worldY = y3 * R;
         const worldZ = z2 * R;
 
         const scale = fov / Math.max(120, fov + worldZ);
@@ -1084,12 +1199,14 @@ function renderInteractiveGraphHtml(
         n.projY = centerY + worldY * scale;
         n.projZ = worldZ;
         n.projScale = scale;
+
+        if (n.flashTimer > 0) n.flashTimer -= 0.035;
       }
 
       // Ambient core glow behind sphere
-      const coreGrad = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, R * 1.25);
-      coreGrad.addColorStop(0, overdrive ? 'rgba(255, 23, 107, 0.16)' : 'rgba(255, 23, 107, 0.07)');
-      coreGrad.addColorStop(0.55, 'rgba(99, 102, 241, 0.04)');
+      const coreGrad = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, R * 1.3);
+      coreGrad.addColorStop(0, overdrive ? 'rgba(255, 23, 107, 0.22)' : 'rgba(255, 23, 107, 0.11)');
+      coreGrad.addColorStop(0.55, 'rgba(99, 102, 241, 0.05)');
       coreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = coreGrad;
       ctx.fillRect(0, 0, width, height);
@@ -1099,18 +1216,19 @@ function renderInteractiveGraphHtml(
         (a, b) => (b.source.projZ + b.target.projZ) - (a.source.projZ + a.target.projZ)
       );
 
-      // Pass 1: Draw silver-white geodesic wireframe mesh
+      // Pass 1: Draw silver-white geodesic lattice mesh
       ctx.save();
       for (const e of sortedEdges) {
         const k = e.source.id + '->' + e.target.id;
+        const beam = activeLaserEdges.get(k);
         const isLaser = overdrive
           ? (e.kind !== 'mesh' || (e.source.idx + e.target.idx) % 2 === 0)
-          : activePathEdges.has(k);
+          : Boolean(beam);
 
         if (isLaser) continue;
 
         const avgZ = (e.source.projZ + e.target.projZ) / (2 * R);
-        const depthAlpha = Math.max(0.06, Math.min(0.38, 0.24 - avgZ * 0.14));
+        const depthAlpha = Math.max(0.05, Math.min(0.35, 0.22 - avgZ * 0.15));
 
         ctx.beginPath();
         ctx.moveTo(e.source.projX, e.source.projY);
@@ -1121,99 +1239,151 @@ function renderInteractiveGraphHtml(
       }
       ctx.restore();
 
-      // Pass 2: Draw Neon Red/Pink Laser Synapse Beams (TikTok signature look!)
+      // Pass 2: High-Voltage Electric Neon Laser Beams (with Plasma Arc Jitter!)
       ctx.save();
       for (const e of sortedEdges) {
         const k = e.source.id + '->' + e.target.id;
+        const beam = activeLaserEdges.get(k);
         const isHoveredEdge = hoveredNode && (e.source === hoveredNode || e.target === hoveredNode);
-        const isLaser = isHoveredEdge || (overdrive
-          ? (e.kind !== 'mesh' || (e.source.idx + e.target.idx) % 2 === 0)
-          : activePathEdges.has(k));
+        const isLaser = isHoveredEdge || overdrive || Boolean(beam);
 
         if (!isLaser) continue;
 
-        // Outer neon pink/red laser bloom
+        const intensity = overdrive ? 1 : beam ? beam.ttl / beam.maxTtl : 0.85;
+
+        // Plasma arc micro-jitter
+        const midX = (e.source.projX + e.target.projX) / 2;
+        const midY = (e.source.projY + e.target.projY) / 2;
+        const dx = e.target.projX - e.source.projX;
+        const dy = e.target.projY - e.source.projY;
+        const len = Math.hypot(dx, dy) || 1;
+        const perpX = -dy / len;
+        const perpY = dx / len;
+        const jitter = Math.sin(globalTime * 38 + e.seed) * (isBrutal ? 3.2 : 1.2) * intensity;
+        const cx = midX + perpX * jitter;
+        const cy = midY + perpY * jitter;
+
+        // Outer neon pink bloom
         ctx.beginPath();
         ctx.moveTo(e.source.projX, e.source.projY);
-        ctx.lineTo(e.target.projX, e.target.projY);
+        ctx.quadraticCurveTo(cx, cy, e.target.projX, e.target.projY);
         ctx.shadowColor = '#ff176b';
-        ctx.shadowBlur = overdrive ? 14 : 18;
-        ctx.strokeStyle = overdrive ? 'rgba(255, 28, 110, 0.78)' : 'rgba(255, 20, 95, 0.95)';
-        ctx.lineWidth = overdrive ? 2.2 : 3.1;
+        ctx.shadowBlur = (overdrive ? 20 : 16) + Math.sin(globalTime * 25 + e.seed) * 6;
+        ctx.strokeStyle = \`rgba(255, 20, 95, \${(0.88 * intensity).toFixed(3)})\`;
+        ctx.lineWidth = (overdrive ? 2.6 : 3.2) * (isBrutal ? 1.25 : 1.0);
         ctx.stroke();
 
         // Inner white-hot laser core
         ctx.beginPath();
         ctx.moveTo(e.source.projX, e.source.projY);
-        ctx.lineTo(e.target.projX, e.target.projY);
+        ctx.quadraticCurveTo(cx, cy, e.target.projX, e.target.projY);
         ctx.shadowBlur = 0;
-        ctx.strokeStyle = 'rgba(255, 215, 235, 0.92)';
-        ctx.lineWidth = overdrive ? 0.9 : 1.35;
+        ctx.strokeStyle = \`rgba(255, 225, 240, \${(0.95 * intensity).toFixed(3)})\`;
+        ctx.lineWidth = 1.35;
         ctx.stroke();
       }
       ctx.restore();
 
-      // Pass 3: Animated energy pulses shooting along active laser lines
+      // Pass 3: Animated high-speed energy pulses
       ctx.save();
-      for (const p of pulses) {
+      for (let i = pulses.length - 1; i >= 0; i--) {
+        const p = pulses[i];
         p.t += p.speed;
-        if (p.t > 1) p.t = 0;
+        if (p.t >= 1) {
+          // Pulse arrived! Trigger shockwave ripple on target node
+          shockwaves.push({
+            x: p.to.projX,
+            y: p.to.projY,
+            r: p.to.r * p.to.projScale,
+            maxR: p.to.r * p.to.projScale + (isBrutal ? 36 : 20),
+            alpha: 1.0
+          });
+          p.to.flashTimer = 1.0;
+          pulses.splice(i, 1);
+          continue;
+        }
+
         const px = p.from.projX + (p.to.projX - p.from.projX) * p.t;
         const py = p.from.projY + (p.to.projY - p.from.projY) * p.t;
 
         ctx.beginPath();
-        ctx.arc(px, py, 3.6, 0, Math.PI * 2);
+        ctx.arc(px, py, 3.8, 0, Math.PI * 2);
         ctx.shadowColor = '#ff176b';
-        ctx.shadowBlur = 16;
+        ctx.shadowBlur = 18;
         ctx.fillStyle = '#ffffff';
         ctx.fill();
+
+        // Trailing comet spark
+        const trailX = p.from.projX + (p.to.projX - p.from.projX) * Math.max(0, p.t - 0.08);
+        const trailY = p.from.projY + (p.to.projY - p.from.projY) * Math.max(0, p.t - 0.08);
+        ctx.beginPath();
+        ctx.moveTo(trailX, trailY);
+        ctx.lineTo(px, py);
+        ctx.strokeStyle = 'rgba(255, 23, 107, 0.7)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
       }
       ctx.restore();
 
-      // Pass 4: Sort nodes back-to-front and render 3D Pearlescent / Neon Spheres + Monospace Labels
+      // Pass 4: Expanding Shockwave Halo Rings
+      ctx.save();
+      for (let i = shockwaves.length - 1; i >= 0; i--) {
+        const sw = shockwaves[i];
+        sw.r += isBrutal ? 1.8 : 1.2;
+        sw.alpha *= 0.91;
+        if (sw.alpha <= 0.03 || sw.r >= sw.maxR) {
+          shockwaves.splice(i, 1);
+          continue;
+        }
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
+        ctx.shadowColor = '#ff176b';
+        ctx.shadowBlur = 14;
+        ctx.strokeStyle = \`rgba(255, 23, 107, \${sw.alpha.toFixed(3)})\`;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Pass 5: Render 3D Nodes & Monospace Labels
       const sortedNodes = [...nodes].sort((a, b) => b.projZ - a.projZ);
       for (const n of sortedNodes) {
         const activeSearch = matchesSearch(n);
         const isSel = n === selectedNode || n === hoveredNode;
-        const isPathNode = overdrive || activePathNodes.has(n.id) || isSel;
-        const normZ = n.projZ / R; // -1 (front) to +1 (back)
-        const depthAlpha = Math.max(0.22, Math.min(1, 0.78 - normZ * 0.42));
-        const r = Math.max(2.5, n.r * n.projScale * (isSel ? 1.35 : 1));
+        const isFlashing = n.flashTimer > 0;
+        const normZ = n.projZ / R;
+        const depthAlpha = Math.max(0.24, Math.min(1, 0.78 - normZ * 0.45));
+        const r = Math.max(2.8, n.r * n.projScale * (isSel ? 1.4 : isFlashing ? 1.25 : 1));
 
         ctx.save();
         ctx.globalAlpha = activeSearch ? depthAlpha : 0.12;
 
-        if (isPathNode) {
+        if (isFlashing || isSel) {
           ctx.beginPath();
-          ctx.arc(n.projX, n.projY, r + (isSel ? 6 : 3.5), 0, Math.PI * 2);
-          ctx.fillStyle = isSel ? 'rgba(255, 23, 107, 0.42)' : 'rgba(255, 23, 107, 0.24)';
+          ctx.arc(n.projX, n.projY, r + (isSel ? 7 : 4), 0, Math.PI * 2);
+          ctx.fillStyle = isSel ? 'rgba(255, 23, 107, 0.45)' : 'rgba(255, 23, 107, 0.28)';
           ctx.fill();
         }
 
         ctx.beginPath();
         ctx.arc(n.projX, n.projY, r, 0, Math.PI * 2);
-        if (isSel) {
+        if (isSel || isFlashing) {
           ctx.shadowColor = '#ff176b';
-          ctx.shadowBlur = 18;
+          ctx.shadowBlur = isSel ? 22 : 15;
           ctx.fillStyle = '#ffffff';
-        } else if (isPathNode) {
-          ctx.shadowColor = '#ff176b';
-          ctx.shadowBlur = 12;
-          ctx.fillStyle = '#ffd1e3';
         } else if (n.category === 'memory') {
           ctx.shadowColor = '#10b981';
-          ctx.shadowBlur = 12;
+          ctx.shadowBlur = 14;
           ctx.fillStyle = '#10b981';
         } else {
           ctx.fillStyle = '#f8fafc';
         }
         ctx.fill();
 
-        // Compact floating monospace label next to node (like frame_0226 & frame_0301)
-        if (normZ < 0.55 || isSel || isPathNode) {
+        if (normZ < 0.55 || isSel || isFlashing) {
           ctx.shadowBlur = 0;
-          ctx.font = (isSel || isPathNode ? '700 ' : '500 ') + Math.round(10 * Math.max(0.82, n.projScale)) + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
-          ctx.fillStyle = isSel ? '#ffffff' : isPathNode ? '#ff9ec2' : 'rgba(226, 232, 240, 0.85)';
+          ctx.font = (isSel || isFlashing ? '700 ' : '500 ') + Math.round(10 * Math.max(0.82, n.projScale)) + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
+          ctx.fillStyle = isSel ? '#ffffff' : isFlashing ? '#ff9ec2' : 'rgba(226, 232, 240, 0.88)';
           ctx.textAlign = 'left';
           const lbl = n.label.length > 22 ? n.label.slice(0, 20) + '…' : n.label;
           ctx.fillText(lbl, n.projX + r + 5, n.projY + 3);
@@ -1233,7 +1403,7 @@ function renderInteractiveGraphHtml(
       for (const e of edges) {
         if (e.kind === 'mesh' || e.kind === 'chord') continue;
         const k = e.source.id + '->' + e.target.id;
-        const isHighlighted = activePathEdges.has(k) || selectedNode === e.source || selectedNode === e.target;
+        const isHighlighted = activeLaserEdges.has(k) || selectedNode === e.source || selectedNode === e.target;
 
         ctx.beginPath();
         ctx.moveTo(e.source.x, e.source.y);
