@@ -873,7 +873,7 @@ function renderInteractiveGraphHtml(
     }
 
     // Seed initial boot log lines
-    appendTerminalLog('INIT', \`Knowledge Graph mapped \${nodes.length} nodes & \${links.length} links\`);
+    appendTerminalLog('INIT', \`Knowledge Graph mapped \${nodes.length} nodes & \${codeEdgesCount} links\`);
     appendTerminalLog('AST', 'Kotlin/Java symbols & line anchors ready for surgery');
 
     function igniteSynapseBeam(fromNode, toNode, pulseSpeed = 0.045) {
