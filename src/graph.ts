@@ -520,21 +520,77 @@ function renderInteractiveGraphHtml(
     padding: 8px 14px;
     overflow-y: auto;
     font-size: 11.5px;
-    line-height: 1.52;
-    color: #cbd5e1;
+    line-height: 1.6;
+    color: #f1f5f9;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
+  }
+  .term-welcome {
+    color: #64748b;
+    font-size: 11px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
   .log-line {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 11.5px;
+    letter-spacing: 0.01em;
   }
-  .log-line .ts { color: #64748b; }
-  .log-line .hl { color: var(--accent); font-weight: 700; }
-  .log-line .tok { color: #38bdf8; }
+  .log-line .ts {
+    color: #94a3b8;
+    margin-right: 8px;
+    font-weight: 500;
+  }
+  .tag-pill {
+    display: inline-block;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin-right: 8px;
+    border-radius: 2px;
+  }
+  .tag-live_fs, .tag-live_sse {
+    background: rgba(16, 185, 129, 0.18);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+  }
+  .tag-synapse {
+    background: rgba(0, 168, 255, 0.16);
+    color: var(--accent);
+    border: 1px solid rgba(0, 168, 255, 0.35);
+  }
+  .tag-trace, .tag-select, .tag-burst, .tag-jump {
+    background: rgba(168, 85, 247, 0.18);
+    color: #c084fc;
+    border: 1px solid rgba(168, 85, 247, 0.35);
+  }
+  .tag-overdrive {
+    background: rgba(244, 63, 94, 0.2);
+    color: #fb7185;
+    border: 1px solid rgba(244, 63, 94, 0.4);
+  }
+  .tag-init, .tag-ast {
+    background: rgba(148, 163, 184, 0.18);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+  }
+  .log-line .msg {
+    color: #f1f5f9;
+  }
+  .log-line .tok {
+    color: #38bdf8;
+    margin-left: 6px;
+    font-weight: 600;
+  }
   .term-inspector {
     padding: 8px 14px;
     overflow-y: auto;
@@ -601,7 +657,9 @@ function renderInteractiveGraphHtml(
       </div>
     </div>
     <div class="term-body">
-      <div class="term-log" id="term-log"></div>
+      <div class="term-log" id="term-log">
+        <div class="term-welcome">> anti-yapping telemetry stream --live (PID: 4949)</div>
+      </div>
       <div class="term-inspector" id="term-inspector">
         <div class="insp-head" id="node-title">.hahahah/graph/memory.md</div>
         <div id="node-meta"></div>
@@ -790,18 +848,33 @@ function renderInteractiveGraphHtml(
     let burstCounter = 0;
 
     const termLogEl = document.getElementById('term-log');
+    let lastLogKey = '';
     function appendTerminalLog(tag, message, tokInfo = '') {
+      const cleanTag = String(tag).replace(/[\[\]]/g, '');
+      const key = cleanTag + ':' + message;
+      if (key === lastLogKey) return;
+      lastLogKey = key;
+
       const now = new Date();
       const ts = now.toTimeString().slice(0, 8);
       const line = document.createElement('div');
       line.className = 'log-line';
-      line.innerHTML = \`<span class="ts">[\${ts}]</span> <span class="hl">\${tag}</span> \${message} <span class="tok">\${tokInfo}</span>\`;
+      const tokSpan = tokInfo ? \`<span class="tok">\${tokInfo}</span>\` : '';
+      line.innerHTML = \`<span class="ts">\${ts}</span><span class="tag-pill tag-\${cleanTag.toLowerCase()}">\${cleanTag}</span><span class="msg">\${message}</span>\${tokSpan}\`;
       termLogEl.appendChild(line);
-      while (termLogEl.children.length > 28) {
-        termLogEl.removeChild(termLogEl.firstChild);
+      while (termLogEl.children.length > 25) {
+        if (termLogEl.children[1]) {
+          termLogEl.removeChild(termLogEl.children[1]);
+        } else {
+          break;
+        }
       }
       termLogEl.scrollTop = termLogEl.scrollHeight;
     }
+
+    // Seed initial boot log lines
+    appendTerminalLog('INIT', \`Knowledge Graph mapped \${nodes.length} nodes & \${links.length} links\`);
+    appendTerminalLog('AST', 'Kotlin/Java symbols & line anchors ready for surgery');
 
     function igniteSynapseBeam(fromNode, toNode, pulseSpeed = 0.045) {
       if (!fromNode || !toNode) return;
@@ -851,7 +924,7 @@ function renderInteractiveGraphHtml(
       const symPreview = startNode.symbols.length > 0
         ? \` (\${startNode.symbols.map(s => s.name + ':' + s.line).slice(0, 2).join(', ')})\`
         : '';
-      appendTerminalLog(\`[\${sourceLabel}]\`, \`\${routeNames}\${symPreview}\`, \`~\${startNode.estTokens} tok\`);
+      appendTerminalLog(sourceLabel, \`\${routeNames}\${symPreview}\`, \`~\${startNode.estTokens} tok\`);
       document.getElementById('trace-counter').textContent = \`\${visited.size} NODES ACTIVE\`;
     }
 
@@ -859,8 +932,7 @@ function renderInteractiveGraphHtml(
       if (!is3D || !isBrutal) return;
       burstCounter++;
 
-      const hubCandidates = [selectedNode, nodes[0], nodes[Math.floor(Math.random() * nodes.length)]];
-      const source = hubCandidates[Math.floor(Math.random() * hubCandidates.length)];
+      const source = nodes[Math.floor(Math.random() * nodes.length)];
       if (!source) return;
 
       const neighbors = [...(adj.get(source.id) || [])].map(id => nodeById.get(id)).filter(Boolean);
@@ -883,9 +955,10 @@ function renderInteractiveGraphHtml(
       const tokRate = Math.floor(115 + Math.random() * 48);
       document.getElementById('tok-speed').textContent = \`[\${tokRate} tok/s]\`;
 
-      if (!isLiveConnected && burstCounter % 6 === 0) {
-        const activeSym = source.symbols[0]?.name ? \`::\${source.symbols[0].name}:\${source.symbols[0].line}\` : '';
-        appendTerminalLog('[SYNAPSE]', \`\${source.label}\${activeSym} ➔ \${forks} branches\`, \`[\${tokRate} tok/s]\`);
+      if (!isLiveConnected && burstCounter % 7 === 0) {
+        const activeSym = source.symbols[0]?.name ? \`::\${source.symbols[0].name}\` : '';
+        const targetSample = neighbors[0]?.label || 'geodesic';
+        appendTerminalLog('SYNAPSE', \`\${source.label}\${activeSym} ➔ \${targetSample} (\${forks} branches)\`, \`(\${tokRate} tok/s)\`);
       }
     }
 
@@ -948,7 +1021,7 @@ function renderInteractiveGraphHtml(
             const statusEl = document.getElementById('telemetry-status');
             statusEl.textContent = '[TELEMETRY: ● LIVE REAL-TIME FS & TOKEN STREAM]';
             statusEl.style.color = '#10b981';
-            appendTerminalLog('[LIVE_SSE]', \`Connected to real-time file & token watcher (\${url})\`, '[READY]');
+            appendTerminalLog('LIVE_SSE', \`Connected to real-time file & token watcher (\${url})\`, '[READY]');
           };
           es.onmessage = (ev) => {
             try {
@@ -964,7 +1037,7 @@ function renderInteractiveGraphHtml(
                   target.estTokens = msg.tokens || target.estTokens;
                   selectNode(target, 'LIVE_FS');
                 } else {
-                  appendTerminalLog('[LIVE_FS]', \`\${msg.event.toUpperCase()} \${msg.path}\`, \`\${msg.tokens} tok (Δ\${sign})\`);
+                  appendTerminalLog('LIVE_FS', \`\${msg.event.toUpperCase()} \${msg.path}\`, \`\${msg.tokens} tok (Δ\${sign})\`);
                 }
               }
             } catch {}
@@ -1085,7 +1158,7 @@ function renderInteractiveGraphHtml(
       e.target.textContent = overdrive ? '[OVERDRIVE: ON]' : '[OVERDRIVE: OFF]';
       e.target.classList.toggle('on', overdrive);
       if (overdrive) {
-        appendTerminalLog('[OVERDRIVE]', 'All geodesic memory & symbol channels ignited at maximum voltage', '[MAX]');
+        appendTerminalLog('OVERDRIVE', 'All geodesic memory & symbol channels ignited at maximum voltage', '[MAX]');
       } else {
         buildLaserPathway(selectedNode, 'TRACE');
       }
