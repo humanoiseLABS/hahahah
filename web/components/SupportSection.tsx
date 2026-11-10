@@ -12,7 +12,7 @@ const HUMANOISE_FAQS = [
   {
     question: "Gimana efeknya ke konsumsi token & biaya API?",
     answer:
-      "Kita blak-blakan ya: blok instruksi always-on cuma makan ~517 token (Anti-Yapping) atau ~538 token (+62 Mode). Khusus Anti-Yapping, aturan surgical diffs maksa AI cuma nulis baris yang diedit (+2 baris konteks), jadi output token pas edit file gede bisa hemat drastis dan ga bikin limit cepet jebol.",
+      "Kita blak-blakan ya: blok instruksi always-on cuma makan ~532 token (Anti-Yapping) atau ~538 token (+62 Mode). Khusus Anti-Yapping, ada dual token saver: (1) aturan surgical diffs memangkas output token hingga 80% (cuma nulis baris yang diedit), dan (2) aturan surgical inspection + generator .agentignore otomatis memblokir file raksasa (build artifacts, keystores, lockfiles) agar context window tidak cepat penuh (hemat input token hingga 50-70%).",
   },
   {
     question: "Aman ga dari serangan prompt injection atau jailbreak?",
