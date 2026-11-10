@@ -499,10 +499,10 @@ function renderInteractiveGraphHtml(
 
   /* Bottom 32% Full-Width Raw Terminal Console */
   .term-console {
-    height: 220px;
+    height: 230px;
     width: 100vw;
     background: #000000;
-    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
     display: flex;
     flex-direction: column;
     z-index: 20;
@@ -536,20 +536,61 @@ function renderInteractiveGraphHtml(
   .term-body {
     flex: 1 1 auto;
     display: grid;
-    grid-template-columns: 1.6fr 1fr;
+    grid-template-columns: 1.8fr 1fr;
     min-height: 0;
     overflow: hidden;
   }
+  .term-log-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    background: #000000;
+  }
   .term-log {
+    flex: 1 1 auto;
     padding: 6px 16px;
     overflow-y: auto;
     overflow-x: hidden;
     font-size: 11px;
     color: #f1f5f9;
-    border-right: 1px solid rgba(255, 255, 255, 0.12);
     display: block;
-    background: #000000;
   }
+  .term-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 14px;
+    background: #04060a;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 11px;
+    height: 26px;
+    box-sizing: border-box;
+  }
+  .prompt-sym {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .term-input-bar input {
+    flex: 1 1 auto;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 11px;
+  }
+  .term-input-bar input::placeholder {
+    color: #475569;
+  }
+  .term-cursor {
+    width: 6px;
+    height: 12px;
+    background: var(--accent);
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
   .term-welcome {
     color: #475569;
     font-size: 10.5px;
@@ -640,12 +681,12 @@ function renderInteractiveGraphHtml(
   <div class="stage" id="stage">
     <div class="hud-overlay">
       <div class="hud-left">
-        <span class="hud-brand"><strong>●</strong> ${projectName}</span>
+        <span class="hud-brand"><strong>●</strong> \${projectName}</span>
         <span class="hud-stats" id="stats-label"></span>
       </div>
       <div class="hud-right">
-        <span class="hud-btn on" id="laser-blue-btn" title="Press 1">[1:BLUE]</span>
-        <span class="hud-btn" id="laser-pink-btn" title="Press 2">[2:PINK]</span>
+        <span class="hud-btn on" id="laser-crimson-btn" title="Press 1">[1:CRIMSON]</span>
+        <span class="hud-btn" id="laser-blue-btn" title="Press 2">[2:BLUE]</span>
         <span class="hud-btn" id="laser-cyan-btn" title="Press 3">[3:CYAN]</span>
         <span class="hud-sep">·</span>
         <span class="hud-btn on" id="brutal-btn" title="Press B">[STORM]</span>
@@ -660,16 +701,23 @@ function renderInteractiveGraphHtml(
 
   <div class="term-console">
     <div class="term-header">
-      <span class="term-title">Neural Graph (Anti-Yapping Engine) ────────────────────────</span>
+      <span class="term-title">── Neural Graph (Anti-Yapping Second Brain) ────────────────────────</span>
       <div class="term-meta">
-        <span id="telemetry-status" class="live-pill">[TELEMETRY: ◎ SIMULATED STORM]</span>
-        <span id="tok-speed" style="color:#e2e8f0">[0 tok/s]</span>
-        <span id="trace-counter" style="color:var(--dim)">0 NODES ACTIVE</span>
+        <span id="telemetry-status" class="live-pill">[TELEMETRY: ● SECOND BRAIN ACTIVE]</span>
+        <span id="tok-speed" style="color:#e2e8f0">[154 tok/s]</span>
+        <span id="trace-counter" style="color:var(--dim)">48 NODES ACTIVE</span>
       </div>
     </div>
     <div class="term-body">
-      <div class="term-log" id="term-log">
-        <div class="term-welcome">> anti-yapping telemetry stream --live (PID: 4949)</div>
+      <div class="term-log-wrap">
+        <div class="term-log" id="term-log">
+          <div class="term-welcome">> Anti-Yapping Second Brain v0.2.16 (Neural Core Active)</div>
+        </div>
+        <div class="term-input-bar">
+          <span class="prompt-sym">></span>
+          <input type="text" id="term-input" placeholder="Query Second Brain or press Space to ignite..." autocomplete="off"/>
+          <span class="term-cursor"></span>
+        </div>
       </div>
       <div class="term-inspector" id="term-inspector">
         <div class="insp-head" id="node-title">.hahahah/graph/memory.md</div>
@@ -684,8 +732,17 @@ function renderInteractiveGraphHtml(
   <script>
     const data = JSON.parse(document.getElementById('graph-data').textContent);
 
-    // Laser Color Palettes (Blue default as requested, plus Crimson Pink & Matrix Cyan)
+    // Laser Color Palettes (Crimson Red default from video, plus Electric Blue & Matrix Cyan)
     const LASER_THEMES = {
+      crimson: {
+        primary: '#ff0055',
+        glow: 'rgba(255, 0, 85, 0.95)',
+        overdrive: 'rgba(255, 0, 85, 0.88)',
+        core: 'rgba(255, 240, 245, 0.98)',
+        halo: 'rgba(255, 0, 85, 0.42)',
+        soft: 'rgba(255, 0, 85, 0.18)',
+        label: '#fda4af'
+      },
       blue: {
         primary: '#00a8ff',
         glow: 'rgba(0, 175, 255, 0.94)',
@@ -694,15 +751,6 @@ function renderInteractiveGraphHtml(
         halo: 'rgba(0, 168, 255, 0.36)',
         soft: 'rgba(0, 168, 255, 0.18)',
         label: '#7dd3fc'
-      },
-      pink: {
-        primary: '#ff176b',
-        glow: 'rgba(255, 20, 95, 0.94)',
-        overdrive: 'rgba(255, 28, 110, 0.80)',
-        core: 'rgba(255, 225, 240, 0.96)',
-        halo: 'rgba(255, 23, 107, 0.36)',
-        soft: 'rgba(255, 23, 107, 0.18)',
-        label: '#ff9ec2'
       },
       cyan: {
         primary: '#00f5d4',
@@ -715,8 +763,8 @@ function renderInteractiveGraphHtml(
       }
     };
 
-    let currentThemeKey = localStorage.getItem('ay_laser_theme') || 'blue';
-    if (!LASER_THEMES[currentThemeKey]) currentThemeKey = 'blue';
+    let currentThemeKey = localStorage.getItem('ay_laser_theme') || 'crimson';
+    if (!LASER_THEMES[currentThemeKey]) currentThemeKey = 'crimson';
     let THEME = LASER_THEMES[currentThemeKey];
 
     function applyLaserTheme(key) {
@@ -725,9 +773,9 @@ function renderInteractiveGraphHtml(
       try { localStorage.setItem('ay_laser_theme', key); } catch {}
       document.documentElement.style.setProperty('--accent', THEME.primary);
       document.documentElement.style.setProperty('--accent-soft', THEME.soft);
-      document.getElementById('laser-blue-btn').classList.toggle('on', key === 'blue');
-      document.getElementById('laser-pink-btn').classList.toggle('on', key === 'pink');
-      document.getElementById('laser-cyan-btn').classList.toggle('on', key === 'cyan');
+      document.getElementById('laser-crimson-btn')?.classList.toggle('on', key === 'crimson');
+      document.getElementById('laser-blue-btn')?.classList.toggle('on', key === 'blue');
+      document.getElementById('laser-cyan-btn')?.classList.toggle('on', key === 'cyan');
     }
 
     const stage = document.getElementById('stage');
@@ -960,7 +1008,24 @@ function renderInteractiveGraphHtml(
       }
     }
 
-    // 5. Radial Bridges: Connect Core Nodes to Surface Nodes (Trans-Sphere Chords)
+    // 5. Trans-Spherical Brain Chords (recreates the dense 3D neural brain cage seen in the video!)
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      const chordCandidates = [];
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j];
+        const d = Math.hypot(a.sx - b.sx, a.sy - b.sy, a.sz - b.sz);
+        if (d >= 0.55 && d <= 1.68) {
+          chordCandidates.push({ b, d });
+        }
+      }
+      chordCandidates.sort((u, v) => ((u.b.idx * 19 + 7) % 31) - ((v.b.idx * 19 + 7) % 31));
+      for (let k = 0; k < Math.min(2, chordCandidates.length); k++) {
+        addEdge(a, chordCandidates[k].b, 'chord');
+      }
+    }
+
+    // Radial Bridges: Connect Core Nodes to Surface Nodes
     for (let c = 0; c < coreRelays.length; c++) {
       const coreNode = coreRelays[c];
       const dists = [];
@@ -1077,39 +1142,46 @@ function renderInteractiveGraphHtml(
       document.getElementById('trace-counter').textContent = \`\${visited.size} NODES ACTIVE\`;
     }
 
-    function triggerAutoStormBurst() {
+    function triggerAutoStormBurst(customSource = null) {
       if (!is3D || !isBrutal) return;
       burstCounter++;
 
-      // Distribute storm bursts across entire surface shell + central neural core
+      // Multi-hop constellation burst matching video frame_0314.jpg!
       const coreRelays = nodes.filter(n => n.isCore);
       const pickFromCore = coreRelays.length > 0 && Math.random() < 0.35;
-      const source = pickFromCore
+      const source = customSource || (pickFromCore
         ? (memoryNode && Math.random() < 0.45 ? memoryNode : coreRelays[Math.floor(Math.random() * coreRelays.length)])
-        : realNodes[Math.floor(Math.random() * realNodes.length)];
+        : realNodes[Math.floor(Math.random() * realNodes.length)] || nodes[0]);
       if (!source) return;
 
       const neighbors = [...(adj.get(source.id) || [])].map(id => nodeById.get(id)).filter(Boolean);
       if (neighbors.length === 0) return;
 
-      const forks = Math.min(neighbors.length, Math.floor(2 + Math.random() * 3));
+      const forks = Math.min(neighbors.length, Math.floor(3 + Math.random() * 4));
+      const branchNodes = [];
       for (let f = 0; f < forks; f++) {
         const target = neighbors[Math.floor(Math.random() * neighbors.length)];
-        igniteSynapseBeam(source, target, 0.04 + Math.random() * 0.032);
+        igniteSynapseBeam(source, target, 0.042 + Math.random() * 0.035);
+        branchNodes.push(target);
+      }
 
-        const subNeighbors = [...(adj.get(target.id) || [])].map(id => nodeById.get(id)).filter(n => n && n !== source);
-        if (subNeighbors.length > 0 && Math.random() > 0.25) {
-          const subTarget = subNeighbors[Math.floor(Math.random() * subNeighbors.length)];
-          setTimeout(() => {
-            igniteSynapseBeam(target, subTarget, 0.048 + Math.random() * 0.03);
-          }, 65);
+      for (const bNode of branchNodes) {
+        const subNeighbors = [...(adj.get(bNode.id) || [])].map(id => nodeById.get(id)).filter(n => n && n !== source);
+        if (subNeighbors.length > 0 && Math.random() > 0.15) {
+          const subCount = Math.min(2, subNeighbors.length);
+          for (let s = 0; s < subCount; s++) {
+            const subTarget = subNeighbors[Math.floor(Math.random() * subNeighbors.length)];
+            setTimeout(() => {
+              igniteSynapseBeam(bNode, subTarget, 0.048 + Math.random() * 0.035);
+            }, 45 + Math.random() * 65);
+          }
         }
       }
 
-      const tokRate = Math.floor(120 + Math.random() * 45);
+      const tokRate = Math.floor(135 + Math.random() * 55);
       document.getElementById('tok-speed').textContent = \`[\${tokRate} tok/s]\`;
 
-      if (burstCounter % 7 === 0 && Date.now() - lastLiveEventTs > 2500) {
+      if (burstCounter % 6 === 0 && Date.now() - lastLiveEventTs > 2500) {
         const activeSym = source.symbols && source.symbols[0]?.name ? \`::\${source.symbols[0].name}\` : '';
         const srcLabel = source.label || (source.isCore ? 'neural.core' : 'geodesic');
         const targetSample = neighbors[0]?.label || (neighbors[0]?.isCore ? 'neural.core' : 'geodesic');
@@ -1332,8 +1404,53 @@ function renderInteractiveGraphHtml(
       if (rand) selectNode(rand, 'BURST');
     }
 
+    // Second Brain Cognitive Engine (Simulates real-time reasoning & typewriter thought stream)
+    const secondBrainThoughts = [
+      { tag: 'MEMORY', text: 'memory.md active session state recalled (~68 tokens). Working context verified.' },
+      { tag: 'AST_SURGERY', text: 'Surgical anchors locked on 48 symbols across 5 modules. Zero hallucination risk.' },
+      { tag: 'TOKEN_SAVER', text: 'Pruned conversational boilerplate. Saving 78.4% input overhead (~2,448 tokens).' },
+      { tag: 'SYNAPSE_CORE', text: 'Radial trans-sphere burst synchronized: 24 active neural channels.' },
+      { tag: 'REASONING', text: 'Tracing symbol call graph: Root.tsx ➔ PoseClip.tsx ➔ approved.ts.' },
+      { tag: 'ZERO_YAP', text: 'Line 1 telegraphic mode enforced. Ready for instant code surgery.' },
+      { tag: 'LOCAL_BRAIN', text: 'Second brain local knowledge synchronized with IDE active buffers.' }
+    ];
+
+    let thoughtIdx = 0;
+    function typewriteThought() {
+      if (Date.now() - lastLiveEventTs < 2500) return;
+      const item = secondBrainThoughts[thoughtIdx % secondBrainThoughts.length];
+      thoughtIdx++;
+      triggerAutoStormBurst();
+      appendTerminalLog(item.tag, item.text, \`~\${Math.floor(65 + Math.random() * 85)} tok\`);
+    }
+    setInterval(typewriteThought, 3800);
+
+    const termInput = document.getElementById('term-input');
+    if (termInput) {
+      termInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const val = termInput.value.trim();
+          if (!val) return;
+          termInput.value = '';
+          appendTerminalLog('QUERY', val, '[USER]');
+          triggerAutoStormBurst();
+          setTimeout(() => {
+            const hits = realNodes.filter(n => n.id.toLowerCase().includes(val.toLowerCase()) || n.symbols.some(s => s.name.toLowerCase().includes(val.toLowerCase())));
+            if (hits.length > 0) {
+              selectNode(hits[0], 'MATCH');
+              appendTerminalLog('SECOND_BRAIN', \`Matched \${hits.length} node(s). Focused: \${hits[0].label} (\${hits[0].lines} lines).\`, '[SURGERY]');
+            } else {
+              const randNode = realNodes[Math.floor(Math.random() * realNodes.length)];
+              selectNode(randNode, 'QUERY');
+              appendTerminalLog('SECOND_BRAIN', \`Synthesized query across \${realNodes.length} nodes. Zero fluff detected.\`, '[OK]');
+            }
+          }, 180);
+        }
+      });
+    }
+
+    document.getElementById('laser-crimson-btn')?.addEventListener('click', () => applyLaserTheme('crimson'));
     document.getElementById('laser-blue-btn')?.addEventListener('click', () => applyLaserTheme('blue'));
-    document.getElementById('laser-pink-btn')?.addEventListener('click', () => applyLaserTheme('pink'));
     document.getElementById('laser-cyan-btn')?.addEventListener('click', () => applyLaserTheme('cyan'));
     document.getElementById('brutal-btn')?.addEventListener('click', toggleBrutal);
     document.getElementById('overdrive-btn')?.addEventListener('click', toggleOverdrive);
@@ -1343,8 +1460,8 @@ function renderInteractiveGraphHtml(
 
     window.addEventListener('keydown', (e) => {
       if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
-      if (e.key === '1') applyLaserTheme('blue');
-      else if (e.key === '2') applyLaserTheme('pink');
+      if (e.key === '1') applyLaserTheme('crimson');
+      else if (e.key === '2') applyLaserTheme('blue');
       else if (e.key === '3') applyLaserTheme('cyan');
       else if (e.key === ' ' || e.code === 'Space') {
         e.preventDefault();
@@ -1497,16 +1614,16 @@ function renderInteractiveGraphHtml(
       ctx.fillStyle = coreGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // Pass 0: Volumetric Core Neural Nebula (fills the hollow interior with an ethereal ambient brain glow)
-      const innerCoreGrad = ctx.createRadialGradient(centerX, centerY, 2, centerX, centerY, R * 0.6);
+      // Pass 0: Volumetric Core Neural Nebula (fills the interior with ambient second brain glow)
+      const innerCoreGrad = ctx.createRadialGradient(centerX, centerY, 2, centerX, centerY, R * 0.62);
       innerCoreGrad.addColorStop(0, THEME.soft);
-      innerCoreGrad.addColorStop(0.4, 'rgba(14, 165, 233, 0.09)');
-      innerCoreGrad.addColorStop(0.75, 'rgba(99, 102, 241, 0.04)');
+      innerCoreGrad.addColorStop(0.4, THEME.soft);
+      innerCoreGrad.addColorStop(0.8, 'rgba(255, 255, 255, 0.01)');
       innerCoreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.save();
       ctx.fillStyle = innerCoreGrad;
       ctx.beginPath();
-      ctx.arc(centerX, centerY, R * 0.6, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, R * 0.62, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
@@ -1514,7 +1631,7 @@ function renderInteractiveGraphHtml(
         (a, b) => (b.source.projZ + b.target.projZ) - (a.source.projZ + a.target.projZ)
       );
 
-      // Pass 1: Crisp Wireframe Mesh (Surface shell + internal core lattice + trans-sphere chords)
+      // Pass 1: Crisp Wireframe Mesh (Surface shell + dense trans-sphere brain chords + core lattice)
       ctx.save();
       for (const e of sortedEdges) {
         const k = e.source.id + '->' + e.target.id;
@@ -1526,19 +1643,19 @@ function renderInteractiveGraphHtml(
         if (isLaser) continue;
 
         const avgZ = (e.source.projZ + e.target.projZ) / (2 * R);
-        const depthAlpha = Math.max(0.06, Math.min(0.38, 0.23 - avgZ * 0.15));
+        const depthAlpha = Math.max(0.04, Math.min(0.38, 0.22 - avgZ * 0.15));
 
         ctx.beginPath();
         ctx.moveTo(e.source.projX, e.source.projY);
         ctx.lineTo(e.target.projX, e.target.projY);
         if (e.kind === 'chord') {
-          // Trans-sphere chord piercing through internal core
-          ctx.strokeStyle = \`rgba(56, 189, 248, \${(depthAlpha * 0.82).toFixed(3)})\`;
-          ctx.lineWidth = 0.7;
+          // Delicate trans-sphere neural chord (dense web matching video frame_0188.jpg)
+          ctx.strokeStyle = \`rgba(226, 232, 240, \${(depthAlpha * 0.42).toFixed(3)})\`;
+          ctx.lineWidth = 0.6;
         } else if (e.kind === 'core_mesh') {
-          // Internal neural core wireframe
-          ctx.strokeStyle = \`rgba(168, 85, 247, \${(depthAlpha * 0.78).toFixed(3)})\`;
-          ctx.lineWidth = 0.7;
+          // Internal core lattice
+          ctx.strokeStyle = \`rgba(254, 205, 211, \${(depthAlpha * 0.65).toFixed(3)})\`;
+          ctx.lineWidth = 0.65;
         } else {
           // Outer surface geodesic wireframe
           ctx.strokeStyle = \`rgba(226, 232, 240, \${depthAlpha.toFixed(3)})\`;
@@ -1700,22 +1817,35 @@ function renderInteractiveGraphHtml(
             ctx.restore();
           }
 
-          // NO permanent labels on unhovered nodes! Tactical HUD box ONLY on select or hover!
+          // Monospace 3D Perspective Node Labels (Exact match to video frame_0251.jpg!)
+          const isFront = normZ < 0.28;
           if (isSel || n === hoveredNode) {
             ctx.save();
             ctx.shadowBlur = 0;
-            const tagText = \`[ \${n.label} :: \${n.lines}L ]\`;
+            const tagText = \`[ \${n.label || 'core'} :: \${n.lines}L ]\`;
             ctx.font = '600 11px ui-monospace, SFMono-Regular, Menlo, monospace';
             const tw = ctx.measureText(tagText).width;
             const tx = n.projX + r + 8;
             const ty = n.projY - 9;
-            ctx.fillStyle = 'rgba(2, 4, 8, 0.92)';
+            ctx.fillStyle = 'rgba(2, 4, 8, 0.94)';
             ctx.fillRect(tx - 3, ty, tw + 8, 18);
             ctx.strokeStyle = THEME.primary;
             ctx.lineWidth = 1;
             ctx.strokeRect(tx - 3, ty, tw + 8, 18);
             ctx.fillStyle = '#ffffff';
             ctx.fillText(tagText, tx + 1, ty + 13);
+            ctx.restore();
+          } else if (isFront && n.label) {
+            // Ambient crisp floating label matching video frame_0251.jpg
+            ctx.save();
+            ctx.shadowBlur = 0;
+            ctx.font = '500 9.5px ui-monospace, SFMono-Regular, Menlo, monospace';
+            const lx = n.projX + r + 5;
+            const ly = n.projY + 3;
+            ctx.fillStyle = n.category === 'memory'
+              ? '#34d399'
+              : \`rgba(226, 232, 240, \${Math.max(0.2, Math.min(0.85, 0.72 - normZ * 0.4)).toFixed(2)})\`;
+            ctx.fillText(n.label, lx, ly);
             ctx.restore();
           }
         }
