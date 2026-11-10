@@ -111,7 +111,7 @@ export class GenericHarnessAdapter implements Adapter {
           path: this.spec.blockPath,
           content: alwaysOnBlock(input, [
             '',
-            `Rules lengkap ada di \`${root}/\`.`,
+            `Voice detail, lexicon, kebijakan penuh, dan referensi budaya ada di \`${root}/\` sebagai rules; yang selalu termuat cuma voice.`,
           ]),
           kind: 'always_on',
         },

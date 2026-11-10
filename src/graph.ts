@@ -49,6 +49,12 @@ const IGNORED_DIRS = new Set([
   'venv',
   'site-packages',
   'target',
+  'appdata',
+  'application data',
+  'local settings',
+  'library',
+  'temp',
+  'tmp',
 ]);
 
 const CODE_EXTENSIONS = new Set([
@@ -106,7 +112,8 @@ function collectSourceFiles(rootDir: string): string[] {
     for (const entry of entries) {
       if (results.length >= MAX_FILES_TO_SCAN) break;
       if (entry.name.startsWith('.') && entry.name !== '.well-known') continue;
-      if (IGNORED_DIRS.has(entry.name) || isBundledRuntimeDir(entry.name)) continue;
+      const entryNameLower = entry.name.toLowerCase();
+      if (IGNORED_DIRS.has(entryNameLower) || isBundledRuntimeDir(entry.name)) continue;
       const fullPath = join(current, entry.name);
       if (entry.isDirectory()) {
         walk(fullPath, depth + 1);
@@ -374,20 +381,31 @@ function renderInteractiveGraphHtml(
 <style>
   :root {
     --bg: #000000;
-    --term-bg: #030407;
-    --border: rgba(255, 255, 255, 0.16);
+    --term-bg: #000000;
+    --border: rgba(255, 255, 255, 0.14);
     --text: #f1f5f9;
     --muted: #64748b;
     --dim: #94a3b8;
     --accent: #00a8ff;
-    --accent-soft: rgba(0, 168, 255, 0.18);
+    --accent-soft: rgba(0, 168, 255, 0.16);
     --memory: #10b981;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
   body {
     background: #000000;
     color: var(--text);
-    font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     overflow: hidden;
     height: 100vh;
     width: 100vw;
@@ -395,13 +413,13 @@ function renderInteractiveGraphHtml(
     flex-direction: column;
     user-select: none;
   }
-  /* Top 68% Canvas Stage (Pure Black Terminal Space like TikTok Video) */
+  /* Top 68% Pure Black Void Stage */
   .stage {
     position: relative;
     flex: 1 1 auto;
     width: 100vw;
     min-height: 0;
-    background: radial-gradient(circle at 50% 52%, #070a12 0%, #000000 72%);
+    background: #000000;
   }
   canvas {
     display: block;
@@ -411,75 +429,80 @@ function renderInteractiveGraphHtml(
   }
   canvas:active { cursor: grabbing; }
 
-  /* Minimalist ASCII/CLI Top Bar */
-  .cli-topbar {
+  /* Ultra-Minimal Monolith HUD */
+  .hud-overlay {
     position: absolute;
-    top: 10px;
-    left: 14px;
-    right: 14px;
+    top: 14px;
+    left: 20px;
+    right: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
     pointer-events: none;
     z-index: 10;
     font-size: 11px;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
   }
-  .cli-left, .cli-right {
+  .hud-left {
     display: flex;
     align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    gap: 12px;
+    color: #94a3b8;
     pointer-events: auto;
   }
-  .cli-tag {
-    background: rgba(5, 7, 12, 0.85);
-    border: 1px solid var(--border);
-    padding: 4px 8px;
-    color: var(--text);
+  .hud-brand {
+    color: #ffffff;
+    font-weight: 700;
   }
-  .cli-btn {
-    background: rgba(5, 7, 12, 0.85);
-    border: 1px solid var(--border);
-    color: var(--dim);
-    padding: 4px 8px;
-    font-family: inherit;
-    font-size: 11px;
+  .hud-brand strong {
+    color: var(--accent);
+    margin-right: 5px;
+  }
+  .hud-stats {
+    color: #64748b;
+    font-size: 10.5px;
+  }
+  .hud-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+    opacity: 0.42;
+    transition: opacity 0.2s;
+  }
+  .hud-right:hover {
+    opacity: 1;
+  }
+  .hud-btn {
     cursor: pointer;
-    transition: all 0.12s;
+    color: #94a3b8;
+    padding: 2px 6px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+    font-size: 10.5px;
+    background: transparent;
   }
-  .cli-btn:hover {
+  .hud-btn:hover {
     color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.45);
+    border-color: rgba(255, 255, 255, 0.25);
   }
-  .cli-btn.on {
+  .hud-btn.on {
     color: #ffffff;
     border-color: var(--accent);
-    background: var(--accent-soft);
-    box-shadow: 0 0 12px var(--accent-soft);
+    text-shadow: 0 0 8px var(--accent);
   }
-  .cli-input {
-    background: rgba(5, 7, 12, 0.9);
-    border: 1px solid var(--border);
-    color: #ffffff;
-    padding: 4px 8px;
-    font-family: inherit;
-    font-size: 11px;
-    width: 165px;
-    outline: none;
-  }
-  .cli-input:focus {
-    border-color: var(--accent);
+  .hud-sep {
+    color: #334155;
+    user-select: none;
   }
 
-  /* Bottom 32% Raw Terminal Console (Exact TikTok Video Split Layout) */
+  /* Bottom 32% Full-Width Raw Terminal Console */
   .term-console {
-    height: 215px;
+    height: 220px;
     width: 100vw;
-    background: var(--term-bg);
-    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    background: #000000;
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
     display: flex;
     flex-direction: column;
     z-index: 20;
@@ -489,11 +512,12 @@ function renderInteractiveGraphHtml(
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 11px;
-    background: #05070c;
-    color: #e2e8f0;
+    padding: 5px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 10.5px;
+    background: #020306;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
   }
   .term-title {
     font-weight: 700;
@@ -503,7 +527,7 @@ function renderInteractiveGraphHtml(
     display: flex;
     gap: 14px;
     align-items: center;
-    font-size: 11px;
+    font-size: 10.5px;
   }
   .live-pill {
     font-weight: 700;
@@ -512,27 +536,26 @@ function renderInteractiveGraphHtml(
   .term-body {
     flex: 1 1 auto;
     display: grid;
-    grid-template-columns: 1.55fr 1fr;
+    grid-template-columns: 1.6fr 1fr;
     min-height: 0;
     overflow: hidden;
   }
   .term-log {
-    padding: 8px 14px;
+    padding: 6px 16px;
     overflow-y: auto;
     overflow-x: hidden;
-    font-size: 11.5px;
+    font-size: 11px;
     color: #f1f5f9;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
     display: block;
+    background: #000000;
   }
   .term-welcome {
-    color: #64748b;
-    font-size: 11px;
-    height: 20px;
-    line-height: 20px;
-    margin-bottom: 6px;
-    padding-bottom: 4px;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    color: #475569;
+    font-size: 10.5px;
+    height: 18px;
+    line-height: 18px;
+    margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -540,88 +563,58 @@ function renderInteractiveGraphHtml(
   .log-line {
     display: flex;
     align-items: center;
-    height: 20px;
-    line-height: 20px;
-    margin-bottom: 2px;
+    height: 21px;
+    line-height: 21px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     white-space: nowrap;
     overflow: hidden;
-    font-size: 11.5px;
-    letter-spacing: 0.01em;
+    font-size: 11px;
+    letter-spacing: 0.015em;
   }
   .log-line .ts {
-    color: #94a3b8;
-    margin-right: 8px;
-    font-weight: 500;
+    color: #64748b;
+    margin-right: 10px;
+    font-size: 10.5px;
     flex-shrink: 0;
   }
-  .tag-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 15px;
-    line-height: 15px;
-    padding: 0 6px;
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    margin-right: 8px;
-    border-radius: 2px;
-    flex-shrink: 0;
-    min-width: 58px;
-    text-align: center;
-  }
-  .tag-live_fs, .tag-live_sse {
-    background: rgba(16, 185, 129, 0.18);
-    color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.4);
-  }
-  .tag-synapse {
-    background: rgba(0, 168, 255, 0.16);
+  .log-line .tag {
     color: var(--accent);
-    border: 1px solid rgba(0, 168, 255, 0.35);
-  }
-  .tag-trace, .tag-select, .tag-burst, .tag-jump, .tag-click {
-    background: rgba(168, 85, 247, 0.18);
-    color: #c084fc;
-    border: 1px solid rgba(168, 85, 247, 0.35);
-  }
-  .tag-overdrive {
-    background: rgba(244, 63, 94, 0.2);
-    color: #fb7185;
-    border: 1px solid rgba(244, 63, 94, 0.4);
-  }
-  .tag-init, .tag-ast {
-    background: rgba(148, 163, 184, 0.18);
-    color: #cbd5e1;
-    border: 1px solid rgba(148, 163, 184, 0.35);
+    font-weight: 700;
+    font-size: 10px;
+    margin-right: 10px;
+    min-width: 66px;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
   }
   .log-line .msg {
-    color: #f1f5f9;
+    color: #cbd5e1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex: 0 1 auto;
+    flex: 1 1 auto;
   }
   .log-line .tok {
-    color: #38bdf8;
-    margin-left: 8px;
-    font-weight: 600;
+    color: #64748b;
+    margin-left: 10px;
+    font-size: 10px;
     flex-shrink: 0;
   }
   .term-inspector {
-    padding: 8px 14px;
+    padding: 8px 16px;
     overflow-y: auto;
     font-size: 11px;
-    line-height: 1.48;
+    line-height: 1.5;
     color: #94a3b8;
     display: flex;
     flex-direction: column;
     gap: 6px;
+    background: #020306;
   }
   .insp-head {
     color: #ffffff;
     font-weight: 700;
     word-break: break-all;
+    font-size: 11.5px;
   }
   .insp-chips {
     display: flex;
@@ -629,36 +622,37 @@ function renderInteractiveGraphHtml(
     gap: 5px;
   }
   .chip {
-    border: 1px solid rgba(255,255,255,0.14);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     padding: 1px 6px;
-    font-size: 10.5px;
-    color: #e2e8f0;
+    font-size: 10px;
+    color: #cbd5e1;
     cursor: pointer;
-    background: rgba(255,255,255,0.03);
+    background: rgba(255, 255, 255, 0.02);
   }
   .chip:hover {
     border-color: var(--accent);
     color: #ffffff;
   }
-  .chip .ln { color: var(--accent); font-weight: 700; }
+  .chip .ln { color: var(--accent); font-weight: 600; }
 </style>
 </head>
 <body>
   <div class="stage" id="stage">
-    <div class="cli-topbar">
-      <div class="cli-left">
-        <span class="cli-tag"><strong style="color:var(--accent)">●</strong> ${projectName} <span id="stats-label" style="color:var(--dim)"></span></span>
-        <input type="text" id="search" class="cli-input" placeholder="/filter node or fn..." />
+    <div class="hud-overlay">
+      <div class="hud-left">
+        <span class="hud-brand"><strong>●</strong> ${projectName}</span>
+        <span class="hud-stats" id="stats-label"></span>
       </div>
-      <div class="cli-right">
-        <button class="cli-btn on" id="laser-blue-btn">[LASER: BLUE]</button>
-        <button class="cli-btn" id="laser-pink-btn">[LASER: PINK]</button>
-        <button class="cli-btn" id="laser-cyan-btn">[LASER: CYAN]</button>
-        <button class="cli-btn on" id="brutal-btn">[STORM: BRUTAL]</button>
-        <button class="cli-btn" id="overdrive-btn">[OVERDRIVE: OFF]</button>
-        <button class="cli-btn on" id="mode-btn">[3D SPHERE]</button>
-        <button class="cli-btn" id="pulse-btn">[FIRE]</button>
-        <button class="cli-btn" id="reset-btn">[CENTER]</button>
+      <div class="hud-right">
+        <span class="hud-btn on" id="laser-blue-btn" title="Press 1">[1:BLUE]</span>
+        <span class="hud-btn" id="laser-pink-btn" title="Press 2">[2:PINK]</span>
+        <span class="hud-btn" id="laser-cyan-btn" title="Press 3">[3:CYAN]</span>
+        <span class="hud-sep">·</span>
+        <span class="hud-btn on" id="brutal-btn" title="Press B">[STORM]</span>
+        <span class="hud-btn" id="overdrive-btn" title="Press O">[OVERDRIVE]</span>
+        <span class="hud-btn on" id="mode-btn" title="Press M">[3D]</span>
+        <span class="hud-btn" id="pulse-btn" title="Press Space">[FIRE]</span>
+        <span class="hud-btn" id="reset-btn" title="Press C">[CENTER]</span>
       </div>
     </div>
     <canvas id="graph"></canvas>
@@ -666,7 +660,7 @@ function renderInteractiveGraphHtml(
 
   <div class="term-console">
     <div class="term-header">
-      <span class="term-title">Neural Graph (Anti-Yapping Engine) ──────────────────</span>
+      <span class="term-title">Neural Graph (Anti-Yapping Engine) ────────────────────────</span>
       <div class="term-meta">
         <span id="telemetry-status" class="live-pill">[TELEMETRY: ◎ SIMULATED STORM]</span>
         <span id="tok-speed" style="color:#e2e8f0">[0 tok/s]</span>
@@ -758,48 +752,60 @@ function renderInteractiveGraphHtml(
     let velX = 0.002;
     let sphereRadius = Math.min(width, height) * 0.39;
 
-    const N = data.nodes.length;
+    const N_REAL = data.nodes.length;
+    const TARGET_VERTICES = Math.max(135, N_REAL);
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
-    const nodes = data.nodes.map((n, i) => {
-      const y3 = N <= 1 ? 0 : 1 - (i / (N - 1)) * 2;
+    const allVertices = [];
+    for (let i = 0; i < TARGET_VERTICES; i++) {
+      const y3 = TARGET_VERTICES <= 1 ? 0 : 1 - (i / (TARGET_VERTICES - 1)) * 2;
       const rSlice = Math.sqrt(Math.max(0, 1 - y3 * y3));
       const theta = goldenAngle * i;
       const sx = Math.cos(theta) * rSlice;
       const sz = Math.sin(theta) * rSlice;
 
-      const angle2d = (i / N) * Math.PI * 2;
-      const rad2d = n.category === 'memory' ? 0 : 110 + (i % 3) * 65;
+      const angle2d = (i / TARGET_VERTICES) * Math.PI * 2;
+      const rad2d = 120 + (i % 3) * 60;
 
-      return {
-        ...n,
-        idx: i,
-        estTokens: Math.max(12, Math.round(n.lines * 7.5)),
-        sx, sy: y3, sz,
-        x: width / 2 + Math.cos(angle2d) * rad2d,
-        y: height / 2 + Math.sin(angle2d) * rad2d,
-        vx: 0, vy: 0,
-        projX: 0, projY: 0, projZ: 0, projScale: 1,
-        flashTimer: 0,
-        r: n.category === 'memory' ? 7.2 : Math.max(4.0, Math.min(7.2, 3.8 + Math.sqrt(n.symbols.length + n.links.length)))
-      };
-    });
+      if (i < N_REAL) {
+        const realNode = data.nodes[i];
+        allVertices.push({
+          ...realNode,
+          isAux: false,
+          idx: i,
+          estTokens: Math.max(12, Math.round(realNode.lines * 7.5)),
+          sx, sy: y3, sz,
+          x: width / 2 + Math.cos(angle2d) * (realNode.category === 'memory' ? 0 : rad2d),
+          y: height / 2 + Math.sin(angle2d) * (realNode.category === 'memory' ? 0 : rad2d),
+          vx: 0, vy: 0,
+          projX: 0, projY: 0, projZ: 0, projScale: 1,
+          flashTimer: 0,
+          r: realNode.category === 'memory' ? 5.2 : Math.max(2.6, Math.min(4.5, 2.6 + Math.sqrt(realNode.symbols.length + realNode.links.length) * 0.6))
+        });
+      } else {
+        allVertices.push({
+          id: '__aux_' + i,
+          label: '',
+          category: 'relay',
+          lines: 0,
+          links: [],
+          symbols: [],
+          isAux: true,
+          idx: i,
+          estTokens: 0,
+          sx, sy: y3, sz,
+          x: width / 2 + Math.cos(angle2d) * rad2d,
+          y: height / 2 + Math.sin(angle2d) * rad2d,
+          vx: 0, vy: 0,
+          projX: 0, projY: 0, projZ: 0, projScale: 1,
+          flashTimer: 0,
+          r: 1.2
+        });
+      }
+    }
 
-    const ambientStars = Array.from({ length: 75 }, () => {
-      const u = Math.random();
-      const v = Math.random();
-      const theta = u * 2.0 * Math.PI;
-      const phi = Math.acos(2.0 * v - 1.0);
-      const r = 1.15 + Math.random() * 0.85;
-      return {
-        sx: r * Math.sin(phi) * Math.cos(theta),
-        sy: r * Math.sin(phi) * Math.sin(theta),
-        sz: r * Math.cos(phi),
-        size: 0.8 + Math.random() * 1.4,
-        alpha: 0.15 + Math.random() * 0.45
-      };
-    });
-
+    const nodes = allVertices;
+    const realNodes = nodes.filter(n => !n.isAux);
     const nodeById = new Map(nodes.map(n => [n.id, n]));
     const edges = [];
     const edgeKeySet = new Set();
@@ -817,23 +823,24 @@ function renderInteractiveGraphHtml(
       adj.get(b.id).add(a.id);
     }
 
-    for (const n of nodes) {
+    for (const n of realNodes) {
       for (const targetId of n.links) {
         const target = nodeById.get(targetId);
         if (target) {
           addEdge(n, target, n.category === 'memory' ? 'memory' : 'code');
-          backlinks.get(targetId).push(n.id);
+          backlinks.get(targetId)?.push(n.id);
         }
       }
     }
 
     const codeEdgesCount = edges.length;
 
-    const kNeighbors = Math.min(5, Math.max(3, Math.floor(N / 7)));
-    for (let i = 0; i < N; i++) {
+    // Triangulated Geodesic Wireframe connecting 4 nearest neighbors
+    const kNeighbors = 4;
+    for (let i = 0; i < TARGET_VERTICES; i++) {
       const a = nodes[i];
       const dists = [];
-      for (let j = 0; j < N; j++) {
+      for (let j = 0; j < TARGET_VERTICES; j++) {
         if (i === j) continue;
         const b = nodes[j];
         const d = Math.hypot(a.sx - b.sx, a.sy - b.sy, a.sz - b.sz);
@@ -843,15 +850,15 @@ function renderInteractiveGraphHtml(
       for (let m = 0; m < Math.min(kNeighbors, dists.length); m++) {
         addEdge(a, dists[m].b, 'mesh');
       }
-      if (dists.length > kNeighbors + 4 && i % 2 === 0) {
-        addEdge(a, dists[Math.min(dists.length - 1, kNeighbors + 5)].b, 'chord');
+      if (i % 3 === 0 && dists.length > 7) {
+        addEdge(a, dists[6].b, 'chord');
       }
     }
 
     document.getElementById('stats-label').textContent =
-      \`[\${nodes.length}n | \${codeEdgesCount}e | ~\${data.indexTokensEst} idx_tok]\`;
+      \`// [\${realNodes.length} nodes · \${codeEdgesCount} links · ~\${data.indexTokensEst} idx_tok]\`;
 
-    let selectedNode = nodes[0];
+    let selectedNode = realNodes[0] || nodes[0];
     let hoveredNode = null;
     let draggedNode = null;
     let panX = 0, panY = 0, zoom = 1;
@@ -877,9 +884,9 @@ function renderInteractiveGraphHtml(
       const line = document.createElement('div');
       line.className = 'log-line';
       const tokSpan = tokInfo ? \`<span class="tok">\${tokInfo}</span>\` : '';
-      line.innerHTML = \`<span class="ts">\${ts}</span><span class="tag-pill tag-\${cleanTag.toLowerCase()}">\${cleanTag}</span><span class="msg">\${message}</span>\${tokSpan}\`;
+      line.innerHTML = \`<span class="ts">\${ts}</span><span class="tag">[\${cleanTag}]</span><span class="msg">\${message}</span>\${tokSpan}\`;
       termLogEl.appendChild(line);
-      while (termLogEl.children.length > 25) {
+      while (termLogEl.children.length > 30) {
         if (termLogEl.children[1]) {
           termLogEl.removeChild(termLogEl.children[1]);
         } else {
@@ -890,8 +897,8 @@ function renderInteractiveGraphHtml(
     }
 
     // Seed initial boot log lines
-    appendTerminalLog('INIT', \`Knowledge Graph mapped \${nodes.length} nodes & \${codeEdgesCount} links\`);
-    appendTerminalLog('AST', 'Kotlin/Java symbols & line anchors ready for surgery');
+    appendTerminalLog('INIT', \`Knowledge Graph mapped \${realNodes.length} nodes & \${codeEdgesCount} links\`);
+    appendTerminalLog('AST', 'Symbols & line anchors mapped for surgery');
 
     function igniteSynapseBeam(fromNode, toNode, pulseSpeed = 0.045) {
       if (!fromNode || !toNode) return;
@@ -910,16 +917,16 @@ function renderInteractiveGraphHtml(
     }
 
     function buildLaserPathway(startNode, sourceLabel = 'TRACE') {
-      if (!startNode) return;
+      if (!startNode || startNode.isAux) return;
       let curr = startNode;
-      const hops = Math.min(6, Math.max(3, Math.floor(N / 5)));
+      const hops = Math.min(6, Math.max(3, Math.floor(realNodes.length / 5)));
       const visited = new Set([curr.id]);
       const path = [curr];
 
       for (let step = 0; step < hops; step++) {
         const neighbors = [...(adj.get(curr.id) || [])]
           .map(id => nodeById.get(id))
-          .filter(n => n && !visited.has(n.id));
+          .filter(n => n && !visited.has(n.id) && !n.isAux);
         if (neighbors.length === 0) break;
 
         const codeLinked = neighbors.filter(nb => curr.links.includes(nb.id) || nb.links.includes(curr.id));
@@ -949,7 +956,7 @@ function renderInteractiveGraphHtml(
       if (!is3D || !isBrutal) return;
       burstCounter++;
 
-      const source = nodes[Math.floor(Math.random() * nodes.length)];
+      const source = realNodes[Math.floor(Math.random() * realNodes.length)];
       if (!source) return;
 
       const neighbors = [...(adj.get(source.id) || [])].map(id => nodeById.get(id)).filter(Boolean);
@@ -969,10 +976,10 @@ function renderInteractiveGraphHtml(
         }
       }
 
-      const tokRate = Math.floor(115 + Math.random() * 48);
+      const tokRate = Math.floor(120 + Math.random() * 45);
       document.getElementById('tok-speed').textContent = \`[\${tokRate} tok/s]\`;
 
-      if (burstCounter % 8 === 0 && Date.now() - lastLiveEventTs > 2500) {
+      if (burstCounter % 7 === 0 && Date.now() - lastLiveEventTs > 2500) {
         const activeSym = source.symbols[0]?.name ? \`::\${source.symbols[0].name}\` : '';
         const targetSample = neighbors[0]?.label || 'geodesic';
         appendTerminalLog('SYNAPSE', \`\${source.label}\${activeSym} ➔ \${targetSample} (\${forks} branches)\`, \`(\${tokRate} tok/s)\`);
@@ -980,6 +987,7 @@ function renderInteractiveGraphHtml(
     }
 
     function selectNode(node, reason = 'SELECT') {
+      if (!node || node.isAux) return;
       selectedNode = node;
       buildLaserPathway(node, reason);
 
@@ -1084,9 +1092,9 @@ function renderInteractiveGraphHtml(
       const cx = clientX - rect.left;
       const cy = clientY - rect.top;
       if (is3D) {
-        const sorted = [...nodes].sort((a, b) => a.projZ - b.projZ);
+        const sorted = [...realNodes].sort((a, b) => a.projZ - b.projZ);
         for (const n of sorted) {
-          const hitR = n.r * n.projScale + 8;
+          const hitR = n.r * n.projScale + 9;
           if (Math.hypot(cx - n.projX, cy - n.projY) <= hitR) {
             return n;
           }
@@ -1095,8 +1103,8 @@ function renderInteractiveGraphHtml(
       } else {
         const wx = (cx - width / 2 - panX) / zoom + width / 2;
         const wy = (cy - height / 2 - panY) / zoom + height / 2;
-        for (let i = nodes.length - 1; i >= 0; i--) {
-          const n = nodes[i];
+        for (let i = realNodes.length - 1; i >= 0; i--) {
+          const n = realNodes[i];
           if (Math.hypot(wx - n.x, wy - n.y) <= n.r + 6) return n;
         }
         return null;
@@ -1154,50 +1162,67 @@ function renderInteractiveGraphHtml(
       zoom = Math.max(0.45, Math.min(2.8, zoom * factor));
     }, { passive: false });
 
-    document.getElementById('search').addEventListener('input', (e) => {
-      searchQuery = e.target.value.trim().toLowerCase();
-      if (searchQuery) {
-        const match = nodes.find(n => matchesSearch(n));
-        if (match) selectNode(match, 'FILTER');
-      }
-    });
-
-    document.getElementById('laser-blue-btn').addEventListener('click', () => applyLaserTheme('blue'));
-    document.getElementById('laser-pink-btn').addEventListener('click', () => applyLaserTheme('pink'));
-    document.getElementById('laser-cyan-btn').addEventListener('click', () => applyLaserTheme('cyan'));
-
-    document.getElementById('brutal-btn').addEventListener('click', (e) => {
+    function toggleBrutal() {
       isBrutal = !isBrutal;
-      e.target.textContent = isBrutal ? '[STORM: BRUTAL]' : '[STORM: CALM]';
-      e.target.classList.toggle('on', isBrutal);
-    });
+      const el = document.getElementById('brutal-btn');
+      if (el) el.classList.toggle('on', isBrutal);
+    }
 
-    document.getElementById('mode-btn').addEventListener('click', (e) => {
+    function toggle3D() {
       is3D = !is3D;
-      e.target.textContent = is3D ? '[3D SPHERE]' : '[2D PLANAR]';
-      e.target.classList.toggle('on', is3D);
-    });
-
-    document.getElementById('overdrive-btn').addEventListener('click', (e) => {
-      overdrive = !overdrive;
-      e.target.textContent = overdrive ? '[OVERDRIVE: ON]' : '[OVERDRIVE: OFF]';
-      e.target.classList.toggle('on', overdrive);
-      if (overdrive) {
-        appendTerminalLog('OVERDRIVE', 'All geodesic memory & symbol channels ignited at maximum voltage', '[MAX]');
-      } else {
-        buildLaserPathway(selectedNode, 'TRACE');
+      const el = document.getElementById('mode-btn');
+      if (el) {
+        el.textContent = is3D ? '[3D]' : '[2D]';
+        el.classList.toggle('on', is3D);
       }
-    });
+    }
 
-    document.getElementById('pulse-btn').addEventListener('click', () => {
-      const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
-      selectNode(randomNode, 'BURST');
-    });
+    function toggleOverdrive() {
+      overdrive = !overdrive;
+      const el = document.getElementById('overdrive-btn');
+      if (el) {
+        el.classList.toggle('on', overdrive);
+        if (overdrive) {
+          appendTerminalLog('OVERDRIVE', 'All geodesic memory channels ignited at maximum voltage', '[MAX]');
+        } else {
+          buildLaserPathway(selectedNode, 'TRACE');
+        }
+      }
+    }
 
-    document.getElementById('reset-btn').addEventListener('click', () => {
+    function resetCamera() {
       panX = 0; panY = 0; zoom = 1;
       rotX = 0.22; rotY = 0.4; rotZ = 0;
       velY = 0.0095; velX = 0.002;
+    }
+
+    function fireRandomBurst() {
+      const rand = realNodes[Math.floor(Math.random() * realNodes.length)];
+      if (rand) selectNode(rand, 'BURST');
+    }
+
+    document.getElementById('laser-blue-btn')?.addEventListener('click', () => applyLaserTheme('blue'));
+    document.getElementById('laser-pink-btn')?.addEventListener('click', () => applyLaserTheme('pink'));
+    document.getElementById('laser-cyan-btn')?.addEventListener('click', () => applyLaserTheme('cyan'));
+    document.getElementById('brutal-btn')?.addEventListener('click', toggleBrutal);
+    document.getElementById('overdrive-btn')?.addEventListener('click', toggleOverdrive);
+    document.getElementById('mode-btn')?.addEventListener('click', toggle3D);
+    document.getElementById('pulse-btn')?.addEventListener('click', fireRandomBurst);
+    document.getElementById('reset-btn')?.addEventListener('click', resetCamera);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      if (e.key === '1') applyLaserTheme('blue');
+      else if (e.key === '2') applyLaserTheme('pink');
+      else if (e.key === '3') applyLaserTheme('cyan');
+      else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        fireRandomBurst();
+      }
+      else if (e.key === 'o' || e.key === 'O') toggleOverdrive();
+      else if (e.key === 'b' || e.key === 'B') toggleBrutal();
+      else if (e.key === 'm' || e.key === 'M') toggle3D();
+      else if (e.key === 'c' || e.key === 'C') resetCamera();
     });
 
     window.addEventListener('resize', () => {
@@ -1247,7 +1272,7 @@ function renderInteractiveGraphHtml(
         e.target.vx -= fx; e.target.vy -= fy;
       }
 
-      for (const n of nodes) {
+      for (const n of realNodes) {
         if (n === draggedNode) continue;
         const g = n.category === 'memory' ? 0.04 : 0.009;
         n.vx += (centerX - n.x) * g;
@@ -1470,48 +1495,57 @@ function renderInteractiveGraphHtml(
       }
       ctx.restore();
 
-      // Pass 5: 3D Pearlescent Nodes + Terminal Labels
+      // Pass 5: 3D Geodesic Pinpoints + Tactical HUD Tag ONLY on hover/select
       const sortedNodes = [...nodes].sort((a, b) => b.projZ - a.projZ);
       for (const n of sortedNodes) {
-        const activeSearch = matchesSearch(n);
         const isSel = n === selectedNode || n === hoveredNode;
         const isFlashing = n.flashTimer > 0;
         const normZ = n.projZ / R;
-        const depthAlpha = Math.max(0.24, Math.min(1, 0.80 - normZ * 0.45));
-        const r = Math.max(2.6, n.r * n.projScale * (isSel ? 1.4 : isFlashing ? 1.25 : 1));
+        const depthAlpha = Math.max(0.18, Math.min(1, 0.85 - normZ * 0.45));
+        const r = Math.max(1.8, n.r * n.projScale * (isSel ? 1.35 : isFlashing ? 1.2 : 1));
 
         ctx.save();
-        ctx.globalAlpha = activeSearch ? depthAlpha : 0.12;
+        ctx.globalAlpha = depthAlpha;
 
-        if (isFlashing || isSel) {
+        if (n.isAux) {
           ctx.beginPath();
-          ctx.arc(n.projX, n.projY, r + (isSel ? 6.5 : 3.8), 0, Math.PI * 2);
-          ctx.fillStyle = THEME.halo;
+          ctx.arc(n.projX, n.projY, 1.2 * n.projScale, 0, Math.PI * 2);
+          ctx.fillStyle = \`rgba(226, 232, 240, \${(0.42 - normZ * 0.22).toFixed(2)})\`;
           ctx.fill();
-        }
-
-        ctx.beginPath();
-        ctx.arc(n.projX, n.projY, r, 0, Math.PI * 2);
-        if (isSel || isFlashing) {
-          ctx.shadowColor = THEME.primary;
-          ctx.shadowBlur = isSel ? 22 : 15;
-          ctx.fillStyle = '#ffffff';
-        } else if (n.category === 'memory') {
-          ctx.shadowColor = '#10b981';
-          ctx.shadowBlur = 14;
-          ctx.fillStyle = '#10b981';
         } else {
-          ctx.fillStyle = '#f8fafc';
-        }
-        ctx.fill();
+          ctx.beginPath();
+          ctx.arc(n.projX, n.projY, r, 0, Math.PI * 2);
+          if (isSel || isFlashing) {
+            ctx.shadowColor = THEME.primary;
+            ctx.shadowBlur = isSel ? 18 : 12;
+            ctx.fillStyle = '#ffffff';
+          } else if (n.category === 'memory') {
+            ctx.shadowColor = '#10b981';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = '#10b981';
+          } else {
+            ctx.fillStyle = '#f8fafc';
+          }
+          ctx.fill();
 
-        if (normZ < 0.55 || isSel || isFlashing) {
-          ctx.shadowBlur = 0;
-          ctx.font = (isSel || isFlashing ? '700 ' : '500 ') + Math.round(10 * Math.max(0.82, n.projScale)) + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
-          ctx.fillStyle = isSel ? '#ffffff' : isFlashing ? THEME.label : 'rgba(226, 232, 240, 0.86)';
-          ctx.textAlign = 'left';
-          const lbl = n.label.length > 22 ? n.label.slice(0, 20) + '…' : n.label;
-          ctx.fillText(lbl, n.projX + r + 5, n.projY + 3);
+          // NO permanent labels on unhovered nodes! Tactical HUD box ONLY on select or hover!
+          if (isSel || n === hoveredNode) {
+            ctx.save();
+            ctx.shadowBlur = 0;
+            const tagText = \`[ \${n.label} :: \${n.lines}L ]\`;
+            ctx.font = '600 11px ui-monospace, SFMono-Regular, Menlo, monospace';
+            const tw = ctx.measureText(tagText).width;
+            const tx = n.projX + r + 8;
+            const ty = n.projY - 9;
+            ctx.fillStyle = 'rgba(2, 4, 8, 0.92)';
+            ctx.fillRect(tx - 3, ty, tw + 8, 18);
+            ctx.strokeStyle = THEME.primary;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(tx - 3, ty, tw + 8, 18);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(tagText, tx + 1, ty + 13);
+            ctx.restore();
+          }
         }
 
         ctx.restore();
@@ -1538,7 +1572,7 @@ function renderInteractiveGraphHtml(
         ctx.stroke();
       }
 
-      for (const n of nodes) {
+      for (const n of realNodes) {
         const active = matchesSearch(n);
         const isSel = n === selectedNode || n === hoveredNode;
 
@@ -1614,11 +1648,11 @@ export function startLiveGraphServer(targetRoot: string, port = 4949): { url: st
       if (
         segments.some(
           (seg) =>
-            IGNORED_DIRS.has(seg) ||
-            seg.startsWith('pythoncore-') ||
-            seg === 'intermediates' ||
-            seg === 'outputs' ||
-            seg === 'generated',
+            IGNORED_DIRS.has(seg.toLowerCase()) ||
+            seg.toLowerCase().startsWith('pythoncore-') ||
+            seg.toLowerCase() === 'intermediates' ||
+            seg.toLowerCase() === 'outputs' ||
+            seg.toLowerCase() === 'generated',
         ) &&
         !rel.endsWith('memory.md')
       ) {

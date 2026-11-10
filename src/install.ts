@@ -13,6 +13,7 @@ import {
 import { homedir, tmpdir } from 'node:os';
 import { dirname, join, resolve, sep } from 'node:path';
 import { build } from './build.ts';
+import { buildCodeGraph, removeCodeGraph } from './graph.ts';
 import { validate } from './schema.ts';
 import type { InstallManifest, MeasuredArtifact } from './types.ts';
 
@@ -20,6 +21,42 @@ const MANIFEST_PATH = '.hahahah/manifest.json';
 const BLOCK_PATH = 'CLAUDE.md';
 const BLOCK_BEGIN = /<!-- hahahah:begin [^\n]*-->/;
 const BLOCK_END = /<!-- hahahah:end -->/;
+
+export const RECOMMENDED_AGENT_IGNORE = `# anti-yapping: input token saver (safe build & asset ignores)
+node_modules/
+dist/
+build/
+.next/
+.nuxt/
+.gradle/
+*.apk
+*.aab
+*.idsig
+*.keystore
+*.jks
+coverage/
+*.log
+`;
+
+export function setupAgentIgnore(targetRoot: string, adapterId?: string): { created: boolean; path: string } {
+  const filenames = adapterId === 'claude-code' ? ['.claudeignore', '.agentignore'] : ['.agentignore'];
+  const primaryPath = join(targetRoot, filenames[0]);
+  let anyCreated = false;
+  for (const filename of filenames) {
+    const filePath = join(targetRoot, filename);
+    if (existsSync(filePath)) {
+      const existing = readFileSync(filePath, 'utf8');
+      if (!existing.includes('anti-yapping: input token saver')) {
+        writeFileSync(filePath, `${existing.trimEnd()}\n\n${RECOMMENDED_AGENT_IGNORE}`, 'utf8');
+        anyCreated = true;
+      }
+    } else {
+      writeFileSync(filePath, RECOMMENDED_AGENT_IGNORE, 'utf8');
+      anyCreated = true;
+    }
+  }
+  return { created: anyCreated, path: primaryPath };
+}
 
 export interface InstallOptions {
   sourceRoot: string;
@@ -230,6 +267,10 @@ export function install(options: InstallOptions): InstallResult {
     }
     writeAtomic(claudePath, merged.text);
     writeAtomic(join(targetRoot, MANIFEST_PATH), `${JSON.stringify(manifest, null, 2)}\n`);
+    if (options.scope !== 'global') {
+      setupAgentIgnore(targetRoot, adapterId);
+      buildCodeGraph(targetRoot);
+    }
     if (adapterId === 'qoder') {
       ensureQoderSessionResumeHook(targetRoot);
     }
@@ -263,11 +304,7 @@ function pruneConflictingPersonas(
     if (!existsSync(skillsRoot)) continue;
     try {
       for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
-        if (
-          entry.isDirectory() &&
-          entry.name.startsWith('hahahah-') &&
-          entry.name !== activeDirName
-        ) {
+        if (entry.isDirectory() && entry.name.startsWith('hahahah-') && entry.name !== activeDirName) {
           rmSync(join(skillsRoot, entry.name), { recursive: true, force: true });
         }
       }
@@ -409,6 +446,7 @@ export function uninstall(options: {
         writeAtomic(claudePath, cleaned);
       }
     }
+    removeCodeGraph(targetRoot);
     unlinkSync(join(targetRoot, MANIFEST_PATH));
     pruneEmptyDirs(dirname(join(targetRoot, MANIFEST_PATH)), targetRoot);
   }

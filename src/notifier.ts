@@ -24,9 +24,9 @@ export function formatUpdateNotice(current: string, latest: string): string {
   return [
     '',
     '┌────────────────────────────────────────────────────────┐',
-    `│  Pembaruan HAHahah tersedia: v${current} → v${latest}`.padEnd(57) + '│',
-    '│  Jalankan git pull & update untuk memperbarui:         │',
-    '│  $ node src/cli.ts update                              │',
+    `│  Pembaruan Anti-Yapping tersedia: v${current} → v${latest}`.padEnd(57) + '│',
+    '│  Jalankan perintah berikut untuk memperbarui:          │',
+    '│  $ npx anti-yapping update                             │',
     '└────────────────────────────────────────────────────────┘',
     '',
   ].join('\n');
@@ -38,7 +38,7 @@ export async function checkRemoteUpdate(currentVersion: string): Promise<string 
   }
   try {
     const res = await fetch(
-      'https://raw.githubusercontent.com/humanoiseLABS/hahahah/main/package.json',
+      'https://raw.githubusercontent.com/humanoiseLABS/anti-yapping/main/package.json',
       {
         signal: AbortSignal.timeout(1500),
       },
