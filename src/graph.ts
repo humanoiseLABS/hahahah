@@ -1620,10 +1620,24 @@ export function startLiveGraphServer(targetRoot: string, port = 4949): { url: st
     // recursive watch fallback
   }
 
-  server.listen(port, '127.0.0.1');
+  server.on('error', (err: any) => {
+    if (err.code === 'EADDRINUSE') {
+      // Live daemon already running on port, safe to reuse
+    } else {
+      console.error(`Live server error: ${err.message}`);
+    }
+  });
+
+  try {
+    server.listen(port, '127.0.0.1');
+  } catch {
+    // ignore
+  }
   return {
     url: `http://127.0.0.1:${port}`,
-    close: () => server.close(),
+    close: () => {
+      try { server.close(); } catch {}
+    },
   };
 }
 
