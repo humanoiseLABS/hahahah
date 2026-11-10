@@ -681,7 +681,7 @@ function renderInteractiveGraphHtml(
   <div class="stage" id="stage">
     <div class="hud-overlay">
       <div class="hud-left">
-        <span class="hud-brand"><strong>●</strong> \${projectName}</span>
+        <span class="hud-brand"><strong>●</strong> ${projectName}</span>
         <span class="hud-stats" id="stats-label"></span>
       </div>
       <div class="hud-right">
@@ -1055,7 +1055,9 @@ function renderInteractiveGraphHtml(
     let pulses = [];
     let shockwaves = [];
     let lastStormBurst = 0;
+    let lastIdlePulse = 0;
     let burstCounter = 0;
+    let cognitiveSurgeUntil = Date.now() + 2400; // High-voltage boot surge!
 
     const termLogEl = document.getElementById('term-log');
     let lastLogKey = '';
@@ -1090,7 +1092,7 @@ function renderInteractiveGraphHtml(
       if (!fromNode || !toNode) return;
       const k1 = fromNode.id + '->' + toNode.id;
       const k2 = toNode.id + '->' + fromNode.id;
-      const ttl = isBrutal ? 58 : 36;
+      const ttl = isBrutal ? 46 : 32;
       activeLaserEdges.set(k1, { from: fromNode, to: toNode, ttl, maxTtl: ttl });
       activeLaserEdges.set(k2, { from: toNode, to: fromNode, ttl, maxTtl: ttl });
       pulses.push({
@@ -1189,6 +1191,23 @@ function renderInteractiveGraphHtml(
       }
     }
 
+    // Cognitive Wave Dynamics: Sudden explosive surges followed by serene calm
+    function igniteCognitiveSurge(durationMs = 1500) {
+      cognitiveSurgeUntil = Math.max(cognitiveSurgeUntil, Date.now() + durationMs);
+      triggerAutoStormBurst();
+    }
+
+    function triggerIdlePulse() {
+      if (!is3D) return;
+      const a = realNodes[Math.floor(Math.random() * realNodes.length)] || nodes[0];
+      if (!a) return;
+      const neighbors = [...(adj.get(a.id) || [])].map(id => nodeById.get(id)).filter(Boolean);
+      if (neighbors.length === 0) return;
+      const b = neighbors[Math.floor(Math.random() * neighbors.length)];
+      igniteSynapseBeam(a, b, 0.038);
+      document.getElementById('tok-speed').textContent = \`[idle · \${Math.floor(18 + Math.random() * 22)} tok/s]\`;
+    }
+
     function selectNode(node, reason = 'SELECT') {
       if (!node || node.isAux) return;
       selectedNode = node;
@@ -1257,6 +1276,7 @@ function renderInteractiveGraphHtml(
               const msg = JSON.parse(ev.data);
               if (msg.type === 'file_event' && msg.path) {
                 lastLiveEventTs = Date.now();
+                igniteCognitiveSurge(2200); // Trigger live edit surge!
                 const target =
                   nodeById.get(msg.path) ||
                   nodes.find(n => n.id.endsWith(msg.basename) || msg.path.endsWith(n.id));
@@ -1402,6 +1422,7 @@ function renderInteractiveGraphHtml(
     function fireRandomBurst() {
       const rand = realNodes[Math.floor(Math.random() * realNodes.length)];
       if (rand) selectNode(rand, 'BURST');
+      igniteCognitiveSurge(2000);
     }
 
     // Second Brain Cognitive Engine (Simulates real-time reasoning & typewriter thought stream)
@@ -1420,10 +1441,10 @@ function renderInteractiveGraphHtml(
       if (Date.now() - lastLiveEventTs < 2500) return;
       const item = secondBrainThoughts[thoughtIdx % secondBrainThoughts.length];
       thoughtIdx++;
-      triggerAutoStormBurst();
+      igniteCognitiveSurge(1600); // 1.6s surge during thought generation!
       appendTerminalLog(item.tag, item.text, \`~\${Math.floor(65 + Math.random() * 85)} tok\`);
     }
-    setInterval(typewriteThought, 3800);
+    setInterval(typewriteThought, 4600); // Surge 1.6s, then 3.0s serene calm!
 
     const termInput = document.getElementById('term-input');
     if (termInput) {
@@ -1433,7 +1454,7 @@ function renderInteractiveGraphHtml(
           if (!val) return;
           termInput.value = '';
           appendTerminalLog('QUERY', val, '[USER]');
-          triggerAutoStormBurst();
+          igniteCognitiveSurge(2500); // User query burst!
           setTimeout(() => {
             const hits = realNodes.filter(n => n.id.toLowerCase().includes(val.toLowerCase()) || n.symbols.some(s => s.name.toLowerCase().includes(val.toLowerCase())));
             if (hits.length > 0) {
@@ -1545,9 +1566,20 @@ function renderInteractiveGraphHtml(
         rotZ = Math.cos(globalTime * 0.65) * (isBrutal ? 0.22 : 0.08);
       }
 
-      if (isBrutal && Date.now() - lastStormBurst > 175) {
-        triggerAutoStormBurst();
-        lastStormBurst = Date.now();
+      const inSurge = Date.now() < cognitiveSurgeUntil || overdrive;
+
+      if (inSurge) {
+        // BURST PHASE: Explosive multi-hop crimson constellation during thoughts & surgery
+        if (Date.now() - lastStormBurst > (overdrive ? 180 : 280)) {
+          triggerAutoStormBurst();
+          lastStormBurst = Date.now();
+        }
+      } else {
+        // IDLE PHASE: Quiet, pristine silver wireframe with occasional single gentle pulse
+        if (Date.now() - lastIdlePulse > 2800) {
+          triggerIdlePulse();
+          lastIdlePulse = Date.now();
+        }
       }
 
       for (const [k, beam] of activeLaserEdges.entries()) {
