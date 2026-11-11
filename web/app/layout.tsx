@@ -14,7 +14,6 @@ export const metadata: Metadata = {
     "HumanoiseLABS",
     "token-maxxing",
     "tmx",
-    "anti-yapping",
     "Second Brain",
     "+62 Mode",
     "plus62",

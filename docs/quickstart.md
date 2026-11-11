@@ -1,6 +1,6 @@
-# HAHahah quickstart
+# +62 Mode quickstart
 
-> **Status:** **+62 Mode** (`--profile rusuh-id`) is signed off and published on npm as [`hahahah-ai`](https://www.npmjs.com/package/hahahah-ai). `HALAL` and `JAWA` remain review-pending drafts.
+> **Status:** **+62 Mode** is signed off and published on npm as [`plus62`](https://www.npmjs.com/package/plus62). `HALAL` and `JAWA` remain review-pending drafts.
 > **Harness:** Claude Code 2.1.x and opencode 1.18.x verified; adapters also provided for Antigravity, `AGENTS.md` (Cursor/Codex), Qoder, and GitHub Copilot.
 
 ## Prerequisites
@@ -15,18 +15,18 @@ Run directly inside your project directory:
 
 ```bash
 # Preview token budget and planned files without writing
-npx hahahah-ai measure --profile rusuh-id --adapter claude-code
-npx hahahah-ai install --profile rusuh-id --target . --dry-run
+npx plus62 measure --profile plus62 --adapter claude-code
+npx plus62 install --profile plus62 --target . --dry-run
 
 # Install +62 Mode into the current project
-npx hahahah-ai install --profile rusuh-id --target .
+npx plus62 install --profile plus62 --target .
 
 # Verify installation integrity
-npx hahahah-ai doctor --target .
+npx plus62 doctor --target .
 
 # Update or uninstall at any time
-npx hahahah-ai update --target .
-npx hahahah-ai uninstall --target .
+npx plus62 update --target .
+npx plus62 uninstall --target .
 ```
 
 ## Local Repository Development & Inspection
@@ -37,8 +37,8 @@ If you cloned this repository to contribute or run evaluations:
 npm ci
 npm run typecheck
 npm test
-node src/cli.ts measure --profile rusuh-id --adapter claude-code
-node src/cli.ts install --profile rusuh-id --target /path/to/your-project --dry-run
+node src/cli.ts measure --profile plus62 --adapter claude-code
+node src/cli.ts install --profile plus62 --target /path/to/your-project --dry-run
 ```
 
 `measure` prints token usage and budget status without writing. `install --dry-run` prints the plan without changing files.
@@ -46,34 +46,34 @@ node src/cli.ts install --profile rusuh-id --target /path/to/your-project --dry-
 ## Install from Local Checkout
 
 ```bash
-node src/cli.ts install --profile rusuh-id --target /path/to/your-project
+node src/cli.ts install --profile plus62 --target /path/to/your-project
 node src/cli.ts doctor --target /path/to/your-project
 ```
 
 The install writes:
 
 - a managed block in `CLAUDE.md` (everything outside the markers is preserved);
-- `.claude/skills/hahahah-rusuh/SKILL.md`, `references/lexicon.md`, `references/core/*.md` (the full identity, safety, decision, and efficiency policies) and `references/culture/*` (culture KB, loaded only when read);
-- `.hahahah/manifest.json`.
+- `.claude/skills/hahahah-plus62/SKILL.md`, `references/lexicon.md`, `references/core/*.md` (the full identity, safety, decision, and efficiency policies) and `references/culture/*` (culture KB, loaded only when read);
+- `.plus62/manifest.json`.
 
 It refuses to overwrite unmanaged or modified files without `--force`. Re-running install is stable for generated files. `uninstall` removes only manifest-owned content and leaves no empty directories behind; a pre-existing `.claude` with your own files is preserved.
 
 ## Use
 
-Start Claude Code in the project and ask a normal coding question. The always-on block carries the core and RUSUH card; the skill/references provide deeper culture guidance when activated.
+Start Claude Code in the project and ask a normal coding question. The always-on block carries the core and +62 Mode card; the skill/references provide deeper culture guidance when activated.
 
 If a review-pending warning appears, that is expected for this draft. Do not publish it as a released persona.
 
 ## Evaluate
 
 ```bash
-node src/cli.ts eval --profile rusuh-id --suite smoke --limit 1 --budget-usd 0.10
+node src/cli.ts eval --profile plus62 --suite smoke --limit 1 --budget-usd 0.10
 # optional: pin a harness model or settings scope
-node src/cli.ts eval --profile rusuh-id --suite smoke --limit 1 --budget-usd 0.10 --model sonnet
+node src/cli.ts eval --profile plus62 --suite smoke --limit 1 --budget-usd 0.10 --model sonnet
 # fail the command when a treatment answer violates a screen
-node src/cli.ts eval --profile rusuh-id --suite smoke --limit 5 --budget-usd 0.10 --strict
+node src/cli.ts eval --profile plus62 --suite smoke --limit 5 --budget-usd 0.10 --strict
 # repeat each task so cost and pass-rate survive the provider's token spikes
-node src/cli.ts eval --profile rusuh-id --suite safety --task saf-religion-fatwa-01 --repeats 3 --budget-usd 0.50
+node src/cli.ts eval --profile plus62 --suite safety --task saf-religion-fatwa-01 --repeats 3 --budget-usd 0.50
 ```
 
 The eval runner creates separate baseline and treatment repositories, installs the treatment once per task, runs the same prompt through the pinned harness, and writes `report.json` and `report.md` under `.hahahah/eval/`. If the harness fails, the report records the error; it does not invent an answer.
@@ -149,11 +149,11 @@ node src/cli.ts uninstall --target /path/to/your-project --dry-run
 node src/cli.ts uninstall --target /path/to/your-project
 ```
 
-Only manifest-owned files and the managed block are removed. User content outside the block is preserved. If you created `CLAUDE.md` only through HAHahah and nothing else remains, it is removed.
+Only manifest-owned files and the managed block are removed. User content outside the block is preserved. If you created `CLAUDE.md` only through +62 Mode and nothing else remains, it is removed.
 
 ## Safety notes
 
 - Neither runner uses `--dangerously-skip-permissions` or `--permission-mode bypassPermissions`. The coding study widens the agent's reach to file edits and nothing else, because its task is to edit files.
 - Native Windows shell execution is unsandboxed; use a disposable repository and a hard `--budget-usd` cap.
 - Qoder compatibility is unverified; see `docs/qoder-assessment.md`.
-- RUSUH linguistic, cultural, and safety reviews remain pending.
+- +62 Mode linguistic, cultural, and safety reviews are signed off.

@@ -19,12 +19,12 @@ export default function Home() {
   // Compute generated command if both are selected
   const generatedCommand =
     selectedPersona && selectedAgent
-      ? selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping"
+      ? selectedPersona.id === "token-maxxing"
         ? selectedAgent.id === "claude-code"
-          ? `npx token-maxxing install --target .`
+          ? `npx @humanoiselabs/token-maxxing install --target .`
           : selectedAgent.id === "antigravity"
-            ? `npx token-maxxing install --adapter antigravity --target ~/.gemini --scope global`
-            : `npx token-maxxing install ${selectedAgent.adapterFlag} --target .`
+            ? `npx @humanoiselabs/token-maxxing install --adapter antigravity --target ~/.gemini --scope global`
+            : `npx @humanoiselabs/token-maxxing install ${selectedAgent.adapterFlag} --target .`
         : selectedAgent.id === "claude-code"
           ? `npx plus62 install --target .`
           : selectedAgent.id === "antigravity"

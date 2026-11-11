@@ -396,7 +396,7 @@ export default function Configurator({
                   <div className="flex items-center gap-3">
                     <a
                       href={
-                        selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping"
+                        selectedPersona.id === "token-maxxing"
                           ? "https://github.com/humanoiseLABS/token-maxxing"
                           : "https://github.com/humanoiseLABS/plus62"
                       }
@@ -404,7 +404,7 @@ export default function Configurator({
                       rel="noopener noreferrer"
                       className="text-[#0d0d0d] font-bold hover:text-[#ff6b2c] underline flex items-center gap-1"
                     >
-                      <span>Repo ({selectedPersona.id === "token-maxxing" || selectedPersona.id === "anti-yapping" ? "token-maxxing" : "plus62"})</span>
+                      <span>Repo ({selectedPersona.id === "token-maxxing" ? "token-maxxing" : "plus62"})</span>
                       <ArrowRight className="w-3 h-3" />
                     </a>
                     <a href="#tutorial" className="text-[#ff6b2c] font-bold hover:underline flex items-center gap-1">

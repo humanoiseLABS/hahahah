@@ -69,7 +69,7 @@ const svg = `
 
   <!-- Big Brand Heading -->
   <g transform="translate(90, 220)">
-    <text x="0" y="0" class="display" font-size="78" fill="#0d0d0d" letter-spacing="-1">HAHAHAH</text>
+    <text x="0" y="0" class="display" font-size="78" fill="#0d0d0d" letter-spacing="-1">+62 MODE</text>
     <path d="M 0 16 Q 180 30, 360 14 T 420 18" fill="none" stroke="#ff6b2c" stroke-width="8" stroke-linecap="round" />
     <text x="0" y="58" class="sans" font-size="25" fill="#3a3a3a">
       Personality &amp; Token Efficiency Layer for Coding Agents
@@ -120,7 +120,7 @@ const svg = `
       <circle cx="54" cy="33" r="5" fill="#27c93f" />
       <!-- Prompt -->
       <text x="75" y="39" class="mono" font-size="16" fill="#00ff66">$</text>
-      <text x="95" y="39" class="mono" font-size="16" fill="#ffd23f">npx hahahah-ai install --profile rusuh-id</text>
+      <text x="95" y="39" class="mono" font-size="16" fill="#ffd23f">npx plus62 install</text>
     </g>
 
     <!-- Supported Badges -->

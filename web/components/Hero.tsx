@@ -56,7 +56,7 @@ const HERO_CREW: CrewMember[] = [
     offset: 0.42,
     flip: true,
     scale: 0.96,
-    says: "npx token-maxxing doctor — 100% sehat meong!",
+    says: "npx @humanoiselabs/token-maxxing doctor — 100% sehat meong!",
   },
 ];
 

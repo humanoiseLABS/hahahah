@@ -56,7 +56,7 @@ const HUMANOISE_CREW: CrewMember[] = [
     offset: 0.42,
     flip: true,
     scale: 0.96,
-    says: "npx token-maxxing doctor — 100% sehat meong!",
+    says: "npx @humanoiselabs/token-maxxing doctor — 100% sehat meong!",
   },
 ];
 
@@ -93,7 +93,7 @@ export default function Footer() {
             links: [
               { label: "Cara Pasang", href: "#integrations" },
               { label: "Riset & Benchmark", href: "https://github.com/humanoiseLABS/plus62/tree/main/docs" },
-              { label: "Evaluasi Keamanan", href: "https://github.com/humanoiseLABS/plus62/tree/main/eval" },
+              { label: "Evaluasi Keamanan", href: "https://github.com/humanoiseLABS/plus62/tree/main/evals" },
               { label: "Tanya Jawab (FAQ)", href: "#support" },
             ],
           },
