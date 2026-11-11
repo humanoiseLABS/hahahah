@@ -59,14 +59,24 @@ export default function SupportSection() {
               Nemu bug di adapter atau pas lagi ngetes? Lempar aja issue-nya langsung ke repo GitHub kita.
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
+          <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20 flex flex-wrap items-center gap-3">
             <a
               href="https://github.com/humanoiseLABS/plus62/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#ff6b2c] transition-colors"
             >
-              <span>Buka GitHub Issues</span>
+              <span>Issues +62 Mode</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <span className="text-[#0d0d0d]/30">&bull;</span>
+            <a
+              href="https://github.com/humanoiseLABS/token-maxxing/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#00b4d8] transition-colors"
+            >
+              <span>Issues Token-Maxxing</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -83,14 +93,24 @@ export default function SupportSection() {
               Cek jeroan benchmark token, tabel parity tiap harness, dan catatan Phase 3 content hardening kita.
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
+          <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20 flex flex-wrap items-center gap-3">
             <a
               href="https://github.com/humanoiseLABS/plus62/tree/main/docs"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#ff6b2c] transition-colors"
             >
-              <span>Intip Dokumen Teknis</span>
+              <span>Docs +62 Mode</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <span className="text-[#0d0d0d]/30">&bull;</span>
+            <a
+              href="https://github.com/humanoiseLABS/token-maxxing#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-mono text-[#0d0d0d] font-bold flex items-center gap-1.5 hover:text-[#00b4d8] transition-colors"
+            >
+              <span>Docs Token-Maxxing</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -107,14 +127,24 @@ export default function SupportSection() {
               Bantu nambahin persona khas daerah lu di Nusantara. Jangan lupa klik Star di GitHub biar makin rame!
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20">
+          <div className="mt-6 pt-4 border-t-2 border-dashed border-[#0d0d0d]/20 flex flex-wrap items-center gap-3">
             <a
               href="https://github.com/humanoiseLABS/plus62"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#ff6b2c] font-bold flex items-center gap-1.5 hover:underline"
             >
-              <span>Kasih Star di GitHub &#9733;</span>
+              <span>Star +62 Mode &#9733;</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <span className="text-[#0d0d0d]/30">&bull;</span>
+            <a
+              href="https://github.com/humanoiseLABS/token-maxxing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-mono text-[#00b4d8] font-bold flex items-center gap-1.5 hover:underline"
+            >
+              <span>Star Token-Maxxing &#9733;</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>

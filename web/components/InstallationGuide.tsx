@@ -108,7 +108,7 @@ export default function InstallationGuide({
   ];
 
   return (
-    <section id="tutorial" className="py-24 px-6 max-w-5xl mx-auto sketch-divider">
+    <div className="py-24 px-6 max-w-5xl mx-auto sketch-divider">
       
       {/* Section Header */}
       <div className="text-left mb-12">
@@ -274,6 +274,6 @@ export default function InstallationGuide({
         </div>
       </div>
 
-    </section>
+    </div>
   );
 }

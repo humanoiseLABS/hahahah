@@ -61,14 +61,31 @@ export default function Home() {
         generatedCommand={generatedCommand}
       />
 
-      {/* Section 2: Tutorial Roadmap (HANYA MUNCUL KETIKA PERSONALITAS & AGENT TELAH DIPILIH) */}
-      {isConfigured && (
-        <InstallationGuide
-          selectedPersona={selectedPersona}
-          selectedAgent={selectedAgent}
-          generatedCommand={generatedCommand}
-        />
-      )}
+      {/* Section 2: Tutorial Roadmap (Selalu ada di DOM untuk menjamin keandalan anchor #tutorial) */}
+      <section id="tutorial" className="scroll-mt-20">
+        {isConfigured ? (
+          <InstallationGuide
+            selectedPersona={selectedPersona}
+            selectedAgent={selectedAgent}
+            generatedCommand={generatedCommand}
+          />
+        ) : (
+          <div className="py-16 px-6 max-w-4xl mx-auto text-center sketch-card bg-white/90 border-2 border-dashed border-[#0d0d0d]/30 my-12">
+            <h3 className="text-2xl font-black text-[#0d0d0d] font-mono mb-2">
+              Belum Memilih Persona atau Agen
+            </h3>
+            <p className="text-sm text-[#3a3a3a] mb-6">
+              Pilih salah satu mode (+62 Mode atau Token-Maxxing) dan agen AI lu di atas untuk memunculkan panduan langkah demi langkah yang presisi.
+            </p>
+            <a
+              href="#integrations"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#ffd23f] border-2 border-[#0d0d0d] shadow-[3px_3px_0_#0d0d0d] font-mono font-bold text-sm text-[#0d0d0d] hover:bg-[#ffea79] transition-all"
+            >
+              Pilih Mode &amp; Agen Sekarang &uarr;
+            </a>
+          </div>
+        )}
+      </section>
 
       {/* Section 3: Halaman Support */}
       <SupportSection />

@@ -91,8 +91,9 @@ export default function Footer() {
           {
             title: "Dokumentasi",
             links: [
-              { label: "Cara Pasang", href: "#integrations" },
-              { label: "Riset & Benchmark", href: "https://github.com/humanoiseLABS/plus62/tree/main/docs" },
+              { label: "Cara Pasang", href: "#tutorial" },
+              { label: "Docs +62 Mode", href: "https://github.com/humanoiseLABS/plus62/tree/main/docs" },
+              { label: "Docs Token-Maxxing", href: "https://github.com/humanoiseLABS/token-maxxing#readme" },
               { label: "Evaluasi Keamanan", href: "https://github.com/humanoiseLABS/plus62/tree/main/evals" },
               { label: "Tanya Jawab (FAQ)", href: "#support" },
             ],
@@ -101,8 +102,8 @@ export default function Footer() {
             title: "Komunitas",
             links: [
               { label: "GitHub @humanoiseLABS", href: "https://github.com/humanoiseLABS" },
-              { label: "Buka Issue / Bug", href: "https://github.com/humanoiseLABS/plus62/issues" },
-              { label: "Kirim Pull Request", href: "https://github.com/humanoiseLABS/plus62/pulls" },
+              { label: "Issues +62 Mode", href: "https://github.com/humanoiseLABS/plus62/issues" },
+              { label: "Issues Token-Maxxing", href: "https://github.com/humanoiseLABS/token-maxxing/issues" },
               { label: "Lisensi MIT", href: "https://github.com/humanoiseLABS/plus62/blob/main/LICENSE" },
             ],
           },
