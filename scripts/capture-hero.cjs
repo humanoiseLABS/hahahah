@@ -4,7 +4,7 @@ const path = require('path');
 
 const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const PORT = 9222;
-const TARGET_URL = 'https://plus62.vercel.app/';
+const TARGET_URL = 'https://humanoise.vercel.app/';
 const OUTPUT_FILE = path.resolve(__dirname, '../web/public/og-hero.png');
 
 async function sleep(ms) {

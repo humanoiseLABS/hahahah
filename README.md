@@ -1,5 +1,10 @@
 # 🇮🇩 +62 Mode (`@humanoiselabs/plus62`)
 
+[![npm version](https://img.shields.io/npm/v/@humanoiselabs/plus62.svg?color=cb3837&style=flat-square)](https://www.npmjs.com/package/@humanoiselabs/plus62)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Companion: Token-Maxxing](https://img.shields.io/badge/Companion-Token--Maxxing-00ffcc?style=flat-square)](https://github.com/humanoiseLABS/token-maxxing)
+[![Website: HUMANOISE](https://img.shields.io/badge/Website-HUMANOISE-ffd23f?style=flat-square)](https://humanoise.vercel.app)
+
 **HumanoiseLABS (`@humanoiseLABS`)** builds zero-fluff instruction & guardrail layers for AI coding agents across two flagship products:
 
 | Product | Package / Repo | Focus | Install Command |

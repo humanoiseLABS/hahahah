@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://plus62.vercel.app/sitemap.xml",
-    host: "https://plus62.vercel.app",
+    sitemap: "https://humanoise.vercel.app/sitemap.xml",
+    host: "https://humanoise.vercel.app",
   };
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://plus62.vercel.app"),
+  metadataBase: new URL("https://humanoise.vercel.app"),
   title: {
     default: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
     template: "%s | HumanoiseLABS",
@@ -34,14 +34,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://plus62.vercel.app",
+    url: "https://humanoise.vercel.app",
     siteName: "HumanoiseLABS",
     title: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
     description:
       "Pasang +62 Mode (partner ngoding lokal blak-blakan) atau Token-Maxxing (Second Brain & surgical diffs) ke Claude Code, Antigravity, OpenCode, Qoder, Codex, dan Cursor.",
     images: [
       {
-        url: "https://plus62.vercel.app/og-image.png",
+        url: "https://humanoise.vercel.app/og-image.png",
         width: 1200,
         height: 630,
         alt: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     title: "HUMANOISE — +62 Mode & Token-Maxxing untuk AI Coding Agents",
     description:
       "Dua senjata AI coding agent dari HumanoiseLABS: +62 Mode (partner ngoding lokal Nusantara) & Token-Maxxing (Second Brain & surgical diffs).",
-    images: ["https://plus62.vercel.app/og-image.png"],
+    images: ["https://humanoise.vercel.app/og-image.png"],
   },
   robots: {
     index: true,
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://plus62.vercel.app",
+    canonical: "https://humanoise.vercel.app",
   },
 };
 
