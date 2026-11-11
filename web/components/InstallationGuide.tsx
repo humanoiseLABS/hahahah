@@ -19,7 +19,7 @@ export default function InstallationGuide({
   const [copiedPrompt, setCopiedPrompt] = useState(false);
 
   const isTokenMaxxing = selectedPersona.id === "token-maxxing";
-  const packageName = isTokenMaxxing ? "@humanoiselabs/token-maxxing" : "plus62";
+  const packageName = isTokenMaxxing ? "@humanoiselabs/token-maxxing" : "@humanoiselabs/plus62";
   const repoUrl = isTokenMaxxing
     ? "https://github.com/humanoiseLABS/token-maxxing"
     : "https://github.com/humanoiseLABS/plus62";

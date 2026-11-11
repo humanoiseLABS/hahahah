@@ -7,7 +7,7 @@ const HUMANOISE_FAQS = [
   {
     question: "Apa bedanya HumanoiseLABS, +62 Mode, dan Token-Maxxing?",
     answer:
-      "HumanoiseLABS adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) +62 Mode (`npx plus62 install`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara, dan (2) Token-Maxxing (`npx @humanoiselabs/token-maxxing install` atau `tmx`) buat Second Brain memory, jawaban telegrafis baris pertama, 3D live visualizer, dan surgical diffs biar AI hemat token hingga 80%.",
+      "HumanoiseLABS adalah nama lab kita. Di dalamnya ada 2 mode yang bisa lu pilih sesuai kebutuhan: (1) +62 Mode (`npx @humanoiselabs/plus62 install` atau binary `plus62`) buat gaya partner ngoding lokal Indonesia (bloko suto) yang blak-blakan lengkap dengan kamus budaya Nusantara, dan (2) Token-Maxxing (`npx @humanoiselabs/token-maxxing install` atau `tmx`) buat Second Brain memory, jawaban telegrafis baris pertama, 3D live visualizer, dan surgical diffs biar AI hemat token hingga 80%.",
   },
   {
     question: "Gimana efeknya ke konsumsi token & biaya API?",

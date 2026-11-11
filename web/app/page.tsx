@@ -26,10 +26,10 @@ export default function Home() {
             ? `npx @humanoiselabs/token-maxxing install --adapter antigravity --target ~/.gemini --scope global`
             : `npx @humanoiselabs/token-maxxing install ${selectedAgent.adapterFlag} --target .`
         : selectedAgent.id === "claude-code"
-          ? `npx plus62 install --target .`
+          ? `npx @humanoiselabs/plus62 install --target .`
           : selectedAgent.id === "antigravity"
-            ? `npx plus62 install --adapter antigravity --target ~/.gemini --scope global`
-            : `npx plus62 install ${selectedAgent.adapterFlag} --target .`
+            ? `npx @humanoiselabs/plus62 install --adapter antigravity --target ~/.gemini --scope global`
+            : `npx @humanoiselabs/plus62 install ${selectedAgent.adapterFlag} --target .`
       : "";
 
   const copyCommand = () => {

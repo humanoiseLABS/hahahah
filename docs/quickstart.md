@@ -15,18 +15,18 @@ Run directly inside your project directory:
 
 ```bash
 # Preview token budget and planned files without writing
-npx plus62 measure --profile plus62 --adapter claude-code
-npx plus62 install --profile plus62 --target . --dry-run
+npx @humanoiselabs/plus62 measure --profile plus62 --adapter claude-code
+npx @humanoiselabs/plus62 install --profile plus62 --target . --dry-run
 
 # Install +62 Mode into the current project
-npx plus62 install --profile plus62 --target .
+npx @humanoiselabs/plus62 install --profile plus62 --target .
 
 # Verify installation integrity
-npx plus62 doctor --target .
+npx @humanoiselabs/plus62 doctor --target .
 
 # Update or uninstall at any time
-npx plus62 update --target .
-npx plus62 uninstall --target .
+npx @humanoiselabs/plus62 update --target .
+npx @humanoiselabs/plus62 uninstall --target .
 ```
 
 ## Local Repository Development & Inspection

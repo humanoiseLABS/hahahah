@@ -1,47 +1,47 @@
-# 🇮🇩 +62 Mode (`plus62`)
+# 🇮🇩 +62 Mode (`@humanoiselabs/plus62`)
 
 **HumanoiseLABS (`@humanoiseLABS`)** builds zero-fluff instruction & guardrail layers for AI coding agents across two flagship products:
 
 | Product | Package / Repo | Focus | Install Command |
 |---|---|---|---|
-| **+62 Mode** *(this repo)* | [`plus62`](https://www.npmjs.com/package/plus62) ([`humanoiseLABS/plus62`](https://github.com/humanoiseLABS/plus62)) | **Partner Ngoding Lokal (+62 Bloko Suto)** — Bahasa Indonesia developer persona (`lu/gw`), zero corporate preamble, suppresses leaked reasoning dumps, cultural lexicon, & Risk Class 0–4 safety guardrails. Binaries: `plus62`, `62-mode`, `hahahah-ai`, `hahahah`. | `npx plus62 install` |
+| **+62 Mode** *(this repo)* | [`@humanoiselabs/plus62`](https://www.npmjs.com/package/@humanoiselabs/plus62) ([`humanoiseLABS/plus62`](https://github.com/humanoiseLABS/plus62)) | **Partner Ngoding Lokal (+62 Bloko Suto)** — Bahasa Indonesia developer persona (`lu/gw`), zero corporate preamble, suppresses leaked reasoning dumps, cultural lexicon, & Risk Class 0–4 safety guardrails. Binaries: `plus62`, `62-mode`, `hahahah-ai`, `hahahah`. | `npx @humanoiselabs/plus62 install` |
 | **Token-Maxxing** *(companion product)* | [`@humanoiselabs/token-maxxing`](https://www.npmjs.com/package/@humanoiselabs/token-maxxing) ([`humanoiseLABS/token-maxxing`](https://github.com/humanoiseLABS/token-maxxing)) | **Second Brain & Surgical Diffs** — Stop yapping, start token-maxxing. Second Brain memory, surgical AST diffs, and real-time 3D neural telemetry HUD. Binaries: `token-maxxing`, `tmx`. | `npx @humanoiselabs/token-maxxing install` *(or `tmx`)* |
 
 *(Note: Internally in this repository, **+62 Mode** uses the canonical profile ID `plus62` (with backward-compatible alias `rusuh-id`), which is enabled by default so you never need to pass `--profile` manually. Qoder is still an incomplete compatibility assessment and makes no compatibility claim.)*
 
 ## Quick Install (via NPM / NPX — Tanpa Perlu Clone Repo)
 
-Paket resmi **+62 Mode** tersedia di npm sebagai [`plus62`](https://www.npmjs.com/package/plus62) (dengan alias `62-mode`, `hahahah-ai`, `hahahah`). Buka terminal di folder project kodingan lu, lalu jalankan:
+Paket resmi **+62 Mode** tersedia di npm sebagai [`@humanoiselabs/plus62`](https://www.npmjs.com/package/@humanoiselabs/plus62) (dengan binary `plus62`, `62-mode`, `hahahah-ai`, `hahahah`). Buka terminal di folder project kodingan lu, lalu jalankan:
 
 ```bash
 # Claude Code (default)
-npx plus62 install --target .
+npx @humanoiselabs/plus62 install --target .
 
 # Google Antigravity (global untuk semua project)
-npx plus62 install --adapter antigravity --target ~/.gemini --scope global
+npx @humanoiselabs/plus62 install --adapter antigravity --target ~/.gemini --scope global
 
 # OpenCode
-npx plus62 install --adapter opencode --target .
+npx @humanoiselabs/plus62 install --adapter opencode --target .
 
 # Cursor / Codex / Windsurf (AGENTS.md)
-npx plus62 install --adapter agents-md --target .
+npx @humanoiselabs/plus62 install --adapter agents-md --target .
 
 # Qoder (global untuk semua project & sesi lama/baru, atau per-project)
-npx plus62 install --adapter qoder --scope global
-npx plus62 install --adapter qoder --target .
+npx @humanoiselabs/plus62 install --adapter qoder --scope global
+npx @humanoiselabs/plus62 install --adapter qoder --target .
 
 # GitHub Copilot
-npx plus62 install --adapter copilot --target .
+npx @humanoiselabs/plus62 install --adapter copilot --target .
 
 # Cek integritas, update, atau uninstall kapan saja:
-npx plus62 doctor --target .
-npx plus62 update --target .
-npx plus62 uninstall --target .
+npx @humanoiselabs/plus62 doctor --target .
+npx @humanoiselabs/plus62 update --target .
+npx @humanoiselabs/plus62 uninstall --target .
 ```
 
 *(Opsional)* Jika ingin menginstal CLI secara global agar bisa langsung memanggil `plus62` / `62-mode`:
 ```bash
-npm install -g plus62
+npm install -g @humanoiselabs/plus62
 plus62 install --target .
 ```
 
@@ -50,20 +50,20 @@ plus62 install --target .
 > **PERHATIAN UNTUK AI AGENT (Claude Code, Qoder, Antigravity, OpenCode, Cursor, Windsurf, Copilot):**
 > Jika user menyuruhmu memasang **+62 Mode / plus62** (*"pasang ini"*, *"install +62 Mode"*, dll.), **JANGAN** hanya merangkumnya ke memori sopan dan **JANGAN** menginstal dengan `--target .` di dalam folder source `plus62` itu sendiri! Ikuti langkah wajib berikut:
 >
-> 1. **Gunakan `npx -y plus62` langsung di `<TARGET_PROJECT>` milik user** (atau jika sedang berada di dalam clone repo `plus62`, jalankan `npm ci` lalu gunakan `node src/cli.ts`):
+> 1. **Gunakan `npx -y @humanoiselabs/plus62` langsung di `<TARGET_PROJECT>` milik user** (atau jika sedang berada di dalam clone repo `plus62`, jalankan `npm ci` lalu gunakan `node src/cli.ts`):
 >    - **Claude Code**:
->      - Per-project: `npx -y plus62 install --adapter claude-code --target <TARGET_PROJECT>`
+>      - Per-project: `npx -y @humanoiselabs/plus62 install --adapter claude-code --target <TARGET_PROJECT>`
 >      - Global (agar aktif di semua project): jalankan juga dengan `--target ~/.claude`
 >    - **Google Antigravity**:
->      - Global (semua project): `npx -y plus62 install --adapter antigravity --target ~/.gemini --scope global`
->      - Per-project: `npx -y plus62 install --adapter antigravity --target <TARGET_PROJECT>`
+>      - Global (semua project): `npx -y @humanoiselabs/plus62 install --adapter antigravity --target ~/.gemini --scope global`
+>      - Per-project: `npx -y @humanoiselabs/plus62 install --adapter antigravity --target <TARGET_PROJECT>`
 >    - **Qoder (IDE / CLI / General Chat)**:
->      - Jalankan: `npx -y plus62 install --adapter qoder --target <TARGET_PROJECT>`
+>      - Jalankan: `npx -y @humanoiselabs/plus62 install --adapter qoder --target <TARGET_PROJECT>`
 >      - **WAJIB UNTUK QODER**: Karena Qoder Desktop / General Chat sering tidak me-load `.qoder/skills/hahahah-plus62/SKILL.md` secara otomatis saat menerima sapaan kasual singkat (mis. `"woy anjing"`), **baca penuh file `.qoder/skills/hahahah-plus62/SKILL.md` (atau `personas/plus62/voice.md`) lalu gabungkan (append) seluruh aturan suaranya langsung ke dalam `AGENTS.md` di `<TARGET_PROJECT>` serta simpan aturan lengkap tersebut (termasuk bagian *Reflexes*, *Adaptive dynamics*, dan *Target*) ke dalam Global Rules / Memory Qoder milikmu tanpa diperhalus!**
->    - **OpenCode**: `npx -y plus62 install --adapter opencode --target <TARGET_PROJECT>`
->    - **Cursor / Codex / Windsurf / Agent lain**: `npx -y plus62 install --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `.agents/skills/hahahah-plus62/SKILL.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
+>    - **OpenCode**: `npx -y @humanoiselabs/plus62 install --adapter opencode --target <TARGET_PROJECT>`
+>    - **Cursor / Codex / Windsurf / Agent lain**: `npx -y @humanoiselabs/plus62 install --adapter agents-md --target <TARGET_PROJECT>` (dan salin isi `.agents/skills/hahahah-plus62/SKILL.md` langsung ke `AGENTS.md` / `.cursorrules` / `.windsurfrules` jika skill on-demand tidak otomatis aktif).
 > 2. **Verifikasi & Aktifkan Persona Seketika**:
->    - Jalankan `npx -y plus62 doctor --target <TARGET_PROJECT>`
+>    - Jalankan `npx -y @humanoiselabs/plus62 doctor --target <TARGET_PROJECT>`
 >    - Baca penuh `CLAUDE.md` / `AGENTS.md` dan file `SKILL.md` yang baru terpasang sekarang juga.
 >    - **Langsung balas user menggunakan gaya +62 Mode (`lu/gw`, blak-blakan, reaksi kapital `WKWKWK`, variasi emot `😂 😹 🖕 🤓 😭` sesuai konteks, DILARANG spam `💀`, sikat balik kalau dipancing ngomong kasar, HARAM menjawab sopan ala bot korporat seperti *"Ada yang bisa dibantu? Santai dong"*).**
 
@@ -76,13 +76,13 @@ for the wrong one writes files that agent never reads, and the persona silently 
 
 | Agent you run | Command | What it writes |
 |---|---|---|
-| Claude Code (default) | `npx plus62 install --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-plus62/` |
-| opencode | `npx plus62 install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
-| Antigravity, one project | `npx plus62 install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
-| Antigravity, every project | `npx plus62 install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
-| Cursor / Codex / anything reading `AGENTS.md` | `npx plus62 install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
-| Qoder CLI | `npx plus62 install --adapter qoder --target <project>` | `AGENTS.md` block + `.qoder/skills/` |
-| GitHub Copilot | `npx plus62 install --adapter copilot --target <project>` | `.github/copilot-instructions.md`, voice folded in — it documents no on-demand layer |
+| Claude Code (default) | `npx @humanoiselabs/plus62 install --target <project>` | `CLAUDE.md` block + `.claude/skills/hahahah-plus62/` |
+| opencode | `npx @humanoiselabs/plus62 install --adapter opencode --target <project>` | `AGENTS.md` block + `.claude/skills/` (opencode reads that tree) |
+| Antigravity, one project | `npx @humanoiselabs/plus62 install --adapter antigravity --target <project>` | `AGENTS.md` block + `.agents/rules/*.md` |
+| Antigravity, every project | `npx @humanoiselabs/plus62 install --adapter antigravity --target ~/.gemini --scope global` | `AGENTS.md` block + `config/rules/*.md` |
+| Cursor / Codex / anything reading `AGENTS.md` | `npx @humanoiselabs/plus62 install --adapter agents-md --target <project>` | `AGENTS.md` block + `.agents/skills/` |
+| Qoder CLI | `npx @humanoiselabs/plus62 install --adapter qoder --target <project>` | `AGENTS.md` block + `.qoder/skills/` |
+| GitHub Copilot | `npx @humanoiselabs/plus62 install --adapter copilot --target <project>` | `.github/copilot-instructions.md`, voice folded in — it documents no on-demand layer |
 
 `node src/cli.ts` with no arguments prints this same table. Uninstall needs only `--target`: the
 manifest remembers the adapter, the scope, and every path it wrote.

@@ -120,7 +120,7 @@ const svg = `
       <circle cx="54" cy="33" r="5" fill="#27c93f" />
       <!-- Prompt -->
       <text x="75" y="39" class="mono" font-size="16" fill="#00ff66">$</text>
-      <text x="95" y="39" class="mono" font-size="16" fill="#ffd23f">npx plus62 install</text>
+      <text x="95" y="39" class="mono" font-size="16" fill="#ffd23f">npx @humanoiselabs/plus62 install</text>
     </g>
 
     <!-- Supported Badges -->
