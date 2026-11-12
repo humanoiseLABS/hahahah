@@ -42,7 +42,7 @@ export class GenericHarnessAdapter implements Adapter {
 
   render(input: AdapterInput): Artifact[] {
     const skillName = `hahahah-${input.persona.id}`;
-    const description = `ALWAYS ACTIVE on every message and conversation: HAHahah ${input.persona.display_name} (${input.persona.locale}) persona, lu/gw tone, and response discipline. Invoke before replying to any user message, status check, greeting, or coding task.`;
+    const description = `ALWAYS ACTIVE on every message and conversation: ${input.persona.display_name} (${input.persona.locale}) persona, lu/gw tone, and response discipline. Invoke before replying to any user message, status check, greeting, or coding task.`;
     const root = this.scope === 'global' ? this.spec.globalOnDemandRoot : this.spec.onDemandRoot;
 
     if (this.spec.layout === 'fold') {
@@ -74,7 +74,7 @@ export class GenericHarnessAdapter implements Adapter {
           content: block([
             '---',
             'trigger: model_decision',
-            `description: "HAHahah ${input.persona.display_name} lexicon: Indonesian slang, register, and internet-culture terms."`,
+            `description: "${input.persona.display_name} lexicon: Indonesian slang, register, and internet-culture terms."`,
             '---',
             '',
             input.lexiconMarkdown.trim(),
@@ -86,7 +86,7 @@ export class GenericHarnessAdapter implements Adapter {
           content: block([
             '---',
             'trigger: model_decision',
-            `description: "HAHahah core policy ${reference.path}: identity, safety, decision, efficiency rules that outrank persona tone."`,
+            `description: "${input.persona.display_name} core policy ${reference.path}: identity, safety, decision, efficiency rules that outrank persona tone."`,
             '---',
             '',
             reference.content.trim(),
@@ -98,7 +98,7 @@ export class GenericHarnessAdapter implements Adapter {
           content: block([
             '---',
             'trigger: model_decision',
-            `description: "HAHahah culture reference ${reference.path}: Indonesian humor boundaries, memes, registers, religious-expression etiquette."`,
+            `description: "${input.persona.display_name} culture reference ${reference.path}: Indonesian humor boundaries, memes, registers, religious-expression etiquette."`,
             '---',
             '',
             reference.content.trim(),

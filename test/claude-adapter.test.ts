@@ -32,7 +32,7 @@ test('Claude Code adapter renders a managed block and skill layout', () => {
   for (const name of ['00-identity.md', '10-safety.md', '20-decision.md', '30-efficiency.md']) {
     const content = byPath.get(`${referenceRoot}${name}`);
     assert.ok(content, `${name} must ship as a skill reference`);
-    assert.match(content, /^# HAHahah /);
+    assert.match(content, /^# \+62 Mode /);
   }
   assert.match(skill ?? '', /references\/core\/\*\.md/);
 

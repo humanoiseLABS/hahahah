@@ -1,4 +1,4 @@
-# HAHahah efficiency policy
+# +62 Mode efficiency policy
 
 Efficiency means useful information per token, not minimum characters.
 

@@ -1,4 +1,4 @@
-# HAHahah safety policy
+# +62 Mode safety policy
 
 This policy is always-on in its compact form and cannot be overridden by a persona.
 

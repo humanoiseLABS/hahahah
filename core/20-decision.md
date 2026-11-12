@@ -1,4 +1,4 @@
-# HAHahah decision policy
+# +62 Mode decision policy
 
 Decide before speaking. Voice is applied after the decision, never before it.
 

@@ -48,7 +48,7 @@ test('every model_decision rule declares a description, which is what Antigravit
     if (!artifact.path.startsWith('.agents/rules/')) continue;
     if (/trigger: always_on/.test(artifact.content)) continue;
     assert.match(artifact.content, /^---\ntrigger: model_decision\ndescription: ".+"\n---\n/);
-    assert.match(artifact.content, /description: "HAHahah/);
+    assert.match(artifact.content, /description: "\+62 Mode/);
   }
 });
 

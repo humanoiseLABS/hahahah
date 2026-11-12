@@ -175,15 +175,15 @@ function parseBlock(text: string): ParsedBlock | null {
     return null;
   }
   if (begins.length !== 1 || ends.length !== 1) {
-    throw new InstallError('Malformed or duplicate HAHahah managed block markers');
+    throw new InstallError('Malformed or duplicate +62 Mode managed block markers');
   }
   const begin = begins[0];
   const end = ends[0];
   if (!begin || !end) {
-    throw new InstallError('Malformed HAHahah managed block markers');
+    throw new InstallError('Malformed +62 Mode managed block markers');
   }
   if (begin.index === undefined || end.index === undefined || end.index < begin.index) {
-    throw new InstallError('Malformed HAHahah managed block order');
+    throw new InstallError('Malformed +62 Mode managed block order');
   }
   const endIndex = end.index + end[0].length;
   const content = text.slice(begin.index, endIndex);
@@ -209,7 +209,7 @@ function installBlock(
   if (parsed) {
     if (!old && !force) {
       throw new InstallError(
-        'An existing HAHahah managed block has no install manifest; use --force to replace it',
+        'An existing +62 Mode managed block has no install manifest; use --force to replace it',
       );
     }
     if (old && old.block.sha256 !== parsed.hash && !force) {
@@ -448,7 +448,7 @@ export function uninstall(options: {
   const targetRoot = resolve(options.targetRoot);
   const old = readManifest(targetRoot);
   if (!old) {
-    throw new InstallError(`No HAHahah install manifest at ${targetRoot}`);
+    throw new InstallError(`No +62 Mode install manifest at ${targetRoot}`);
   }
 
   const claudePath = join(targetRoot, old.block.path);
@@ -567,7 +567,7 @@ export function update(options: {
   const targetRoot = resolve(options.targetRoot);
   const old = readManifest(targetRoot);
   if (!old) {
-    throw new InstallError(`No HAHahah install manifest at ${targetRoot}; run install first`);
+    throw new InstallError(`No +62 Mode install manifest at ${targetRoot}; run install first`);
   }
   const isGlobal = old.files.some(
     (file) => file.path.startsWith('config/rules/') || file.path.startsWith('skills/'),
