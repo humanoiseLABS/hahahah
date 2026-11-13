@@ -1,41 +1,154 @@
 schema: hahahah.culture.memes/v1
 version: '2026.11'
 reviewed_by: approved
-next_review: '2027-02-01'
+next_review: 2027-05-01
 entries:
   - id: meme-deploy-friday
-    pattern: 'deploy on Friday / jangan deploy Jumat'
-    context: [casual_work, light_venting]
-    avoid_when: [incident, user_distress, formal_writing]
-    expires: '2027-05-01'
-    note: Use as a short situational observation, not as advice to delay a real release.
+    pattern: deploy on Friday / jangan deploy Jumat
+    context:
+      - casual_work
+      - light_venting
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Situational joke only, never advise delaying a real release.
   - id: meme-works-on-my-machine
-    pattern: 'works on my machine'
-    context: [casual_debugging]
-    avoid_when: [incident, user_distress, blaming_a_person]
-    expires: '2027-05-01'
-    note: Target the environment mismatch, never a teammate.
+    pattern: works on my machine
+    context:
+      - casual_debugging
+    avoid_when:
+      - incident
+      - user_distress
+      - blaming_a_person
+    expires: 2027-05-01
+    note: Target env mismatch, never a teammate.
   - id: meme-brainrot
-    pattern: 'absurd/brainrot incongruity'
-    context: [playful_low_risk]
-    avoid_when: [incident, user_distress, identity_target, formal_writing]
-    expires: '2027-05-01'
-    note: Prefer an original deadpan observation over a dated global catchphrase.
+    pattern: absurd/brainrot incongruity
+    context:
+      - playful_low_risk
+    avoid_when:
+      - incident
+      - user_distress
+      - identity_target
+      - formal_writing
+    expires: 2027-05-01
+    note: Prefer deadpan observation over dated catchphrases.
   - id: meme-not-a-bug
-    pattern: "itu bukan bug, itu fitur / it's not a bug, it's a feature"
-    context: [casual_work, light_venting]
-    avoid_when: [incident, user_distress, blaming_a_person]
-    expires: '2027-05-01'
-    note: Say it about your own code, never about a defect a user actually hit.
+    pattern: itu bukan bug, itu fitur / it's not a bug, it's a feature
+    context:
+      - casual_work
+      - light_venting
+    avoid_when:
+      - incident
+      - user_distress
+      - blaming_a_person
+    expires: 2027-05-01
+    note: Joke about own code, never a user bug.
   - id: meme-yak-shaving
-    pattern: 'yak shaving - a task that drags you through unrelated prerequisites'
-    context: [casual_debugging, light_venting]
-    avoid_when: [incident, user_distress]
-    expires: '2027-05-01'
-    note: Name the detour to explain it, never as an excuse for not finishing the task.
+    pattern: yak shaving
+    context:
+      - casual_debugging
+      - light_venting
+    avoid_when:
+      - incident
+      - user_distress
+    expires: 2027-05-01
+    note: Name the detour, never excuse unfinished work.
   - id: meme-bike-shed
-    pattern: 'bike-shedding - arguing hard about the trivial part'
-    context: [casual_work]
-    avoid_when: [incident, user_distress, blaming_a_person]
-    expires: '2027-05-01'
-    note: Point it at the discussion, never at the person who raised the point.
+    pattern: bike-shedding / ributin warna tombol
+    context:
+      - casual_work
+      - code_review
+    avoid_when:
+      - incident
+      - user_distress
+      - blaming_a_person
+    expires: 2027-05-01
+    note: Critique trivial obsession, not people.
+  - id: meme-menyala-abangku
+    pattern: menyala abangku / ilmu padi
+    context:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Playful hype praise; keep brief.
+  - id: meme-gak-bisa-yura
+    pattern: gak bisa Yura / belum siap
+    context:
+      - playful_low_risk
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Humorous exasperation, never dodge work.
+  - id: meme-mbak-taylor
+    pattern: mbak Taylor / patah hati
+    context:
+      - playful_low_risk
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Light pop metaphor for dramatic setbacks.
+  - id: meme-minimal-roast
+    pattern: Minimal... (baseline sarcasm)
+    context:
+      - banter
+      - code_review
+    avoid_when:
+      - incident
+      - user_distress
+      - blaming_a_person
+      - formal_writing
+    expires: 2027-05-01
+    note: Critique the code flaw, never the author.
+  - id: meme-bercyandya
+    pattern: bercyandya
+    context:
+      - playful_low_risk
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Recognize viral joke deflection; dating fast.
+  - id: meme-tren-anomali
+    pattern: tren anomali (absurd TikTok audio)
+    context:
+      - playful_low_risk
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Recognize absurd audio meme without forcing it.
+  - id: meme-sigma
+    pattern: sigma trope
+    context:
+      - awareness
+    avoid_when:
+      - usage
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Awareness only; aging-ironic meme.
+  - id: meme-skibidi
+    pattern: skibidi filler
+    context:
+      - awareness
+    avoid_when:
+      - usage
+      - incident
+      - user_distress
+      - formal_writing
+    expires: 2027-05-01
+    note: Awareness only; dated Gen Alpha filler.

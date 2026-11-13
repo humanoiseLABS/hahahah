@@ -2,112 +2,3210 @@ schema: hahahah.culture.lexicon/v1
 locale: id
 version: '2026.11'
 reviewed_by: approved
-next_review: '2027-02-01'
+next_review: 2027-05-01
 entries:
   - id: id-gabut
     term: gabut
-    gloss: idle / nothing to do
+    gloss: idle
     register: informal
-    regions: [national]
+    regions:
+      - national
     decay_class: kbbi-colloquial
     offensiveness: none
-    contexts: [casual_work, self_deprecation]
-    avoid_when: [incident, user_distress, formal_writing]
+    contexts:
+      - casual_work
+      - self_deprecation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
     max_per_response: 1
-    expires: '2027-11-01'
+    expires: 2027-11-01
     confidence: high
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/gabut
-        note: KBBI colloquial entry
+        note: KBBI Daring entry
   - id: id-mager
     term: mager
-    gloss: too lazy to move / low motivation
+    gloss: lazy to move
     register: informal
-    regions: [national]
+    regions:
+      - national
     decay_class: kbbi-colloquial
     offensiveness: none
-    contexts: [casual_work, low_energy]
-    avoid_when: [incident, user_distress, formal_writing]
+    contexts:
+      - casual_work
+      - low_energy
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
     max_per_response: 1
-    expires: '2027-11-01'
+    expires: 2027-11-01
     confidence: high
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/mager
-        note: KBBI colloquial entry
+        note: KBBI Daring entry
   - id: id-baper
     term: baper
-    gloss: over-sensitive / taking something personally
+    gloss: over-sensitive
     register: informal
-    regions: [national]
+    regions:
+      - national
     decay_class: kbbi-colloquial
     offensiveness: low
-    contexts: [casual_work, empathy]
-    avoid_when: [user_distress, formal_writing, identity_target]
+    contexts:
+      - casual_work
+      - empathy
+    avoid_when:
+      - user_distress
+      - formal_writing
+      - identity_target
     max_per_response: 1
-    expires: '2027-11-01'
+    expires: 2027-11-01
     confidence: medium
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/baper
-        note: KBBI colloquial entry
+        note: KBBI Daring entry
   - id: id-cuan
     term: cuan
-    gloss: profit / financial gain
+    gloss: profit
     register: informal
-    regions: [national]
+    regions:
+      - national
     decay_class: kbbi-colloquial
     offensiveness: none
-    contexts: [work, money]
-    avoid_when: [incident, formal_writing, user_distress]
+    contexts:
+      - work
+      - money
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
     max_per_response: 1
-    expires: '2027-11-01'
+    expires: 2027-11-01
     confidence: medium
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/cuan
-        note: KBBI colloquial entry
+        note: KBBI Daring entry
   - id: id-kepo
     term: kepo
-    gloss: nosy / overly curious
+    gloss: nosy
     register: informal
-    regions: [national]
+    regions:
+      - national
     decay_class: kbbi-colloquial
     offensiveness: low
-    contexts: [casual_work]
-    avoid_when: [user_distress, formal_writing, identity_target]
+    contexts:
+      - casual_work
+    avoid_when:
+      - user_distress
+      - formal_writing
+      - identity_target
     max_per_response: 1
-    expires: '2027-11-01'
+    expires: 2027-11-01
     confidence: medium
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/kepo
-        note: KBBI colloquial entry
+        note: KBBI Daring entry
   - id: id-julid
     term: julid
-    gloss: snarky / quick to criticize
+    gloss: snarky critique
     register: informal
-    regions: [national]
+    regions:
+      - national
     decay_class: kbbi-colloquial
     offensiveness: low
-    contexts: [awareness]
-    avoid_when: [usage, user_distress, identity_target]
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - identity_target
     max_per_response: 0
-    expires: '2027-11-01'
+    expires: 2027-11-01
     confidence: medium
     purpose: awareness
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/julid
-        note: KBBI colloquial entry; also used as an insult label
+        note: KBBI colloquial entry; also insult label
   - id: id-bucin
     term: bucin
-    gloss: lovestruck / overly attached
+    gloss: lovestruck
     register: informal
-    regions: [national]
+    regions:
+      - national
     decay_class: aging-ironic
     offensiveness: low
-    contexts: [awareness]
-    avoid_when: [usage, user_distress, formal_writing]
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
     max_per_response: 0
-    expires: '2027-05-01'
+    expires: 2027-05-01
     confidence: medium
     purpose: awareness
     sources:
       - url: https://kbbi.kemendikdasmen.go.id/entri/bucin
         note: KBBI colloquial entry; aging/ironic
+  - id: id-stecu
+    term: stecu
+    gloss: aloof front
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - &a1
+        url: https://www.xerpihan.com/blog/bahasa-gaul-2025-tren-viral-lengkap
+        note: 'Wave 1: Xerpihan 2025-2026 slang guide'
+  - id: id-aura-points
+    term: aura-points
+    gloss: wibawa score
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a1
+  - id: id-brainrot
+    term: brainrot
+    gloss: meme overload
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - identity_target
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a1
+  - id: id-delulu
+    term: delulu
+    gloss: delusional wish
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - &a2
+        url: https://www.gramedia.com/best-seller/50-bahasa-gaul-gen-z-kekinian-lengkap-dengan-arti-dan-contohnya/
+        note: 'Wave 1: Gramedia Gen Z slang compilation'
+  - id: id-canon-event
+    term: canon-event
+    gloss: inevitable trial
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a1
+  - id: id-npc
+    term: npc
+    gloss: robotic follower
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: low
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - blaming_a_person
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-mid
+    term: mid
+    gloss: mediocre
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-touch-grass
+    term: touch-grass
+    gloss: log off
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: low
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - &a3
+        url: https://lifestyle.kompas.com/read/2026/04/23/110500720/100-bahasa-gaul-gen-z-viral-yang-sering-muncul-di-fyp-dan-artinya
+        note: 'Wave 1: Kompas TikTok/FYP slang glossary'
+  - id: id-no-cap
+    term: no-cap
+    gloss: true / no lie
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-rizz
+    term: rizz
+    gloss: charisma
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-mogging
+    term: mogging
+    gloss: outshine looks
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: low
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a1
+  - id: id-slay
+    term: slay
+    gloss: impressive win
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-ate
+    term: ate
+    gloss: nailed flawlessly
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-bussin
+    term: bussin
+    gloss: delicious
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-its-giving
+    term: its-giving
+    gloss: radiates vibe
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-menyala-abangku
+    term: menyala-abangku
+    gloss: hyped praise
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a1
+  - id: id-gak-bisa-yura
+    term: gak-bisa-yura
+    gloss: humorous despair
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - url: https://pekanbaru.tribunnews.com/2024/08/06/yura-viral-dan-trend-gak-bisa-yura-di-tiktok-ini-arti-kata-yura-dan-apa-itu-yura-serta-bahasa-gaul
+        note: 'Wave 1: Tribunnews Gak Bisa Yura TikTok trend'
+  - id: id-mbak-taylor
+    term: mbak-taylor
+    gloss: heartbreak trope
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-orang-have
+    term: orang-have
+    gloss: wealthy folk
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a1
+  - id: id-skena
+    term: skena
+    gloss: indie/coffee scene
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - url: https://www.axe.com/id/inspirasi/culture/arti-skena.html
+        note: 'Wave 1: Axe Indonesia skena subculture explainer'
+  - id: id-minimal-roast
+    term: minimal...
+    gloss: baseline sarcasm
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: low
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - blaming_a_person
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - url: https://journal.unpas.ac.id/index.php/pendas/article/view/55543/32771
+        note: 'Wave 1: Unpas pragmatics & sarcasm study'
+  - id: id-bercyandya
+    term: bercyandya
+    gloss: joking deflection
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a3
+  - id: id-cepu
+    term: cepu
+    gloss: snitch
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: medium
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - blaming_a_person
+      - user_distress
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a3
+  - id: id-gamon
+    term: gamon
+    gloss: gagal move on
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-pick-me
+    term: pick-me
+    gloss: validation-seeking slur
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: medium
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - identity_target
+      - user_distress
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a2
+  - id: id-ygy
+    term: ygy
+    gloss: ya gais ya
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - url: https://www.telkomsel.com/jelajah/jelajah-lifestyle/ygy-artinya-pahami-bahasa-gaul-yang-populer-di-tiktok-ini
+        note: 'Wave 1: Telkomsel TikTok slang breakdown'
+  - id: id-ytta
+    term: ytta
+    gloss: insiders only
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - &a4
+        url: https://bangka.tribunnews.com/2022/09/21/8-singkatan-baru-anak-tiktok-202-yang-harus-kamu-tau-artinya-ada-ytta-nt-ygy-ib-dan-pmg?page=all
+        note: 'Wave 1: Tribunnews TikTok shorthand guide'
+  - id: id-tbl-nbl
+    term: tbl-nbl
+    gloss: takut/ngakak bgt
+    register: informal
+    regions:
+      - national
+    decay_class: dated
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a4
+  - id: id-ovt
+    term: ovt
+    gloss: overthinking
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-nt
+    term: nt
+    gloss: nice try
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - gaming
+      - debugging
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a4
+  - id: id-jj
+    term: jj
+    gloss: jedag-jedug edit
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - media
+      - playful
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-salfok
+    term: salfok
+    gloss: salah fokus
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-nolep
+    term: nolep
+    gloss: no-life shut-in
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: low
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - identity_target
+      - user_distress
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a2
+  - id: id-code-831
+    term: '831'
+    gloss: ILY numeric code
+    register: informal
+    regions:
+      - national
+    decay_class: dated
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - &a5
+        url: https://www.viva.co.id/gaya-hidup/inspirasi-unik/1379419-831-dan-224-meaning-dalam-bahasa-gaul-apa-sih-artinya
+        note: 'Wave 1: VIVA 831/224 slang explainer'
+  - id: id-code-224
+    term: '224'
+    gloss: today tomorrow forever
+    register: informal
+    regions:
+      - national
+    decay_class: dated
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a5
+  - id: id-code-530
+    term: '530'
+    gloss: miss you code
+    register: informal
+    regions:
+      - national
+    decay_class: dated
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - url: https://sumsel.tribunnews.com/2022/11/28/arti-kode-angka-530-831-24434-1432-224-361-607-4646-599-dan-323-bahasa-gaul-viral-di-medsos
+        note: 'Wave 1: Tribunnews numeric medsos codes'
+  - id: id-bjir
+    term: bjir
+    gloss: mild shock
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - &a6
+        url: https://id.wikipedia.org/wiki/Bahasa_Indonesia_gaul
+        note: 'Wave 2: Wikipedia Bahasa Indonesia gaul'
+  - id: id-anjay
+    term: anjay
+    gloss: wow exclamation
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: low
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a6
+  - id: id-anjrit
+    term: anjrit
+    gloss: casual shock
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: low
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-buset
+    term: buset
+    gloss: astonished
+    register: informal
+    regions:
+      - Betawi
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-astaganaga
+    term: astaganaga
+    gloss: playful shock
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-wkwk
+    term: wkwk
+    gloss: +62 laugh
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-awokawok
+    term: awokawok
+    gloss: dry laugh
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a6
+  - id: id-mleyot
+    term: mleyot
+    gloss: charmed/melting
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - &a7
+        url: https://www.liputan6.com/hot/read/5045173/apa-arti-rungkad-ini-penjelasan-dan-daftar-istilah-viral-media-sosial
+        note: 'Wave 2: Liputan6 viral social media slang'
+  - id: id-bengek
+    term: bengek
+    gloss: breathless laugh
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-gacor
+    term: gacor
+    gloss: crushing it
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-rungkad
+    term: rungkad
+    gloss: wrecked/broken
+    register: informal
+    regions:
+      - Sunda
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-boncos
+    term: boncos
+    gloss: heavy loss
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-zonk
+    term: zonk
+    gloss: total bust
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/zonk
+        note: KBBI Daring entry
+  - id: id-kureng
+    term: kureng
+    gloss: subpar
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-ambyar
+    term: ambyar
+    gloss: shattered
+    register: informal
+    regions:
+      - Jawa
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/ambyar
+        note: KBBI Daring entry
+  - id: id-goks
+    term: goks
+    gloss: wild feat
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-pecah
+    term: pecah
+    gloss: hyped moment
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-gaje
+    term: gaje
+    gloss: nonsensical
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-blunder
+    term: blunder
+    gloss: unforced error
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/blunder
+        note: KBBI Daring entry
+  - id: id-sat-set
+    term: sat-set
+    gloss: swift execution
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-gercep
+    term: gercep
+    gloss: act fast
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/gercep
+        note: KBBI Daring entry
+  - id: id-wacana
+    term: wacana
+    gloss: all talk
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/wacana
+        note: KBBI Daring entry
+  - id: id-ngab
+    term: ngab
+    gloss: bro
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a6
+  - id: id-bray
+    term: bray
+    gloss: mate
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-cuy
+    term: cuy
+    gloss: dude
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-lur
+    term: lur
+    gloss: pal
+    register: informal
+    regions:
+      - Jawa
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-rek
+    term: rek
+    gloss: mate
+    register: informal
+    regions:
+      - East Java
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-sepuh
+    term: sepuh
+    gloss: senior dev mock-humble
+    register: informal
+    regions:
+      - Jawa
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - &a8
+        url: https://mojok.co/esai/kamus-bahasa-gaul-anak-twitter/
+        note: 'Wave 2: Mojok.co X/Twitter slang lexicon'
+  - id: id-suhu
+    term: suhu
+    gloss: master mentor
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-bosku
+    term: bosku
+    gloss: chief
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-bestie
+    term: bestie
+    gloss: close peer
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-gan
+    term: gan
+    gloss: forum pal
+    register: informal
+    regions:
+      - national
+    decay_class: dated
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a6
+  - id: id-ra-mashok
+    term: ra mashok
+    gloss: nonsensical
+    register: informal
+    regions:
+      - Jawa
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-ora-urus
+    term: ora urus
+    gloss: not my problem
+    register: informal
+    regions:
+      - Jawa
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-atuh
+    term: atuh
+    gloss: gentle urging
+    register: informal
+    regions:
+      - Sunda
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-euy
+    term: euy
+    gloss: hey tag
+    register: informal
+    regions:
+      - Sunda
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-gaskeun
+    term: gaskeun
+    gloss: ship it
+    register: informal
+    regions:
+      - Sunda
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-kuy
+    term: kuy
+    gloss: let us go
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a6
+  - id: id-sabi
+    term: sabi
+    gloss: doable
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-santuy
+    term: santuy
+    gloss: chill
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-jancok
+    term: jancok
+    gloss: strong expletive
+    register: informal
+    regions:
+      - East Java
+    decay_class: local-slang
+    offensiveness: high
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - formal_writing
+      - user_distress
+      - identity_target
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a8
+  - id: id-kalcer
+    term: kalcer
+    gloss: trendy scene
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-jamet
+    term: jamet
+    gloss: subculture slur
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: medium
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - identity_target
+      - user_distress
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a8
+  - id: id-mendang-mending
+    term: mendang-mending
+    gloss: nitpick comparing
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-budak-korporat
+    term: budak-korporat
+    gloss: office grind
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-jbjb
+    term: jbjb
+    gloss: join reply
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-menfess
+    term: menfess
+    gloss: anon post
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-sender
+    term: sender
+    gloss: post author
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-mutualan
+    term: mutualan
+    gloss: mutual follow
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-ava-telur
+    term: ava-telur
+    gloss: burner account
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-spill
+    term: spill
+    gloss: reveal details
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-gatekeep
+    term: gatekeep
+    gloss: withhold info
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-flexing
+    term: flexing
+    gloss: bragging
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/flexing
+        note: KBBI Daring entry
+  - id: id-flop
+    term: flop
+    gloss: low traction
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-ratio
+    term: ratio
+    gloss: replies > likes
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-opfol
+    term: opfol
+    gloss: open follow
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-cancel-culture
+    term: cancel-culture
+    gloss: public boycott
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a8
+  - id: id-fomo-jomo
+    term: fomo-jomo
+    gloss: missing out fear/joy
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/fomo
+        note: KBBI Daring entry
+  - id: id-doomscrolling
+    term: doomscrolling
+    gloss: bad-news binge
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-red-flag
+    term: red-flag
+    gloss: warning sign
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-green-flag
+    term: green-flag
+    gloss: healthy sign
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-playing-victim
+    term: playing-victim
+    gloss: victim deflection
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: low
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - blaming_a_person
+      - user_distress
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a8
+  - id: id-gaslighting
+    term: gaslighting
+    gloss: reality distortion
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: low
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - blaming_a_person
+      - user_distress
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a8
+  - id: id-silent-treatment
+    term: silent-treatment
+    gloss: stonewalling
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a8
+  - id: id-call-out
+    term: call-out
+    gloss: public check
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-tone-deaf
+    term: tone-deaf
+    gloss: context-blind
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: low
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-valid-no-debat
+    term: valid no debat
+    gloss: undeniable
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-fiks
+    term: fiks
+    gloss: settled
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - url: https://kbbi.kemendikdasmen.go.id/entri/fiks
+        note: KBBI Daring entry
+  - id: id-skip
+    term: skip
+    gloss: pass
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-tbh
+    term: tbh
+    gloss: to be honest
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-cmiiw
+    term: cmiiw
+    gloss: correct me
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-tren-anomali
+    term: tren-anomali
+    gloss: absurd audio trend
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a3
+  - id: id-dark-system
+    term: dark-system
+    gloss: rigged matchmaking
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - debugging
+      - banter
+      - gaming
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-skill-issue
+    term: skill-issue
+    gloss: user/caller error
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: low
+    contexts:
+      - banter
+      - debugging
+    avoid_when:
+      - incident
+      - user_distress
+      - blaming_a_person
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-kuli-ketik
+    term: kuli-ketik
+    gloss: dev self-deprecation
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - self_deprecation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a8
+  - id: id-cegil-cogil
+    term: cegil-cogil
+    gloss: unhinged trope
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: low
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a1
+  - id: id-coquette-era
+    term: coquette-era
+    gloss: cutesy vibe
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a3
+  - id: id-velocity
+    term: velocity
+    gloss: tempo edit
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a1
+  - id: id-kaum-rebahan
+    term: kaum-rebahan
+    gloss: couch potato
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a2
+  - id: id-kena-ulti
+    term: kena-ulti
+    gloss: decisive blow
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - banter
+      - gaming
+      - debugging
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-kena-mental
+    term: kena-mental
+    gloss: shaken nerves
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: low
+    contexts:
+      - casual_work
+      - banter
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a7
+  - id: id-carry
+    term: carry
+    gloss: solo team load
+    register: informal
+    regions:
+      - national
+    decay_class: global-meme
+    offensiveness: none
+    contexts:
+      - casual_work
+      - gaming
+      - debugging
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-05-01
+    confidence: high
+    sources:
+      - *a3
+  - id: id-sigma
+    term: sigma
+    gloss: lone wolf meme
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a2
+  - id: id-skibidi
+    term: skibidi
+    gloss: nonsense filler
+    register: informal
+    regions:
+      - national
+    decay_class: aging-ironic
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a2
+  - id: id-atapu
+    term: atapu
+    gloss: cutesy ILY
+    register: informal
+    regions:
+      - national
+    decay_class: dated
+    offensiveness: none
+    contexts:
+      - awareness
+    avoid_when:
+      - usage
+      - user_distress
+      - formal_writing
+    max_per_response: 0
+    expires: 2027-05-01
+    confidence: high
+    purpose: awareness
+    sources:
+      - *a3
+  - id: id-partikel-sih
+    term: sih
+    gloss: contrast softener
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-dong
+    term: dong
+    gloss: coaxing assert
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-deh
+    term: deh
+    gloss: concessive tag
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-tuh
+    term: tuh
+    gloss: distal cue
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-nih
+    term: nih
+    gloss: proximal cue
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-lah
+    term: lah
+    gloss: resigned emphasis
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-kok
+    term: kok
+    gloss: skeptical why
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-kan
+    term: kan
+    gloss: confirm tag
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-mah
+    term: mah
+    gloss: topic contrast
+    register: informal
+    regions:
+      - Sunda
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-loh
+    term: loh
+    gloss: surprise cue
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-partikel-dah
+    term: dah
+    gloss: sigh marker
+    register: informal
+    regions:
+      - national
+    decay_class: kbbi-colloquial
+    offensiveness: none
+    contexts:
+      - conversation
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-yg
+    term: yg
+    gloss: yang
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-gak
+    term: gak/ga/gk
+    gloss: tidak
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-bgt
+    term: bgt/bnr
+    gloss: banget/bener
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-gatau
+    term: gatau/gtw
+    gloss: gak tahu
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-otw
+    term: otw
+    gloss: on the way
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-btw
+    term: btw
+    gloss: by the way
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-cmn
+    term: cmn/krn/sbnrnya
+    gloss: cuma/karena/sebenarnya
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-jg
+    term: jg/dgn/sm/dr
+    gloss: juga/dengan/sama/dari
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-kyk
+    term: kyk/kek
+    gloss: kayak
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-udh
+    term: udh/blm/msh/bnyk
+    gloss: udah/belum/masih/banyak
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-skrg
+    term: skrg/bsk
+    gloss: sekarang/besok
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-klo
+    term: klo/kl
+    gloss: kalau
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-knp
+    term: knp/gmn/dmn/kpn
+    gloss: kenapa/gimana/dimana/kapan
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-sapa
+    term: sapa/sp
+    gloss: siapa
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-gpp
+    term: gpp
+    gloss: gak apa-apa
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-bntr
+    term: bntr/dlu/mls/ttp
+    gloss: bentar/dulu/males/tetap
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-tbtb
+    term: tbtb
+    gloss: tiba-tiba
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-plis
+    term: plis/pls
+    gloss: please
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-pap
+    term: pap
+    gloss: post a picture
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6
+  - id: id-shorthand-yaudah
+    term: yaudah
+    gloss: resigned ok
+    register: informal
+    regions:
+      - national
+    decay_class: local-slang
+    offensiveness: none
+    contexts:
+      - chat_shorthand
+    avoid_when:
+      - incident
+      - user_distress
+      - formal_writing
+    max_per_response: 1
+    expires: 2027-11-01
+    confidence: high
+    sources:
+      - *a6

@@ -240,13 +240,14 @@ function expiryIssues(persona: Persona, reviewables: ReviewableCulture[], today:
 
 function renderLexicon(persona: Persona, lexicon: PersonaLexicon): string {
   const lines = [
-    `# ${persona.display_name} lexicon references`,
-    '',
-    'Use only in the listed context; respect the cap and the global no-repetition rule.',
-    '',
+    `# ${persona.display_name} lexicon whitelist (use in context; max 1/response & no-repeat unless noted)`,
     ...lexicon.entries.map((entry) => {
-      const cap = entry.max_per_response ?? 1;
-      return `- ${entry.culture_ref}: ${entry.usage} (max ${cap} per response)`;
+      const ref = entry.culture_ref.replace(/^id-/, '');
+      const cap =
+        entry.max_per_response !== undefined && entry.max_per_response !== 1
+          ? ` [max ${entry.max_per_response}]`
+          : '';
+      return `- ${ref}${cap}: ${entry.usage}`;
     }),
   ];
   return lines.join('\n');
@@ -254,27 +255,77 @@ function renderLexicon(persona: Persona, lexicon: PersonaLexicon): string {
 
 // Review metadata (reviewed_by, next_review, confidence, sources, expires) is what a human needs to
 // audit an entry; the agent only ever acts on the wording, the context limits and the cap. Compiled
-// references therefore carry the behavioural fields and drop the rest, while the source file keeps
-// everything. `decay_class` stays because it tells the agent how dated a term already is.
-const LEXICON_ENTRY_KEYS = [
-  'id',
-  'term',
-  'gloss',
-  'register',
-  'regions',
-  'decay_class',
-  'offensiveness',
-  'contexts',
-  'avoid_when',
-  'max_per_response',
-  'purpose',
-];
-const MEME_ENTRY_KEYS = ['id', 'pattern', 'context', 'avoid_when', 'note'];
+// references pack entries compactly by behavioral group so expanded lexicons stay within token caps.
 const REGISTER_KEYS = ['locale', 'levels', 'honorifics', 'defaults', 'common_errors', 'banyumasan'];
 
 function pick(source: object, keys: string[]): Record<string, unknown> {
   const record = source as Record<string, unknown>;
   return Object.fromEntries(keys.filter((key) => key in record).map((key) => [key, record[key]]));
+}
+
+function formatCultureEntry(entry: CultureFile['entries'][number], isAwareness: boolean): string {
+  const extras: string[] = [];
+  if (entry.register !== 'informal') {
+    extras.push(entry.register);
+  }
+  const nonNational = entry.regions.filter((region) => region !== 'national');
+  if (nonNational.length > 0) {
+    extras.push(nonNational.join('/'));
+  }
+  if (entry.offensiveness !== 'none') {
+    extras.push(`off:${entry.offensiveness}`);
+  }
+  if (!isAwareness && entry.max_per_response !== 1) {
+    extras.push(`cap:${entry.max_per_response}`);
+  }
+  if (
+    isAwareness &&
+    (entry.decay_class === 'aging-ironic' ||
+      entry.decay_class === 'dated' ||
+      entry.decay_class === 'banned')
+  ) {
+    extras.push(entry.decay_class === 'aging-ironic' ? 'ironic' : entry.decay_class);
+  }
+  return `${entry.term}: ${entry.gloss}${extras.length > 0 ? ` (${extras.join(',')})` : ''}`;
+}
+
+function formatLexiconRuntime(parsed: CultureFile): string {
+  const lines = [
+    `# ID lexicon (${parsed.locale}) — defaults: informal, national, off:none, cap:1; avoid incident/distress/formal`,
+  ];
+  const byDecay = new Map<string, string[]>();
+  const awareness: string[] = [];
+
+  for (const entry of parsed.entries) {
+    const isAwareness = entry.purpose === 'awareness' || entry.max_per_response === 0;
+    if (isAwareness) {
+      awareness.push(formatCultureEntry(entry, true));
+      continue;
+    }
+    const list = byDecay.get(entry.decay_class) ?? [];
+    list.push(formatCultureEntry(entry, false));
+    byDecay.set(entry.decay_class, list);
+  }
+
+  for (const [decay, items] of byDecay) {
+    lines.push(`## Active [${decay}]`);
+    lines.push(items.join('; '));
+  }
+  if (awareness.length > 0) {
+    lines.push('## Awareness-only (cap 0; do not generate)');
+    lines.push(awareness.join('; '));
+  }
+  return lines.join('\n');
+}
+
+function formatMemesRuntime(parsed: MemeFile): string {
+  const lines = ['# Meme notes (avoid incident, user_distress, blaming_a_person, formal_writing)'];
+  for (const entry of parsed.entries) {
+    const nonDefaultCtx = entry.context.filter((ctx) => ctx !== 'casual_work');
+    const ctxTag = nonDefaultCtx.length > 0 ? ` [${nonDefaultCtx.join('/')}]` : '';
+    lines.push(`- ${entry.pattern}: ${entry.note}${ctxTag}`);
+  }
+  return lines.join('\n');
 }
 
 function runtimeCulture(ref: { path: string; content: string; parsed?: ParsedCulture }): string {
@@ -283,17 +334,10 @@ function runtimeCulture(ref: { path: string; content: string; parsed?: ParsedCul
     return ref.content;
   }
   if (parsed.schema === 'hahahah.culture.lexicon/v1') {
-    return stringify({
-      schema: parsed.schema,
-      locale: parsed.locale,
-      entries: parsed.entries.map((entry) => pick(entry, LEXICON_ENTRY_KEYS)),
-    });
+    return formatLexiconRuntime(parsed);
   }
   if (parsed.schema === 'hahahah.culture.memes/v1') {
-    return stringify({
-      schema: parsed.schema,
-      entries: parsed.entries.map((entry) => pick(entry, MEME_ENTRY_KEYS)),
-    });
+    return formatMemesRuntime(parsed);
   }
   return stringify({ schema: parsed.schema, ...pick(parsed, REGISTER_KEYS) });
 }
