@@ -80,7 +80,7 @@ interface PackageJson {
   [key: string]: unknown;
 }
 
-// Canonical 152 items from Feature Inventory in PROJECT.md and TEST_INFRA.md
+// Canonical 152 Wave 1 & Wave 2 Indonesian slang and meme items across culture/id/
 const MASTER_TERMS: readonly string[] = [
   'stecu',
   'aura-points',
