@@ -14,7 +14,9 @@
 
 *(Note: Internally in this repository, **+62 Mode** uses the canonical profile ID `plus62` (with backward-compatible alias `rusuh-id`), which is enabled by default so you never need to pass `--profile` manually. Qoder is still an incomplete compatibility assessment and makes no compatibility claim.)*
 
-## Before vs After (Antigravity IDE · Gemini 4 Hydrogen Extra)
+## Before vs After (+62 Mode Showcase)
+
+### 1. Obrolan Santai (Antigravity IDE · Gemini 4 Hydrogen Extra)
 
 Prompt yang sama persis (`halo` → `gabut`) di model dan harness yang sama — kiri tanpa persona, kanan dengan **+62 Mode** aktif:
 
@@ -22,6 +24,24 @@ Prompt yang sama persis (`halo` → `gabut`) di model dan harness yang sama — 
 |---|---|
 | ![Before: Respon CS korporat & bullet list panjang](docs/assets/showcase-before.png) | ![After: To-the-point, lu/gw natural, nol basa-basi](docs/assets/showcase-after.png) |
 | Pembuka bot korporat (*"Halo! Ada yang bisa saya bantu hari ini?"*) + 4 bullet template kaku saat diajak ngobrol santai. | Langsung nyambung konteks dev, ngobrol santai `lu/gw`, ringkas tanpa daftar bullet template atau spam emoji. |
+
+### 2. Tolak Ide Ngaco / Over-Engineering & Cek Fakta Repo (Antigravity IDE)
+
+Prompt pancingan (*"bug null pointer 1 baris di `utils.ts`, sekalian rewrite `src/` jadi microservice aja?"*) — kiri tanpa persona (`Gemini 4 Hydrogen Medium`), kanan dengan **+62 Mode** (`Gemini 4 Hydrogen Extra`):
+
+| ❌ Before (Vanilla AI) | 🔥 After (+62 Mode) |
+|---|---|
+| ![Before: Gaya buku teks formal 3 poin](docs/assets/showcase-overengineer-before.png) | ![After: Teguran senior +62 to-the-point & cek repo](docs/assets/showcase-overengineer-after.png) |
+| Menolak secara kaku gaya esai (*"Tidak proporsional (Scope Creep)..."*, *"Kompleksitas melonjak..."*). | Langsung ditegur *"Jangan gass, ngaco 🤦‍♂️"*, solusi ringkas, ngecek langsung bahwa `src/` nggak ada, dan nyadar lagi dipancing. |
+
+### 3. Paham Slang `v0.2.0` & Debugging Tanpa Bertele-tele (Antigravity IDE · Gemini 4 Hydrogen Extra)
+
+Prompt curhat slang + umpatan ringan (*"anjir bjir token gw boncos bgt gara2 script looping mulu, build gw rungkad berasa kena dark system su 😭"*) di model yang sama persis:
+
+| ❌ Before (Vanilla AI) | 🔥 After (+62 Mode) |
+|---|---|
+| ![Before: Minta log lalu lanjut tutorial panjang 3 bullet](docs/assets/showcase-slang-before.png) | ![After: Nangkep dark system, 3 poin tegas, langsung minta log](docs/assets/showcase-slang-after.png) |
+| Bercabang jadi dua bagian panjang (minta log 1–2 + blok tutorial *"Tips cepat biar nggak bocor token..."*). | Langsung nyaut referensi `dark system` (*"script-nya aja yang looping tanpa rem"*), 3 poin tajam, langsung fokus ke debug. |
 
 ## Quick Install (via NPM / NPX — Tanpa Perlu Clone Repo)
 
