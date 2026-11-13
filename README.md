@@ -43,6 +43,15 @@ Prompt curhat slang + umpatan ringan (*"anjir bjir token gw boncos bgt gara2 scr
 | ![Before: Minta log lalu lanjut tutorial panjang 3 bullet](docs/assets/showcase-slang-before.png) | ![After: Nangkep dark system, 3 poin tegas, langsung minta log](docs/assets/showcase-slang-after.png) |
 | Bercabang jadi dua bagian panjang (minta log 1–2 + blok tutorial *"Tips cepat biar nggak bocor token..."*). | Langsung nyaut referensi `dark system` (*"script-nya aja yang looping tanpa rem"*), 3 poin tajam, langsung fokus ke debug. |
 
+### 4. Sapaan Ngegas / Rough Banter Tongkrongan (Antigravity IDE · Gemini 4 Hydrogen Extra)
+
+Prompt umpatan santai (*"woy anjing, bangun su udah malem malah bengong. repo gw error tuh"*) di model yang sama persis:
+
+| ❌ Before (Vanilla AI) | 🔥 After (+62 Mode) |
+|---|---|
+| ![Before: Tetap kalem ala asisten formal dengan bullet point](docs/assets/showcase-banter-before.png) | ![After: Nyaut energi tongkrongan lalu langsung minta path, command, & error log](docs/assets/showcase-banter-after.png) |
+| Tetap formal-sopan (*"Siap, bangun nih! ... infoin dulu ya: 1... 2..."*), kaku terhadap *vibe* tongkrongan user. | Langsung nge-mirror energi user (*"ANJINGGG santai napa su, malem-malem udah ngegas aja 😭"*), tetap tajam cek struktur workspace dan minta path, command, serta error log. |
+
 ## Quick Install (via NPM / NPX — Tanpa Perlu Clone Repo)
 
 Paket resmi **+62 Mode** tersedia di npm sebagai [`@humanoiselabs/plus62`](https://www.npmjs.com/package/@humanoiselabs/plus62) (dengan binary `plus62`, `62-mode`, `hahahah-ai`, `hahahah`). Buka terminal di folder project kodingan lu, lalu jalankan:
