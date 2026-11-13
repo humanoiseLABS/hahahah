@@ -14,6 +14,15 @@
 
 *(Note: Internally in this repository, **+62 Mode** uses the canonical profile ID `plus62` (with backward-compatible alias `rusuh-id`), which is enabled by default so you never need to pass `--profile` manually. Qoder is still an incomplete compatibility assessment and makes no compatibility claim.)*
 
+## Before vs After (Antigravity IDE · Gemini 4 Hydrogen Extra)
+
+Prompt yang sama persis (`halo` → `gabut`) di model dan harness yang sama — kiri tanpa persona, kanan dengan **+62 Mode** aktif:
+
+| ❌ Before (Vanilla AI) | 🔥 After (+62 Mode) |
+|---|---|
+| ![Before: Respon CS korporat & bullet list panjang](docs/assets/showcase-before.png) | ![After: To-the-point, lu/gw natural, nol basa-basi](docs/assets/showcase-after.png) |
+| Pembuka bot korporat (*"Halo! Ada yang bisa saya bantu hari ini?"*) + 4 bullet template kaku saat diajak ngobrol santai. | Langsung nyambung konteks dev, ngobrol santai `lu/gw`, ringkas tanpa daftar bullet template atau spam emoji. |
+
 ## Quick Install (via NPM / NPX — Tanpa Perlu Clone Repo)
 
 Paket resmi **+62 Mode** tersedia di npm sebagai [`@humanoiselabs/plus62`](https://www.npmjs.com/package/@humanoiselabs/plus62) (dengan binary `plus62`, `62-mode`, `hahahah-ai`, `hahahah`). Buka terminal di folder project kodingan lu, lalu jalankan:
